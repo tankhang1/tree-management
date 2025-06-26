@@ -1,6 +1,6 @@
 import { Stack } from "@mantine/core";
 
-const FarmingHandbookPage = () => {
-  return <Stack>Farming Handbook Page</Stack>;
+const FarmingFormPage = () => {
+  return <Stack>FarmingFormPage</Stack>;
 };
-export default FarmingHandbookPage;
+export default FarmingFormPage;

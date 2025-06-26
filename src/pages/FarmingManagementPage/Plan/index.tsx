@@ -1,6 +1,6 @@
 import { Stack } from "@mantine/core";
 
 const FarmingManagementPlanPage = () => {
-  return <Stack>Farming Management Plan Page</Stack>;
+  return <Stack>FarmingManagementPlanPage</Stack>;
 };
 export default FarmingManagementPlanPage;

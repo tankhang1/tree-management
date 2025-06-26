@@ -9,6 +9,7 @@ import {
   Group,
   Image,
   Indicator,
+  Modal,
   NavLink,
   ScrollArea,
   Stack,
@@ -16,17 +17,24 @@ import {
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import Logo from "./assets/logo.avif";
-import { IconBell } from "@tabler/icons-react";
+import { IconBell, IconLogout, IconMessageChatbot } from "@tabler/icons-react";
 import { NAV_BAR } from "./constants/navbar.constants";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import { PATH } from "./constants/path.constants";
+import ChatbotModal from "./components/Chatbot";
 
 export default function App() {
   const [opened, { toggle }] = useDisclosure();
+  const [openedChatbot, { open: openChatbot, close: closeChatbot }] =
+    useDisclosure(false);
+
   const navigate = useNavigate();
   const location = useLocation();
   const onNavQueenFarm = () => {
-    navigate(PATH.QUEEN_FARM);
+    navigate(PATH.HOME);
+  };
+  const onLogout = () => {
+    navigate(PATH.AUTH);
   };
   return (
     <AppShell
@@ -40,11 +48,8 @@ export default function App() {
         main: {
           width: "100dvw",
           display: "flex",
-          overflow: "visible",
-          position: "relative",
           flexDirection: "column",
           boxSizing: "border-box",
-          zIndex: 0,
         },
       }}
       padding="md"
@@ -71,6 +76,7 @@ export default function App() {
                 <ActionIcon
                   variant="outline"
                   color={"gray"}
+                  radius={4}
                   style={{
                     borderColor: "gray", // border color
                   }}
@@ -78,7 +84,17 @@ export default function App() {
                   <IconBell size={18} />
                 </ActionIcon>
               </Indicator>
-
+              <ActionIcon
+                onClick={onLogout}
+                variant="outline"
+                color={"gray"}
+                radius={4}
+                style={{
+                  borderColor: "gray", // border color
+                }}
+              >
+                <IconLogout size={18} />
+              </ActionIcon>
               <Avatar
                 size="md"
                 radius={100}
@@ -114,9 +130,15 @@ export default function App() {
                 styles={{
                   label: {
                     color: isParentActive ? "#4CAF50" : undefined,
+                    "&:hover": {
+                      color: "#4CAF50",
+                    },
                   },
                   section: {
                     color: isParentActive ? "#4CAF50" : undefined,
+                    "&:hover": {
+                      color: "#4CAF50",
+                    },
                   },
                 }}
               >
@@ -134,9 +156,15 @@ export default function App() {
                         label: {
                           fontSize: 14,
                           color: isChildActive ? "#4CAF50" : "#757575",
+                          "&:hover": {
+                            color: "#4CAF50",
+                          },
                         },
                         section: {
                           color: isChildActive ? "#4CAF50" : undefined,
+                          "&:hover": {
+                            color: "#4CAF50",
+                          },
                         },
                       }}
                     />
@@ -151,6 +179,51 @@ export default function App() {
       <AppShell.Main pos={"relative"}>
         <Outlet />
       </AppShell.Main>
+      {!openedChatbot && (
+        <ActionIcon
+          w={58}
+          h={58}
+          radius={100}
+          pos="fixed"
+          bottom={24}
+          right={24}
+          onClick={openChatbot}
+          style={{
+            zIndex: 999,
+            background:
+              "linear-gradient(135deg, rgba(67, 233, 123, 0.4), rgba(56, 249, 215, 0.4))",
+            boxShadow: "0 8px 24px rgba(67, 233, 123, 0.25)",
+            backdropFilter: "blur(12px)",
+            WebkitBackdropFilter: "blur(12px)",
+            border: "1px solid rgba(255, 255, 255, 0.2)",
+            transition: "all 0.3s ease",
+            transform: "scale(1)",
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.transform = "scale(1.1)";
+            e.currentTarget.style.boxShadow =
+              "0 12px 28px rgba(67, 233, 123, 0.35)";
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.transform = "scale(1)";
+            e.currentTarget.style.boxShadow =
+              "0 8px 24px rgba(67, 233, 123, 0.25)";
+          }}
+        >
+          <IconMessageChatbot size={32} color="white" />
+        </ActionIcon>
+      )}
+      <Modal
+        opened={openedChatbot}
+        onClose={closeChatbot}
+        title="🤖 Trợ lý ảo"
+        size="md"
+        centered
+        radius="md"
+        overlayProps={{ blur: 3 }}
+      >
+        <ChatbotModal closeChatbot={closeChatbot} />
+      </Modal>
     </AppShell>
   );
 }

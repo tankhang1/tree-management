@@ -1,6 +1,7 @@
 import { Stack } from "@mantine/core";
 
 const GardenManagementPage = () => {
-  return <Stack w={"100%"}>Garden Management Page</Stack>;
+  return <Stack>GardenManagementPage</Stack>;
 };
+
 export default GardenManagementPage;

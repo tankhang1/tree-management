@@ -113,7 +113,7 @@ const Table = <T extends Record<string, unknown>>({
 
       onSelect: () => {},
       style: {
-        fontSize: "13px",
+        fontSize: "16px",
         fontFamily: "MyFont",
         backgroundColor: "#fcfcfc",
       },
