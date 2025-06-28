@@ -27,10 +27,8 @@ import AreaManagementHistoryPage from "./pages/AreaManagementPage/History/index.
 import PlantManagementPage from "./pages/PlantManagementPage/index.tsx";
 import PlantManagementTreePage from "./pages/PlantManagementPage/Tree/index.tsx";
 import PlantManagementGroupPage from "./pages/PlantManagementPage/Group/index.tsx";
-import PlantManagementAreaPage from "./pages/PlantManagementPage/Area/index.tsx";
 import PlantManagementVarietyPage from "./pages/PlantManagementPage/Variety/index.tsx";
 import PlantManagementSeedPage from "./pages/PlantManagementPage/Seed/index.tsx";
-import PlantManagementHarvestPage from "./pages/PlantManagementPage/Harvest/index.tsx";
 import PlantManagementTechnicalDocPage from "./pages/PlantManagementPage/TechnicalDoc/index.tsx";
 import SeasonManagementPage from "./pages/SeasonManagementPage/index.tsx";
 import SeasonManagementGrowthPage from "./pages/SeasonManagementPage/Growth/index.tsx";
@@ -97,6 +95,15 @@ import FarmingFormPlanPage from "./pages/FarmingFormPage/Plan/index.tsx";
 import PurchasePage from "./pages/PurchasePage/index.tsx";
 import SellPage from "./pages/SellPage/index.tsx";
 import FinanceAccountPage from "./pages/FinanceAccountPage/index.tsx";
+import AreaManagementAddRegionPage from "./pages/AreaManagementPage/Region/Add/index.tsx";
+import AreaManagementRegionDetailPage from "./pages/AreaManagementPage/Region/Detail/index.tsx";
+import AreaManagementAddZonePage from "./pages/AreaManagementPage/Zone/Add/index.tsx";
+import AreaManagementZoneDetailPage from "./pages/AreaManagementPage/Zone/Detail/index.tsx";
+import AreaManagementBlockDetailPage from "./pages/AreaManagementPage/Block/Detail/index.tsx";
+import AreaManagementBlockAddPage from "./pages/AreaManagementPage/Block/Add/index.tsx";
+import PlantManagementTreeAddPage from "./pages/PlantManagementPage/Tree/Add/index.tsx";
+import PlantManagementTreeDetailPage from "./pages/PlantManagementPage/Tree/Detail/index.tsx";
+import PlantManagementCatalogPage from "./pages/PlantManagementPage/Catalog/index.tsx";
 const theme: MantineThemeOverride = {
   fontFamily: "MyFont, sans-serif",
   primaryColor: "brand",
@@ -209,8 +216,26 @@ const ROUTES = [
 
   <Route path={PATH.AREA_MANAGEMENT} element={<AreaManagementPage />} />,
   <Route path={PATH.AREA_REGION} element={<AreaManagementRegionPage />} />,
+  <Route
+    path={PATH.AREA_ADD_REGION}
+    element={<AreaManagementAddRegionPage />}
+  />,
+  <Route
+    path={PATH.AREA_REGION_DETAIL}
+    element={<AreaManagementRegionDetailPage />}
+  />,
   <Route path={PATH.AREA_ZONE} element={<AreaManagementZonePage />} />,
+  <Route path={PATH.AREA_ADD_ZONE} element={<AreaManagementAddZonePage />} />,
+  <Route
+    path={PATH.AREA_ZONE_DETAIL}
+    element={<AreaManagementZoneDetailPage />}
+  />,
   <Route path={PATH.AREA_BLOCK} element={<AreaManagementBlockPage />} />,
+  <Route path={PATH.AREA_ADD_BLOCK} element={<AreaManagementBlockAddPage />} />,
+  <Route
+    path={PATH.AREA_BLOCK_DETAIL}
+    element={<AreaManagementBlockDetailPage />}
+  />,
   <Route path={PATH.AREA_ROW} element={<AreaManagementRowPage />} />,
   <Route path={PATH.AREA_TREE} element={<AreaManagementTreePage />} />,
   <Route path={PATH.AREA_MAP} element={<AreaManagementMapPage />} />,
@@ -224,11 +249,15 @@ const ROUTES = [
 
   <Route path={PATH.PLANT_MANAGEMENT} element={<PlantManagementPage />} />,
   <Route path={PATH.PLANT_TREE} element={<PlantManagementTreePage />} />,
+  <Route path={PATH.PLANT_ADD_TREE} element={<PlantManagementTreeAddPage />} />,
+  <Route
+    path={PATH.PLANT_TREE_DETAIL}
+    element={<PlantManagementTreeDetailPage />}
+  />,
   <Route path={PATH.PLANT_GROUP} element={<PlantManagementGroupPage />} />,
-  <Route path={PATH.PLANT_AREA} element={<PlantManagementAreaPage />} />,
   <Route path={PATH.PLANT_VARIETY} element={<PlantManagementVarietyPage />} />,
   <Route path={PATH.PLANT_SEED} element={<PlantManagementSeedPage />} />,
-  <Route path={PATH.PLANT_HARVEST} element={<PlantManagementHarvestPage />} />,
+  <Route path={PATH.PLANT_CATALOG} element={<PlantManagementCatalogPage />} />,
   <Route
     path={PATH.PLANT_TECHNICAL_DOC}
     element={<PlantManagementTechnicalDocPage />}

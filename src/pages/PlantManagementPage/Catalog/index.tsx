@@ -18,31 +18,31 @@ import {
 import Table from "../../../components/Table";
 import type { MRT_ColumnDef } from "mantine-react-table";
 import { useDisclosure } from "@mantine/hooks";
-import AddGroupForm from "./components/AddGroupForm";
-type CropType = {
+import AddCatalogForm from "./components/AddCatalogForm";
+type CatalogType = {
   id: string; // Mã loại cây
   name: string; // Tên loại cây
 };
-const cropTypeData: CropType[] = [
+const cropTypeData: CatalogType[] = [
   { id: "LC001", name: "Cây ăn trái" },
   { id: "LC002", name: "Cây công nghiệp" },
   { id: "LC003", name: "Cây rau màu" },
   { id: "LC004", name: "Cây dược liệu" },
 ];
-const PlantManagementGroupPage = () => {
+const PlantManagementCatalogPage = () => {
   const [
-    openedAddGroupForm,
-    { open: openAddGroupForm, close: closeAddGroupForm },
+    openedAddCatalogForm,
+    { open: openAddCatalogForm, close: closeAddCatalogForm },
   ] = useDisclosure(false);
-  const cropTypeColumns: MRT_ColumnDef<CropType>[] = [
+  const cropTypeColumns: MRT_ColumnDef<CatalogType>[] = [
     {
       accessorKey: "id",
-      header: "Mã loại cây",
+      header: "Mã",
       Cell: ({ cell }) => <Text fw={500}>{cell.getValue<string>()}</Text>,
     },
     {
       accessorKey: "name",
-      header: "Tên loại cây",
+      header: "Danh mục cây",
     },
     {
       accessorKey: "actions",
@@ -76,13 +76,13 @@ const PlantManagementGroupPage = () => {
     <Stack gap="lg">
       <Group justify="space-between" px={"sm"}>
         <Title flex={1} order={2}>
-          Quản lý nhóm cây trồng
+          Quản lý danh mục cây trồng
         </Title>
         <Group>
           <Button variant="outline" radius={4} leftSection={<IconFileExcel />}>
             Xuất File
           </Button>
-          <Button radius={4} onClick={openAddGroupForm}>
+          <Button radius={4} onClick={openAddCatalogForm}>
             Thêm mới
           </Button>
         </Group>
@@ -90,14 +90,14 @@ const PlantManagementGroupPage = () => {
 
       <Table columns={cropTypeColumns} data={cropTypeData} />
       <Modal
-        opened={openedAddGroupForm}
-        onClose={closeAddGroupForm}
-        title={<Text fw={500}>Tạo mới loại cây</Text>}
+        opened={openedAddCatalogForm}
+        onClose={closeAddCatalogForm}
+        title={<Text fw={500}>Tạo mới danh mục cây</Text>}
       >
-        <AddGroupForm />
+        <AddCatalogForm />
       </Modal>
     </Stack>
   );
 };
 
-export default PlantManagementGroupPage;
+export default PlantManagementCatalogPage;

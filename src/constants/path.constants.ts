@@ -37,8 +37,14 @@ export const PATH = {
   // Area Management
   AREA_MANAGEMENT: "/area-management",
   AREA_REGION: "/area-management/region",
+  AREA_ADD_REGION: "/area-management/region/add",
+  AREA_REGION_DETAIL: "/area-management/region/detail",
   AREA_ZONE: "/area-management/zone",
+  AREA_ZONE_DETAIL: "/area-management/zone/detail",
+  AREA_ADD_ZONE: "/area-management/zone/add",
   AREA_BLOCK: "/area-management/block",
+  AREA_BLOCK_DETAIL: "/area-management/block/detail",
+  AREA_ADD_BLOCK: "/area-management/block/add",
   AREA_ROW: "/area-management/row",
   AREA_TREE: "/area-management/tree",
   AREA_MAP: "/area-management/map",
@@ -50,11 +56,12 @@ export const PATH = {
   // Plant Management
   PLANT_MANAGEMENT: "/plant-management",
   PLANT_TREE: "/plant-management/tree",
+  PLANT_ADD_TREE: "/plant-management/tree/add",
+  PLANT_TREE_DETAIL: "/plant-management/tree/detail",
   PLANT_GROUP: "/plant-management/group",
-  PLANT_AREA: "/plant-management/area",
   PLANT_VARIETY: "/plant-management/variety",
   PLANT_SEED: "/plant-management/seed",
-  PLANT_HARVEST: "/plant-management/harvest",
+  PLANT_CATALOG: "/plant-management/catalog",
   PLANT_TECHNICAL_DOC: "/plant-management/technical-doc",
 
   // Season Management
