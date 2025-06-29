@@ -24,10 +24,8 @@ type CatalogType = {
   name: string; // Tên loại cây
 };
 const cropTypeData: CatalogType[] = [
-  { id: "LC001", name: "Cây ăn trái" },
-  { id: "LC002", name: "Cây công nghiệp" },
-  { id: "LC003", name: "Cây rau màu" },
-  { id: "LC004", name: "Cây dược liệu" },
+  { id: "LC001", name: "Sầu riêng" },
+  { id: "LC002", name: "Cafe" },
 ];
 const PlantManagementCatalogPage = () => {
   const [
