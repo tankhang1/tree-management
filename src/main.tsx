@@ -111,6 +111,7 @@ import PlanManagementAssignDetailPage from "./pages/PlanManagementPage/Assign/De
 import PlanManagementAssignAddPage from "./pages/PlanManagementPage/Assign/Add/index.tsx";
 import PlanManagementUnplannedDetailPage from "./pages/PlanManagementPage/Unplanned/Detail/index.tsx";
 import PlanManagementUnplannedAddPage from "./pages/PlanManagementPage/Unplanned/Add/index.tsx";
+import TaskManagementMainDetailPage from "./pages/TaskManagementPage/Main/Detail/index.tsx";
 const theme: MantineThemeOverride = {
   fontFamily: "MyFont, sans-serif",
   primaryColor: "brand",
@@ -314,6 +315,10 @@ const ROUTES = [
 
   <Route path={PATH.TASK_MANAGEMENT} element={<TaskManagementPage />} />,
   <Route path={PATH.TASK_MAIN} element={<TaskManagementMainPage />} />,
+  <Route
+    path={PATH.TASK_MAIN_DETAIL}
+    element={<TaskManagementMainDetailPage />}
+  />,
   <Route path={PATH.TASK_BATMAN} element={<TaskManagementBatmanPage />} />,
 
   <Route path={PATH.HARVEST_MANAGEMENT} element={<HarvestManagementPage />} />,

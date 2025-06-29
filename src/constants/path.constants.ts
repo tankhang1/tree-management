@@ -87,6 +87,7 @@ export const PATH = {
   // Task Management
   TASK_MANAGEMENT: "/task-management",
   TASK_MAIN: "/task-management/main",
+  TASK_MAIN_DETAIL: "/task-management/main/detail",
   TASK_BATMAN: "/task-management/batman",
 
   // Harvest Management
