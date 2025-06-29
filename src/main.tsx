@@ -114,6 +114,8 @@ import TaskManagementMainDetailPage from "./pages/TaskManagementPage/Main/Detail
 import ProductManagementItemAddPage from "./pages/ProductManagementPage/Item/Add/index.tsx";
 import ContractManagementDetailPage from "./pages/ContractManagementPage/Detail/index.tsx";
 import ContractManagementAddPage from "./pages/ContractManagementPage/Add/index.tsx";
+import HRManagementTeamDetailPage from "./pages/HRManagementPage/Team/Detail/index.tsx";
+import HRManagementTeamAddPage from "./pages/HRManagementPage/Team/Add/index.tsx";
 const theme: MantineThemeOverride = {
   fontFamily: "MyFont, sans-serif",
   primaryColor: "brand",
@@ -362,6 +364,8 @@ const ROUTES = [
   <Route path={PATH.HR_DEPARTMENT} element={<HRManagementDepartmentPage />} />,
   <Route path={PATH.HR_POSITION} element={<HRManagementPositionPage />} />,
   <Route path={PATH.HR_TEAM} element={<HRManagementTeamPage />} />,
+  <Route path={PATH.HR_TEAM_DETAIL} element={<HRManagementTeamDetailPage />} />,
+  <Route path={PATH.HR_ADD_TEAM} element={<HRManagementTeamAddPage />} />,
   <Route path={PATH.HR_EMPLOYEE} element={<HRManagementEmployeePage />} />,
 
   <Route path={PATH.FACTORY_MANAGEMENT} element={<FactoryManagementPage />} />,

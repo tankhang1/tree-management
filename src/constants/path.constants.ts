@@ -112,6 +112,8 @@ export const PATH = {
   HR_DEPARTMENT: "/hr-management/department",
   HR_POSITION: "/hr-management/position",
   HR_TEAM: "/hr-management/team",
+  HR_TEAM_DETAIL: "/hr-management/team/detail",
+  HR_ADD_TEAM: "/hr-management/team/add",
   HR_EMPLOYEE: "/hr-management/employee",
 
   // Factory Management
