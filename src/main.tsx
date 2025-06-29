@@ -107,6 +107,10 @@ import SeasonManagementCycleDetailPage from "./pages/SeasonManagementPage/Cycle/
 import SeasonManagementCycleAddPage from "./pages/SeasonManagementPage/Cycle/Add/index.tsx";
 import PlanManagementMainDetailPage from "./pages/PlanManagementPage/Main/Detail/index.tsx";
 import PlanManagementMainAddPage from "./pages/PlanManagementPage/Main/Add/index.tsx";
+import PlanManagementAssignDetailPage from "./pages/PlanManagementPage/Assign/Detail/index.tsx";
+import PlanManagementAssignAddPage from "./pages/PlanManagementPage/Assign/Add/index.tsx";
+import PlanManagementUnplannedDetailPage from "./pages/PlanManagementPage/Unplanned/Detail/index.tsx";
+import PlanManagementUnplannedAddPage from "./pages/PlanManagementPage/Unplanned/Add/index.tsx";
 const theme: MantineThemeOverride = {
   fontFamily: "MyFont, sans-serif",
   primaryColor: "brand",
@@ -287,8 +291,24 @@ const ROUTES = [
   <Route path={PATH.PLAN_ADD_MAIN} element={<PlanManagementMainAddPage />} />,
   <Route path={PATH.PLAN_ASSIGN} element={<PlanManagementAssignPage />} />,
   <Route
+    path={PATH.PLAN_ASSIGN_DETAIL}
+    element={<PlanManagementAssignDetailPage />}
+  />,
+  <Route
+    path={PATH.PLAN_ADD_ASSIGN}
+    element={<PlanManagementAssignAddPage />}
+  />,
+  <Route
     path={PATH.PLAN_UNPLANNED}
     element={<PlanManagementUnplannedPage />}
+  />,
+  <Route
+    path={PATH.PLAN_UNPLANNED_DETAIL}
+    element={<PlanManagementUnplannedDetailPage />}
+  />,
+  <Route
+    path={PATH.PLAN_ADD_UNPLANNED}
+    element={<PlanManagementUnplannedAddPage />}
   />,
   <Route path={PATH.PLAN_HISTORY} element={<PlanManagementHistoryPage />} />,
 

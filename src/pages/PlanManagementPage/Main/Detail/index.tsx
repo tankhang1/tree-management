@@ -40,91 +40,97 @@ const PlanManagementMainDetailPage = () => {
     pesticides: [{ item: "Confidor", quantity: 4 }],
   };
   return (
-    <Card withBorder radius={8} p="lg" shadow="sm">
-      <Group mb="md" align="center" justify="space-between">
-        <Group mb={"md"}>
-          <Button
-            variant="subtle"
-            radius={4}
-            leftSection={<IconArrowLeft size={18} />}
-            onClick={() => navigate(-1)}
-          >
-            Quay lại
-          </Button>
-          <Title order={3}>Chi tiết kế hoạch mùa vụ</Title>
+    <Stack justify="center" align="center">
+      <Card w={"50%"} withBorder radius={8} p="lg" shadow="sm">
+        <Group mb="md" align="center" justify="space-between">
+          <Group mb={"md"}>
+            <Button
+              variant="subtle"
+              radius={4}
+              leftSection={<IconArrowLeft size={18} />}
+              onClick={() => navigate(-1)}
+            >
+              Quay lại
+            </Button>
+            <Title order={3}>Chi tiết kế hoạch mùa vụ</Title>
+          </Group>
+          <Group>
+            <Button radius={4} leftSection={<IconEdit size={16} />}>
+              Chỉnh sửa
+            </Button>
+            <Button
+              radius={4}
+              color="red"
+              leftSection={<IconTrash size={16} />}
+            >
+              Xoá
+            </Button>
+          </Group>
         </Group>
-        <Group>
-          <Button radius={4} leftSection={<IconEdit size={16} />}>
-            Chỉnh sửa
-          </Button>
-          <Button radius={4} color="red" leftSection={<IconTrash size={16} />}>
-            Xoá
-          </Button>
-        </Group>
-      </Group>
 
-      <Stack gap="sm">
-        <Title order={4}>Thông tin mùa vụ</Title>
-        <Group>
-          <Badge
-            leftSection={<IconCalendar size={12} />}
-            radius={4}
-            color="teal"
-          >
-            {plan.season}
+        <Stack gap="sm">
+          <Title order={4}>Thông tin mùa vụ</Title>
+          <Group>
+            <Badge
+              leftSection={<IconCalendar size={12} />}
+              radius={4}
+              color="teal"
+            >
+              {plan.season}
+            </Badge>
+            <Badge radius={4} color="blue">
+              {plan.startDate} - {plan.endDate}
+            </Badge>
+          </Group>
+
+          <Divider my="sm" />
+
+          <Title order={4}>Khu vực thực hiện</Title>
+          <Group gap="md">
+            <Badge radius={4} leftSection={<IconMapPin size={12} />}>
+              {plan.zone}
+            </Badge>
+            <Badge radius={4}>{plan.area}</Badge>
+            <Badge radius={4}>{plan.plot}</Badge>
+            <Badge radius={4}>{plan.row}</Badge>
+          </Group>
+
+          <Divider my="sm" />
+
+          <Title order={4}>Giai đoạn và vật tư</Title>
+          <Badge radius={4} leftSection={<IconPlant size={12} />} color="grape">
+            {plan.growthStage}
           </Badge>
-          <Badge radius={4} color="blue">
-            {plan.startDate} - {plan.endDate}
-          </Badge>
-        </Group>
 
-        <Divider my="sm" />
+          <Stack mt="xs">
+            <Title order={5}>Vật tư ({plan.materials.length})</Title>
+            {plan.materials.map((m, i) => (
+              <Text key={i}>
+                - {m.item}: {m.quantity}
+              </Text>
+            ))}
+          </Stack>
 
-        <Title order={4}>Khu vực thực hiện</Title>
-        <Group gap="md">
-          <Badge radius={4} leftSection={<IconMapPin size={12} />}>
-            {plan.zone}
-          </Badge>
-          <Badge radius={4}>{plan.area}</Badge>
-          <Badge radius={4}>{plan.plot}</Badge>
-          <Badge radius={4}>{plan.row}</Badge>
-        </Group>
+          <Stack>
+            <Title order={5}>Thiết bị ({plan.equipment.length})</Title>
+            {plan.equipment.map((e, i) => (
+              <Text key={i}>
+                - {e.item}: {e.quantity}
+              </Text>
+            ))}
+          </Stack>
 
-        <Divider my="sm" />
-
-        <Title order={4}>Giai đoạn và vật tư</Title>
-        <Badge radius={4} leftSection={<IconPlant size={12} />} color="grape">
-          {plan.growthStage}
-        </Badge>
-
-        <Stack mt="xs">
-          <Title order={5}>Vật tư ({plan.materials.length})</Title>
-          {plan.materials.map((m, i) => (
-            <Text key={i}>
-              - {m.item}: {m.quantity}
-            </Text>
-          ))}
+          <Stack>
+            <Title order={5}>Thuốc BVTV ({plan.pesticides.length})</Title>
+            {plan.pesticides.map((p, i) => (
+              <Text key={i}>
+                - {p.item}: {p.quantity}
+              </Text>
+            ))}
+          </Stack>
         </Stack>
-
-        <Stack>
-          <Title order={5}>Thiết bị ({plan.equipment.length})</Title>
-          {plan.equipment.map((e, i) => (
-            <Text key={i}>
-              - {e.item}: {e.quantity}
-            </Text>
-          ))}
-        </Stack>
-
-        <Stack>
-          <Title order={5}>Thuốc BVTV ({plan.pesticides.length})</Title>
-          {plan.pesticides.map((p, i) => (
-            <Text key={i}>
-              - {p.item}: {p.quantity}
-            </Text>
-          ))}
-        </Stack>
-      </Stack>
-    </Card>
+      </Card>
+    </Stack>
   );
 };
 

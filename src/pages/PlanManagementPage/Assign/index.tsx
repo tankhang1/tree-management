@@ -8,6 +8,7 @@ import {
   Title,
 } from "@mantine/core";
 import {
+  IconCalendar,
   IconDotsVertical,
   IconEdit,
   IconEye,
@@ -16,6 +17,9 @@ import {
 } from "@tabler/icons-react";
 import type { MRT_ColumnDef } from "mantine-react-table";
 import Table from "../../../components/Table";
+import { useNavigate } from "react-router-dom";
+import { PATH } from "../../../constants/path.constants";
+import { DateInput } from "@mantine/dates";
 type Assignment = {
   id: string;
   name: string;
@@ -65,6 +69,13 @@ const assignmentData: Assignment[] = [
 ];
 
 const PlanManagementAssignPage = () => {
+  const navigate = useNavigate();
+  const onAddAssign = () => {
+    navigate(PATH.PLAN_ADD_ASSIGN);
+  };
+  const onAssignDetail = () => {
+    navigate(PATH.PLAN_ASSIGN_DETAIL);
+  };
   const assignmentColumns: MRT_ColumnDef<Assignment>[] = [
     { accessorKey: "name", header: "Tên phiếu" },
     { accessorKey: "assignDate", header: "Ngày giao" },
@@ -108,7 +119,10 @@ const PlanManagementAssignPage = () => {
           </Menu.Target>
 
           <Menu.Dropdown>
-            <Menu.Item leftSection={<IconEye size={18} color="gray" />}>
+            <Menu.Item
+              leftSection={<IconEye size={18} color="gray" />}
+              onClick={onAssignDetail}
+            >
               Chi tiết
             </Menu.Item>
             <Menu.Item leftSection={<IconEdit size={18} color="green" />}>
@@ -133,10 +147,23 @@ const PlanManagementAssignPage = () => {
           <Button variant="outline" radius={4} leftSection={<IconFileExcel />}>
             Xuất File
           </Button>
-          <Button radius={4}>Thêm mới</Button>
+          <Button radius={4} onClick={onAddAssign}>
+            Thêm mới
+          </Button>
         </Group>
       </Group>
-
+      <Group>
+        <DateInput
+          leftSection={<IconCalendar />}
+          placeholder="Ngày bắt đầu"
+          radius={4}
+        />
+        <DateInput
+          leftSection={<IconCalendar />}
+          placeholder="Ngày kết thúc"
+          radius={4}
+        />
+      </Group>
       <Table columns={assignmentColumns} data={assignmentData} />
     </Stack>
   );

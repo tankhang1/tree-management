@@ -1,28 +1,23 @@
 import {
   Button,
   Card,
+  Divider,
   Group,
-  MultiSelect,
   Select,
   Stack,
   TextInput,
   Title,
+  MultiSelect,
   NumberInput,
   ActionIcon,
-  Divider,
 } from "@mantine/core";
 import { DateInput } from "@mantine/dates";
-import {
-  IconArrowLeft,
-  IconCalendar,
-  IconClipboardCheck,
-  IconPlus,
-  IconUsers,
-} from "@tabler/icons-react";
 import { useForm } from "@mantine/form";
+import { IconArrowLeft, IconPlus } from "@tabler/icons-react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-const PlanManagementAssignAddPage = () => {
+const PlanManagementUnplannedAddPage = () => {
   const navigate = useNavigate();
   const form = useForm({
     initialValues: {
@@ -32,18 +27,22 @@ const PlanManagementAssignAddPage = () => {
       endDate: new Date(),
       departments: [],
       employees: [],
-      manager: "",
-      creator: "Admin User",
+      creator: "Nguyễn Quản Lý",
       supervisor: "",
       seasonPlan: "",
-      materials: [],
-      pesticides: [],
-      equipment: [],
+      resources: [],
     },
   });
 
+  const [newResource, setNewResource] = useState({
+    type: "Vật tư",
+    name: "",
+    quantity: 1,
+    unit: "",
+  });
+
   return (
-    <Card withBorder radius={8} shadow="sm" p="md">
+    <Card withBorder shadow="sm" radius={8} p="xl">
       <Group mb={"md"}>
         <Button
           variant="subtle"
@@ -53,15 +52,14 @@ const PlanManagementAssignAddPage = () => {
         >
           Quay lại
         </Button>
-        <Title order={3}>Tạo phiếu giao việc</Title>
+        <Title order={3}>Tạo phiếu giao việc phát sinh</Title>
       </Group>
       <form onSubmit={form.onSubmit((values) => console.log(values))}>
-        <Stack gap={"xs"}>
+        <Stack>
           <TextInput
             label="Tên phiếu giao việc"
-            placeholder="VD: Tưới nước đợt 1"
+            placeholder="Ví dụ: Phun thuốc sâu vụ hè"
             radius={4}
-            leftSection={<IconClipboardCheck size={16} />}
             {...form.getInputProps("name")}
           />
 
@@ -71,18 +69,19 @@ const PlanManagementAssignAddPage = () => {
               placeholder="Chọn ngày"
               radius={4}
               locale="vi"
-              leftSection={<IconCalendar size={16} />}
               {...form.getInputProps("assignDate")}
             />
             <DateInput
-              locale="vi"
-              label="Bắt đầu"
+              label="Bắt đầu công việc"
+              placeholder="Chọn ngày"
               radius={4}
+              locale="vi"
               {...form.getInputProps("startDate")}
             />
             <DateInput
+              label="Kết thúc công việc"
               locale="vi"
-              label="Kết thúc"
+              placeholder="Chọn ngày"
               radius={4}
               {...form.getInputProps("endDate")}
             />
@@ -90,64 +89,65 @@ const PlanManagementAssignAddPage = () => {
 
           <MultiSelect
             label="Phòng ban"
-            placeholder="Chọn phòng ban liên quan"
+            placeholder="Chọn nhiều phòng ban"
             radius={4}
-            leftSection={<IconUsers size={16} />}
-            data={["Chăm sóc cây", "Bảo vệ thực vật", "Thu hoạch"]}
+            data={["Chăm sóc cây", "Phòng BVTV", "Vận hành"]}
             {...form.getInputProps("departments")}
           />
 
           <MultiSelect
             label="Nhân sự"
-            placeholder="Chọn nhân sự phụ trách"
+            placeholder="Chọn nhân sự từ phòng ban"
             radius={4}
-            data={["Nguyễn Văn A", "Trần Thị B", "Lê Văn C"]}
+            data={["Nguyễn Văn A", "Trần Thị B"]}
             {...form.getInputProps("employees")}
-          />
-
-          <Select
-            label="Người quản lý"
-            placeholder="Chọn người quản lý"
-            radius={4}
-            data={["Nguyễn Quản Lý", "Phạm Điều Hành"]}
-            {...form.getInputProps("manager")}
           />
 
           <Select
             label="Người giám sát"
             placeholder="Chọn người giám sát"
             radius={4}
-            data={["Nguyễn Giám Sát", "Trần Thanh Tra"]}
             {...form.getInputProps("supervisor")}
           />
 
-          <Select
-            label="Kế hoạch canh tác"
-            placeholder="Chọn kế hoạch mùa vụ"
-            radius={4}
-            data={["Mùa Xuân 2025", "Mùa Hè 2025"]}
-            {...form.getInputProps("seasonPlan")}
-          />
-          <Divider label="Danh sách tài nguyên" labelPosition="left" />
+          <Divider label="Tài nguyên sử dụng" labelPosition="left" my="sm" />
+
           <Group align="flex-end">
             <Select
               label="Loại tài nguyên"
               radius={4}
-              placeholder="Chọn loại tài nguyên"
               data={["Vật tư", "Thuốc BVTV", "Thiết bị"]}
+              value={newResource.type}
+              onChange={(value) =>
+                setNewResource({ ...newResource, type: value || "" })
+              }
               flex={1}
             />
             <TextInput
               label="Tên"
               placeholder="Tên tài nguyên"
               radius={4}
+              value={newResource.name}
+              onChange={(e) =>
+                setNewResource({ ...newResource, name: e.currentTarget.value })
+              }
               flex={1}
             />
-            <NumberInput label="Số lượng" min={1} radius={4} flex={1} />
+            <NumberInput
+              label="Số lượng"
+              min={1}
+              radius={4}
+              flex={1}
+              value={newResource.quantity}
+            />
             <TextInput
               label="Đơn vị tính"
               placeholder="Ví dụ: Lít, Kg"
               radius={4}
+              value={newResource.unit}
+              onChange={(e) =>
+                setNewResource({ ...newResource, unit: e.currentTarget.value })
+              }
               flex={1}
             />
             <ActionIcon radius={4} w={30} h={30}>
@@ -155,15 +155,13 @@ const PlanManagementAssignAddPage = () => {
             </ActionIcon>
           </Group>
 
-          <Group justify="flex-end" mt="md">
-            <Button radius={4} type="submit">
-              Tạo phiếu
-            </Button>
-          </Group>
+          <Button type="submit" radius={4} mt="md">
+            Tạo phiếu giao việc
+          </Button>
         </Stack>
       </form>
     </Card>
   );
 };
 
-export default PlanManagementAssignAddPage;
+export default PlanManagementUnplannedAddPage;
