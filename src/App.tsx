@@ -125,20 +125,19 @@ export default function App() {
                   }
                 }}
                 variant="light"
-                color="brand"
                 style={{ marginBottom: 8 }}
                 styles={{
-                  label: {
-                    color: isParentActive ? "#4CAF50" : undefined,
+                  root: {
                     "&:hover": {
-                      color: "#4CAF50",
+                      backgroundColor: "#e6f4ea", // light green background
                     },
                   },
+                  label: {
+                    color: isParentActive ? "#2b8a3e" : "#212529",
+                    fontWeight: isParentActive ? 600 : 500,
+                  },
                   section: {
-                    color: isParentActive ? "#4CAF50" : undefined,
-                    "&:hover": {
-                      color: "#4CAF50",
-                    },
+                    color: isParentActive ? "#2b8a3e" : "#495057",
                   },
                 }}
               >
