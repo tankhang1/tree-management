@@ -55,7 +55,7 @@ const AreaManagementAddZonePage = () => {
   };
 
   return (
-    <Card withBorder shadow="md" radius={12} p="xl">
+    <Card withBorder shadow="md" radius={4} p="xl">
       <Title order={3} mb="lg">
         📋 Tạo mới Lô và Hàng
       </Title>
