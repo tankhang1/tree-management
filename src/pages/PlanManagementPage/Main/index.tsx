@@ -21,6 +21,8 @@ import {
 import type { MRT_ColumnDef } from "mantine-react-table";
 import Table from "../../../components/Table";
 import { DateInput } from "@mantine/dates";
+import { useNavigate } from "react-router-dom";
+import { PATH } from "../../../constants/path.constants";
 
 type SeasonPlan = {
   id: string;
@@ -55,6 +57,13 @@ const seasonPlans: SeasonPlan[] = [
   },
 ];
 const PlanManagementMainPage = () => {
+  const navigate = useNavigate();
+  const onMainDetail = () => {
+    navigate(PATH.PLAN_MAIN_DETAIL);
+  };
+  const onAddMain = () => {
+    navigate(PATH.PLAN_ADD_MAIN);
+  };
   const seasonPlanColumns: MRT_ColumnDef<SeasonPlan>[] = [
     { accessorKey: "seasonName", header: "Tên mùa vụ" },
     { accessorKey: "startDate", header: "Bắt đầu" },
@@ -129,7 +138,10 @@ const PlanManagementMainPage = () => {
           </Menu.Target>
 
           <Menu.Dropdown>
-            <Menu.Item leftSection={<IconEye size={18} color="gray" />}>
+            <Menu.Item
+              leftSection={<IconEye size={18} color="gray" />}
+              onClick={onMainDetail}
+            >
               Chi tiết
             </Menu.Item>
             <Menu.Item leftSection={<IconEdit size={18} color="green" />}>
@@ -154,7 +166,9 @@ const PlanManagementMainPage = () => {
           <Button variant="outline" radius={4} leftSection={<IconFileExcel />}>
             Xuất File
           </Button>
-          <Button radius={4}>Thêm mới</Button>
+          <Button radius={4} onClick={onAddMain}>
+            Thêm mới
+          </Button>
         </Group>
       </Group>
       <Group>

@@ -105,6 +105,8 @@ import PlantManagementTreeDetailPage from "./pages/PlantManagementPage/Tree/Deta
 import PlantManagementCatalogPage from "./pages/PlantManagementPage/Catalog/index.tsx";
 import SeasonManagementCycleDetailPage from "./pages/SeasonManagementPage/Cycle/Detail/index.tsx";
 import SeasonManagementCycleAddPage from "./pages/SeasonManagementPage/Cycle/Add/index.tsx";
+import PlanManagementMainDetailPage from "./pages/PlanManagementPage/Main/Detail/index.tsx";
+import PlanManagementMainAddPage from "./pages/PlanManagementPage/Main/Add/index.tsx";
 const theme: MantineThemeOverride = {
   fontFamily: "MyFont, sans-serif",
   primaryColor: "brand",
@@ -278,6 +280,11 @@ const ROUTES = [
 
   <Route path={PATH.PLAN_MANAGEMENT} element={<PlanManagementPage />} />,
   <Route path={PATH.PLAN_MAIN} element={<PlanManagementMainPage />} />,
+  <Route
+    path={PATH.PLAN_MAIN_DETAIL}
+    element={<PlanManagementMainDetailPage />}
+  />,
+  <Route path={PATH.PLAN_ADD_MAIN} element={<PlanManagementMainAddPage />} />,
   <Route path={PATH.PLAN_ASSIGN} element={<PlanManagementAssignPage />} />,
   <Route
     path={PATH.PLAN_UNPLANNED}

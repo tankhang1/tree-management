@@ -74,6 +74,8 @@ export const PATH = {
   // Plan Management
   PLAN_MANAGEMENT: "/plan-management",
   PLAN_MAIN: "/plan-management/main",
+  PLAN_MAIN_DETAIL: "/plan-management/main/detail",
+  PLAN_ADD_MAIN: "/plan-management/main/add",
   PLAN_ASSIGN: "/plan-management/assign",
   PLAN_UNPLANNED: "/plan-management/unplanned",
   PLAN_HISTORY: "/plan-management/history",
