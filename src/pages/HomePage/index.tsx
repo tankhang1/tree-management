@@ -446,7 +446,7 @@ const HomePage = () => {
         <Grid.Col span={{ base: 12, md: 4 }}>
           <Card withBorder shadow="lg" radius={4}>
             <Title order={5} c="gray.7" mb="xs">
-              Khu vực xuất khẩu
+              Khu vực trồng trọt
             </Title>
             <Box h={310} style={{ borderRadius: 4, overflow: "hidden" }}>
               <iframe

@@ -63,9 +63,8 @@ export const NAV_BAR = [
     icon: IconReportAnalytics,
     link: PATH.SEASON_MANAGEMENT,
     children: [
-      { label: "Vụ & sinh trưởng", link: PATH.SEASON_GROWTH },
-      { label: "Giai đoạn", link: PATH.SEASON_STAGE },
-      { label: "Mùa vụ & chu kỳ", link: PATH.SEASON_CYCLE },
+      { label: "Mùa vụ", link: PATH.SEASON_GROWTH },
+      { label: "Chu kỳ", link: PATH.SEASON_CYCLE },
     ],
   },
   {

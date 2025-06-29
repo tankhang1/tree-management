@@ -32,7 +32,6 @@ import PlantManagementSeedPage from "./pages/PlantManagementPage/Seed/index.tsx"
 import PlantManagementTechnicalDocPage from "./pages/PlantManagementPage/TechnicalDoc/index.tsx";
 import SeasonManagementPage from "./pages/SeasonManagementPage/index.tsx";
 import SeasonManagementGrowthPage from "./pages/SeasonManagementPage/Growth/index.tsx";
-import SeasonManagementStagePage from "./pages/SeasonManagementPage/Stage/index.tsx";
 import SeasonManagementCyclePage from "./pages/SeasonManagementPage/Cycle/index.tsx";
 import PlanManagementPage from "./pages/PlanManagementPage/index.tsx";
 import PlanManagementMainPage from "./pages/PlanManagementPage/Main/index.tsx";
@@ -104,6 +103,8 @@ import AreaManagementBlockAddPage from "./pages/AreaManagementPage/Block/Add/ind
 import PlantManagementTreeAddPage from "./pages/PlantManagementPage/Tree/Add/index.tsx";
 import PlantManagementTreeDetailPage from "./pages/PlantManagementPage/Tree/Detail/index.tsx";
 import PlantManagementCatalogPage from "./pages/PlantManagementPage/Catalog/index.tsx";
+import SeasonManagementCycleDetailPage from "./pages/SeasonManagementPage/Cycle/Detail/index.tsx";
+import SeasonManagementCycleAddPage from "./pages/SeasonManagementPage/Cycle/Add/index.tsx";
 const theme: MantineThemeOverride = {
   fontFamily: "MyFont, sans-serif",
   primaryColor: "brand",
@@ -265,8 +266,15 @@ const ROUTES = [
 
   <Route path={PATH.SEASON_MANAGEMENT} element={<SeasonManagementPage />} />,
   <Route path={PATH.SEASON_GROWTH} element={<SeasonManagementGrowthPage />} />,
-  <Route path={PATH.SEASON_STAGE} element={<SeasonManagementStagePage />} />,
   <Route path={PATH.SEASON_CYCLE} element={<SeasonManagementCyclePage />} />,
+  <Route
+    path={PATH.SEASON_CYCLE_DETAIL}
+    element={<SeasonManagementCycleDetailPage />}
+  />,
+  <Route
+    path={PATH.SEASON_ADD_CYCLE}
+    element={<SeasonManagementCycleAddPage />}
+  />,
 
   <Route path={PATH.PLAN_MANAGEMENT} element={<PlanManagementPage />} />,
   <Route path={PATH.PLAN_MAIN} element={<PlanManagementMainPage />} />,

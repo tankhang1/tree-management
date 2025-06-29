@@ -67,8 +67,9 @@ export const PATH = {
   // Season Management
   SEASON_MANAGEMENT: "/season-management",
   SEASON_GROWTH: "/season-management/growth",
-  SEASON_STAGE: "/season-management/stage",
   SEASON_CYCLE: "/season-management/cycle",
+  SEASON_CYCLE_DETAIL: "/season-management/cycle/detail",
+  SEASON_ADD_CYCLE: "/season-management/cycle/add",
 
   // Plan Management
   PLAN_MANAGEMENT: "/plan-management",
