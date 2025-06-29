@@ -125,9 +125,9 @@ const PlanManagementAssignPage = () => {
 
   return (
     <Stack gap="lg">
-      <Group justify="space-between" px={"sm"}>
+      <Group justify="space-between">
         <Title flex={1} order={2}>
-          Quản lý chu kì sinh trưởng
+          Quản lý công việc
         </Title>
         <Group>
           <Button variant="outline" radius={4} leftSection={<IconFileExcel />}>
