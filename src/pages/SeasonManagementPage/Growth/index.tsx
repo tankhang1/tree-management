@@ -106,9 +106,9 @@ const SeasonManagementGrowthPage = () => {
   ];
   return (
     <Stack gap="lg">
-      <Group justify="space-between" px={"sm"}>
+      <Group justify="space-between">
         <Title flex={1} order={2}>
-          Quản lý nhóm cây trồng
+          Quản lý mùa vụ
         </Title>
         <Group>
           <Button variant="outline" radius={4} leftSection={<IconFileExcel />}>
