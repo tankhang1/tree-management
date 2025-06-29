@@ -52,7 +52,7 @@ const HRManagementPositionPage = () => {
   const positionColumns: MRT_ColumnDef<Position>[] = [
     {
       accessorKey: "code",
-      header: "Mã phòng",
+      header: "Mã vị trí",
     },
     {
       accessorKey: "name",
