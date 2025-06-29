@@ -99,7 +99,6 @@ export const PATH = {
   PRODUCT_MANAGEMENT: "/product-management",
   PRODUCT_ITEM: "/product-management/item",
   PRODUCT_ADD_ITEM: "/product-management/item/add",
-  PRODUCT_UNIT: "/product-management/unit",
   PRODUCT_BOM: "/product-management/bom",
   PRODUCT_RAW_MATERIAL: "/product-management/raw-material",
 

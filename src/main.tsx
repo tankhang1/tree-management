@@ -46,7 +46,6 @@ import HarvestManagementReportPage from "./pages/HarvestManagementPage/Report/in
 import HarvestManagementQueryMapPage from "./pages/HarvestManagementPage/QueryMap/index.tsx";
 import ProductManagementPage from "./pages/ProductManagementPage/index.tsx";
 import ProductManagementItemPage from "./pages/ProductManagementPage/Item/index.tsx";
-import ProductManagementUnitPage from "./pages/ProductManagementPage/Unit/index.tsx";
 import ProductManagementBOMPage from "./pages/ProductManagementPage/BOM/index.tsx";
 import ProductManagementRawMaterialPage from "./pages/ProductManagementPage/RawMaterial/index.tsx";
 import ContractManagementPage from "./pages/ContractManagementPage/index.tsx";
@@ -338,7 +337,6 @@ const ROUTES = [
     path={PATH.PRODUCT_ADD_ITEM}
     element={<ProductManagementItemAddPage />}
   />,
-  <Route path={PATH.PRODUCT_UNIT} element={<ProductManagementUnitPage />} />,
   <Route path={PATH.PRODUCT_BOM} element={<ProductManagementBOMPage />} />,
   <Route
     path={PATH.PRODUCT_RAW_MATERIAL}
