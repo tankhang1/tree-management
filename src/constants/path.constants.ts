@@ -104,6 +104,8 @@ export const PATH = {
 
   // Contract Management
   CONTRACT_MANAGEMENT: "/contract-management",
+  CONTRACT_ADD_MANAGEMENT: "/contract-management/add",
+  CONTRACT_MANAGEMENT_DETAIL: "/contract-management/detail",
 
   // HR Management
   HR_MANAGEMENT: "/hr-management",

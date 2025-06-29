@@ -112,6 +112,8 @@ import PlanManagementUnplannedDetailPage from "./pages/PlanManagementPage/Unplan
 import PlanManagementUnplannedAddPage from "./pages/PlanManagementPage/Unplanned/Add/index.tsx";
 import TaskManagementMainDetailPage from "./pages/TaskManagementPage/Main/Detail/index.tsx";
 import ProductManagementItemAddPage from "./pages/ProductManagementPage/Item/Add/index.tsx";
+import ContractManagementDetailPage from "./pages/ContractManagementPage/Detail/index.tsx";
+import ContractManagementAddPage from "./pages/ContractManagementPage/Add/index.tsx";
 const theme: MantineThemeOverride = {
   fontFamily: "MyFont, sans-serif",
   primaryColor: "brand",
@@ -346,6 +348,14 @@ const ROUTES = [
   <Route
     path={PATH.CONTRACT_MANAGEMENT}
     element={<ContractManagementPage />}
+  />,
+  <Route
+    path={PATH.CONTRACT_MANAGEMENT_DETAIL}
+    element={<ContractManagementDetailPage />}
+  />,
+  <Route
+    path={PATH.CONTRACT_ADD_MANAGEMENT}
+    element={<ContractManagementAddPage />}
   />,
 
   <Route path={PATH.HR_MANAGEMENT} element={<HRManagementPage />} />,
