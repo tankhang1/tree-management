@@ -1,13 +1,4 @@
-import {
-  ActionIcon,
-  Button,
-  Group,
-  Menu,
-  Modal,
-  Stack,
-  Text,
-  Title,
-} from "@mantine/core";
+import { ActionIcon, Button, Group, Menu, Stack, Title } from "@mantine/core";
 import {
   IconDotsVertical,
   IconEdit,
@@ -17,8 +8,8 @@ import {
 } from "@tabler/icons-react";
 import type { MRT_ColumnDef } from "mantine-react-table";
 import Table from "../../../components/Table";
-import { useDisclosure } from "@mantine/hooks";
-import AddCultivationMethodForm from "./components/AddCultivationMethodForm";
+import { useNavigate } from "react-router-dom";
+import { PATH } from "../../../constants/path.constants";
 type FarmingMethod = {
   id: string;
   name: string;
@@ -42,8 +33,10 @@ const farmingMethods: FarmingMethod[] = [
   },
 ];
 const AreaManagementCultivationMethodPage = () => {
-  const [openedAddRowForm, { open: openAddRowForm, close: closeAddRowForm }] =
-    useDisclosure(false);
+  const navigate = useNavigate();
+  const onAddCultivationMethod = () => {
+    navigate(PATH.AREA_ADD_CULTIVATION_METHOD);
+  };
   const rowColumns: MRT_ColumnDef<FarmingMethod>[] = [
     {
       accessorKey: "id",
@@ -111,20 +104,13 @@ const AreaManagementCultivationMethodPage = () => {
           <Button variant="outline" radius={4} leftSection={<IconFileExcel />}>
             Xuất File
           </Button>
-          <Button radius={4} onClick={openAddRowForm}>
+          <Button radius={4} onClick={onAddCultivationMethod}>
             Thêm mới
           </Button>
         </Group>
       </Group>
 
       <Table columns={rowColumns} data={farmingMethods} />
-      <Modal
-        opened={openedAddRowForm}
-        onClose={closeAddRowForm}
-        title={<Text fw={"bold"}>Thêm mới phương thức canh tác</Text>}
-      >
-        <AddCultivationMethodForm />
-      </Modal>
     </Stack>
   );
 };

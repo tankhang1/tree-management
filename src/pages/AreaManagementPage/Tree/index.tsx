@@ -118,9 +118,9 @@ const AreaManagementTreePage = () => {
 
   return (
     <Stack gap="lg">
-      <Group justify="space-between" px={"sm"}>
+      <Group justify="space-between">
         <Title flex={1} order={2}>
-          Quản lý hàng
+          Quản lý cây
         </Title>
         <Group>
           <Button variant="outline" radius={4} leftSection={<IconFileExcel />}>
@@ -161,7 +161,7 @@ const AreaManagementTreePage = () => {
       <Modal
         opened={openedAddRowForm}
         onClose={closeAddRowForm}
-        title={<Text fw={"bold"}>Thêm mới hàng</Text>}
+        title={<Text fw={"bold"}>Thêm mới cây</Text>}
       >
         <AddTreeForm />
       </Modal>

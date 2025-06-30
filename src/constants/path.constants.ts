@@ -52,6 +52,7 @@ export const PATH = {
   AREA_SOIL: "/area-management/soil-type",
   AREA_TERRAIN: "/area-management/terrain",
   AREA_CULTIVATION_METHOD: "/area-management/cultivation-method",
+  AREA_ADD_CULTIVATION_METHOD: "/area-management/cultivation-method/add",
   AREA_HISTORY: "/area-management/history",
 
   // Plant Management

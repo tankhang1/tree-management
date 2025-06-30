@@ -1,7 +1,13 @@
-import { Button, Group, Stack, Title } from "@mantine/core";
+import { ActionIcon, Button, Group, Menu, Stack, Title } from "@mantine/core";
 import type { MRT_ColumnDef } from "mantine-react-table";
 import Table from "../../../components/Table";
-import { IconFileExcel } from "@tabler/icons-react";
+import {
+  IconDotsVertical,
+  IconEdit,
+  IconEye,
+  IconFileExcel,
+  IconTrash,
+} from "@tabler/icons-react";
 
 type HistoryLog = {
   id: string;
@@ -42,7 +48,7 @@ const AreaManagementHistoryPage = () => {
   const historyColumns: MRT_ColumnDef<HistoryLog>[] = [
     {
       accessorKey: "timestamp",
-      header: "Thời gian",
+      header: "Thời gian thực hiện",
       Cell: ({ cell }) => new Date(cell.getValue<string>()).toLocaleString(),
     },
     {
@@ -51,15 +57,42 @@ const AreaManagementHistoryPage = () => {
     },
     {
       accessorKey: "entityType",
-      header: "Loại đối tượng",
+      header: "Loại thông tin",
     },
     {
       accessorKey: "entityId",
-      header: "Mã đối tượng",
+      header: "Mã thông tin",
     },
     {
       accessorKey: "user",
-      header: "Người thao tác",
+      header: "Người thực hiện",
+    },
+    {
+      accessorKey: "actions",
+      header: "",
+      enableColumnActions: false,
+      size: 10,
+      Cell: () => (
+        <Menu shadow="md">
+          <Menu.Target>
+            <ActionIcon variant="transparent" c={"gray"}>
+              <IconDotsVertical />
+            </ActionIcon>
+          </Menu.Target>
+
+          <Menu.Dropdown>
+            <Menu.Item leftSection={<IconEye size={18} color="gray" />}>
+              Chi tiết
+            </Menu.Item>
+            <Menu.Item leftSection={<IconEdit size={18} color="green" />}>
+              Chỉnh sửa
+            </Menu.Item>
+            <Menu.Item leftSection={<IconTrash size={18} />} color="red">
+              Xoá
+            </Menu.Item>
+          </Menu.Dropdown>
+        </Menu>
+      ),
     },
   ];
   return (

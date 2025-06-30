@@ -10,6 +10,7 @@ import "mantine-react-table/styles.css"; //import MRT styles
 import "@mantine/core/styles.css";
 import "dayjs/locale/vi";
 import "leaflet/dist/leaflet.css";
+import "suneditor/dist/css/suneditor.min.css";
 import { MantineProvider, type MantineThemeOverride } from "@mantine/core";
 import { ModalsProvider } from "@mantine/modals";
 import AuthPage from "./pages/AuthPage/index.tsx";
@@ -117,6 +118,7 @@ import ContractManagementAddPage from "./pages/ContractManagementPage/Add/index.
 import HRManagementTeamDetailPage from "./pages/HRManagementPage/Team/Detail/index.tsx";
 import HRManagementTeamAddPage from "./pages/HRManagementPage/Team/Add/index.tsx";
 import AreaManagementRowDetailPage from "./pages/AreaManagementPage/Row/Detail/index.tsx";
+import AreaManagementCultivationMethodAddPage from "./pages/AreaManagementPage/CultivationMethod/Add/index.tsx";
 const theme: MantineThemeOverride = {
   fontFamily: "MyFont, sans-serif",
   primaryColor: "brand",
@@ -261,6 +263,10 @@ const ROUTES = [
   <Route
     path={PATH.AREA_CULTIVATION_METHOD}
     element={<AreaManagementCultivationMethodPage />}
+  />,
+  <Route
+    path={PATH.AREA_ADD_CULTIVATION_METHOD}
+    element={<AreaManagementCultivationMethodAddPage />}
   />,
   <Route path={PATH.AREA_HISTORY} element={<AreaManagementHistoryPage />} />,
 
