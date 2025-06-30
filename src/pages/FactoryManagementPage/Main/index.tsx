@@ -18,6 +18,7 @@ import {
 } from "@tabler/icons-react";
 import type { MRT_ColumnDef } from "mantine-react-table";
 import Table from "../../../components/Table";
+import { useForm } from "@mantine/form";
 type Factory = {
   factoryId: string;
   name: string;
@@ -26,7 +27,7 @@ type Factory = {
   manager: string; // tên người quản lý
   departments: string[]; // danh sách phòng ban
   establishedDate: string; // YYYY-MM-DD
-  status: "active" | "inactive" | "maintenance";
+  status: string;
 };
 const factoryDataset: Factory[] = [
   {
@@ -37,7 +38,7 @@ const factoryDataset: Factory[] = [
     manager: "Nguyễn Văn A",
     departments: ["Sản xuất", "Kho", "QA/QC"],
     establishedDate: "2015-04-10",
-    status: "active",
+    status: "Ngưng hoạt động",
   },
   {
     factoryId: "FAC002",
@@ -47,7 +48,7 @@ const factoryDataset: Factory[] = [
     manager: "Trần Thị B",
     departments: ["Đóng gói", "Kho", "Kỹ thuật"],
     establishedDate: "2018-07-22",
-    status: "maintenance",
+    status: "Bảo trì",
   },
   {
     factoryId: "FAC003",
@@ -57,11 +58,38 @@ const factoryDataset: Factory[] = [
     manager: "Phạm Văn C",
     departments: ["Kho", "Vận chuyển", "Kế toán"],
     establishedDate: "2020-01-15",
-    status: "inactive",
+    status: "Đang Hoạt động",
   },
 ];
+const statusOptions = [
+  { value: "active", label: "Đang hoạt động" },
+  { value: "inactive", label: "Ngừng hoạt động" },
+  { value: "maintenance", label: "Bảo trì" },
+];
 
+const departmentOptions = [
+  "Sản xuất",
+  "Kho",
+  "QA/QC",
+  "Đóng gói",
+  "Vận chuyển",
+  "Kỹ thuật",
+  "Kế toán",
+].map((d) => ({ value: d, label: d }));
 const FactoryManagementMainPage = () => {
+  const form = useForm({
+    initialValues: {
+      factoryId: "",
+      name: "",
+      location: "",
+      areaSize: 0,
+      manager: "",
+      departments: [],
+      establishedDate: null,
+      status: "active",
+    },
+  });
+
   const factoryColumns: MRT_ColumnDef<Factory>[] = [
     { accessorKey: "factoryId", header: "Mã nhà máy" },
     { accessorKey: "name", header: "Tên nhà máy" },

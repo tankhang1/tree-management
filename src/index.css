@@ -87,3 +87,38 @@ button:focus-visible {
   }
 }
 
+
+
+/* Custom màu header */
+.fc .fc-toolbar-title {
+  color: black /* màu title */
+}
+
+/* Màu viền và khung */
+.fc td, .fc th {
+  border-color: #dee2e6;
+}
+
+/* Nút active */
+.fc-button-primary {
+  background-color: #4CAF50 !important;
+  border-color:  #4CAF50 !important;
+}
+.fc-daygrid-day-number {
+  color: #333333 !important; /* Màu đậm trung tính */
+}
+.fc-col-header-cell-cushion {
+  color: #495057 !important; /* Tùy chọn: xám đậm, hoặc bạn có thể dùng #000 */
+}
+.event-kehoach {
+  background-color: #228be6 !important; /* Xanh dương */
+  color: white !important;
+  border: none !important;
+
+}
+
+.event-phatsinh {
+  background-color: #ae3ec9 !important; /* Tím */
+  color: white !important;
+  border: none !important;
+}

@@ -1,272 +1,292 @@
 import {
   Button,
-  Card,
   Group,
-  Select,
   Stack,
   Text,
   Title,
-  Avatar,
-  ScrollAreaAutosize,
   Paper,
+  Divider,
+  Modal,
+  Badge,
+  Checkbox,
+  Card,
 } from "@mantine/core";
 import { DatePicker } from "@mantine/dates";
-import { IconChevronLeft, IconChevronRight } from "@tabler/icons-react";
-import dayjs from "dayjs";
-import { useMemo, useState } from "react";
-import lodash from "lodash";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { PATH } from "../../constants/path.constants";
-const events = [
+import FullCalendar from "@fullcalendar/react";
+import dayGridPlugin from "@fullcalendar/daygrid";
+import { IconPlus } from "@tabler/icons-react";
+import dayjs from "dayjs";
+import { useDisclosure } from "@mantine/hooks";
+import interactionPlugin from "@fullcalendar/interaction";
+const mockJob = {
+  title: "Tưới nước khu A",
+  description: "Cây sầu riêng 6 tháng tuổi cần tưới nước định kỳ.",
+  cropType: "Sầu riêng",
+  status: "Đang diễn ra",
+  timeSlot: "Sáng",
+  date: new Date("2025-07-02T08:00:00"),
+};
+const allEvents = [
   {
-    time: new Date(),
+    id: "1",
     title: "Tưới nước khu A",
-    description: "Cây sầu riêng 6 tháng tuổi",
-    color: "#d0bfff",
-    avatars: [
-      "https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/avatars/avatar-1.png",
-      "https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/avatars/avatar-2.png",
-    ],
+    description: "Tưới nước cho cây sầu riêng 6 tháng tuổi",
+    date: "2025-07-01T08:00:00",
+    status: "done",
+    sourceType: "keHoach",
   },
   {
-    time: new Date(),
+    id: "2",
     title: "Phun thuốc sâu",
     description: "Dãy xoài phía Bắc",
-    color: "#b197fc",
-    avatars: [
-      "https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/avatars/avatar-3.png",
-      "https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/avatars/avatar-4.png",
-      "https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/avatars/avatar-5.png",
-    ],
+    date: "2025-07-01T15:00:00",
+    status: "in_progress",
+    sourceType: "keHoach",
   },
   {
-    time: new Date(),
-    title: "Kiểm tra độ ẩm",
-    description: "Block C, cảm biến soil moisture",
-    color: "#74c0fc",
-    avatars: [
-      "https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/avatars/avatar-6.png",
-    ],
+    id: "3",
+    title: "Kiểm tra độ ẩm đất",
+    description: "Block C",
+    date: "2025-07-02T10:00:00",
+    status: "done",
+    sourceType: "phatSinh",
   },
   {
-    time: new Date(),
-    title: "Thu hoạch chuối",
-    description: "Lô D5",
-    color: "#63e6be",
-    avatars: [
-      "https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/avatars/avatar-7.png",
-      "https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/avatars/avatar-8.png",
-    ],
+    id: "4",
+    title: "Thu hoạch chuối lô D5",
+    description: "Cây đã chín",
+    date: "2025-07-02T14:30:00",
+    status: "done",
+    sourceType: "keHoach",
   },
   {
-    time: new Date(),
-    title: "Đánh giá sâu bệnh",
-    description: "Chuyên gia kiểm tra",
-    color: "#ffa94d",
-    avatars: [
-      "https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/avatars/avatar-9.png",
-      "https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/avatars/avatar-10.png",
-      "https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/avatars/avatar-11.png",
-    ],
+    id: "5",
+    title: "Vệ sinh ống tưới",
+    description: "Theo lịch hàng tuần",
+    date: "2025-07-03T16:00:00",
+    status: "canceled",
+    sourceType: "keHoach",
   },
   {
-    time: new Date(),
-    title: "Thu hoạch chuối",
-    description: "Lô D5",
-    color: "#63e6be",
-    avatars: [
-      "https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/avatars/avatar-7.png",
-      "https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/avatars/avatar-8.png",
-    ],
+    id: "6",
+    title: "Bón phân định kỳ",
+    description: "Sử dụng phân vi sinh",
+    date: "2025-07-04T08:30:00",
+    status: "in_progress",
+    sourceType: "keHoach",
   },
   {
-    time: new Date(),
-    title: "Đánh giá sâu bệnh",
-    description: "Chuyên gia kiểm tra",
-    color: "#ffa94d",
-    avatars: [
-      "https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/avatars/avatar-9.png",
-      "https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/avatars/avatar-10.png",
-      "https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/avatars/avatar-11.png",
-    ],
-  },
-  {
-    time: new Date(),
-    title: "Thu hoạch chuối",
-    description: "Lô D5",
-    color: "#63e6be",
-    avatars: [
-      "https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/avatars/avatar-7.png",
-      "https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/avatars/avatar-8.png",
-    ],
-  },
-  {
-    time: new Date(),
-    title: "Đánh giá sâu bệnh",
-    description: "Chuyên gia kiểm tra",
-    color: "#ffa94d",
-    avatars: [
-      "https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/avatars/avatar-9.png",
-      "https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/avatars/avatar-10.png",
-      "https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/avatars/avatar-11.png",
-    ],
+    id: "7",
+    title: "Khảo sát sâu bệnh",
+    description: "Gửi mẫu lên trung tâm kiểm định",
+    date: "2025-07-04T13:30:00",
+    status: "done",
+    sourceType: "phatSinh",
   },
 ];
 const SchedulePage = () => {
+  const [visibleTypes] = useState({
+    keHoach: true,
+    phatSinh: true,
+  });
+  const [
+    openedModalDetail,
+    { open: openModalDetail, close: closeModalDetail },
+  ] = useDisclosure(false);
   const navigate = useNavigate();
   const [selectedDate, setSelectedDate] = useState<
     [string | null, string | null]
   >([null, null]);
 
-  const filters = (
-    <Group flex={1}>
-      <Select
-        radius={4}
-        label="Loại cây"
-        data={["Sầu riêng", "Xoài", "Chuối"]}
-      />
-      <Select radius={4} label="Thời gian" data={["Sáng", "Chiều", "Tối"]} />
-      <Select
-        radius={4}
-        label="Trạng thái"
-        data={["Đang diễn ra", "Hoàn thành"]}
-      />
-    </Group>
-  );
-
-  const groupEvent = useMemo(
-    () =>
-      lodash.groupBy(events, (item) => dayjs(item.time).format("DD/MM/YYYY")),
-    [events]
-  );
   const onScheduleAddPage = () => {
     navigate(PATH.SCHEDULE_ADD);
   };
+
   return (
     <Stack gap="lg">
       <Group justify="space-between" px={"sm"}>
         <Title flex={1} order={2}>
           Lịch trình công việc
         </Title>
-        <Group align="flex-end" justify="space-between">
-          {filters}
-          <Button radius={4} onClick={onScheduleAddPage}>
-            Thêm mới
-          </Button>
-        </Group>
       </Group>
       <Group align="flex-start">
         <Stack flex={1}>
-          <Paper>
+          <Paper w="100%" shadow="md" p={"sm"} radius={4}>
             <Stack h={390} justify="center" align="center">
               <DatePicker
                 type="range"
                 value={selectedDate}
                 onChange={setSelectedDate}
                 allowSingleDateInRange
+                locale="vi"
                 size="lg"
               />
             </Stack>
-          </Paper>
-          <Paper w="100%" shadow="md" p={"sm"} radius={4}>
             <Stack>
-              <Group w={"100%"}>
-                <Text fw={"bold"} fz={"h4"}>
-                  Lịch trình công việc sắp tới
-                </Text>
-              </Group>
-              <ScrollAreaAutosize w="100%" mah={460}>
-                <Stack>
-                  {events.map((event, idx) => (
+              <Button
+                onClick={onScheduleAddPage}
+                variant="transparent"
+                radius={4}
+              >
+                <Group justify="space-between" p={"md"}>
+                  <Text>Thêm mới công việc</Text>
+                  <IconPlus />
+                </Group>
+              </Button>
+              <Divider label="Lọc dữ liệu" />
+              <Checkbox
+                label="Theo kế hoạch"
+                radius={4}
+                checked={visibleTypes.keHoach}
+              />
+              <Checkbox
+                label="Phát sinh"
+                radius={4}
+                checked={visibleTypes.phatSinh}
+              />
+              <Stack gap="md">
+                {["keHoach", "phatSinh"].map((type) => {
+                  const label =
+                    type === "keHoach" ? "Theo kế hoạch" : "Phát sinh";
+                  const color = type === "keHoach" ? "#228be6" : "#ae3ec9";
+
+                  const groupEvents = allEvents.filter(
+                    (e) => e.sourceType === type
+                  );
+                  const canceled = groupEvents.filter(
+                    (e) => e.status === "canceled"
+                  );
+                  const inProgress = groupEvents.filter(
+                    (e) => e.status === "in_progress"
+                  );
+                  const done = groupEvents.filter((e) => e.status === "done");
+
+                  return (
                     <Card
-                      key={idx}
+                      key={type}
                       shadow="sm"
-                      radius="md"
-                      style={{ backgroundColor: event.color }}
+                      radius={4}
+                      withBorder
+                      style={{ borderLeft: `6px solid ${color}` }}
                     >
-                      <Group justify="space-between">
-                        <Text fw={500}>
-                          {dayjs(event.time).format("HH:mm")}
-                        </Text>
-                        <Text size="xs">{selectedDate[0]}</Text>
-                      </Group>
-                      <Text mt="xs" fw={700}>
-                        {event.title}
-                      </Text>
-                      <Text size="sm" c="white">
-                        {event.description}
-                      </Text>
-                      <Avatar.Group mt="sm">
-                        {event.avatars?.map((src, i) => (
-                          <Avatar key={i} src={src} size="sm" radius="xl" />
-                        ))}
-                      </Avatar.Group>
+                      <Stack gap={4}>
+                        <Text fw={600}>{label}</Text>
+                        <Group gap="xs">
+                          <Badge color="red" variant="filled">
+                            {canceled.length} Hủy
+                          </Badge>
+                          <Badge color="yellow" variant="filled">
+                            {inProgress.length} Chưa xong
+                          </Badge>
+                          <Badge color="green" variant="filled">
+                            {done.length} Hoàn thành
+                          </Badge>
+                        </Group>
+                      </Stack>
                     </Card>
-                  ))}
-                </Stack>
-              </ScrollAreaAutosize>
+                  );
+                })}
+              </Stack>
+              <Button radius={4}>
+                <Text>Lọc dữ liệu</Text>
+              </Button>
             </Stack>
           </Paper>
         </Stack>
 
-        <Paper flex={1} p={"sm"} shadow="md" radius={4}>
-          <Stack>
-            <Group
-              justify="space-between"
-              bg={"green"}
-              p={"sm"}
-              style={{ borderRadius: 4 }}
-            >
-              <Button radius={4} leftSection={<IconChevronLeft size={16} />}>
-                Hôm qua
-              </Button>
-              <Text fw={"bold"} c={"white"}>
-                {dayjs(new Date()).format("DD/MM/YYYY")}
-              </Text>
-              <Button radius={4} rightSection={<IconChevronRight size={16} />}>
-                Ngày mai
-              </Button>
-            </Group>
-            <ScrollAreaAutosize mah={835}>
-              <Stack>
-                {Object.keys(groupEvent).map((item) => (
-                  <Group align="flex-start">
-                    <Text>{item}</Text>
-                    <Stack flex={1}>
-                      {events.map((event, idx) => (
-                        <Card
-                          key={idx}
-                          shadow="sm"
-                          radius="md"
-                          style={{ backgroundColor: event.color }}
-                        >
-                          <Group justify="space-between">
-                            <Text fw={500}>
-                              {dayjs(event.time).format("HH:mm")}
-                            </Text>
-                            <Text size="xs">{selectedDate[0]}</Text>
-                          </Group>
-                          <Text mt="xs" fw={700}>
-                            {event.title}
-                          </Text>
-                          <Text size="sm" c="white">
-                            {event.description}
-                          </Text>
-                          <Avatar.Group mt="sm">
-                            {event.avatars?.map((src, i) => (
-                              <Avatar key={i} src={src} size="sm" radius="xl" />
-                            ))}
-                          </Avatar.Group>
-                        </Card>
-                      ))}
-                    </Stack>
-                  </Group>
-                ))}
-              </Stack>
-            </ScrollAreaAutosize>
-          </Stack>
+        <Paper flex={3} p={"sm"} shadow="md" radius={4}>
+          <FullCalendar
+            plugins={[dayGridPlugin, interactionPlugin]}
+            initialView="dayGridMonth"
+            locale={"vi"}
+            selectable={true}
+            editable={true}
+            buttonText={{
+              today: "Hôm nay",
+              month: "Tháng",
+              week: "Tuần",
+              day: "Ngày",
+              list: "Danh sách",
+            }}
+            moreLinkText={(n) => `+${n} xem thêm`}
+            eventClick={() => {
+              openModalDetail();
+            }}
+            dayMaxEvents={true}
+            eventClassNames={(arg) => {
+              const type = arg.event.extendedProps.sourceType;
+              return type === "keHoach"
+                ? ["event-kehoach"]
+                : ["event-phatsinh"];
+            }}
+            titleFormat={(date) => {
+              const month = date.date.month + 1;
+              const year = date.date.year;
+              return `Tháng ${month} ${year}`;
+            }}
+            events={allEvents}
+          />
         </Paper>
       </Group>
+      <Modal
+        opened={openedModalDetail}
+        onClose={closeModalDetail}
+        title="Thông tin công việc"
+      >
+        <Stack>
+          <Text size="sm" c="dimmed">
+            Tiêu đề
+          </Text>
+          <Text fw={600} fz="lg">
+            {mockJob.title}
+          </Text>
+
+          <Text size="sm" c="dimmed">
+            Ngày và giờ
+          </Text>
+          <Text>{dayjs(mockJob.date).format("DD/MM/YYYY HH:mm")}</Text>
+
+          <Text size="sm" c="dimmed">
+            Mô tả
+          </Text>
+          <Text>{mockJob.description}</Text>
+
+          <Group grow mt="sm">
+            <Stack gap={4}>
+              <Text size="sm" c="dimmed">
+                Loại cây
+              </Text>
+              <Badge color="teal" variant="light">
+                {mockJob.cropType}
+              </Badge>
+            </Stack>
+
+            <Stack gap={4}>
+              <Text size="sm" c="dimmed">
+                Thời gian
+              </Text>
+              <Badge color="cyan" variant="light">
+                {mockJob.timeSlot}
+              </Badge>
+            </Stack>
+
+            <Stack gap={4}>
+              <Text size="sm" c="dimmed">
+                Trạng thái
+              </Text>
+              <Badge
+                color={mockJob.status === "Hoàn thành" ? "green" : "orange"}
+                variant="light"
+              >
+                {mockJob.status}
+              </Badge>
+            </Stack>
+          </Group>
+        </Stack>
+      </Modal>
     </Stack>
   );
 };
