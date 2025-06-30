@@ -190,9 +190,6 @@ const SchedulePage = () => {
                   );
                 })}
               </Stack>
-              <Button radius={4}>
-                <Text>Lọc dữ liệu</Text>
-              </Button>
             </Stack>
           </Paper>
         </Stack>
