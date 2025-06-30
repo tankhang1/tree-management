@@ -116,6 +116,7 @@ import ContractManagementDetailPage from "./pages/ContractManagementPage/Detail/
 import ContractManagementAddPage from "./pages/ContractManagementPage/Add/index.tsx";
 import HRManagementTeamDetailPage from "./pages/HRManagementPage/Team/Detail/index.tsx";
 import HRManagementTeamAddPage from "./pages/HRManagementPage/Team/Add/index.tsx";
+import AreaManagementRowDetailPage from "./pages/AreaManagementPage/Row/Detail/index.tsx";
 const theme: MantineThemeOverride = {
   fontFamily: "MyFont, sans-serif",
   primaryColor: "brand",
@@ -249,6 +250,10 @@ const ROUTES = [
     element={<AreaManagementBlockDetailPage />}
   />,
   <Route path={PATH.AREA_ROW} element={<AreaManagementRowPage />} />,
+  <Route
+    path={PATH.AREA_ROW_DETAIL}
+    element={<AreaManagementRowDetailPage />}
+  />,
   <Route path={PATH.AREA_TREE} element={<AreaManagementTreePage />} />,
   <Route path={PATH.AREA_MAP} element={<AreaManagementMapPage />} />,
   <Route path={PATH.AREA_SOIL} element={<AreaManagementSoilTypePage />} />,

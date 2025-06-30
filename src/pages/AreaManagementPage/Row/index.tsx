@@ -22,8 +22,11 @@ import {
 } from "@tabler/icons-react";
 import type { MRT_ColumnDef } from "mantine-react-table";
 import Table from "../../../components/Table";
+import { useNavigate } from "react-router-dom";
+import { PATH } from "../../../constants/path.constants";
 import { useDisclosure } from "@mantine/hooks";
 import AddRowForm from "./components/AddRowForm";
+
 type Row = {
   name: string;
   code: string;
@@ -50,6 +53,11 @@ const rowData: Row[] = [
 const AreaManagementRowPage = () => {
   const [openedAddRowForm, { open: openAddRowForm, close: closeAddRowForm }] =
     useDisclosure(false);
+
+  const navigate = useNavigate();
+  const onRowDetail = () => {
+    navigate(PATH.AREA_ROW_DETAIL);
+  };
   const rowColumns: MRT_ColumnDef<Row>[] = [
     {
       accessorKey: "code",
@@ -69,10 +77,6 @@ const AreaManagementRowPage = () => {
       Cell: ({ row }) => `${row.original.treeCount} cây`,
     },
     {
-      accessorKey: "gps",
-      header: "Toạ độ GPS",
-    },
-    {
       accessorKey: "actions",
       header: "",
       enableColumnActions: false,
@@ -86,7 +90,10 @@ const AreaManagementRowPage = () => {
           </Menu.Target>
 
           <Menu.Dropdown>
-            <Menu.Item leftSection={<IconEye size={18} color="gray" />}>
+            <Menu.Item
+              leftSection={<IconEye size={18} color="gray" />}
+              onClick={onRowDetail}
+            >
               Chi tiết
             </Menu.Item>
             <Menu.Item leftSection={<IconEdit size={18} color="green" />}>
@@ -112,7 +119,7 @@ const AreaManagementRowPage = () => {
             Xuất File
           </Button>
           <Button radius={4} onClick={openAddRowForm}>
-            Thêm mới
+            Tạo mới
           </Button>
         </Group>
       </Group>

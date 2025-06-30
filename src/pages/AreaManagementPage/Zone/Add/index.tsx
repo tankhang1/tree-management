@@ -10,6 +10,7 @@ import {
   MultiSelect,
   Title,
   Paper,
+  NumberInput,
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { useState } from "react";
@@ -166,16 +167,10 @@ const AreaManagementAddZonePage = () => {
                     radius={4}
                     {...form.getInputProps(`rows.${index}.crop`)}
                   />
-                  <TextInput
+                  <NumberInput
                     label="Số cây"
-                    type="number"
                     radius={4}
                     {...form.getInputProps(`rows.${index}.treeCount`)}
-                  />
-                  <Textarea
-                    label="Toạ độ GPS (x1y1 x2y2)"
-                    radius={4}
-                    {...form.getInputProps(`rows.${index}.gps`)}
                   />
                 </Stack>
               </Paper>

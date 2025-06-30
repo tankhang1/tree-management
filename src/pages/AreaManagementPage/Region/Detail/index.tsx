@@ -16,9 +16,9 @@ import { useForm } from "@mantine/form";
 import {
   IconArrowLeft,
   IconDroplet,
-  IconMapPin,
   IconRulerMeasure,
   IconTree,
+  IconUserCog,
 } from "@tabler/icons-react";
 import { useMemo, useState } from "react";
 import { MapContainer, TileLayer } from "react-leaflet";
@@ -48,6 +48,7 @@ const AreaManagementRegionDetailPage = () => {
           terrain: ["Cao"],
           mainCrop: "Sầu riêng",
           gps: "10.12,106.21;...",
+          manager: "Khang",
           plots: [],
         },
         {
@@ -58,6 +59,7 @@ const AreaManagementRegionDetailPage = () => {
           terrain: ["Dốc"],
           mainCrop: "Sầu riêng",
           gps: "10.14,106.23;...",
+          manager: "Khang",
           plots: [],
         },
       ],
@@ -114,10 +116,6 @@ const AreaManagementRegionDetailPage = () => {
                   <Badge key={i}>{t}</Badge>
                 ))}
               </Group>
-            </Grid.Col>
-            <Grid.Col span={6}>
-              <Text fw={500}>Toạ độ GPS:</Text>
-              <Text>{region.gps}</Text>
             </Grid.Col>
             <Grid.Col span={12}>
               <Text fw={500}>Ghi chú:</Text>
@@ -193,9 +191,9 @@ const AreaManagementRegionDetailPage = () => {
               </Group>
               <Group mb={8}>
                 <ThemeIcon variant="light" color="grape" size={24}>
-                  <IconMapPin size={16} />
+                  <IconUserCog size={16} />
                 </ThemeIcon>
-                <Text size="sm">{area.gps}</Text>
+                <Text size="sm">{area.manager}</Text>
               </Group>
               <Group gap="xs" mt="sm">
                 {area.terrain.map((t, i) => (

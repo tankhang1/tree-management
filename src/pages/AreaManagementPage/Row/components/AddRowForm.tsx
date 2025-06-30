@@ -1,11 +1,4 @@
-import {
-  Button,
-  Group,
-  Select,
-  Stack,
-  Textarea,
-  TextInput,
-} from "@mantine/core";
+import { Button, Group, Select, Stack, TextInput } from "@mantine/core";
 import { useForm } from "@mantine/form";
 
 const AddRowForm = () => {
@@ -64,12 +57,6 @@ const AddRowForm = () => {
           data={["Sầu riêng", "Xoài", "Chuối"]}
           required
           {...rowForm.getInputProps("crop")}
-          radius={4}
-        />
-        <Textarea
-          label="Toạ độ GPS (x1y1 x2y2)"
-          required
-          {...rowForm.getInputProps("gps")}
           radius={4}
         />
       </Stack>
