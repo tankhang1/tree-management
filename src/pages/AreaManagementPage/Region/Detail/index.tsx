@@ -9,6 +9,8 @@ import {
   Paper,
   ThemeIcon,
   Button,
+  SegmentedControl,
+  Stack,
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import {
@@ -18,9 +20,11 @@ import {
   IconRulerMeasure,
   IconTree,
 } from "@tabler/icons-react";
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
+import { MapContainer, TileLayer } from "react-leaflet";
 import { useNavigate } from "react-router-dom";
 const AreaManagementRegionDetailPage = () => {
+  const [type, setType] = useState<string>("Toạ độ");
   const navigate = useNavigate();
   const form = useForm({
     initialValues: {
@@ -122,15 +126,40 @@ const AreaManagementRegionDetailPage = () => {
           </Grid>
         </Grid.Col>
         <Grid.Col span={4}>
-          <iframe
-            title="Bản đồ vùng trồng"
-            src="https://maps.google.com/maps?q=10.123,106.234&z=15&output=embed"
-            width="100%"
-            height="250"
-            style={{ border: 0, borderRadius: 8 }}
-            allowFullScreen
-            loading="lazy"
-          ></iframe>
+          <Stack>
+            <SegmentedControl
+              radius={4}
+              data={["Toạ độ", "Bản đồ"]}
+              value={type}
+              onChange={(value) => setType(value)}
+            />
+            {type === "Toạ độ" && (
+              <iframe
+                title="Bản đồ vùng trồng"
+                src="https://maps.google.com/maps?q=10.123,106.234&z=15&output=embed"
+                width="100%"
+                height="250"
+                style={{ border: 0, borderRadius: 8 }}
+                allowFullScreen
+                loading="lazy"
+              ></iframe>
+            )}
+            {type === "Bản đồ" && (
+              <Stack h={250} w={"100%"}>
+                <MapContainer
+                  preferCanvas
+                  center={[11.553203605968022, 107.12999664743181]}
+                  maxZoom={20}
+                  zoom={18}
+                  zoomSnap={1}
+                  minZoom={17}
+                  style={{ height: "250px", borderRadius: 4 }}
+                >
+                  <TileLayer url="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}" />
+                </MapContainer>
+              </Stack>
+            )}
+          </Stack>
         </Grid.Col>
       </Grid>
 
