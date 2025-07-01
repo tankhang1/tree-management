@@ -70,7 +70,6 @@ import StockManagementPage from "./pages/StockManagementPage/index.tsx";
 import StockManagementSupplyPage from "./pages/StockManagementPage/Supply/index.tsx";
 import StockManagementPesticidePage from "./pages/StockManagementPage/Pesticide/index.tsx";
 import StockManagementMachinePage from "./pages/StockManagementPage/Machine/index.tsx";
-import StockManagementFormPage from "./pages/StockManagementPage/Form/index.tsx";
 import StockManagementSeedPage from "./pages/StockManagementPage/Seed/index.tsx";
 import FarmingFormEmployeeEvaluationPage from "./pages/FarmingFormPage/Employee-Evaluation/index.tsx";
 import FarmingFormHistoryPage from "./pages/FarmingFormPage/History/index.tsx";
@@ -123,6 +122,8 @@ import FactoryManagementMainAddPage from "./pages/FactoryManagementPage/Main/Add
 import FactoryManagementMainDetailPage from "./pages/FactoryManagementPage/Main/Detail/index.tsx";
 import MachineManagementMainDetailPage from "./pages/MachineManagementPage/Main/Detail/index.tsx";
 import MachineManagementMainAddPage from "./pages/MachineManagementPage/Main/Add/index.tsx";
+import PesticideManagementMainDetailPage from "./pages/PesticideManagementPage/Main/Detail/index.tsx";
+import PesticideManagementMainAddPage from "./pages/PesticideManagementPage/Main/Add/index.tsx";
 const theme: MantineThemeOverride = {
   fontFamily: "MyFont, sans-serif",
   primaryColor: "brand",
@@ -426,6 +427,14 @@ const ROUTES = [
     element={<PesticideManagementMainPage />}
   />,
   <Route
+    path={PATH.PESTICIDE_MAIN_DETAIL}
+    element={<PesticideManagementMainDetailPage />}
+  />,
+  <Route
+    path={PATH.PESTICIDE_ADD_MAIN}
+    element={<PesticideManagementMainAddPage />}
+  />,
+  <Route
     path={PATH.PESTICIDE_CATEGORY}
     element={<PesticideManagementCategoryPage />}
   />,
@@ -440,7 +449,6 @@ const ROUTES = [
   />,
   <Route path={PATH.STOCK_MACHINE} element={<StockManagementMachinePage />} />,
   <Route path={PATH.STOCK_SEED} element={<StockManagementSeedPage />} />,
-  <Route path={PATH.STOCK_FORM} element={<StockManagementFormPage />} />,
 
   <Route path={PATH.PURCHASE} element={<PurchasePage />} />,
   <Route path={PATH.SELL} element={<SellPage />} />,

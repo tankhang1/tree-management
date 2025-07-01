@@ -136,6 +136,8 @@ export const PATH = {
   // Pesticide Management
   PESTICIDE_MANAGEMENT: "/pesticide-management",
   PESTICIDE_MAIN: "/pesticide-management/main",
+  PESTICIDE_ADD_MAIN: "/pesticide-management/main/add",
+  PESTICIDE_MAIN_DETAIL: "/pesticide-management/main/detail",
   PESTICIDE_CATEGORY: "/pesticide-management/category",
 
   // Supply Management
@@ -147,7 +149,6 @@ export const PATH = {
   STOCK_PESTICIDE: "/stock-management/pesticide",
   STOCK_MACHINE: "/stock-management/machine",
   STOCK_SEED: "/stock-management/seed",
-  STOCK_FORM: "/stock-management/form",
 
   // Purchase & Sales
   PURCHASE: "/purchase",

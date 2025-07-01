@@ -164,7 +164,6 @@ export const NAV_BAR = [
       { label: "Xuất/nhập thuốc", link: PATH.STOCK_PESTICIDE },
       { label: "Xuất/nhập máy móc", link: PATH.STOCK_MACHINE },
       { label: "Xuất/nhập hạt giống", link: PATH.STOCK_SEED },
-      { label: "Tạo phiếu xuất/nhập", link: PATH.STOCK_FORM },
     ],
   },
   {
