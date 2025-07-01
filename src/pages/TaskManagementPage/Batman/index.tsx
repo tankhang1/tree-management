@@ -107,7 +107,7 @@ const TaskManagementBatmanPage = () => {
     <Stack gap="lg">
       <Group justify="space-between">
         <Title flex={1} order={2}>
-          Quản lý công việc
+          Quản lý công việc BATMAN
         </Title>
         <Group>
           <Button variant="outline" radius={4} leftSection={<IconFileExcel />}>

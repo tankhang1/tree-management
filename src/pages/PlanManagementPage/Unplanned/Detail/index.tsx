@@ -25,14 +25,13 @@ const PlanManagementUnplannedDetailPage = () => {
   const navigate = useNavigate();
   const [assignment] = useState({
     name: "Phun thuốc trừ sâu đợt 1",
-    assignDate: new Date("2025-07-01"),
     startDate: new Date("2025-07-02"),
     endDate: new Date("2025-07-04"),
     departments: ["Chăm sóc cây", "Phòng BVTV"],
     employees: ["Nguyễn Văn A", "Trần Thị B"],
     creator: "Nguyễn Quản Lý",
-    supervisor: "Lê Thanh Giám Sát",
-    seasonPlan: "Kế hoạch mùa hè 2025",
+    supervisor: "", // optional
+    seasonPlan: "", // optional
     resources: [
       { type: "Vật tư", name: "Phân bón A", quantity: 20, unit: "Kg" },
       { type: "Thuốc BVTV", name: "Thuốc trừ sâu X", quantity: 5, unit: "Lít" },
@@ -40,14 +39,13 @@ const PlanManagementUnplannedDetailPage = () => {
     ],
   });
 
-  const groupResources = (type: string) => {
-    return assignment.resources.filter((r) => r.type === type);
-  };
+  const groupResources = (type: string) =>
+    assignment.resources.filter((r) => r.type === type);
 
   return (
     <Stack justify="center" align="center">
-      <Card w={"60%"} withBorder shadow="sm" radius={8} p="xl">
-        <Group mb={"md"}>
+      <Card w="60%" withBorder shadow="sm" radius={8} p="xl">
+        <Group mb="md">
           <Button
             variant="subtle"
             radius={4}
@@ -56,29 +54,25 @@ const PlanManagementUnplannedDetailPage = () => {
           >
             Quay lại
           </Button>
-          <Title order={3}>Chi tiết phiếu giao việc</Title>
+          <Title order={3}>Chi tiết công việc phát sinh</Title>
         </Group>
+
         <Stack gap="sm">
           <Group gap={6} align="center">
             <IconClipboardList size={18} />
-            <Text fw={500}>Tên phiếu:</Text>
+            <Text fw={500}>Tên công việc:</Text>
             <Text>{assignment.name}</Text>
           </Group>
 
           <Group grow>
             <Group gap={6}>
               <IconCalendarEvent size={18} />
-              <Text fw={500}>Ngày giao:</Text>
-              <Text>{assignment.assignDate.toLocaleDateString()}</Text>
-            </Group>
-            <Group gap={6}>
-              <IconCalendarEvent size={18} />
-              <Text fw={500}>Bắt đầu:</Text>
+              <Text fw={500}>Thời gian thực hiện:</Text>
               <Text>{assignment.startDate.toLocaleDateString()}</Text>
             </Group>
             <Group gap={6}>
               <IconCalendarEvent size={18} />
-              <Text fw={500}>Kết thúc:</Text>
+              <Text fw={500}>Thời gian hoàn thành dự kiến:</Text>
               <Text>{assignment.endDate.toLocaleDateString()}</Text>
             </Group>
           </Group>
@@ -110,15 +104,17 @@ const PlanManagementUnplannedDetailPage = () => {
             <Text fw={500}>Người tạo:</Text>
             <Text>{assignment.creator}</Text>
           </Group>
+
           <Group gap={6}>
             <IconUser size={18} />
-            <Text fw={500}>Giám sát:</Text>
-            <Text>{assignment.supervisor}</Text>
+            <Text fw={500}>Người kiểm định:</Text>
+            <Text>{assignment.supervisor || "--"}</Text>
           </Group>
+
           <Group gap={6}>
             <IconClipboardList size={18} />
-            <Text fw={500}>Kế hoạch:</Text>
-            <Text>{assignment.seasonPlan}</Text>
+            <Text fw={500}>Kế hoạch mùa vụ:</Text>
+            <Text>{assignment.seasonPlan || "--"}</Text>
           </Group>
 
           <Divider label="Tài nguyên sử dụng" labelPosition="left" my="sm" />
@@ -132,7 +128,10 @@ const PlanManagementUnplannedDetailPage = () => {
               label: "Thuốc BVTV",
               icon: <IconVaccine size={18} color="pink" />,
             },
-            { label: "Thiết bị", icon: <IconTool size={18} color="orange" /> },
+            {
+              label: "Thiết bị",
+              icon: <IconTool size={18} color="orange" />,
+            },
           ].map(({ label, icon }) => {
             const items = groupResources(label);
             return items.length > 0 ? (

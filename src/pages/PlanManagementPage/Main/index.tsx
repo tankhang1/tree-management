@@ -28,8 +28,7 @@ type SeasonPlan = {
   id: string;
   seasonName: string;
   seasonId: string; // ID mùa vụ
-  startDate: string;
-  endDate: string;
+  duration: number;
   zoneName: string;
   areaName: string;
   plotName: string;
@@ -44,8 +43,7 @@ const seasonPlans: SeasonPlan[] = [
     id: "SP001",
     seasonName: "Mùa vụ Xuân 2025",
     seasonId: "MSV-2025",
-    startDate: "2025-01-15",
-    endDate: "2025-05-30",
+    duration: 40,
     zoneName: "Vùng A",
     areaName: "Khu vực A1",
     plotName: "Lô A1-L1",
@@ -66,8 +64,12 @@ const PlanManagementMainPage = () => {
   };
   const seasonPlanColumns: MRT_ColumnDef<SeasonPlan>[] = [
     { accessorKey: "seasonName", header: "Tên mùa vụ" },
-    { accessorKey: "startDate", header: "Bắt đầu" },
-    { accessorKey: "endDate", header: "Kết thúc" },
+
+    {
+      accessorKey: "duration",
+      header: "Khoảng thời gian diễn ra",
+      Cell: ({ row }) => `${row.original.duration} ngày`,
+    },
     { accessorKey: "zoneName", header: "Vùng trồng" },
     { accessorKey: "areaName", header: "Khu vực" },
     { accessorKey: "plotName", header: "Lô" },

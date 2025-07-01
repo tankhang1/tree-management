@@ -83,7 +83,7 @@ export const NAV_BAR = [
     icon: IconBook2,
     link: PATH.TASK_MANAGEMENT,
     children: [
-      { label: "Công việc", link: PATH.TASK_MAIN },
+      { label: "Công việc phát sinh", link: PATH.TASK_MAIN },
       { label: "Công việc BATMAN", link: PATH.TASK_BATMAN },
     ],
   },

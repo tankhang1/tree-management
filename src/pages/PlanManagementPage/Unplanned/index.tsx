@@ -21,16 +21,17 @@ import Table from "../../../components/Table";
 import { useNavigate } from "react-router-dom";
 import { PATH } from "../../../constants/path.constants";
 import { DateInput } from "@mantine/dates";
+
 type Assignment = {
   name: string;
   assignDate: string;
   startDate: string;
   endDate: string;
-  departments: string[]; // XI.1
-  employees: string[]; // XI.4
-  creator: string; // XI
-  supervisor: string; // XI
-  locationPath: string; // Vùng > Khu vực > Lô > Hàng > Cây
+  departments: string[];
+  employees: string[];
+  creator: string;
+  supervisor: string;
+  locationPath: string;
   resources: {
     type: "Vật tư" | "Thuốc BVTV" | "Thiết bị";
     name: string;
@@ -38,6 +39,7 @@ type Assignment = {
     unit?: string;
   }[];
 };
+
 const assignmentData: Assignment[] = [
   {
     name: "Phun thuốc sâu đợt 1",
@@ -59,17 +61,17 @@ const assignmentData: Assignment[] = [
 
 const PlanManagementUnplannedPage = () => {
   const navigate = useNavigate();
-  const onAddUnplanned = () => {
-    navigate(PATH.PLAN_ADD_UNPLANNED);
+
+  const onAddUnplanned = () => navigate(PATH.PLAN_ADD_UNPLANNED);
+  const onUnplannedDetail = (name: string) => {
+    console.log("Xem chi tiết:", name);
+    navigate(PATH.PLAN_UNPLANNED_DETAIL); // thay bằng PATH có id nếu cần
   };
-  const onUnplannedDetail = () => {
-    navigate(PATH.PLAN_UNPLANNED_DETAIL);
-  };
+
   const assignmentColumns: MRT_ColumnDef<Assignment>[] = [
-    { accessorKey: "name", header: "Tên phiếu" },
-    { accessorKey: "assignDate", header: "Ngày giao việc" },
-    { accessorKey: "startDate", header: "Bắt đầu" },
-    { accessorKey: "endDate", header: "Kết thúc" },
+    { accessorKey: "name", header: "Tên công việc" },
+    { accessorKey: "startDate", header: "Thời gian thực hiện" },
+    { accessorKey: "endDate", header: "Thời gian hoàn thành dự kiến" },
     {
       accessorKey: "departments",
       header: "Phòng ban",
@@ -91,19 +93,21 @@ const PlanManagementUnplannedPage = () => {
         )),
     },
     { accessorKey: "creator", header: "Người tạo" },
-    { accessorKey: "supervisor", header: "Người giám sát" },
-    { accessorKey: "locationPath", header: "Vị trí" },
+    {
+      accessorKey: "supervisor",
+      header: "Người kiểm định",
+      Cell: ({ row }) => row.original.supervisor || "--",
+    },
+    { accessorKey: "locationPath", header: "Vị trí thực hiện" },
     {
       accessorKey: "resources",
       header: "Tài nguyên",
       Cell: ({ row }) => (
-        <Stack gap={"xs"}>
-          {row.original.resources.map((r) => (
-            <Group>
-              -
-              <Text>
-                {r.name} ({r.quantity}
-                {r.unit ? ` ${r.unit}` : ""})
+        <Stack gap="xs">
+          {row.original.resources.map((r, i) => (
+            <Group key={i} gap={4}>
+              <Text size="sm">
+                - {r.name} ({r.quantity} {r.unit ?? ""})
               </Text>
             </Group>
           ))}
@@ -115,10 +119,10 @@ const PlanManagementUnplannedPage = () => {
       header: "",
       enableColumnActions: false,
       size: 10,
-      Cell: () => (
+      Cell: ({ row }) => (
         <Menu shadow="md">
           <Menu.Target>
-            <ActionIcon variant="transparent" c={"gray"}>
+            <ActionIcon variant="transparent" c="gray">
               <IconDotsVertical />
             </ActionIcon>
           </Menu.Target>
@@ -126,14 +130,21 @@ const PlanManagementUnplannedPage = () => {
           <Menu.Dropdown>
             <Menu.Item
               leftSection={<IconEye size={18} color="gray" />}
-              onClick={onUnplannedDetail}
+              onClick={() => onUnplannedDetail(row.original.name)}
             >
               Chi tiết
             </Menu.Item>
-            <Menu.Item leftSection={<IconEdit size={18} color="green" />}>
+            <Menu.Item
+              leftSection={<IconEdit size={18} color="green" />}
+              onClick={() => console.log("Chỉnh sửa:", row.original.name)}
+            >
               Chỉnh sửa
             </Menu.Item>
-            <Menu.Item leftSection={<IconTrash size={18} />} color="red">
+            <Menu.Item
+              leftSection={<IconTrash size={18} />}
+              color="red"
+              onClick={() => console.log("Xoá:", row.original.name)}
+            >
               Xoá
             </Menu.Item>
           </Menu.Dropdown>
@@ -141,6 +152,7 @@ const PlanManagementUnplannedPage = () => {
       ),
     },
   ];
+
   return (
     <Stack gap="lg">
       <Group justify="space-between">
@@ -156,20 +168,23 @@ const PlanManagementUnplannedPage = () => {
           </Button>
         </Group>
       </Group>
+
       <Group>
         <DateInput
-          leftSection={<IconCalendar />}
-          placeholder="Ngày bắt đầu"
+          leftSection={<IconCalendar size={18} />}
+          placeholder="Từ ngày"
           radius={4}
         />
         <DateInput
-          leftSection={<IconCalendar />}
-          placeholder="Ngày kết thúc"
+          leftSection={<IconCalendar size={18} />}
+          placeholder="Đến ngày"
           radius={4}
         />
       </Group>
+
       <Table columns={assignmentColumns} data={assignmentData} />
     </Stack>
   );
 };
+
 export default PlanManagementUnplannedPage;

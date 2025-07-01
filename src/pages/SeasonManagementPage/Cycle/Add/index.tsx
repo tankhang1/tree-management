@@ -69,13 +69,25 @@ const SeasonManagementCycleAddPage = () => {
           {active === 0 && (
             <Stack gap={"xs"}>
               <Select
-                label="Giống cây"
+                label="Nhóm cây trồng"
+                placeholder="Chọn nhóm cây trồng"
+                {...form.getInputProps("varietyId")}
+                radius={4}
+              />
+              <Select
+                label="Danh mục cây trồng"
+                placeholder="Chọn danh mục cây trồng"
+                {...form.getInputProps("varietyId")}
+                radius={4}
+              />
+              <Select
+                label="Giống cây trồng"
                 placeholder="VRI-001"
                 {...form.getInputProps("varietyId")}
                 radius={4}
               />
               <NumberInput
-                label="Tổng thời gian (ngày)"
+                label="Tổng thời gian phát triển"
                 placeholder="Nhập số ngày"
                 min={1}
                 {...form.getInputProps("duration")}

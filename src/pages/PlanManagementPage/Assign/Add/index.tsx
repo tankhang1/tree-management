@@ -17,34 +17,34 @@ import {
   IconCalendar,
   IconClipboardCheck,
   IconPlus,
-  IconUsers,
 } from "@tabler/icons-react";
 import { useForm } from "@mantine/form";
 import { useNavigate } from "react-router-dom";
 
 const PlanManagementAssignAddPage = () => {
   const navigate = useNavigate();
+
   const form = useForm({
     initialValues: {
       name: "",
-      assignDate: new Date(),
+      season: "",
+      growthStage: "",
       startDate: new Date(),
       endDate: new Date(),
       departments: [],
+      ranks: [],
+      positions: [],
+      groups: [],
       employees: [],
       manager: "",
-      creator: "Admin User",
       supervisor: "",
-      seasonPlan: "",
-      materials: [],
-      pesticides: [],
-      equipment: [],
+      resources: [],
     },
   });
 
   return (
     <Card withBorder radius={8} shadow="sm" p="md">
-      <Group mb={"md"}>
+      <Group mb="md">
         <Button
           variant="subtle"
           radius={4}
@@ -53,12 +53,13 @@ const PlanManagementAssignAddPage = () => {
         >
           Quay lại
         </Button>
-        <Title order={3}>Tạo phiếu giao việc</Title>
+        <Title order={3}>Tạo công việc canh tác</Title>
       </Group>
+
       <form onSubmit={form.onSubmit((values) => console.log(values))}>
-        <Stack gap={"xs"}>
+        <Stack gap="xs">
           <TextInput
-            label="Tên phiếu giao việc"
+            label="Tên công việc"
             placeholder="VD: Tưới nước đợt 1"
             radius={4}
             leftSection={<IconClipboardCheck size={16} />}
@@ -66,89 +67,129 @@ const PlanManagementAssignAddPage = () => {
           />
 
           <Group grow>
+            <Select
+              label="Mùa vụ"
+              placeholder="Chọn mùa vụ"
+              radius={4}
+              data={["Mùa Xuân 2025", "Mùa Hè 2025"]}
+              {...form.getInputProps("season")}
+            />
+            <Select
+              label="Giai đoạn sinh trưởng"
+              placeholder="Chọn giai đoạn theo mùa vụ"
+              radius={4}
+              data={["Gieo trồng", "Ra hoa", "Kết trái"]} // nên filter theo mùa vụ
+              {...form.getInputProps("growthStage")}
+            />
+          </Group>
+
+          <Group grow>
             <DateInput
-              label="Thời gian giao việc"
-              placeholder="Chọn ngày"
+              label="Thời gian thực hiện"
               radius={4}
               locale="vi"
               leftSection={<IconCalendar size={16} />}
-              {...form.getInputProps("assignDate")}
-            />
-            <DateInput
-              locale="vi"
-              label="Bắt đầu"
-              radius={4}
               {...form.getInputProps("startDate")}
             />
             <DateInput
-              locale="vi"
-              label="Kết thúc"
+              label="Thời gian hoàn thành dự kiến"
               radius={4}
+              locale="vi"
+              leftSection={<IconCalendar size={16} />}
               {...form.getInputProps("endDate")}
             />
           </Group>
 
-          <MultiSelect
-            label="Phòng ban"
-            placeholder="Chọn phòng ban liên quan"
-            radius={4}
-            leftSection={<IconUsers size={16} />}
-            data={["Chăm sóc cây", "Bảo vệ thực vật", "Thu hoạch"]}
-            {...form.getInputProps("departments")}
-          />
+          <Divider label="Phân nhóm nhân sự" labelPosition="left" />
+
+          <Group grow>
+            <MultiSelect
+              label="Phòng ban"
+              data={["Chăm sóc cây", "Bảo vệ thực vật", "Thu hoạch"]}
+              {...form.getInputProps("departments")}
+              radius={4}
+            />
+            <MultiSelect
+              label="Cấp bậc"
+              data={["Quản lý", "Nhân viên", "Thực tập"]}
+              {...form.getInputProps("ranks")}
+              radius={4}
+            />
+          </Group>
+
+          <Group grow>
+            <MultiSelect
+              label="Vị trí"
+              data={["Kỹ sư nông nghiệp", "Giám sát hiện trường", "Công nhân"]}
+              {...form.getInputProps("positions")}
+              radius={4}
+            />
+            <MultiSelect
+              label="Nhóm nhân sự"
+              data={["Nhóm A", "Nhóm B", "Tổ 1", "Tổ 2"]}
+              {...form.getInputProps("groups")}
+              radius={4}
+            />
+          </Group>
 
           <MultiSelect
-            label="Nhân sự"
-            placeholder="Chọn nhân sự phụ trách"
-            radius={4}
+            label="Nhân sự cụ thể"
+            placeholder="Chọn từ danh sách đã lọc"
             data={["Nguyễn Văn A", "Trần Thị B", "Lê Văn C"]}
             {...form.getInputProps("employees")}
+            radius={4}
           />
 
-          <Select
-            label="Người quản lý"
-            placeholder="Chọn người quản lý"
-            radius={4}
-            data={["Nguyễn Quản Lý", "Phạm Điều Hành"]}
-            {...form.getInputProps("manager")}
-          />
+          <Group grow>
+            <Select
+              label="Người quản lý"
+              placeholder="Chọn (có thể bỏ trống)"
+              radius={4}
+              data={["Nguyễn Quản Lý", "Phạm Điều Hành"]}
+              clearable
+              {...form.getInputProps("manager")}
+            />
+            <Select
+              label="Người kiểm định chất lượng"
+              placeholder="Chọn (có thể bỏ trống)"
+              radius={4}
+              data={["Nguyễn Kiểm Tra", "Trần Thanh Tra"]}
+              clearable
+              {...form.getInputProps("supervisor")}
+            />
+          </Group>
 
-          <Select
-            label="Người giám sát"
-            placeholder="Chọn người giám sát"
-            radius={4}
-            data={["Nguyễn Giám Sát", "Trần Thanh Tra"]}
-            {...form.getInputProps("supervisor")}
-          />
+          <Divider label="Tài nguyên sử dụng" labelPosition="left" />
 
-          <Select
-            label="Kế hoạch canh tác"
-            placeholder="Chọn kế hoạch mùa vụ"
-            radius={4}
-            data={["Mùa Xuân 2025", "Mùa Hè 2025"]}
-            {...form.getInputProps("seasonPlan")}
-          />
-          <Divider label="Danh sách tài nguyên" labelPosition="left" />
+          {/* Gợi ý: nên lặp danh sách tài nguyên đã phân bổ trong kế hoạch */}
           <Group align="flex-end">
             <Select
               label="Loại tài nguyên"
               radius={4}
-              placeholder="Chọn loại tài nguyên"
               data={["Vật tư", "Thuốc BVTV", "Thiết bị"]}
               flex={1}
+              required
             />
-            <TextInput
-              label="Tên"
-              placeholder="Tên tài nguyên"
+            <Select
+              label="Tên tài nguyên"
+              placeholder="Tên vật tư/thiết bị/thuốc"
               radius={4}
               flex={1}
+              required
             />
-            <NumberInput label="Số lượng" min={1} radius={4} flex={1} />
-            <TextInput
-              label="Đơn vị tính"
-              placeholder="Ví dụ: Lít, Kg"
+            <NumberInput
+              label="Số lượng"
+              min={1}
               radius={4}
               flex={1}
+              required
+            />
+            <Select
+              label="Đơn vị"
+              placeholder="kg, lít, chai..."
+              radius={4}
+              flex={1}
+              required
             />
             <ActionIcon radius={4} w={30} h={30}>
               <IconPlus />
@@ -156,8 +197,8 @@ const PlanManagementAssignAddPage = () => {
           </Group>
 
           <Group justify="flex-end" mt="md">
-            <Button radius={4} type="submit">
-              Tạo phiếu
+            <Button type="submit" radius={4}>
+              Tạo công việc
             </Button>
           </Group>
         </Stack>

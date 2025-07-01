@@ -20,37 +20,24 @@ import Table from "../../../components/Table";
 import { useNavigate } from "react-router-dom";
 import { PATH } from "../../../constants/path.constants";
 import { DateInput } from "@mantine/dates";
+
 type Assignment = {
   id: string;
   name: string;
-  assignDate: string;
   startDate: string;
   endDate: string;
   departments: string[];
   employees: string[];
-  supervisor: string;
+  supervisor?: string;
   creator: string;
-  manager: string;
+  manager?: string;
   seasonPlan: string;
-  materials?: {
-    name: string;
-    quantity: number;
-  }[];
-  pesticides?: {
-    name: string;
-    quantity: number;
-    unit: string;
-  }[];
-  equipment?: {
-    name: string;
-    quantity: number;
-  }[];
 };
+
 const assignmentData: Assignment[] = [
   {
     id: "A001",
     name: "Tưới nước đợt 1",
-    assignDate: "2025-07-01",
     startDate: "2025-07-02",
     endDate: "2025-07-03",
     departments: ["Chăm sóc cây", "Bảo vệ thực vật"],
@@ -59,28 +46,31 @@ const assignmentData: Assignment[] = [
     creator: "Lê Thị Điều",
     manager: "Nguyễn Quản Lý",
     seasonPlan: "Kế hoạch mùa Xuân 2025",
-    materials: [
-      { name: "Phân NPK", quantity: 10 },
-      { name: "Vôi bột", quantity: 3 },
-    ],
-    pesticides: [{ name: "Confidor", quantity: 2, unit: "lít" }],
-    equipment: [{ name: "Máy xịt thuốc", quantity: 1 }],
   },
 ];
 
 const PlanManagementAssignPage = () => {
   const navigate = useNavigate();
-  const onAddAssign = () => {
-    navigate(PATH.PLAN_ADD_ASSIGN);
+
+  const onAddAssign = () => navigate(PATH.PLAN_ADD_ASSIGN);
+
+  const onAssignDetail = (id: string) =>
+    navigate(PATH.PLAN_ASSIGN_DETAIL.replace(":id", id));
+
+  const onAssignEdit = (id: string) => {
+    // Navigate to edit page (optional implementation)
+    console.log("Chỉnh sửa", id);
   };
-  const onAssignDetail = () => {
-    navigate(PATH.PLAN_ASSIGN_DETAIL);
+
+  const onAssignDelete = (id: string) => {
+    // Gọi API hoặc mở xác nhận xoá
+    console.log("Xoá", id);
   };
+
   const assignmentColumns: MRT_ColumnDef<Assignment>[] = [
-    { accessorKey: "name", header: "Tên phiếu" },
-    { accessorKey: "assignDate", header: "Ngày giao" },
-    { accessorKey: "startDate", header: "Bắt đầu" },
-    { accessorKey: "endDate", header: "Kết thúc" },
+    { accessorKey: "name", header: "Tên công việc" },
+    { accessorKey: "startDate", header: "Thời gian thực hiện" },
+    { accessorKey: "endDate", header: "Thời gian hoàn thành dự kiến" },
     {
       accessorKey: "departments",
       header: "Phòng ban",
@@ -101,19 +91,27 @@ const PlanManagementAssignPage = () => {
           </Badge>
         )),
     },
-    { accessorKey: "manager", header: "Quản lý" },
-    { accessorKey: "supervisor", header: "Giám sát" },
+    {
+      accessorKey: "manager",
+      header: "Người quản lý",
+      Cell: ({ row }) => row.original.manager || "--",
+    },
+    {
+      accessorKey: "supervisor",
+      header: "Người kiểm định",
+      Cell: ({ row }) => row.original.supervisor || "--",
+    },
     { accessorKey: "creator", header: "Người tạo" },
-    { accessorKey: "seasonPlan", header: "Kế hoạch canh tác" },
+    { accessorKey: "seasonPlan", header: "Kế hoạch mùa vụ" },
     {
       accessorKey: "actions",
       header: "",
       enableColumnActions: false,
       size: 10,
-      Cell: () => (
+      Cell: ({ row }) => (
         <Menu shadow="md">
           <Menu.Target>
-            <ActionIcon variant="transparent" c={"gray"}>
+            <ActionIcon variant="transparent" c="gray">
               <IconDotsVertical />
             </ActionIcon>
           </Menu.Target>
@@ -121,14 +119,21 @@ const PlanManagementAssignPage = () => {
           <Menu.Dropdown>
             <Menu.Item
               leftSection={<IconEye size={18} color="gray" />}
-              onClick={onAssignDetail}
+              onClick={() => onAssignDetail(row.original.id)}
             >
               Chi tiết
             </Menu.Item>
-            <Menu.Item leftSection={<IconEdit size={18} color="green" />}>
+            <Menu.Item
+              leftSection={<IconEdit size={18} color="green" />}
+              onClick={() => onAssignEdit(row.original.id)}
+            >
               Chỉnh sửa
             </Menu.Item>
-            <Menu.Item leftSection={<IconTrash size={18} />} color="red">
+            <Menu.Item
+              leftSection={<IconTrash size={18} />}
+              color="red"
+              onClick={() => onAssignDelete(row.original.id)}
+            >
               Xoá
             </Menu.Item>
           </Menu.Dropdown>
@@ -152,20 +157,23 @@ const PlanManagementAssignPage = () => {
           </Button>
         </Group>
       </Group>
+
       <Group>
         <DateInput
           leftSection={<IconCalendar />}
-          placeholder="Ngày bắt đầu"
+          placeholder="Từ ngày"
           radius={4}
         />
         <DateInput
           leftSection={<IconCalendar />}
-          placeholder="Ngày kết thúc"
+          placeholder="Đến ngày"
           radius={4}
         />
       </Group>
+
       <Table columns={assignmentColumns} data={assignmentData} />
     </Stack>
   );
 };
+
 export default PlanManagementAssignPage;

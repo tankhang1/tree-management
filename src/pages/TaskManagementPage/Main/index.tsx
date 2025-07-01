@@ -125,7 +125,7 @@ const TaskManagementMainPage = () => {
     <Stack gap="lg">
       <Group justify="space-between">
         <Title flex={1} order={2}>
-          Quản lý công việc BATMAN
+          Quản lý công việc phát sinh
         </Title>
         <Group>
           <Button variant="outline" radius={4} leftSection={<IconFileExcel />}>
