@@ -18,7 +18,8 @@ import {
 } from "@tabler/icons-react";
 import type { MRT_ColumnDef } from "mantine-react-table";
 import Table from "../../../components/Table";
-import { useForm } from "@mantine/form";
+import { useNavigate } from "react-router-dom";
+import { PATH } from "../../../constants/path.constants";
 type Factory = {
   factoryId: string;
   name: string;
@@ -61,35 +62,15 @@ const factoryDataset: Factory[] = [
     status: "Đang Hoạt động",
   },
 ];
-const statusOptions = [
-  { value: "active", label: "Đang hoạt động" },
-  { value: "inactive", label: "Ngừng hoạt động" },
-  { value: "maintenance", label: "Bảo trì" },
-];
 
-const departmentOptions = [
-  "Sản xuất",
-  "Kho",
-  "QA/QC",
-  "Đóng gói",
-  "Vận chuyển",
-  "Kỹ thuật",
-  "Kế toán",
-].map((d) => ({ value: d, label: d }));
 const FactoryManagementMainPage = () => {
-  const form = useForm({
-    initialValues: {
-      factoryId: "",
-      name: "",
-      location: "",
-      areaSize: 0,
-      manager: "",
-      departments: [],
-      establishedDate: null,
-      status: "active",
-    },
-  });
-
+  const navigate = useNavigate();
+  const onAddFactoryMain = () => {
+    navigate(PATH.FACTORY_ADD_MAIN);
+  };
+  const onAddFactoryDetail = () => {
+    navigate(PATH.FACTORY_MAIN_DETAIL);
+  };
   const factoryColumns: MRT_ColumnDef<Factory>[] = [
     { accessorKey: "factoryId", header: "Mã nhà máy" },
     { accessorKey: "name", header: "Tên nhà máy" },
@@ -123,7 +104,10 @@ const FactoryManagementMainPage = () => {
           </Menu.Target>
 
           <Menu.Dropdown>
-            <Menu.Item leftSection={<IconEye size={18} color="gray" />}>
+            <Menu.Item
+              leftSection={<IconEye size={18} color="gray" />}
+              onClick={onAddFactoryDetail}
+            >
               Chi tiết
             </Menu.Item>
             <Menu.Item leftSection={<IconEdit size={18} color="green" />}>
@@ -148,12 +132,14 @@ const FactoryManagementMainPage = () => {
           <Button variant="outline" radius={4} leftSection={<IconFileExcel />}>
             Xuất File
           </Button>
-          <Button radius={4}>Thêm mới</Button>
+          <Button radius={4} onClick={onAddFactoryMain}>
+            Thêm mới
+          </Button>
         </Group>
       </Group>
       <Group>
         <Autocomplete
-          leftSection={<IconSearch />}
+          leftSection={<IconSearch size={18} />}
           placeholder="Tìm kiếm vùng trồng"
           radius={4}
         />

@@ -119,6 +119,10 @@ import HRManagementTeamDetailPage from "./pages/HRManagementPage/Team/Detail/ind
 import HRManagementTeamAddPage from "./pages/HRManagementPage/Team/Add/index.tsx";
 import AreaManagementRowDetailPage from "./pages/AreaManagementPage/Row/Detail/index.tsx";
 import AreaManagementCultivationMethodAddPage from "./pages/AreaManagementPage/CultivationMethod/Add/index.tsx";
+import FactoryManagementMainAddPage from "./pages/FactoryManagementPage/Main/Add/index.tsx";
+import FactoryManagementMainDetailPage from "./pages/FactoryManagementPage/Main/Detail/index.tsx";
+import MachineManagementMainDetailPage from "./pages/MachineManagementPage/Main/Detail/index.tsx";
+import MachineManagementMainAddPage from "./pages/MachineManagementPage/Main/Add/index.tsx";
 const theme: MantineThemeOverride = {
   fontFamily: "MyFont, sans-serif",
   primaryColor: "brand",
@@ -382,12 +386,28 @@ const ROUTES = [
   <Route path={PATH.FACTORY_MANAGEMENT} element={<FactoryManagementPage />} />,
   <Route path={PATH.FACTORY_MAIN} element={<FactoryManagementMainPage />} />,
   <Route
+    path={PATH.FACTORY_ADD_MAIN}
+    element={<FactoryManagementMainAddPage />}
+  />,
+  <Route
+    path={PATH.FACTORY_MAIN_DETAIL}
+    element={<FactoryManagementMainDetailPage />}
+  />,
+  <Route
     path={PATH.FACTORY_HISTORY}
     element={<FactoryManagementHistoryPage />}
   />,
 
   <Route path={PATH.MACHINE_MANAGEMENT} element={<MachineManagementPage />} />,
   <Route path={PATH.MACHINE_MAIN} element={<MachineManagementMainPage />} />,
+  <Route
+    path={PATH.MACHINE_MAIN_DETAIL}
+    element={<MachineManagementMainDetailPage />}
+  />,
+  <Route
+    path={PATH.MACHINE_ADD_MAIN}
+    element={<MachineManagementMainAddPage />}
+  />,
   <Route
     path={PATH.MACHINE_USAGE_HISTORY}
     element={<MachineManagementUsageHistoryPage />}

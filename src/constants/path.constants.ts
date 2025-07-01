@@ -121,11 +121,15 @@ export const PATH = {
   // Factory Management
   FACTORY_MANAGEMENT: "/factory-management",
   FACTORY_MAIN: "/factory-management/main",
+  FACTORY_ADD_MAIN: "/factory-management/main/add",
+  FACTORY_MAIN_DETAIL: "/factory-management/main/detail",
   FACTORY_HISTORY: "/factory-management/history",
 
   // Machine Management
   MACHINE_MANAGEMENT: "/machine-management",
   MACHINE_MAIN: "/machine-management/main",
+  MACHINE_MAIN_DETAIL: "/machine-management/main/detail",
+  MACHINE_ADD_MAIN: "/machine-management/main/add",
   MACHINE_USAGE_HISTORY: "/machine-management/usage-history",
   MACHINE_MAINTENANCE_HISTORY: "/machine-management/maintenance-history",
 
