@@ -10,13 +10,21 @@ import {
   Textarea,
   FileInput,
   MultiSelect,
+  Modal,
+  Text,
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
+import { useDisclosure } from "@mantine/hooks";
 import { IconArrowLeft, IconFileTypePdf } from "@tabler/icons-react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import CycleDetail from "./components/CycleDetail";
 
 const PlantManagementTreeAddPage = () => {
+  const [openedTreeDetail, { open: openTreeDetail, close: closeTreeDetail }] =
+    useDisclosure(false);
+  const [openedAddTree, { open: openAddTree, close: closeAddTree }] =
+    useDisclosure(false);
   const navigate = useNavigate();
   const [activeStep, setActiveStep] = useState(0);
 
@@ -69,6 +77,21 @@ const PlantManagementTreeAddPage = () => {
       <form onSubmit={form.onSubmit(handleSubmit)}>
         {activeStep === 0 && (
           <Stack mt="md" gap={"xs"}>
+            <Select
+              label="Nhóm cây trồng"
+              placeholder="Chọn nhóm cây trồng"
+              radius={4}
+            />
+            <Select
+              label="Danh mục cây trồng"
+              placeholder="Chọn danh mục cây trồng"
+              radius={4}
+            />
+            <Select
+              label="Giống cây"
+              placeholder="Chọn giống cây trồng"
+              radius={4}
+            />
             <TextInput
               label="Mã cây"
               placeholder="Mã cây"
@@ -83,14 +106,6 @@ const PlantManagementTreeAddPage = () => {
               {...form.getInputProps("name")}
               radius={4}
             />
-            <Select
-              label="Loại cây"
-              placeholder="Chọn loại cây"
-              data={["Cây ăn trái", "Cây công nghiệp", "Cây rau màu", "Khác"]}
-              required
-              {...form.getInputProps("type")}
-              radius={4}
-            />
             <Textarea
               label="Mô tả"
               {...form.getInputProps("note")}
@@ -101,15 +116,22 @@ const PlantManagementTreeAddPage = () => {
 
         {activeStep === 1 && (
           <Stack mt="md" gap={"xs"}>
+            <Group align="flex-end">
+              <TextInput
+                label="Mã giống cây (hệ thống)"
+                placeholder="Mã giống cây (hệ thống)"
+                required
+                disabled
+                {...form.getInputProps("seedCode")}
+                radius={4}
+                flex={1}
+              />
+              <Button radius={4} onClick={openAddTree}>
+                Tạo mới
+              </Button>
+            </Group>
             <TextInput
-              label="Mã giống cây (hệ thống)"
-              placeholder="Mã giống cây (hệ thống)"
-              required
               disabled
-              {...form.getInputProps("seedCode")}
-              radius={4}
-            />
-            <TextInput
               label="Tên giống"
               placeholder="Tên giống"
               required
@@ -121,12 +143,14 @@ const PlantManagementTreeAddPage = () => {
               placeholder="Nhà cung cấp"
               {...form.getInputProps("supplier")}
               radius={4}
+              disabled
             />
             <Select
               label="Xuất xứ (quốc gia)"
               placeholder="Xuất xứ (quốc gia)"
               {...form.getInputProps("origin")}
               radius={4}
+              disabled
             />
             <TextInput
               label="Tỷ lệ nảy mầm (%)"
@@ -134,12 +158,23 @@ const PlantManagementTreeAddPage = () => {
               placeholder="VD: 30"
               type="number"
               min={0}
+              disabled
+              {...form.getInputProps("germinationRate")}
+            />
+            <TextInput
+              label="Độ đồng đều (%)"
+              radius={4}
+              placeholder="VD: 30"
+              type="number"
+              disabled
+              min={0}
               {...form.getInputProps("germinationRate")}
             />
             <TextInput
               label="Năng suất (tấn/ha)"
               {...form.getInputProps("yield")}
               radius={4}
+              disabled
               placeholder="VD: 30"
               type="number"
             />
@@ -147,11 +182,13 @@ const PlantManagementTreeAddPage = () => {
               label="Mô tả"
               {...form.getInputProps("seedNote")}
               radius={4}
+              disabled
             />
             <FileInput
               label="Tài liệu kỹ thuật (PDF)"
               accept="application/pdf"
               {...form.getInputProps("seedDoc")}
+              disabled
               radius={4}
               leftSection={<IconFileTypePdf />}
             />
@@ -161,7 +198,7 @@ const PlantManagementTreeAddPage = () => {
         {activeStep === 2 && (
           <Stack mt="md" gap={"xs"}>
             <Select
-              label="Hình thức thu hoạch"
+              label="Đơn vị tính toán khi thu hoạch"
               placeholder="Chọn phương pháp"
               data={["Theo quả", "Kg", "Tấn", "Thùng / Sọt"]}
               required
@@ -173,18 +210,24 @@ const PlantManagementTreeAddPage = () => {
 
         {activeStep === 3 && (
           <Stack mt="md" gap={"xs"}>
-            <Select
-              label="Chu kỳ sinh trưởng"
-              placeholder="Chọn chu kỳ"
-              data={[
-                "Chu kỳ ngắn (9-12 tháng)",
-                "Chu kỳ trung bình (3-5 năm)",
-                "Chu kỳ dài (5-7 năm)",
-              ]}
-              required
-              {...form.getInputProps("growthCycle")}
-              radius={4}
-            />
+            <Group align="flex-end">
+              <Select
+                label="Chu kỳ sinh trưởng"
+                placeholder="Chọn chu kỳ"
+                data={[
+                  "Chu kỳ ngắn (9-12 tháng)",
+                  "Chu kỳ trung bình (3-5 năm)",
+                  "Chu kỳ dài (5-7 năm)",
+                ]}
+                flex={1}
+                required
+                {...form.getInputProps("growthCycle")}
+                radius={4}
+              />
+              <Button radius={4} onClick={openTreeDetail}>
+                Xem chi tiết
+              </Button>
+            </Group>
             <MultiSelect
               label="Giai đoạn sinh trưởng"
               placeholder="Chọn các giai đoạn"
@@ -200,15 +243,9 @@ const PlantManagementTreeAddPage = () => {
               radius={4}
             />
             <TextInput
-              label="Thời gian (ngày)"
+              label="Thời gian thu hoạch dự kiến"
               placeholder="VD: 180 ngày"
               {...form.getInputProps("growthTime")}
-              radius={4}
-            />
-            <Textarea
-              label="Điều kiện đặc thù"
-              placeholder="Mô tả các điều kiện môi trường, phân bón, nước..."
-              {...form.getInputProps("growthNote")}
               radius={4}
             />
           </Stack>
@@ -237,6 +274,90 @@ const PlantManagementTreeAddPage = () => {
           )}
         </Group>
       </form>
+      <Modal
+        opened={openedAddTree}
+        onClose={closeAddTree}
+        title={<Text fw={"bold"}>Tạo mới giống cây</Text>}
+      >
+        <Stack gap={"xs"}>
+          <TextInput
+            label="Mã giống cây (hệ thống)"
+            placeholder="Mã giống cây (hệ thống)"
+            required
+            disabled
+            {...form.getInputProps("seedCode")}
+            radius={4}
+            flex={1}
+          />
+
+          <TextInput
+            label="Tên giống"
+            placeholder="Tên giống"
+            required
+            {...form.getInputProps("seedName")}
+            radius={4}
+          />
+          <Select
+            label="Nhà cung cấp"
+            placeholder="Nhà cung cấp"
+            {...form.getInputProps("supplier")}
+            radius={4}
+          />
+          <Select
+            label="Xuất xứ (quốc gia)"
+            placeholder="Xuất xứ (quốc gia)"
+            {...form.getInputProps("origin")}
+            radius={4}
+          />
+          <TextInput
+            label="Tỷ lệ nảy mầm (%)"
+            radius={4}
+            placeholder="VD: 30"
+            type="number"
+            min={0}
+            {...form.getInputProps("germinationRate")}
+          />
+          <TextInput
+            label="Độ đồng đều (%)"
+            radius={4}
+            placeholder="VD: 30"
+            type="number"
+            min={0}
+            {...form.getInputProps("germinationRate")}
+          />
+          <TextInput
+            label="Năng suất (tấn/ha)"
+            {...form.getInputProps("yield")}
+            radius={4}
+            placeholder="VD: 30"
+            type="number"
+          />
+          <Textarea
+            label="Mô tả"
+            {...form.getInputProps("seedNote")}
+            radius={4}
+          />
+          <FileInput
+            label="Tài liệu kỹ thuật (PDF)"
+            accept="application/pdf"
+            {...form.getInputProps("seedDoc")}
+            radius={4}
+            leftSection={<IconFileTypePdf />}
+          />
+          <Group justify="right">
+            <Button radius={4} onClick={closeAddTree}>
+              Lưu
+            </Button>
+          </Group>
+        </Stack>
+      </Modal>
+      <Modal
+        opened={openedTreeDetail}
+        onClose={closeTreeDetail}
+        title={<Text fw={"bold"}>Chi tiết chu kì sinh trưởng</Text>}
+      >
+        <CycleDetail />
+      </Modal>
     </Card>
   );
 };

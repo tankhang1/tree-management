@@ -30,6 +30,7 @@ type SeedInfo = {
   origin: string; // Xuất xứ (quốc gia)
   germinationRate: number; // Tỷ lệ nảy mầm (%)
   yield: string; // Năng suất (ví dụ: "25 tấn/ha")
+  uniformity: number;
   note: string; // Mô tả
   technicalDoc: string | null; // Link tài liệu kỹ thuật hoặc tên file
 };
@@ -42,6 +43,7 @@ const seedDataset: SeedInfo[] = [
     germinationRate: 85,
     yield: "25 tấn/ha",
     note: "Giống được kiểm định bởi Bộ NN&PTNT.",
+    uniformity: 60,
     technicalDoc: "ri6-tech-guide.pdf",
   },
   {
@@ -50,6 +52,7 @@ const seedDataset: SeedInfo[] = [
     supplier: "Công ty Mekong Seed",
     origin: "Việt Nam",
     germinationRate: 90,
+    uniformity: 60,
     yield: "30 tấn/ha",
     note: "Chống chịu sâu bệnh tốt, phù hợp với khí hậu miền Tây.",
     technicalDoc: "xoai-mt01.pdf",
@@ -67,6 +70,11 @@ const PlantManagementSeedPage = () => {
     {
       accessorKey: "germinationRate",
       header: "Tỷ lệ nảy mầm (%)",
+      Cell: ({ cell }) => `${cell.getValue()}%`,
+    },
+    {
+      accessorKey: "uniformity",
+      header: "Độ đồng đều (%)",
       Cell: ({ cell }) => `${cell.getValue()}%`,
     },
     { accessorKey: "yield", header: "Năng suất" },

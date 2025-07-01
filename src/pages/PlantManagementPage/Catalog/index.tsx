@@ -22,11 +22,38 @@ import AddCatalogForm from "./components/AddCatalogForm";
 type CatalogType = {
   id: string; // Mã loại cây
   name: string; // Tên loại cây
+  eppo_code: string;
+  icc_code: string;
+  vn_name: string;
+  group_tree: string;
 };
-const cropTypeData: CatalogType[] = [
-  { id: "LC001", name: "Sầu riêng" },
-  { id: "LC002", name: "Cafe" },
+const catalogDataset: CatalogType[] = [
+  {
+    id: "CT01",
+    name: "Durio zibethinus",
+    eppo_code: "DURZI",
+    icc_code: "DZ001",
+    vn_name: "Sầu riêng",
+    group_tree: "Cây ăn quả nhiệt đới",
+  },
+  {
+    id: "CT02",
+    name: "Mangifera indica",
+    eppo_code: "MANIN",
+    icc_code: "MI002",
+    vn_name: "Xoài",
+    group_tree: "Cây ăn quả nhiệt đới",
+  },
+  {
+    id: "CT03",
+    name: "Musa acuminata",
+    eppo_code: "MUSA",
+    icc_code: "MA003",
+    vn_name: "Chuối",
+    group_tree: "Cây ăn quả nhiệt đới",
+  },
 ];
+
 const PlantManagementCatalogPage = () => {
   const [
     openedAddCatalogForm,
@@ -41,6 +68,23 @@ const PlantManagementCatalogPage = () => {
     {
       accessorKey: "name",
       header: "Danh mục cây",
+    },
+    {
+      accessorKey: "vn_name",
+      header: "Danh mục cây ( tiếng việt )",
+    },
+    {
+      accessorKey: "eppo_code",
+      header: "Mã EPPO",
+    },
+    {
+      accessorKey: "icc_code",
+      header: "Mã ICC",
+    },
+
+    {
+      accessorKey: "group_tree",
+      header: "Nhóm cây",
     },
     {
       accessorKey: "actions",
@@ -72,7 +116,7 @@ const PlantManagementCatalogPage = () => {
   ];
   return (
     <Stack gap="lg">
-      <Group justify="space-between" px={"sm"}>
+      <Group justify="space-between">
         <Title flex={1} order={2}>
           Quản lý danh mục cây trồng
         </Title>
@@ -86,7 +130,7 @@ const PlantManagementCatalogPage = () => {
         </Group>
       </Group>
 
-      <Table columns={cropTypeColumns} data={cropTypeData} />
+      <Table columns={cropTypeColumns} data={catalogDataset} />
       <Modal
         opened={openedAddCatalogForm}
         onClose={closeAddCatalogForm}
