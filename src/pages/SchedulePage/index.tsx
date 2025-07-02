@@ -29,7 +29,15 @@ const mockJob = {
   timeSlot: "Sáng",
   date: new Date("2025-07-02T08:00:00"),
 };
-const allEvents = [
+type JobEvent = {
+  id: string;
+  title: string;
+  description: string;
+  date: string;
+  status: "done" | "in_progress" | "canceled";
+  sourceType: "keHoach" | "phatSinh";
+};
+const allEvents: JobEvent[] = [
   {
     id: "1",
     title: "Tưới nước khu A",
@@ -96,6 +104,8 @@ const SchedulePage = () => {
     openedModalDetail,
     { open: openModalDetail, close: closeModalDetail },
   ] = useDisclosure(false);
+  const [openedModalList, { open: openModalList, close: closeModalList }] =
+    useDisclosure(false);
   const navigate = useNavigate();
   const [selectedDate, setSelectedDate] = useState<
     [string | null, string | null]
@@ -170,6 +180,7 @@ const SchedulePage = () => {
                       shadow="sm"
                       radius={4}
                       withBorder
+                      onClick={openModalList}
                       style={{ borderLeft: `6px solid ${color}` }}
                     >
                       <Stack gap={4}>
@@ -231,7 +242,7 @@ const SchedulePage = () => {
       <Modal
         opened={openedModalDetail}
         onClose={closeModalDetail}
-        title="Thông tin công việc"
+        title={<Text fw={"bold"}>Thông tin công việc</Text>}
       >
         <Stack>
           <Text size="sm" c="dimmed">
@@ -282,6 +293,50 @@ const SchedulePage = () => {
               </Badge>
             </Stack>
           </Group>
+        </Stack>
+      </Modal>
+      <Modal
+        opened={openedModalList}
+        onClose={closeModalList}
+        title={<Text fw={"bold"}>Danh sách công việc</Text>}
+      >
+        <Stack>
+          {allEvents.map((job) => (
+            <Card key={job.id} shadow="sm" radius="md" withBorder>
+              <Stack gap={4}>
+                <Group justify="space-between">
+                  <Text fw={600}>{job.title}</Text>
+                  <Badge
+                    color={
+                      job.status === "done"
+                        ? "green"
+                        : job.status === "canceled"
+                        ? "red"
+                        : "yellow"
+                    }
+                  >
+                    {job.status === "done"
+                      ? "Hoàn thành"
+                      : job.status === "canceled"
+                      ? "Đã hủy"
+                      : "Chưa xong"}
+                  </Badge>
+                </Group>
+                <Text size="sm" c="dimmed">
+                  {job.description}
+                </Text>
+                <Text size="sm">
+                  Thời gian: {dayjs(job.date).format("HH:mm")}
+                </Text>
+                <Badge
+                  color={job.sourceType === "keHoach" ? "blue" : "violet"}
+                  variant="light"
+                >
+                  {job.sourceType === "keHoach" ? "Theo kế hoạch" : "Phát sinh"}
+                </Badge>
+              </Stack>
+            </Card>
+          ))}
         </Stack>
       </Modal>
     </Stack>
