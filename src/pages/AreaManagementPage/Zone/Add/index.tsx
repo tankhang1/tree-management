@@ -15,8 +15,13 @@ import {
 } from "@mantine/core";
 import { useState } from "react";
 import { MapContainer, TileLayer, Polygon } from "react-leaflet";
-import "leaflet/dist/leaflet.css";
-import { IconAlertTriangle, IconPlus, IconTrash } from "@tabler/icons-react";
+import {
+  IconAlertTriangle,
+  IconArrowLeft,
+  IconPlus,
+  IconTrash,
+} from "@tabler/icons-react";
+import { useNavigate } from "react-router-dom";
 
 type AreaForm = {
   code: string;
@@ -44,6 +49,7 @@ const defaultForm: AreaForm = {
 type LatLng = [number, number];
 
 const AreaManagementAddZonePage = () => {
+  const navigate = useNavigate();
   const [form, setForm] = useState<AreaForm>(defaultForm);
   const [active, setActive] = useState(0);
   const [lat, setLat] = useState<string>("");
@@ -76,9 +82,17 @@ const AreaManagementAddZonePage = () => {
 
   return (
     <Paper shadow="md" radius={8} p="xl" withBorder>
-      <Title order={3} mb="md">
-        Tạo mới khu vực trồng
-      </Title>
+      <Group mb="md">
+        <Button
+          variant="subtle"
+          radius={4}
+          leftSection={<IconArrowLeft size={18} />}
+          onClick={() => navigate(-1)}
+        >
+          Quay lại
+        </Button>
+        <Title order={3}>Tạo mới khu vực trồng</Title>
+      </Group>
 
       <Stepper
         active={active}
@@ -191,18 +205,18 @@ const AreaManagementAddZonePage = () => {
                 ))}
               </Stack>
             )}
-
             {/* Cảnh báo nếu không đủ 3 điểm */}
             {coords.length > 0 && coords.length < 3 && (
               <Alert icon={<IconAlertTriangle />} color="yellow" radius={4}>
                 Cần ít nhất 3 điểm để tạo đa giác.
               </Alert>
             )}
-
-            {/* Bản đồ Leaflet với polygon */}
+            Bản đồ Leaflet với polygon
             {coords.length >= 3 && (
               <MapContainer
-                center={coords[0]}
+                center={
+                  coords.length >= 1 ? coords[0] : [10.762622, 106.660172]
+                }
                 zoom={16}
                 style={{ height: "300px", width: "100%", borderRadius: 8 }}
               >
