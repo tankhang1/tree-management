@@ -1,210 +1,283 @@
 import {
   Button,
-  Card,
   Group,
   Stack,
-  Stepper,
   TextInput,
-  Textarea,
   Select,
-  MultiSelect,
-  Title,
-  Paper,
   NumberInput,
+  MultiSelect,
+  Text,
+  Title,
+  Stepper,
+  Paper,
+  Alert,
+  ActionIcon,
 } from "@mantine/core";
-import { useForm } from "@mantine/form";
 import { useState } from "react";
+import { MapContainer, TileLayer, Polygon } from "react-leaflet";
+import "leaflet/dist/leaflet.css";
+import { IconAlertTriangle, IconPlus, IconTrash } from "@tabler/icons-react";
+
+type AreaForm = {
+  code: string;
+  name: string;
+  area: number;
+  soilType: string;
+  terrain: string[];
+  mainCrop: string;
+  orgUnit: string;
+  employee: string;
+  gps: string;
+};
+
+const defaultForm: AreaForm = {
+  code: "",
+  name: "",
+  area: 0,
+  soilType: "",
+  terrain: [],
+  mainCrop: "",
+  orgUnit: "",
+  employee: "",
+  gps: "",
+};
+type LatLng = [number, number];
 
 const AreaManagementAddZonePage = () => {
-  const [activeStep, setActiveStep] = useState(0);
+  const [form, setForm] = useState<AreaForm>(defaultForm);
+  const [active, setActive] = useState(0);
+  const [lat, setLat] = useState<string>("");
+  const [lng, setLng] = useState<string>("");
+  const [coords, setCoords] = useState<LatLng[]>([]);
 
-  const form = useForm({
-    initialValues: {
-      regionId: "",
-      areaId: "",
-      code: "",
-      name: "",
-      area: "",
-      mainCrops: [],
-      irrigation: "",
-      farming: "",
-      gps: "",
-      rows: [
-        {
-          name: "",
-          code: "",
-          crop: "",
-          treeCount: "",
-          gps: "",
-        },
-      ],
-    },
-  });
-
-  const handleSubmit = () => {
-    console.log("✅ Dữ liệu lô & hàng:", form.values);
+  const handleAddPoint = () => {
+    const parsedLat = parseFloat(lat);
+    const parsedLng = parseFloat(lng);
+    if (!isNaN(parsedLat) && !isNaN(parsedLng)) {
+      setCoords((prev) => [...prev, [parsedLat, parsedLng]]);
+      setLat("");
+      setLng("");
+    }
   };
 
-  const addRow = () => {
-    form.insertListItem("rows", {
-      name: "",
-      code: "",
-      crop: "",
-      treeCount: "",
-      gps: "",
-    });
+  const handleRemove = (index: number) => {
+    setCoords((prev) => prev.filter((_, i) => i !== index));
+  };
+
+  const nextStep = () => setActive((cur) => Math.min(cur + 1, 3));
+  const prevStep = () => setActive((cur) => Math.max(cur - 1, 0));
+
+  const handleChange = <K extends keyof AreaForm>(
+    key: K,
+    value: AreaForm[K]
+  ) => {
+    setForm((prev) => ({ ...prev, [key]: value }));
   };
 
   return (
-    <Card withBorder shadow="md" radius={4} p="xl">
-      <Title order={3} mb="lg">
-        📋 Tạo mới Lô và Hàng
+    <Paper shadow="md" radius={8} p="xl" withBorder>
+      <Title order={3} mb="md">
+        Tạo mới khu vực trồng
       </Title>
 
       <Stepper
-        active={activeStep}
-        onStepClick={setActiveStep}
-        allowNextStepsSelect={true}
+        active={active}
+        onStepClick={setActive}
+        allowNextStepsSelect={false}
       >
-        <Stepper.Step label="Vùng trồng" />
-        <Stepper.Step label="Khu vực" />
-        <Stepper.Step label="Tạo lô" />
-        <Stepper.Step label="Tạo hàng" />
+        {/* BƯỚC 1 */}
+        <Stepper.Step label="Thông tin">
+          <Stack gap="xs" mt="md">
+            <Select
+              placeholder="Chọn vùng trồng"
+              label="Chọn vùng trồng"
+              radius={4}
+            />
+            <TextInput
+              label="Mã khu vực"
+              radius={4}
+              required
+              value={form.code}
+              onChange={(e) => handleChange("code", e.currentTarget.value)}
+            />
+            <TextInput
+              label="Tên khu vực"
+              radius={4}
+              required
+              value={form.name}
+              onChange={(e) => handleChange("name", e.currentTarget.value)}
+            />
+            <NumberInput
+              label="Diện tích (m²)"
+              radius={4}
+              required
+              value={form.area}
+              onChange={(value) => handleChange("area", +value || 0)}
+              min={0}
+            />
+            <Select
+              label="Loại đất"
+              radius={4}
+              data={["Đất thịt", "Đất cát", "Đất đỏ", "Đất sét"]}
+              value={form.soilType}
+              onChange={(value) => handleChange("soilType", value || "")}
+              placeholder="Chọn loại đất"
+            />
+            <Select label="Cây trồng chính" radius={4} value={form.mainCrop} />
+            <MultiSelect
+              label="Địa hình"
+              radius={4}
+              data={["Cao", "Thấp", "Dốc", "Bằng phẳng"]}
+              value={form.terrain}
+              onChange={(value) => handleChange("terrain", value)}
+              placeholder="Chọn nhiều địa hình"
+            />
+            <Select label="Đơn vị quản lý" radius={4} value={form.orgUnit} />
+            <Select
+              label="Nhân viên phụ trách"
+              radius={4}
+              value={form.employee}
+            />
+          </Stack>
+        </Stepper.Step>
+
+        {/* BƯỚC 2 */}
+        <Stepper.Step label="Tọa độ GPS">
+          <Stack mt="md" gap={"xs"}>
+            <Group align="flex-end">
+              <TextInput
+                label="Latitude"
+                value={lat}
+                onChange={(e) => setLat(e.currentTarget.value)}
+                placeholder="10.762622"
+                radius={4}
+                flex={1}
+              />
+              <TextInput
+                label="Longitude"
+                value={lng}
+                onChange={(e) => setLng(e.currentTarget.value)}
+                placeholder="106.660172"
+                radius={4}
+                flex={1}
+              />
+              <Button
+                onClick={handleAddPoint}
+                radius={4}
+                leftSection={<IconPlus size={16} />}
+              >
+                Thêm
+              </Button>
+            </Group>
+            {coords.length > 0 && (
+              <Stack gap={"xs"}>
+                <Text size="sm" c="dimmed">
+                  Danh sách tọa độ ({coords.length}):
+                </Text>
+                {coords.map(([lat, lng], i) => (
+                  <Group key={i} gap="xs">
+                    <Text size="sm" w={"40%"}>
+                      {i + 1}. {lat}, {lng}
+                    </Text>
+                    <ActionIcon
+                      color="red"
+                      variant="light"
+                      radius={4}
+                      onClick={() => handleRemove(i)}
+                    >
+                      <IconTrash size={16} />
+                    </ActionIcon>
+                  </Group>
+                ))}
+              </Stack>
+            )}
+
+            {/* Cảnh báo nếu không đủ 3 điểm */}
+            {coords.length > 0 && coords.length < 3 && (
+              <Alert icon={<IconAlertTriangle />} color="yellow" radius={4}>
+                Cần ít nhất 3 điểm để tạo đa giác.
+              </Alert>
+            )}
+
+            {/* Bản đồ Leaflet với polygon */}
+            {coords.length >= 3 && (
+              <MapContainer
+                center={coords[0]}
+                zoom={16}
+                style={{ height: "300px", width: "100%", borderRadius: 8 }}
+              >
+                <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
+                <Polygon positions={coords} color="green" />
+              </MapContainer>
+            )}
+          </Stack>
+        </Stepper.Step>
+
+        {/* BƯỚC 3 */}
+        <Stepper.Step label="Lô">
+          <Text mt="md">
+            Bạn có thể thêm danh sách lô sau khi tạo khu vực thành công.
+          </Text>
+        </Stepper.Step>
+
+        {/* BƯỚC 4 */}
+        <Stepper.Step label="Xác nhận">
+          <Stack gap={4} mt="md">
+            <Text>
+              <b>Mã:</b> {form.code}
+            </Text>
+            <Text>
+              <b>Tên:</b> {form.name}
+            </Text>
+            <Text>
+              <b>Diện tích:</b> {form.area.toLocaleString()} m²
+            </Text>
+            <Text>
+              <b>Loại đất:</b> {form.soilType}
+            </Text>
+            <Text>
+              <b>Cây trồng chính:</b> {form.mainCrop}
+            </Text>
+            <Text>
+              <b>Địa hình:</b> {form.terrain.join(", ")}
+            </Text>
+            <Text>
+              <b>Đơn vị:</b> {form.orgUnit}
+            </Text>
+            <Text>
+              <b>Nhân viên:</b> {form.employee}
+            </Text>
+            <Text>
+              <b>GPS:</b> {form.gps}
+            </Text>
+          </Stack>
+        </Stepper.Step>
       </Stepper>
 
-      <form onSubmit={form.onSubmit(handleSubmit)}>
-        {activeStep === 0 && (
-          <Stack mt="md">
-            <Select
-              label="Chọn vùng trồng"
-              placeholder="Chọn vùng"
-              data={["RG001 - Vùng A", "RG002 - Vùng B"]}
-              {...form.getInputProps("regionId")}
-              radius={4}
-            />
-          </Stack>
-        )}
-
-        {activeStep === 1 && (
-          <Stack mt="md">
-            <Select
-              label="Chọn khu vực"
-              placeholder="Chọn khu vực"
-              data={["KV001 - Khu vực A1", "KV002 - Khu vực B1"]}
-              radius={4}
-              {...form.getInputProps("areaId")}
-            />
-          </Stack>
-        )}
-
-        {activeStep === 2 && (
-          <Stack mt="md">
-            <TextInput
-              label="Mã lô"
-              required
-              {...form.getInputProps("code")}
-              radius={4}
-            />
-            <TextInput
-              label="Tên lô"
-              required
-              radius={4}
-              {...form.getInputProps("name")}
-            />
-            <TextInput
-              label="Diện tích (m²)"
-              type="number"
-              required
-              radius={4}
-              {...form.getInputProps("area")}
-            />
-            <MultiSelect
-              label="Cây trồng chính"
-              placeholder="Chọn 1 hoặc nhiều loại"
-              data={["Sầu riêng", "Xoài", "Mãng cầu", "Chuối"]}
-              radius={4}
-              {...form.getInputProps("mainCrops")}
-            />
-            <Select
-              label="Phương pháp tưới tiêu"
-              data={["Tưới nhỏ giọt", "Tưới phun mưa", "Tưới tràn"]}
-              radius={4}
-              {...form.getInputProps("irrigation")}
-            />
-            <Select
-              label="Phương pháp canh tác"
-              data={["Hữu cơ", "Truyền thống", "Công nghệ cao"]}
-              radius={4}
-              {...form.getInputProps("farming")}
-            />
-            <Textarea
-              label="Toạ độ GPS (đa giác)"
-              placeholder="VD: 10.77,106.69 10.78,106.70"
-              radius={4}
-              {...form.getInputProps("gps")}
-            />
-          </Stack>
-        )}
-
-        {activeStep === 3 && (
-          <Stack mt="md">
-            {form.values.rows.map((row, index) => (
-              <Paper key={index} p="md" radius={4} withBorder>
-                <Stack gap={"xs"}>
-                  <TextInput
-                    label="Tên hàng"
-                    radius={4}
-                    {...form.getInputProps(`rows.${index}.name`)}
-                  />
-                  <TextInput
-                    label="Mã hàng"
-                    radius={4}
-                    {...form.getInputProps(`rows.${index}.code`)}
-                  />
-                  <Select
-                    label="Chọn cây"
-                    data={["Sầu riêng", "Xoài", "Chuối"]}
-                    radius={4}
-                    {...form.getInputProps(`rows.${index}.crop`)}
-                  />
-                  <NumberInput
-                    label="Số cây"
-                    radius={4}
-                    {...form.getInputProps(`rows.${index}.treeCount`)}
-                  />
-                </Stack>
-              </Paper>
-            ))}
-            <Button variant="light" mt="md" onClick={addRow} radius={4}>
-              + Thêm hàng
-            </Button>
-          </Stack>
-        )}
-
-        <Group justify="space-between" mt="xl">
-          <Button
-            variant="default"
-            radius={4}
-            disabled={activeStep === 0}
-            onClick={() => setActiveStep((prev) => prev - 1)}
-          >
-            Quay lại
+      <Group justify="space-between" mt="xl">
+        <Button
+          radius={4}
+          variant="default"
+          onClick={prevStep}
+          disabled={active === 0}
+        >
+          Quay lại
+        </Button>
+        {active < 3 ? (
+          <Button radius={4} onClick={nextStep}>
+            Tiếp tục
           </Button>
-          {activeStep < 3 ? (
-            <Button
-              radius={4}
-              onClick={() => setActiveStep((prev) => prev + 1)}
-            >
-              Tiếp theo
-            </Button>
-          ) : (
-            <Button radius={4} type="submit" color="green">
-              Lưu
-            </Button>
-          )}
-        </Group>
-      </form>
-    </Card>
+        ) : (
+          <Button
+            radius={4}
+            color="green"
+            onClick={() => console.log("Submitted", form)}
+          >
+            Hoàn tất
+          </Button>
+        )}
+      </Group>
+    </Paper>
   );
 };
 

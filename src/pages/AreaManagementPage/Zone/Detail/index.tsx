@@ -62,6 +62,7 @@ const AreaManagementZoneDetailPage = () => {
     name: "Khu vực A1",
     regionRef: "Vùng Trồng A",
     orgUnit: "Hộ Ông Nguyễn Văn A",
+    employee: "Nhân viên A",
     area: 10000,
     soilType: "Đất thịt",
     terrain: ["Cao", "Dốc"],
@@ -143,6 +144,10 @@ const AreaManagementZoneDetailPage = () => {
                 <Group justify="space-between">
                   <Text fw={600}>Đơn vị quản lý:</Text>
                   <Text>{area.orgUnit}</Text>
+                </Group>
+                <Group justify="space-between">
+                  <Text fw={600}>Nhân viên quản lý:</Text>
+                  <Text>{area.employee}</Text>
                 </Group>
                 <Group justify="space-between">
                   <Text fw={600}>Diện tích:</Text>

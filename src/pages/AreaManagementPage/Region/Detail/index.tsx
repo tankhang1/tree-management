@@ -21,8 +21,8 @@ import {
   IconUserCog,
 } from "@tabler/icons-react";
 import { useMemo, useState } from "react";
-import { MapContainer, TileLayer } from "react-leaflet";
 import { useNavigate } from "react-router-dom";
+import MapBox from "./components/Map";
 const AreaManagementRegionDetailPage = () => {
   const [type, setType] = useState<string>("Toạ độ");
   const navigate = useNavigate();
@@ -33,6 +33,7 @@ const AreaManagementRegionDetailPage = () => {
         codeGov: "VN-REG-2025",
         name: "Vùng trồng sầu riêng Đồng Nai",
         orgUnit: "Hộ nông dân Nguyễn Văn A",
+        employee: "Nhân viên A",
         area: "10000",
         soilType: "Đất thịt",
         terrain: ["Cao", "Dốc"],
@@ -83,7 +84,7 @@ const AreaManagementRegionDetailPage = () => {
         <Title order={3}> Chi tiết vùng trồng</Title>
       </Group>
       <Grid gutter="md" mb="xl">
-        <Grid.Col span={8}>
+        <Grid.Col span={6}>
           <Grid>
             <Grid.Col span={6}>
               <Text fw={500}>Mã vùng:</Text>
@@ -100,6 +101,10 @@ const AreaManagementRegionDetailPage = () => {
             <Grid.Col span={6}>
               <Text fw={500}>Đơn vị quản lý:</Text>
               <Text>{region.orgUnit}</Text>
+            </Grid.Col>
+            <Grid.Col span={6}>
+              <Text fw={500}>Người quản lý:</Text>
+              <Text>{region.employee}</Text>
             </Grid.Col>
             <Grid.Col span={6}>
               <Text fw={500}>Diện tích:</Text>
@@ -123,7 +128,7 @@ const AreaManagementRegionDetailPage = () => {
             </Grid.Col>
           </Grid>
         </Grid.Col>
-        <Grid.Col span={4}>
+        <Grid.Col span={6}>
           <Stack>
             <SegmentedControl
               radius={4}
@@ -136,25 +141,15 @@ const AreaManagementRegionDetailPage = () => {
                 title="Bản đồ vùng trồng"
                 src="https://maps.google.com/maps?q=10.123,106.234&z=15&output=embed"
                 width="100%"
-                height="250"
+                height="400"
                 style={{ border: 0, borderRadius: 8 }}
                 allowFullScreen
                 loading="lazy"
               ></iframe>
             )}
             {type === "Bản đồ" && (
-              <Stack h={250} w={"100%"}>
-                <MapContainer
-                  preferCanvas
-                  center={[11.553203605968022, 107.12999664743181]}
-                  maxZoom={20}
-                  zoom={18}
-                  zoomSnap={1}
-                  minZoom={17}
-                  style={{ height: "250px", borderRadius: 4 }}
-                >
-                  <TileLayer url="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}" />
-                </MapContainer>
+              <Stack h={400} w={"100%"}>
+                <MapBox />
               </Stack>
             )}
           </Stack>

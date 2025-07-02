@@ -28,6 +28,7 @@ type AreaZone = {
   code: string;
   name: string;
   regionName: string;
+  employee: string;
   orgUnit: string;
   area: number; // diện tích (m²)
   soilType: string;
@@ -43,6 +44,7 @@ const areaZoneData: AreaZone[] = [
     name: "Khu vực A1",
     regionName: "Vùng Trồng A",
     orgUnit: "Hộ Ông Nguyễn Văn A",
+    employee: "Nhân viên B",
     area: 10000,
     soilType: "Đất thịt",
     terrain: ["Cao", "Dốc"],
@@ -55,6 +57,7 @@ const areaZoneData: AreaZone[] = [
     code: "KV-B2",
     name: "Khu vực B2",
     regionName: "Vùng Trồng B",
+    employee: "Nhân viên C",
     orgUnit: "Doanh nghiệp VinaFarm",
     area: 8500,
     soilType: "Đất phù sa",
@@ -68,6 +71,7 @@ const areaZoneData: AreaZone[] = [
     code: "KV-C1",
     name: "Khu vực C1",
     regionName: "Vùng Trồng C",
+    employee: "Nhân viên F",
     orgUnit: "Hộ Bà Trần Thị C",
     area: 6000,
     soilType: "Đất cát",
@@ -99,6 +103,10 @@ const AreaManagementRegionPage = () => {
     {
       accessorKey: "orgUnit",
       header: "Đơn vị quản lý",
+    },
+    {
+      accessorKey: "employee",
+      header: "Người quản lý",
     },
     {
       accessorKey: "area",
@@ -162,7 +170,7 @@ const AreaManagementRegionPage = () => {
     },
   ];
   const onAddRegion = () => {
-    navigate(PATH.AREA_ADD_REGION);
+    navigate(PATH.AREA_ADD_ZONE);
   };
   return (
     <Stack gap="lg">

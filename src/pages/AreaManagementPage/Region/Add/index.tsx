@@ -34,6 +34,7 @@ const AreaManagementAddRegionPage = () => {
         codeGov: "",
         name: "",
         orgUnit: "",
+        employee: "",
         area: "",
         soilType: "",
         terrain: [],
@@ -46,6 +47,7 @@ const AreaManagementAddRegionPage = () => {
           name: "",
           regionRef: "",
           orgUnit: "",
+          employee: "",
           area: "",
           soilType: "",
           terrain: [],
@@ -122,10 +124,15 @@ const AreaManagementAddRegionPage = () => {
               required
               {...form.getInputProps("region.name")}
             />
-            <TextInput
+            <Select
               radius={4}
               label="Doanh nghiệp / Hộ nông dân"
               {...form.getInputProps("region.orgUnit")}
+            />
+            <Select
+              radius={4}
+              label="Chọn nhân viên quản lý"
+              {...form.getInputProps("region.employee")}
             />
             <TextInput
               radius={4}
