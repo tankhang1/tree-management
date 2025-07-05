@@ -33,6 +33,7 @@ type TPlot = {
   irrigation: string;
   farming: string;
   gps: string;
+  contour: string;
   numberOfRows: number;
 };
 const areaBlockList: TPlot[] = [
@@ -45,6 +46,7 @@ const areaBlockList: TPlot[] = [
     mainCrops: ["Sầu riêng"],
     irrigation: "Tưới nhỏ giọt",
     farming: "Hữu cơ",
+    contour: "Địa hình dốc nhẹ, từ 48m đến 56m",
     gps: "10.776,106.699 10.777,106.698 10.778,106.700",
     numberOfRows: 8,
   },
@@ -57,6 +59,7 @@ const areaBlockList: TPlot[] = [
     mainCrops: ["Xoài", "Mãng cầu"],
     irrigation: "Tưới phun mưa",
     farming: "Truyền thống",
+    contour: "Địa hình dốc nhẹ, từ 48m đến 56m",
     gps: "10.779,106.695 10.780,106.696 10.781,106.694",
     numberOfRows: 12,
   },
@@ -64,8 +67,8 @@ const areaBlockList: TPlot[] = [
 
 const AreaManagementBlockPage = () => {
   const navigate = useNavigate();
-  const onZoneDetail = () => {
-    navigate(PATH.AREA_ZONE_DETAIL);
+  const onBlockDetail = () => {
+    navigate(PATH.AREA_BLOCK_DETAIL);
   };
   const areaBlockColumns: MRT_ColumnDef<TPlot>[] = [
     { accessorKey: "code", header: "Mã lô" },
@@ -82,7 +85,7 @@ const AreaManagementBlockPage = () => {
     },
     { accessorKey: "irrigation", header: "Phương pháp tưới tiêu" },
     { accessorKey: "farming", header: "Phương pháp canh tác" },
-    { accessorKey: "gps", header: "Tọa độ GPS" },
+    { accessorKey: "contour", header: "Đường bình độ" },
     {
       accessorKey: "numberOfRows",
       header: "Số hàng",
@@ -103,7 +106,7 @@ const AreaManagementBlockPage = () => {
           <Menu.Dropdown>
             <Menu.Item
               leftSection={<IconEye size={18} color="gray" />}
-              onClick={onZoneDetail}
+              onClick={onBlockDetail}
             >
               Chi tiết
             </Menu.Item>
@@ -118,8 +121,8 @@ const AreaManagementBlockPage = () => {
       ),
     },
   ];
-  const onAddZone = () => {
-    navigate(PATH.AREA_ADD_ZONE);
+  const onAddBlock = () => {
+    navigate(PATH.AREA_ADD_BLOCK);
   };
   return (
     <Stack gap="lg">
@@ -131,7 +134,7 @@ const AreaManagementBlockPage = () => {
           <Button variant="outline" radius={4} leftSection={<IconFileExcel />}>
             Xuất File
           </Button>
-          <Button radius={4} onClick={onAddZone}>
+          <Button radius={4} onClick={onAddBlock}>
             Thêm mới
           </Button>
         </Group>
