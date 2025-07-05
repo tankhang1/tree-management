@@ -104,7 +104,7 @@ const MapBox = () => {
       zoomSnap={1}
       minZoom={17}
       boxZoom={false}
-      style={{ height: "100dvh", width: "100dvw" }}
+      style={{ height: "400px", width: "100%", borderRadius: 4 }}
     >
       <ZoomListener onChange={onZoomChange} />
       <TileLayer

@@ -124,6 +124,8 @@ import MachineManagementMainDetailPage from "./pages/MachineManagementPage/Main/
 import MachineManagementMainAddPage from "./pages/MachineManagementPage/Main/Add/index.tsx";
 import PesticideManagementMainDetailPage from "./pages/PesticideManagementPage/Main/Detail/index.tsx";
 import PesticideManagementMainAddPage from "./pages/PesticideManagementPage/Main/Add/index.tsx";
+import SeasonManagementGrowthDetailPage from "./pages/SeasonManagementPage/Growth/Detail/index.tsx";
+import SeasonManagementGrowthAddPage from "./pages/SeasonManagementPage/Growth/Add/index.tsx";
 const theme: MantineThemeOverride = {
   fontFamily: "MyFont, sans-serif",
   primaryColor: "brand",
@@ -293,6 +295,14 @@ const ROUTES = [
 
   <Route path={PATH.SEASON_MANAGEMENT} element={<SeasonManagementPage />} />,
   <Route path={PATH.SEASON_GROWTH} element={<SeasonManagementGrowthPage />} />,
+  <Route
+    path={PATH.SEASON_GROWTH_DETAIL}
+    element={<SeasonManagementGrowthDetailPage />}
+  />,
+  <Route
+    path={PATH.SEASON_ADD_GROWTH}
+    element={<SeasonManagementGrowthAddPage />}
+  />,
   <Route path={PATH.SEASON_CYCLE} element={<SeasonManagementCyclePage />} />,
   <Route
     path={PATH.SEASON_CYCLE_DETAIL}

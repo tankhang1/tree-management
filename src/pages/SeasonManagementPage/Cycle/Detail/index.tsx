@@ -39,7 +39,7 @@ const sampleData = {
 const SeasonManagementCycleDetailPage = () => {
   const navigate = useNavigate();
   return (
-    <Stack>
+    <Card withBorder shadow="sm" radius={4} p="lg">
       <Group mb={"md"}>
         <Button
           variant="subtle"
@@ -111,7 +111,7 @@ const SeasonManagementCycleDetailPage = () => {
           </Paper>
         ))}
       </Stack>
-    </Stack>
+    </Card>
   );
 };
 export default SeasonManagementCycleDetailPage;

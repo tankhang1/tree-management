@@ -1,13 +1,4 @@
-import {
-  ActionIcon,
-  Button,
-  Group,
-  Menu,
-  Modal,
-  Stack,
-  Text,
-  Title,
-} from "@mantine/core";
+import { ActionIcon, Button, Group, Menu, Stack, Title } from "@mantine/core";
 import {
   IconDotsVertical,
   IconEdit,
@@ -17,8 +8,9 @@ import {
 } from "@tabler/icons-react";
 import type { MRT_ColumnDef } from "mantine-react-table";
 import Table from "../../../components/Table";
-import { useDisclosure } from "@mantine/hooks";
-import AddSeasonForm from "./components/AddSeasonForm";
+import { useNavigate } from "react-router-dom";
+import { PATH } from "../../../constants/path.constants";
+
 type CropSeason = {
   id: string;
   name: string;
@@ -50,10 +42,13 @@ const cropSeasonData: CropSeason[] = [
 ];
 
 const SeasonManagementGrowthPage = () => {
-  const [
-    openedAddSeasonForm,
-    { open: openAddSeasonForm, close: closeAddSeasonForm },
-  ] = useDisclosure(false);
+  const navigate = useNavigate();
+  const onAddGrowth = () => {
+    navigate(PATH.SEASON_ADD_GROWTH);
+  };
+  const onGrowthDetail = () => {
+    navigate(PATH.SEASON_GROWTH_DETAIL);
+  };
   const cropSeasonColumns: MRT_ColumnDef<CropSeason>[] = [
     {
       accessorKey: "id",
@@ -90,7 +85,10 @@ const SeasonManagementGrowthPage = () => {
           </Menu.Target>
 
           <Menu.Dropdown>
-            <Menu.Item leftSection={<IconEye size={18} color="gray" />}>
+            <Menu.Item
+              leftSection={<IconEye size={18} color="gray" />}
+              onClick={onGrowthDetail}
+            >
               Chi tiết
             </Menu.Item>
             <Menu.Item leftSection={<IconEdit size={18} color="green" />}>
@@ -114,20 +112,13 @@ const SeasonManagementGrowthPage = () => {
           <Button variant="outline" radius={4} leftSection={<IconFileExcel />}>
             Xuất File
           </Button>
-          <Button radius={4} onClick={openAddSeasonForm}>
+          <Button radius={4} onClick={onAddGrowth}>
             Thêm mới
           </Button>
         </Group>
       </Group>
 
       <Table columns={cropSeasonColumns} data={cropSeasonData} />
-      <Modal
-        opened={openedAddSeasonForm}
-        onClose={closeAddSeasonForm}
-        title={<Text fw={500}>Tạo mới mùa vụ</Text>}
-      >
-        <AddSeasonForm />
-      </Modal>
     </Stack>
   );
 };

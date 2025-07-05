@@ -60,7 +60,7 @@ const SeasonManagementCycleAddPage = () => {
         <Title order={3}>Thêm mới chu kì sinh trưởng</Title>
       </Group>
       <form>
-        <Stack>
+        <Stack gap={"xs"}>
           <Stepper active={active} onStepClick={setActive}>
             <Stepper.Step label="Thông tin chung" />
             <Stepper.Step label="Danh sách giai đoạn" />
