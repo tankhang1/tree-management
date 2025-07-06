@@ -4,15 +4,11 @@ import {
   Group,
   Image,
   Menu,
-  Modal,
   Stack,
-  Text,
   Title,
 } from "@mantine/core";
-import { useDisclosure } from "@mantine/hooks";
 import type { MRT_ColumnDef } from "mantine-react-table";
 import Table from "../../../components/Table";
-import AddTechnicalDocForm from "./components/AddTechnicalDocForm";
 import {
   IconDotsVertical,
   IconEdit,
@@ -20,6 +16,8 @@ import {
   IconFileExcel,
   IconTrash,
 } from "@tabler/icons-react";
+import { useNavigate } from "react-router-dom";
+import { PATH } from "../../../constants/path.constants";
 
 type TechnicalDoc = {
   id: string;
@@ -49,10 +47,14 @@ const varietyDetails: TechnicalDoc[] = [
   },
 ];
 const PlantManagementTechnicalDocPage = () => {
-  const [
-    openedAddTechnicalDocForm,
-    { open: openAddTechnicalDocForm, close: closeAddTechnicalDocForm },
-  ] = useDisclosure(false);
+  const navigate = useNavigate();
+
+  const onTechnicalDocDetail = () => {
+    navigate(PATH.PLANT_TECHNICAL_DOC_DETAIL);
+  };
+  const onAddTechnicalDoc = () => {
+    navigate(PATH.PLANT_ADD_TECHNICAL_DOC);
+  };
   const varietyDetailColumns: MRT_ColumnDef<TechnicalDoc>[] = [
     {
       accessorKey: "imageUrl",
@@ -86,7 +88,10 @@ const PlantManagementTechnicalDocPage = () => {
           </Menu.Target>
 
           <Menu.Dropdown>
-            <Menu.Item leftSection={<IconEye size={18} color="gray" />}>
+            <Menu.Item
+              leftSection={<IconEye size={18} color="gray" />}
+              onClick={onTechnicalDocDetail}
+            >
               Chi tiết
             </Menu.Item>
             <Menu.Item leftSection={<IconEdit size={18} color="green" />}>
@@ -105,26 +110,19 @@ const PlantManagementTechnicalDocPage = () => {
     <Stack gap="lg">
       <Group justify="space-between" px={"sm"}>
         <Title flex={1} order={2}>
-          Quản lý nhóm cây trồng
+          Quản lý tài liệu kĩ thuật
         </Title>
         <Group>
           <Button variant="outline" radius={4} leftSection={<IconFileExcel />}>
             Xuất File
           </Button>
-          <Button radius={4} onClick={openAddTechnicalDocForm}>
+          <Button radius={4} onClick={onAddTechnicalDoc}>
             Thêm mới
           </Button>
         </Group>
       </Group>
 
       <Table columns={varietyDetailColumns} data={varietyDetails} />
-      <Modal
-        opened={openedAddTechnicalDocForm}
-        onClose={closeAddTechnicalDocForm}
-        title={<Text fw={500}>Tạo mới loại cây</Text>}
-      >
-        <AddTechnicalDocForm />
-      </Modal>
     </Stack>
   );
 };

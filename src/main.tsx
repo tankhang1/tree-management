@@ -129,6 +129,8 @@ import SeasonManagementGrowthAddPage from "./pages/SeasonManagementPage/Growth/A
 import AreaManagementRowAddPage from "./pages/AreaManagementPage/Row/Add/index.tsx";
 import AreaManagementTreeAddPage from "./pages/AreaManagementPage/Tree/Add/index.tsx";
 import PlantManagementSeedAddPage from "./pages/PlantManagementPage/Seed/Add/index.tsx";
+import PlantManagementTechnicalDocDetailPage from "./pages/PlantManagementPage/TechnicalDoc/Detail/index.tsx";
+import PlantManagementTechnicalDocAddPage from "./pages/PlantManagementPage/TechnicalDoc/Add/index.tsx";
 const theme: MantineThemeOverride = {
   fontFamily: "MyFont, sans-serif",
   primaryColor: "brand",
@@ -298,7 +300,14 @@ const ROUTES = [
     path={PATH.PLANT_TECHNICAL_DOC}
     element={<PlantManagementTechnicalDocPage />}
   />,
-
+  <Route
+    path={PATH.PLANT_TECHNICAL_DOC_DETAIL}
+    element={<PlantManagementTechnicalDocDetailPage />}
+  />,
+  <Route
+    path={PATH.PLANT_ADD_TECHNICAL_DOC}
+    element={<PlantManagementTechnicalDocAddPage />}
+  />,
   <Route path={PATH.SEASON_MANAGEMENT} element={<SeasonManagementPage />} />,
   <Route path={PATH.SEASON_GROWTH} element={<SeasonManagementGrowthPage />} />,
   <Route

@@ -68,6 +68,8 @@ export const PATH = {
   PLANT_ADD_SEED: "/plant-management/seed/add",
   PLANT_CATALOG: "/plant-management/catalog",
   PLANT_TECHNICAL_DOC: "/plant-management/technical-doc",
+  PLANT_TECHNICAL_DOC_DETAIL: "/plant-management/technical-doc/detail",
+  PLANT_ADD_TECHNICAL_DOC: "/plant-management/technical-doc/add",
 
   // Season Management
   SEASON_MANAGEMENT: "/season-management",
