@@ -3,8 +3,10 @@ import {
   Autocomplete,
   Button,
   Group,
+  Image,
   Menu,
   Stack,
+  Text,
   Title,
 } from "@mantine/core";
 import {
@@ -28,6 +30,7 @@ type TreeCrop = {
   harvestMethod: string; // chọn II.5
   growthCycle: string; // chọn II.4
   note?: string;
+  imgUrl?: string;
 };
 const treeCropData: TreeCrop[] = [
   {
@@ -37,6 +40,8 @@ const treeCropData: TreeCrop[] = [
     harvestMethod: "Thu hoạch thủ công",
     growthCycle: "Chu kỳ dài (5-7 năm)",
     note: "Yêu cầu đất thịt và thoát nước tốt",
+    imgUrl:
+      "https://sinhhocchaua.com/wp-content/uploads/2024/02/gioi-thieu-cay-sau-rieng-1.jpg",
   },
   {
     id: "TREE002",
@@ -45,6 +50,8 @@ const treeCropData: TreeCrop[] = [
     harvestMethod: "Thu hoạch bằng sào",
     growthCycle: "Chu kỳ trung bình (3-5 năm)",
     note: "",
+    imgUrl:
+      "https://inkythuatso.com/uploads/thumbnails/800/2023/03/3-hinh-anh-cay-xoai-sai-qua-inkythuatso-16-08-27-30.jpg",
   },
   {
     id: "TREE003",
@@ -52,6 +59,7 @@ const treeCropData: TreeCrop[] = [
     seedType: "Chồi cây",
     harvestMethod: "Thu hoạch cuống",
     growthCycle: "Chu kỳ ngắn (9-12 tháng)",
+    imgUrl: "https://providenceportieux.com/images/cay_chuoi.jpg",
   },
 ];
 
@@ -65,6 +73,30 @@ const PlantManagementTreePage = () => {
   };
   const treeCropColumns: MRT_ColumnDef<TreeCrop>[] = [
     { accessorKey: "id", header: "Mã cây" },
+    {
+      accessorKey: "imgUrl",
+      header: "Hình ảnh",
+      size: 80,
+      Cell: ({ cell }) => {
+        const url = cell.getValue<string>();
+        return url ? (
+          <Image
+            src={url}
+            alt="Ảnh giống cây"
+            style={{
+              width: 48,
+              height: 48,
+              objectFit: "cover",
+              borderRadius: 4,
+            }}
+          />
+        ) : (
+          <Text size="xs" c="dimmed">
+            Không có ảnh
+          </Text>
+        );
+      },
+    },
     { accessorKey: "name", header: "Tên cây" },
     { accessorKey: "seedType", header: "Hạt giống" },
     { accessorKey: "harvestMethod", header: "Hình thức thu hoạch" },

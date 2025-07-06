@@ -26,31 +26,53 @@ type CatalogType = {
   icc_code: string;
   vn_name: string;
   group_tree: string;
+  note: string;
 };
-const catalogDataset: CatalogType[] = [
+const catalogData: CatalogType[] = [
   {
     id: "CT01",
     name: "Durio zibethinus",
+    vn_name: "Sầu riêng",
     eppo_code: "DURZI",
     icc_code: "DZ001",
-    vn_name: "Sầu riêng",
     group_tree: "Cây ăn quả nhiệt đới",
+    note: "Loài cây nhiệt đới cho quả lớn, giàu dinh dưỡng.",
   },
   {
     id: "CT02",
     name: "Mangifera indica",
+    vn_name: "Xoài",
     eppo_code: "MANIN",
     icc_code: "MI002",
-    vn_name: "Xoài",
     group_tree: "Cây ăn quả nhiệt đới",
+    note: "Trồng phổ biến tại Việt Nam, nhiều giống như Cát Chu, Keo, Tượng.",
   },
   {
     id: "CT03",
     name: "Musa acuminata",
+    vn_name: "Chuối",
     eppo_code: "MUSA",
     icc_code: "MA003",
-    vn_name: "Chuối",
     group_tree: "Cây ăn quả nhiệt đới",
+    note: "Chuối già Nam Mỹ và chuối cau là giống phổ biến.",
+  },
+  {
+    id: "CT04",
+    name: "Coffea canephora",
+    vn_name: "Cà phê Robusta",
+    eppo_code: "COFCA",
+    icc_code: "CF004",
+    group_tree: "Cây công nghiệp lâu năm",
+    note: "Trồng nhiều ở Tây Nguyên, năng suất cao.",
+  },
+  {
+    id: "CT05",
+    name: "Camellia sinensis",
+    vn_name: "Chè",
+    eppo_code: "CAMES",
+    icc_code: "CS005",
+    group_tree: "Cây công nghiệp lâu năm",
+    note: "Nguyên liệu chính để sản xuất trà.",
   },
 ];
 
@@ -85,6 +107,10 @@ const PlantManagementCatalogPage = () => {
     {
       accessorKey: "group_tree",
       header: "Nhóm cây",
+    },
+    {
+      accessorKey: "note",
+      header: "Ghi chú",
     },
     {
       accessorKey: "actions",
@@ -130,7 +156,7 @@ const PlantManagementCatalogPage = () => {
         </Group>
       </Group>
 
-      <Table columns={cropTypeColumns} data={catalogDataset} />
+      <Table columns={cropTypeColumns} data={catalogData} />
       <Modal
         opened={openedAddCatalogForm}
         onClose={closeAddCatalogForm}

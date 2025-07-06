@@ -49,6 +49,7 @@ export const PATH = {
   AREA_ROW_DETAIL: "/area-management/row/detail",
   AREA_ADD_ROW: "/area-management/row/add",
   AREA_TREE: "/area-management/tree",
+  AREA_ADD_TREE: "/area-management/tree/add",
   AREA_MAP: "/area-management/map",
   AREA_SOIL: "/area-management/soil-type",
   AREA_TERRAIN: "/area-management/terrain",
@@ -64,6 +65,7 @@ export const PATH = {
   PLANT_GROUP: "/plant-management/group",
   PLANT_VARIETY: "/plant-management/variety",
   PLANT_SEED: "/plant-management/seed",
+  PLANT_ADD_SEED: "/plant-management/seed/add",
   PLANT_CATALOG: "/plant-management/catalog",
   PLANT_TECHNICAL_DOC: "/plant-management/technical-doc",
 

@@ -3,6 +3,7 @@ import {
   Autocomplete,
   Button,
   Group,
+  Image,
   Menu,
   Modal,
   Stack,
@@ -21,7 +22,9 @@ import {
 } from "@tabler/icons-react";
 import type { MRT_ColumnDef } from "mantine-react-table";
 import Table from "../../../components/Table";
-import AddSeedForm from "./components/AddSeedForm";
+import { useNavigate } from "react-router-dom";
+import { PATH } from "../../../constants/path.constants";
+import SeedDetailView from "./components/SeedDetailView";
 
 type SeedInfo = {
   id: string; // Mã giống cây (hệ thống)
@@ -33,6 +36,7 @@ type SeedInfo = {
   uniformity: number;
   note: string; // Mô tả
   technicalDoc: string | null; // Link tài liệu kỹ thuật hoặc tên file
+  imgUrl: string;
 };
 const seedDataset: SeedInfo[] = [
   {
@@ -45,6 +49,8 @@ const seedDataset: SeedInfo[] = [
     note: "Giống được kiểm định bởi Bộ NN&PTNT.",
     uniformity: 60,
     technicalDoc: "ri6-tech-guide.pdf",
+    imgUrl:
+      "https://giongcaytrongeakmat.com/wp-content/uploads/giong-sau-rieng-ri6.jpg",
   },
   {
     id: "X-MT01",
@@ -56,13 +62,43 @@ const seedDataset: SeedInfo[] = [
     yield: "30 tấn/ha",
     note: "Chống chịu sâu bệnh tốt, phù hợp với khí hậu miền Tây.",
     technicalDoc: "xoai-mt01.pdf",
+    imgUrl:
+      "https://giongcaytrongeakmat.com/wp-content/uploads/giong-sau-rieng-ri6.jpg",
   },
 ];
 
 const PlantManagementSeedPage = () => {
+  const navigate = useNavigate();
   const [openedSeedForm, { open: openSeedForm, close: closeSeedForm }] =
     useDisclosure(false);
+  const onAddSeed = () => {
+    navigate(PATH.PLANT_ADD_SEED);
+  };
   const seedColumns: MRT_ColumnDef<SeedInfo>[] = [
+    {
+      accessorKey: "imgUrl",
+      header: "Hình ảnh",
+      size: 80,
+      Cell: ({ cell }) => {
+        const url = cell.getValue<string>();
+        return url ? (
+          <Image
+            src={url}
+            alt="Ảnh giống cây"
+            style={{
+              width: 48,
+              height: 48,
+              objectFit: "cover",
+              borderRadius: 4,
+            }}
+          />
+        ) : (
+          <Text size="xs" c="dimmed">
+            Không có ảnh
+          </Text>
+        );
+      },
+    },
     { accessorKey: "id", header: "Mã giống" },
     { accessorKey: "name", header: "Tên giống" },
     { accessorKey: "supplier", header: "Nhà cung cấp" },
@@ -109,7 +145,10 @@ const PlantManagementSeedPage = () => {
           </Menu.Target>
 
           <Menu.Dropdown>
-            <Menu.Item leftSection={<IconEye size={18} color="gray" />}>
+            <Menu.Item
+              leftSection={<IconEye size={18} color="gray" />}
+              onClick={openSeedForm}
+            >
               Chi tiết
             </Menu.Item>
             <Menu.Item leftSection={<IconEdit size={18} color="green" />}>
@@ -133,7 +172,7 @@ const PlantManagementSeedPage = () => {
           <Button variant="outline" radius={4} leftSection={<IconFileExcel />}>
             Xuất File
           </Button>
-          <Button onClick={openSeedForm} radius={4}>
+          <Button onClick={onAddSeed} radius={4}>
             Thêm mới
           </Button>
         </Group>
@@ -156,9 +195,24 @@ const PlantManagementSeedPage = () => {
       <Modal
         opened={openedSeedForm}
         onClose={closeSeedForm}
-        title={<Text fw={500}>Tạo mới giống cây</Text>}
+        title={<Text fw={500}>Thông tin chi tiết giống hạt</Text>}
       >
-        <AddSeedForm />
+        <SeedDetailView
+          seed={{
+            id: "SR-RI6",
+            name: "Giống Ri6",
+            supplier: "Green Seed Co.",
+            origin: "Việt Nam",
+            germinationRate: "85",
+            yield: "25",
+            note: "<p>Giống Ri6 nổi bật với năng suất cao và cơm vàng đậm.</p>",
+            imageUrl:
+              "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR1bNpDVSv6F-8H10X4SwSvoi_OF-XkLZZIdw&s",
+            technicalDocUrl: "", // hoặc null nếu không có file
+            technicalContent:
+              "<p>Hướng dẫn trồng theo mật độ 6x6m, sử dụng phân NPK.</p>",
+          }}
+        />
       </Modal>
     </Stack>
   );

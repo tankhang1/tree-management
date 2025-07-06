@@ -22,13 +22,61 @@ import AddGroupForm from "./components/AddGroupForm";
 type CropType = {
   id: string; // Mã loại cây
   name: string; // Tên loại cây
+  note: string;
 };
-const cropTypeData: CropType[] = [
-  { id: "LC001", name: "Cây ăn trái" },
-  { id: "LC002", name: "Cây công nghiệp" },
-  { id: "LC003", name: "Cây rau màu" },
-  { id: "LC004", name: "Cây dược liệu" },
+const cropTypes: CropType[] = [
+  {
+    id: "rice",
+    name: "Lúa",
+    note: "Cây lương thực chính tại Việt Nam, thường trồng vào vụ Đông Xuân và Hè Thu.",
+  },
+  {
+    id: "corn",
+    name: "Ngô",
+    note: "Cây trồng thay thế lúa, phù hợp với nhiều loại đất và khí hậu.",
+  },
+  {
+    id: "cassava",
+    name: "Khoai mì",
+    note: "Cây dễ trồng, chịu hạn tốt, thường dùng làm nguyên liệu chế biến công nghiệp.",
+  },
+  {
+    id: "sweet_potato",
+    name: "Khoai lang",
+    note: "Cây trồng ngắn ngày, thích hợp với đất cát pha, cho năng suất cao.",
+  },
+  {
+    id: "sugarcane",
+    name: "Mía",
+    note: "Nguồn nguyên liệu chính cho ngành sản xuất đường.",
+  },
+  {
+    id: "coffee",
+    name: "Cà phê",
+    note: "Cây công nghiệp dài ngày, chủ yếu trồng ở Tây Nguyên.",
+  },
+  {
+    id: "rubber",
+    name: "Cao su",
+    note: "Cây công nghiệp lâu năm, cho mủ dùng trong công nghiệp chế biến.",
+  },
+  {
+    id: "tea",
+    name: "Chè",
+    note: "Cây công nghiệp và dược liệu, thường trồng ở vùng trung du và miền núi.",
+  },
+  {
+    id: "pepper",
+    name: "Hồ tiêu",
+    note: "Gia vị quan trọng, được xuất khẩu nhiều, chủ yếu trồng ở Tây Nguyên.",
+  },
+  {
+    id: "dragon_fruit",
+    name: "Thanh long",
+    note: "Cây ăn quả đặc sản của miền Nam Trung Bộ.",
+  },
 ];
+
 const PlantManagementGroupPage = () => {
   const [
     openedAddGroupForm,
@@ -43,6 +91,10 @@ const PlantManagementGroupPage = () => {
     {
       accessorKey: "name",
       header: "Tên loại cây",
+    },
+    {
+      accessorKey: "note",
+      header: "Ghi chú",
     },
     {
       accessorKey: "actions",
@@ -88,7 +140,7 @@ const PlantManagementGroupPage = () => {
         </Group>
       </Group>
 
-      <Table columns={cropTypeColumns} data={cropTypeData} />
+      <Table columns={cropTypeColumns} data={cropTypes} />
       <Modal
         opened={openedAddGroupForm}
         onClose={closeAddGroupForm}

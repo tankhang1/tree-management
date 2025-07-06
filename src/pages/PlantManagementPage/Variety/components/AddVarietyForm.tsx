@@ -1,41 +1,18 @@
 import {
+  Button,
+  Stack,
   TextInput,
   Textarea,
-  Button,
   Select,
-  Stack,
   Group,
+  FileInput,
+  Image,
+  ActionIcon,
+  rem,
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
-
-const treeNameOptions = [
-  { value: "Sầu riêng", label: "Sầu riêng" },
-  { value: "Xoài", label: "Xoài" },
-  { value: "Chuối", label: "Chuối" },
-  { value: "Cà phê", label: "Cà phê" },
-  { value: "Mít", label: "Mít" },
-];
-
-const areaOptions = [
-  { value: "A01", label: "Khu A01" },
-  { value: "A02", label: "Khu A02" },
-  { value: "A03", label: "Khu A03" },
-];
-
-const zoneOptions = [
-  { value: "Z01", label: "Vùng Z01" },
-  { value: "Z02", label: "Vùng Z02" },
-  { value: "Z03", label: "Vùng Z03" },
-  { value: "Z04", label: "Vùng Z04" },
-];
-
-const plotOptions = [
-  { value: "P01", label: "Lô P01" },
-  { value: "P02", label: "Lô P02" },
-  { value: "P04", label: "Lô P04" },
-  { value: "P05", label: "Lô P05" },
-  { value: "P07", label: "Lô P07" },
-];
+import { IconUpload, IconFileText, IconX } from "@tabler/icons-react";
+import { useState } from "react";
 
 const AddVarietyForm = () => {
   const form = useForm({
@@ -44,81 +21,127 @@ const AddVarietyForm = () => {
       name: "",
       description: "",
       treeName: "",
-      areaId: "",
-      zoneId: "",
-      plotId: "",
-    },
-
-    validate: {
-      id: (value) => (value ? null : "Bắt buộc"),
-      name: (value) => (value ? null : "Bắt buộc"),
-      treeName: (value) => (value ? null : "Chọn tên cây"),
+      imgUrl: "",
+      doc: "",
     },
   });
 
+  const [imagePreview, setImagePreview] = useState<string | null>(null);
+
   const handleSubmit = (values: typeof form.values) => {
-    console.log("Đã submit:", values);
-    // Gọi API thêm giống cây tại đây
+    console.log("📦 Dữ liệu gửi:", values);
+  };
+
+  const handleImageClear = () => {
+    form.setFieldValue("imgUrl", "");
+    setImagePreview(null);
   };
 
   return (
     <form onSubmit={form.onSubmit(handleSubmit)}>
-      <Stack gap="xs">
+      <Stack gap="sm">
         <TextInput
-          label="Mã giống"
-          placeholder="VD: CV001"
-          {...form.getInputProps("id")}
+          label="Mã giống cây"
+          placeholder="VD: VAR001"
+          required
           radius={4}
+          {...form.getInputProps("id")}
         />
+
         <TextInput
           label="Tên giống"
           placeholder="VD: Sầu riêng Ri6"
+          radius={4}
+          required
           {...form.getInputProps("name")}
-          radius={4}
-        />
-        <Textarea
-          label="Mô tả"
-          placeholder="Mô tả ngắn về giống cây"
-          {...form.getInputProps("description")}
-          radius={4}
         />
 
         <Select
           label="Tên cây"
-          placeholder="Chọn tên cây"
-          data={treeNameOptions}
+          placeholder="Chọn loại cây"
+          radius={4}
+          required
+          data={["Sầu riêng", "Xoài", "Chuối", "Cà phê", "Chè"]}
           {...form.getInputProps("treeName")}
-          radius={4}
-        />
-        <Select
-          label="Khu vực (area)"
-          placeholder="Chọn khu"
-          data={areaOptions}
-          {...form.getInputProps("areaId")}
-          radius={4}
-        />
-        <Select
-          label="Vùng (zone)"
-          placeholder="Chọn vùng"
-          data={zoneOptions}
-          {...form.getInputProps("zoneId")}
-          radius={4}
-        />
-        <Select
-          label="Lô (plot)"
-          placeholder="Chọn lô"
-          data={plotOptions}
-          {...form.getInputProps("plotId")}
-          radius={4}
         />
 
-        <Group justify="right">
+        <Textarea
+          label="Mô tả"
+          placeholder="Nhập mô tả giống cây..."
+          radius={4}
+          minRows={3}
+          autosize
+          {...form.getInputProps("description")}
+        />
+
+        <FileInput
+          label="Ảnh giống cây"
+          placeholder="Chọn ảnh"
+          accept="image/*"
+          radius={4}
+          leftSection={<IconUpload size={18} />}
+          onChange={(file) => {
+            if (file) {
+              const url = URL.createObjectURL(file);
+              form.setFieldValue("imgUrl", url);
+              setImagePreview(url);
+            }
+          }}
+          clearable
+          clearButtonProps={{ onClick: handleImageClear }}
+        />
+
+        {imagePreview && (
+          <Group justify="left" mt="xs">
+            <div style={{ position: "relative", display: "inline-block" }}>
+              <Image
+                src={imagePreview}
+                alt="Ảnh giống cây"
+                radius="md"
+                height={160}
+                width={220}
+                fit="cover"
+              />
+              <ActionIcon
+                variant="filled"
+                color="red"
+                size="sm"
+                radius="xl"
+                style={{
+                  position: "absolute",
+                  top: rem(6),
+                  right: rem(6),
+                  zIndex: 10,
+                }}
+                onClick={handleImageClear}
+              >
+                <IconX size={14} />
+              </ActionIcon>
+            </div>
+          </Group>
+        )}
+
+        <FileInput
+          label="Tài liệu giống cây"
+          placeholder="Tài liệu PDF/DOC"
+          accept=".pdf,.doc,.docx"
+          radius={4}
+          leftSection={<IconFileText size={18} />}
+          onChange={(file) => {
+            if (file) {
+              form.setFieldValue("doc", file.name);
+            }
+          }}
+        />
+
+        <Group justify="flex-end" mt="md">
           <Button type="submit" radius={4}>
-            Lưu
+            Tạo giống cây
           </Button>
         </Group>
       </Stack>
     </form>
   );
 };
+
 export default AddVarietyForm;

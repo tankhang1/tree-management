@@ -80,7 +80,7 @@ const AreaManagementTerrainPage = () => {
     <Stack gap="lg">
       <Group justify="space-between" px={"sm"}>
         <Title flex={1} order={2}>
-          Quản lý hàng
+          Quản lý địa hình
         </Title>
         <Group>
           <Button variant="outline" radius={4} leftSection={<IconFileExcel />}>

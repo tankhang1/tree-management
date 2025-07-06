@@ -1,7 +1,11 @@
 import {
+  Autocomplete,
   Button,
   Card,
+  Divider,
   Group,
+  ScrollAreaAutosize,
+  Select,
   Stack,
   Text,
   TextInput,
@@ -9,10 +13,46 @@ import {
 } from "@mantine/core";
 import SunEditor from "suneditor-react";
 import { useForm } from "@mantine/form";
-import { IconArrowLeft } from "@tabler/icons-react";
+import { IconArrowLeft, IconSearch } from "@tabler/icons-react";
 import { useNavigate } from "react-router-dom";
-
+import PlantCategoryCard from "./components/PlantCategoryCard";
+import { useState } from "react";
+type TPlant = {
+  code: string;
+  scientificName: string;
+  vietnameseName: string;
+  eppoCode: string;
+  iccCode: string;
+  group: string;
+};
+const plants = [
+  {
+    code: "CT01",
+    scientificName: "Durio zibethinus",
+    vietnameseName: "Sầu riêng",
+    eppoCode: "DURZI",
+    iccCode: "DZ001",
+    group: "Cây ăn quả nhiệt đới",
+  },
+  {
+    code: "CT02",
+    scientificName: "Mangifera indica",
+    vietnameseName: "Xoài",
+    eppoCode: "MANIN",
+    iccCode: "MI002",
+    group: "Cây ăn quả nhiệt đới",
+  },
+  {
+    code: "CT03",
+    scientificName: "Musa acuminata",
+    vietnameseName: "Chuối",
+    eppoCode: "MUSA",
+    iccCode: "MA003",
+    group: "Cây ăn quả nhiệt đới",
+  },
+];
 const AreaManagementCultivationMethodAddPage = () => {
+  const [selectedIds, setSelectedIds] = useState<TPlant[]>([]);
   const navigate = useNavigate();
   const form = useForm({
     initialValues: {
@@ -42,6 +82,7 @@ const AreaManagementCultivationMethodAddPage = () => {
           {...form.getInputProps("name")}
           radius={4}
         />
+
         <Stack gap={"xs"}>
           <Text fz={"sm"} fw={500}>
             Nội dung chi tiết
@@ -76,6 +117,65 @@ const AreaManagementCultivationMethodAddPage = () => {
             }}
             onChange={(content) => form.setFieldValue("description", content)}
           />
+          <Divider label="Danh mục cây trồng áp dụng" />
+          <Group align="flex-start">
+            <Stack flex={2}>
+              <Group align="flex-end">
+                <Select
+                  label="Nhóm cây trồng"
+                  placeholder="Nhóm cây trồng"
+                  radius={4}
+                  flex={1}
+                />
+                <Button radius={4}>Thêm mới</Button>
+              </Group>
+              <Autocomplete
+                radius={4}
+                leftSection={<IconSearch size={18} />}
+                placeholder="Tìm kiếm cây trồng"
+              />
+              <Group>
+                {plants.map((plant) => (
+                  <PlantCategoryCard
+                    {...plant}
+                    isActive={
+                      selectedIds.findIndex(
+                        (item) => item.code === plant.code
+                      ) > -1
+                    }
+                    onPress={() => {
+                      const isDuplicate =
+                        selectedIds.findIndex(
+                          (item) => item.code === plant.code
+                        ) > -1;
+                      if (isDuplicate) {
+                        const newIds = selectedIds.filter(
+                          (item) => item.code !== plant.code
+                        );
+                        setSelectedIds([...newIds]);
+                      } else {
+                        setSelectedIds([...selectedIds, plant]);
+                      }
+                    }}
+                  />
+                ))}
+              </Group>
+            </Stack>
+            <Card flex={1}>
+              <Stack>
+                <Text fw={"bold"}>
+                  Thông tin cây trồng đã chọn ({selectedIds.length})
+                </Text>
+                <ScrollAreaAutosize mah={300}>
+                  <Stack>
+                    {selectedIds.map((plant) => (
+                      <PlantCategoryCard {...plant} isShorted={true} />
+                    ))}
+                  </Stack>
+                </ScrollAreaAutosize>
+              </Stack>
+            </Card>
+          </Group>
         </Stack>
       </Stack>
       <Group mt={"xs"} justify="flex-end">

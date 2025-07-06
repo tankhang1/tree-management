@@ -127,6 +127,8 @@ import PesticideManagementMainAddPage from "./pages/PesticideManagementPage/Main
 import SeasonManagementGrowthDetailPage from "./pages/SeasonManagementPage/Growth/Detail/index.tsx";
 import SeasonManagementGrowthAddPage from "./pages/SeasonManagementPage/Growth/Add/index.tsx";
 import AreaManagementRowAddPage from "./pages/AreaManagementPage/Row/Add/index.tsx";
+import AreaManagementTreeAddPage from "./pages/AreaManagementPage/Tree/Add/index.tsx";
+import PlantManagementSeedAddPage from "./pages/PlantManagementPage/Seed/Add/index.tsx";
 const theme: MantineThemeOverride = {
   fontFamily: "MyFont, sans-serif",
   primaryColor: "brand",
@@ -266,6 +268,7 @@ const ROUTES = [
   />,
   <Route path={PATH.AREA_ADD_ROW} element={<AreaManagementRowAddPage />} />,
   <Route path={PATH.AREA_TREE} element={<AreaManagementTreePage />} />,
+  <Route path={PATH.AREA_ADD_TREE} element={<AreaManagementTreeAddPage />} />,
   <Route path={PATH.AREA_MAP} element={<AreaManagementMapPage />} />,
   <Route path={PATH.AREA_SOIL} element={<AreaManagementSoilTypePage />} />,
   <Route path={PATH.AREA_TERRAIN} element={<AreaManagementTerrainPage />} />,
@@ -289,6 +292,7 @@ const ROUTES = [
   <Route path={PATH.PLANT_GROUP} element={<PlantManagementGroupPage />} />,
   <Route path={PATH.PLANT_VARIETY} element={<PlantManagementVarietyPage />} />,
   <Route path={PATH.PLANT_SEED} element={<PlantManagementSeedPage />} />,
+  <Route path={PATH.PLANT_ADD_SEED} element={<PlantManagementSeedAddPage />} />,
   <Route path={PATH.PLANT_CATALOG} element={<PlantManagementCatalogPage />} />,
   <Route
     path={PATH.PLANT_TECHNICAL_DOC}

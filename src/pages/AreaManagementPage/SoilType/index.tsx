@@ -81,7 +81,7 @@ const AreaManagementSoilTypePage = () => {
     <Stack gap="lg">
       <Group justify="space-between" px={"sm"}>
         <Title flex={1} order={2}>
-          Quản lý hàng
+          Quản lý loại đất
         </Title>
         <Group>
           <Button variant="outline" radius={4} leftSection={<IconFileExcel />}>

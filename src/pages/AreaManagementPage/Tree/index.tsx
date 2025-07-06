@@ -23,7 +23,9 @@ import {
 import type { MRT_ColumnDef } from "mantine-react-table";
 import Table from "../../../components/Table";
 import { useDisclosure } from "@mantine/hooks";
-import AddTreeForm from "./components/AddTreeForm";
+import { useNavigate } from "react-router-dom";
+import { PATH } from "../../../constants/path.constants";
+import TreeDetailView from "./components/TreeView";
 type Tree = {
   rowId: string;
   zoneId: string;
@@ -53,9 +55,42 @@ const treeData: Tree[] = [
     gps: "10.762500,106.660100",
   },
 ];
+type TTree = {
+  type: string;
+  variety: string;
+  seed: string;
+  method: string;
+  irrigation: string;
+  plantedAt: string;
+  region: string;
+  area: string;
+  plot: string;
+  row: string;
+  coords: [number, number][];
+};
+const tree: TTree = {
+  type: "Cây sầu riêng",
+  variety: "Sầu riêng Ri6",
+  seed: "Hạt giống Ri6 F1",
+  method: "Trồng theo hố, cách 6m",
+  irrigation: "Tưới nhỏ giọt",
+  plantedAt: "2024-07-05",
+  region: "Vùng A",
+  area: "Khu vực A1",
+  plot: "Lô A1",
+  row: "Hàng 1",
+  coords: [
+    [10.123, 106.123],
+    [10.124, 106.124],
+  ],
+};
 const AreaManagementTreePage = () => {
-  const [openedAddRowForm, { open: openAddRowForm, close: closeAddRowForm }] =
+  const navigate = useNavigate();
+  const [openedRowForm, { open: openRowForm, close: closeRowForm }] =
     useDisclosure(false);
+  const onAddTree = () => {
+    navigate(PATH.AREA_ADD_TREE);
+  };
   const treeColumns: MRT_ColumnDef<Tree>[] = [
     {
       accessorKey: "treeId",
@@ -84,10 +119,6 @@ const AreaManagementTreePage = () => {
         new Date(row.original.plantedAt).toLocaleDateString("vi-VN"),
     },
     {
-      accessorKey: "gps",
-      header: "Toạ độ GPS",
-    },
-    {
       accessorKey: "actions",
       header: "",
       enableColumnActions: false,
@@ -101,7 +132,10 @@ const AreaManagementTreePage = () => {
           </Menu.Target>
 
           <Menu.Dropdown>
-            <Menu.Item leftSection={<IconEye size={18} color="gray" />}>
+            <Menu.Item
+              leftSection={<IconEye size={18} color="gray" />}
+              onClick={openRowForm}
+            >
               Chi tiết
             </Menu.Item>
             <Menu.Item leftSection={<IconEdit size={18} color="green" />}>
@@ -126,7 +160,7 @@ const AreaManagementTreePage = () => {
           <Button variant="outline" radius={4} leftSection={<IconFileExcel />}>
             Xuất File
           </Button>
-          <Button radius={4} onClick={openAddRowForm}>
+          <Button radius={4} onClick={onAddTree}>
             Thêm mới
           </Button>
         </Group>
@@ -159,11 +193,11 @@ const AreaManagementTreePage = () => {
       </Group>
       <Table columns={treeColumns} data={treeData} />
       <Modal
-        opened={openedAddRowForm}
-        onClose={closeAddRowForm}
-        title={<Text fw={"bold"}>Thêm mới cây</Text>}
+        opened={openedRowForm}
+        onClose={closeRowForm}
+        title={<Text fw={"bold"}>Thông tin cây</Text>}
       >
-        <AddTreeForm />
+        <TreeDetailView tree={tree} />
       </Modal>
     </Stack>
   );

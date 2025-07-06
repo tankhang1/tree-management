@@ -1,4 +1,4 @@
-import { Button, Stack, TextInput } from "@mantine/core";
+import { Button, Stack, Textarea, TextInput } from "@mantine/core";
 import { useForm } from "@mantine/form";
 
 const AddGroupForm = () => {
@@ -6,12 +6,14 @@ const AddGroupForm = () => {
     initialValues: {
       id: "",
       name: "",
+      note: "",
     },
 
     validate: {
       id: (value) => (value.length === 0 ? "Vui lòng nhập mã loại cây" : null),
       name: (value) =>
         value.length === 0 ? "Vui lòng nhập tên loại cây" : null,
+      note: (value) => (value.length === 0 ? "Vui lòng nhập ghi chú" : null),
     },
   });
 
@@ -31,7 +33,12 @@ const AddGroupForm = () => {
           {...form.getInputProps("name")}
           radius={4}
         />
-
+        <Textarea
+          label="Ghi chú"
+          placeholder="Ghi chú"
+          {...form.getInputProps("note")}
+          radius={4}
+        />
         <Button type="submit" radius={4}>
           Tạo mới
         </Button>

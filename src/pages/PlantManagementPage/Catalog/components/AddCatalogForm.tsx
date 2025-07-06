@@ -1,4 +1,11 @@
-import { TextInput, Button, Select, Stack, Group } from "@mantine/core";
+import {
+  TextInput,
+  Button,
+  Select,
+  Stack,
+  Group,
+  Textarea,
+} from "@mantine/core";
 import { useForm } from "@mantine/form";
 const groupTreeOptions = [
   { value: "Cây ăn quả nhiệt đới", label: "Cây ăn quả nhiệt đới" },
@@ -15,6 +22,7 @@ const AddCatalogForm = () => {
       icc_code: "",
       vn_name: "",
       group_tree: "",
+      note: "",
     },
 
     validate: {
@@ -69,7 +77,7 @@ const AddCatalogForm = () => {
           radius={4}
           {...form.getInputProps("group_tree")}
         />
-
+        <Textarea label="Ghi chú" radius={4} {...form.getInputProps("note")} />
         <Group justify="right">
           <Button type="submit" radius={4}>
             Lưu
