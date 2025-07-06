@@ -170,7 +170,7 @@ const AreaManagementRegionPage = () => {
     },
   ];
   const onAddRegion = () => {
-    navigate(PATH.AREA_ADD_ZONE);
+    navigate(PATH.AREA_ADD_REGION);
   };
   return (
     <Stack gap="lg">

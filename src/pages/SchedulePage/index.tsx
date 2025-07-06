@@ -1,5 +1,5 @@
 import {
-  Button,
+  // Button,
   Group,
   Stack,
   Text,
@@ -10,17 +10,20 @@ import {
   Badge,
   Checkbox,
   Card,
+  Tooltip,
+  Button,
 } from "@mantine/core";
 import { DatePicker } from "@mantine/dates";
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { PATH } from "../../constants/path.constants";
+// import { useNavigate } from "react-router-dom";
+// import { PATH } from "../../constants/path.constants";
 import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
-import { IconPlus } from "@tabler/icons-react";
+// import { IconPlus } from "@tabler/icons-react";
 import dayjs from "dayjs";
 import { useDisclosure } from "@mantine/hooks";
 import interactionPlugin from "@fullcalendar/interaction";
+import lodash from "lodash";
+import { useState } from "react";
 const mockJob = {
   title: "Tưới nước khu A",
   description: "Cây sầu riêng 6 tháng tuổi cần tưới nước định kỳ.",
@@ -34,8 +37,8 @@ type JobEvent = {
   title: string;
   description: string;
   date: string;
-  status: "done" | "in_progress" | "canceled";
-  sourceType: "keHoach" | "phatSinh";
+  status: "done" | "todo" | "canceled" | "confirmed";
+  sourceType: "keHoach" | "phatSinh" | "batman";
 };
 const allEvents: JobEvent[] = [
   {
@@ -51,7 +54,7 @@ const allEvents: JobEvent[] = [
     title: "Phun thuốc sâu",
     description: "Dãy xoài phía Bắc",
     date: "2025-07-01T15:00:00",
-    status: "in_progress",
+    status: "todo",
     sourceType: "keHoach",
   },
   {
@@ -83,60 +86,88 @@ const allEvents: JobEvent[] = [
     title: "Bón phân định kỳ",
     description: "Sử dụng phân vi sinh",
     date: "2025-07-04T08:30:00",
-    status: "in_progress",
+    status: "confirmed",
     sourceType: "keHoach",
   },
   {
     id: "7",
+    title: "Bón phân định kỳ",
+    description: "Sử dụng phân vi sinh",
+    date: "2025-07-04T08:30:00",
+    status: "confirmed",
+    sourceType: "phatSinh",
+  },
+  {
+    id: "8",
     title: "Khảo sát sâu bệnh",
     description: "Gửi mẫu lên trung tâm kiểm định",
     date: "2025-07-04T13:30:00",
-    status: "done",
-    sourceType: "phatSinh",
+    status: "confirmed",
+    sourceType: "batman",
   },
 ];
+const sourceTypeLabels: Record<string, string> = {
+  keHoach: "Kế hoạch",
+  phatSinh: "Phát sinh",
+  batman: "Batman", // Bạn có thể sửa lại nếu muốn dịch khác
+};
+// Format date to string (e.g., '2025-07-05') to group reliably
+const formatDate = (date: Date | string) =>
+  new Date(date).toISOString().split("T")[0];
+
+// Step 1: Group by formatted date first
+const groupedByDate = lodash.groupBy(allEvents, (event) =>
+  formatDate(event.date)
+);
+
+type TStatus = "done" | "todo" | "canceled" | "confirmed";
+type TSource = "keHoach" | "phatSinh" | "batman";
+// Step 2: For each date group, further group by sourceType
+const result = Object.entries(groupedByDate).flatMap(([date, eventsByDate]) => {
+  const groupedByType = lodash.groupBy(eventsByDate, "sourceType");
+
+  return Object.entries(groupedByType).map(([type, events]) => ({
+    date, // formatted date
+    sourceType: type,
+    title: `${sourceTypeLabels[type] || type} (${events.length})`,
+    value: events.length,
+  }));
+});
 const SchedulePage = () => {
-  const [visibleTypes] = useState({
-    keHoach: true,
-    phatSinh: true,
-  });
+  const [type, setType] = useState<TStatus>("done");
+  const [option, setOption] = useState<TSource>("batman");
   const [
     openedModalDetail,
     { open: openModalDetail, close: closeModalDetail },
   ] = useDisclosure(false);
   const [openedModalList, { open: openModalList, close: closeModalList }] =
     useDisclosure(false);
-  const navigate = useNavigate();
-  const [selectedDate, setSelectedDate] = useState<
-    [string | null, string | null]
-  >([null, null]);
+  // const navigate = useNavigate();
 
-  const onScheduleAddPage = () => {
-    navigate(PATH.SCHEDULE_ADD);
-  };
+  // const onScheduleAddPage = () => {
+  //   navigate(PATH.SCHEDULE_ADD);
+  // };
 
   return (
     <Stack gap="lg">
       <Group justify="space-between" px={"sm"}>
         <Title flex={1} order={2}>
-          Lịch trình công việc
+          Lịch biểu công việc
         </Title>
       </Group>
-      <Group align="flex-start">
+      <Group align="flex-start" gap="lg">
         <Stack flex={1}>
           <Paper w="100%" shadow="md" p={"sm"} radius={4}>
             <Stack h={390} justify="center" align="center">
               <DatePicker
-                type="range"
-                value={selectedDate}
-                onChange={setSelectedDate}
-                allowSingleDateInRange
+                type="default"
+                value={new Date()}
                 locale="vi"
                 size="lg"
               />
             </Stack>
             <Stack>
-              <Button
+              {/* <Button
                 onClick={onScheduleAddPage}
                 variant="transparent"
                 radius={4}
@@ -145,23 +176,23 @@ const SchedulePage = () => {
                   <Text>Thêm mới công việc</Text>
                   <IconPlus />
                 </Group>
-              </Button>
-              <Divider label="Lọc dữ liệu" />
-              <Checkbox
-                label="Theo kế hoạch"
-                radius={4}
-                checked={visibleTypes.keHoach}
-              />
-              <Checkbox
-                label="Phát sinh"
-                radius={4}
-                checked={visibleTypes.phatSinh}
-              />
+              </Button> */}
+              <Divider label="Công việc trong tháng" />
+
               <Stack gap="md">
-                {["keHoach", "phatSinh"].map((type) => {
+                {["keHoach", "phatSinh", "batman"].map((type) => {
                   const label =
-                    type === "keHoach" ? "Theo kế hoạch" : "Phát sinh";
-                  const color = type === "keHoach" ? "#228be6" : "#ae3ec9";
+                    type === "keHoach"
+                      ? "Theo kế hoạch"
+                      : type === "phatSinh"
+                      ? "Phát sinh"
+                      : "BATMAN";
+                  const color =
+                    type === "keHoach"
+                      ? "#228be6"
+                      : type === "phatSinh"
+                      ? "#ae3ec9"
+                      : "#544332";
 
                   const groupEvents = allEvents.filter(
                     (e) => e.sourceType === type
@@ -169,8 +200,10 @@ const SchedulePage = () => {
                   const canceled = groupEvents.filter(
                     (e) => e.status === "canceled"
                   );
-                  const inProgress = groupEvents.filter(
-                    (e) => e.status === "in_progress"
+
+                  const todo = groupEvents.filter((e) => e.status === "todo");
+                  const confirmed = groupEvents.filter(
+                    (e) => e.status === "confirmed"
                   );
                   const done = groupEvents.filter((e) => e.status === "done");
 
@@ -183,20 +216,34 @@ const SchedulePage = () => {
                       onClick={openModalList}
                       style={{ borderLeft: `6px solid ${color}` }}
                     >
-                      <Stack gap={4}>
-                        <Text fw={600}>{label}</Text>
-                        <Group gap="xs">
-                          <Badge color="red" variant="filled">
-                            {canceled.length} Hủy
-                          </Badge>
-                          <Badge color="yellow" variant="filled">
-                            {inProgress.length} Chưa xong
-                          </Badge>
-                          <Badge color="green" variant="filled">
-                            {done.length} Hoàn thành
-                          </Badge>
-                        </Group>
-                      </Stack>
+                      <Group align="center">
+                        <Stack gap={4} flex={1}>
+                          {/**Nếu không có thì không hiển thị */}
+                          <Text fw={600}>{label}</Text>
+                          <Group gap="xs">
+                            <Badge color="green" variant="filled">
+                              {confirmed.length} Đã xác thực
+                            </Badge>
+                            <Badge color="yellow" variant="filled">
+                              {done.length} Hoàn thành
+                            </Badge>
+                            <Badge color="gray" variant="filled">
+                              {todo.length} Chờ thực thi
+                            </Badge>
+
+                            <Badge color="red" variant="filled">
+                              {canceled.length} Hủy
+                            </Badge>
+                          </Group>
+                        </Stack>
+                        <Tooltip label="Hiển thị lịch">
+                          <Checkbox
+                            onClick={(e) => {
+                              e.stopPropagation();
+                            }}
+                          />
+                        </Tooltip>
+                      </Group>
                     </Card>
                   );
                 })}
@@ -205,7 +252,7 @@ const SchedulePage = () => {
           </Paper>
         </Stack>
 
-        <Paper flex={3} p={"sm"} shadow="md" radius={4}>
+        <Paper flex={4} p={"sm"} shadow="md" radius={4}>
           <FullCalendar
             plugins={[dayGridPlugin, interactionPlugin]}
             initialView="dayGridMonth"
@@ -221,24 +268,175 @@ const SchedulePage = () => {
             }}
             moreLinkText={(n) => `+${n} xem thêm`}
             eventClick={() => {
-              openModalDetail();
+              openModalList();
             }}
             dayMaxEvents={true}
             eventClassNames={(arg) => {
               const type = arg.event.extendedProps.sourceType;
               return type === "keHoach"
                 ? ["event-kehoach"]
-                : ["event-phatsinh"];
+                : type === "phatSinh"
+                ? ["event-phatsinh"]
+                : ["event-batman"];
             }}
             titleFormat={(date) => {
               const month = date.date.month + 1;
               const year = date.date.year;
               return `Tháng ${month} ${year}`;
             }}
-            events={allEvents}
+            displayEventTime={false}
+            events={result}
+            eventContent={(arg) => {
+              const { event } = arg;
+              const sourceType = event.extendedProps.sourceType;
+              const color =
+                sourceType === "keHoach"
+                  ? "#228be6"
+                  : sourceType === "phatSinh"
+                  ? "#ae3ec9"
+                  : "#544332";
+              const label =
+                sourceType === "keHoach"
+                  ? "Kế hoạch"
+                  : sourceType === "phatSinh"
+                  ? "Phát sinh"
+                  : "BATMAN";
+
+              return (
+                <Card
+                  w={"100%"}
+                  radius={4}
+                  py={"xs"}
+                  onClick={() => {
+                    setOption(sourceType);
+                    openModalList();
+                  }}
+                  style={{ borderLeft: `6px solid ${color}` }}
+                >
+                  <Group align="center" gap={4}>
+                    {/**Nếu không có thì không hiển thị */}
+                    <Text fw={600} fz={"xs"}>
+                      {label}
+                    </Text>
+                    <Group gap={1}>
+                      <Badge
+                        color="green"
+                        radius={100}
+                        size="xs"
+                        variant="filled"
+                      >
+                        1
+                      </Badge>
+                      <Badge
+                        color="yellow"
+                        radius={100}
+                        size="xs"
+                        variant="filled"
+                      >
+                        2
+                      </Badge>
+                      <Badge
+                        color="red"
+                        radius={100}
+                        size="xs"
+                        variant="filled"
+                      >
+                        2
+                      </Badge>
+                    </Group>
+                  </Group>
+                </Card>
+              );
+            }}
           />
         </Paper>
       </Group>
+
+      <Modal
+        opened={openedModalList}
+        onClose={closeModalList}
+        title={<Text fw={"bold"}>Danh sách công việc</Text>}
+      >
+        <Stack>
+          <Group gap={4}>
+            {["confirmed", "done", "todo", "cancel"].map((item, index) => (
+              <Button
+                onClick={() => setType(item as TStatus)}
+                key={index}
+                variant={type === item ? "filled" : "outline"}
+                color={
+                  item === "confirmed"
+                    ? "green"
+                    : item === "done"
+                    ? "yellow"
+                    : item === "todo"
+                    ? "gray"
+                    : "red"
+                }
+                size="xs"
+                radius={100}
+              >
+                {item === "confirmed"
+                  ? "Đã xác thực"
+                  : item === "done"
+                  ? "Hoàn thành"
+                  : item === "todo"
+                  ? "Chờ thực thi"
+                  : "Huỷ"}
+              </Button>
+            ))}
+          </Group>
+          {allEvents
+            .filter((event) => event.sourceType === option)
+            .filter((event) => event.status === type)
+            .map((job) => (
+              <Card
+                key={job.id}
+                shadow="sm"
+                radius="md"
+                withBorder
+                onClick={openModalDetail}
+              >
+                <Stack gap={4}>
+                  <Group justify="space-between">
+                    <Text fw={600}>{job.title}</Text>
+                    <Badge
+                      color={
+                        job.status === "confirmed"
+                          ? "green"
+                          : job.status === "done"
+                          ? "yellow"
+                          : job.status === "todo"
+                          ? "gray"
+                          : "red"
+                      }
+                    >
+                      {job.status === "done"
+                        ? "Hoàn thành"
+                        : job.status === "canceled"
+                        ? "Hủy"
+                        : "Chưa xong"}
+                    </Badge>
+                  </Group>
+                  <Text size="sm" c="dimmed">
+                    {job.description}
+                  </Text>
+                  <Text size="sm">
+                    Thời gian: {dayjs(job.date).format("HH:mm")}
+                  </Text>
+                  <Badge
+                    color={job.sourceType === "keHoach" ? "blue" : "violet"}
+                    variant="light"
+                  >
+                    {job.sourceType === "keHoach"
+                      ? "Theo kế hoạch"
+                      : "Phát sinh"}
+                  </Badge>
+                </Stack>
+              </Card>
+            ))}
+        </Stack>
+      </Modal>
       <Modal
         opened={openedModalDetail}
         onClose={closeModalDetail}
@@ -286,57 +484,21 @@ const SchedulePage = () => {
                 Trạng thái
               </Text>
               <Badge
-                color={mockJob.status === "Hoàn thành" ? "green" : "orange"}
+                color={
+                  mockJob.status === "Đã xác thực"
+                    ? "green"
+                    : mockJob.status === "Hoàn thành"
+                    ? "yellow"
+                    : mockJob.status === "Chờ thực thi"
+                    ? "gray"
+                    : "red"
+                }
                 variant="light"
               >
                 {mockJob.status}
               </Badge>
             </Stack>
           </Group>
-        </Stack>
-      </Modal>
-      <Modal
-        opened={openedModalList}
-        onClose={closeModalList}
-        title={<Text fw={"bold"}>Danh sách công việc</Text>}
-      >
-        <Stack>
-          {allEvents.map((job) => (
-            <Card key={job.id} shadow="sm" radius="md" withBorder>
-              <Stack gap={4}>
-                <Group justify="space-between">
-                  <Text fw={600}>{job.title}</Text>
-                  <Badge
-                    color={
-                      job.status === "done"
-                        ? "green"
-                        : job.status === "canceled"
-                        ? "red"
-                        : "yellow"
-                    }
-                  >
-                    {job.status === "done"
-                      ? "Hoàn thành"
-                      : job.status === "canceled"
-                      ? "Đã hủy"
-                      : "Chưa xong"}
-                  </Badge>
-                </Group>
-                <Text size="sm" c="dimmed">
-                  {job.description}
-                </Text>
-                <Text size="sm">
-                  Thời gian: {dayjs(job.date).format("HH:mm")}
-                </Text>
-                <Badge
-                  color={job.sourceType === "keHoach" ? "blue" : "violet"}
-                  variant="light"
-                >
-                  {job.sourceType === "keHoach" ? "Theo kế hoạch" : "Phát sinh"}
-                </Badge>
-              </Stack>
-            </Card>
-          ))}
         </Stack>
       </Modal>
     </Stack>

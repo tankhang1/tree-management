@@ -16,7 +16,7 @@ import {
   Text,
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
-import Logo from "./assets/logo.avif";
+import Logo from "./assets/logo.png";
 import { IconBell, IconLogout, IconMessageChatbot } from "@tabler/icons-react";
 import { NAV_BAR } from "./constants/navbar.constants";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
@@ -67,7 +67,7 @@ export default function App() {
               <Group align="center">
                 <Image src={Logo} w={50} h={50} fit="contain" />
                 <Text visibleFrom="md" fw={"bold"}>
-                  QUEEN ECO SMART FARM
+                  MEVI FARM
                 </Text>
               </Group>
             </Group>

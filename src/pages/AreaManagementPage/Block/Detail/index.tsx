@@ -9,6 +9,7 @@ import {
   Button,
 } from "@mantine/core";
 import { IconArrowLeft } from "@tabler/icons-react";
+import { MapContainer, Polygon, TileLayer } from "react-leaflet";
 import { useNavigate } from "react-router-dom";
 
 const AreaManagementBlockDetailPage = () => {
@@ -87,8 +88,17 @@ const AreaManagementBlockDetailPage = () => {
           <strong>Đường bình độ:</strong> {block.contour}
         </Text>
         <Text>
-          <strong>Toạ độ GPS:</strong> {block.gps}
+          <strong>Cao độ:</strong> 60 (m)
         </Text>
+        Bản đồ Leaflet với polygon
+        <MapContainer
+          zoom={16}
+          center={[10.762622, 106.660172]}
+          style={{ height: "300px", width: "100%", borderRadius: 8 }}
+        >
+          <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
+          <Polygon positions={[]} color="green" />
+        </MapContainer>
       </Stack>
 
       <Divider my="lg" label="Danh sách hàng" labelPosition="center" />
@@ -107,13 +117,16 @@ const AreaManagementBlockDetailPage = () => {
               <strong>Mã hàng:</strong> {row.code}
             </Text>
             <Text>
-              <strong>Loại cây:</strong> {row.crop}
+              <strong>Cây trồng:</strong> {row.crop}
+            </Text>
+            <Text>
+              <strong>Giống cây:</strong> Giống A
+            </Text>
+            <Text>
+              <strong>Hạt giống cây:</strong> Hạt giống B
             </Text>
             <Text>
               <strong>Số cây:</strong> {row.treeCount}
-            </Text>
-            <Text>
-              <strong>Toạ độ GPS:</strong> {row.gps}
             </Text>
           </Box>
         ))}

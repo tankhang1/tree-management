@@ -12,16 +12,20 @@ import {
   Paper,
   Alert,
   ActionIcon,
+  Modal,
+  Card,
 } from "@mantine/core";
 import { useState } from "react";
 import { MapContainer, TileLayer, Polygon } from "react-leaflet";
 import {
   IconAlertTriangle,
   IconArrowLeft,
+  IconMap,
   IconPlus,
   IconTrash,
 } from "@tabler/icons-react";
 import { useNavigate } from "react-router-dom";
+import { useDisclosure } from "@mantine/hooks";
 
 type AreaForm = {
   code: string;
@@ -49,6 +53,11 @@ const defaultForm: AreaForm = {
 type LatLng = [number, number];
 
 const AreaManagementAddZonePage = () => {
+  const [
+    openedAddLocation,
+    { open: openAddLocation, close: closeAddLocation },
+  ] = useDisclosure(false);
+
   const navigate = useNavigate();
   const [form, setForm] = useState<AreaForm>(defaultForm);
   const [active, setActive] = useState(0);
@@ -107,13 +116,7 @@ const AreaManagementAddZonePage = () => {
               label="Chọn vùng trồng"
               radius={4}
             />
-            <TextInput
-              label="Mã khu vực"
-              radius={4}
-              required
-              value={form.code}
-              onChange={(e) => handleChange("code", e.currentTarget.value)}
-            />
+
             <TextInput
               label="Tên khu vực"
               radius={4}
@@ -156,7 +159,7 @@ const AreaManagementAddZonePage = () => {
         </Stepper.Step>
 
         {/* BƯỚC 2 */}
-        <Stepper.Step label="Tọa độ GPS">
+        <Stepper.Step label="Biểu đồ khu vực">
           <Stack mt="md" gap={"xs"}>
             <Group align="flex-end">
               <TextInput
@@ -212,26 +215,68 @@ const AreaManagementAddZonePage = () => {
               </Alert>
             )}
             Bản đồ Leaflet với polygon
-            {coords.length >= 3 && (
-              <MapContainer
-                center={
-                  coords.length >= 1 ? coords[0] : [10.762622, 106.660172]
-                }
-                zoom={16}
-                style={{ height: "300px", width: "100%", borderRadius: 8 }}
-              >
-                <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
-                <Polygon positions={coords} color="green" />
-              </MapContainer>
-            )}
+            <MapContainer
+              center={coords.length >= 1 ? coords[0] : [10.762622, 106.660172]}
+              zoom={16}
+              style={{ height: "300px", width: "100%", borderRadius: 8 }}
+            >
+              <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
+              <Polygon positions={coords} color="green" />
+            </MapContainer>
           </Stack>
         </Stepper.Step>
 
         {/* BƯỚC 3 */}
         <Stepper.Step label="Lô">
-          <Text mt="md">
-            Bạn có thể thêm danh sách lô sau khi tạo khu vực thành công.
-          </Text>
+          <Stack mt={"md"} gap={"xs"}>
+            <Card withBorder radius={4} p="md" mb="md">
+              <Stack gap={"xs"}>
+                <TextInput radius={4} label="Mã lô" required />
+                <TextInput label="Tên lô" required radius={4} />
+                <TextInput
+                  label="Diện tích (m²)"
+                  type="number"
+                  required
+                  radius={4}
+                />
+                <MultiSelect
+                  label="Cây trồng chính"
+                  placeholder="Chọn 1 hoặc nhiều loại"
+                  data={["Sầu riêng", "Xoài", "Mãng cầu", "Chuối"]}
+                  radius={4}
+                />
+                <Select
+                  label="Phương pháp tưới tiêu"
+                  data={["Tưới nhỏ giọt", "Tưới phun mưa", "Tưới tràn"]}
+                  radius={4}
+                />
+                <Select
+                  label="Phương pháp canh tác"
+                  data={["Hữu cơ", "Truyền thống", "Công nghệ cao"]}
+                  radius={4}
+                />
+                <TextInput label="Đường bình độ (cao độ)" radius={4} />
+                <Button
+                  onClick={openAddLocation}
+                  my={"sm"}
+                  radius={4}
+                  variant="outline"
+                  leftSection={<IconMap />}
+                >
+                  Tạo bảng đồ
+                </Button>
+                <Group mt={"xs"}>
+                  <Button radius={4}>Lưu</Button>
+                  <Button radius={4} color="red">
+                    Xoá
+                  </Button>
+                </Group>
+              </Stack>
+            </Card>
+            <Button radius={4} variant="outline">
+              + Thêm lô
+            </Button>
+          </Stack>
         </Stepper.Step>
 
         {/* BƯỚC 4 */}
@@ -291,6 +336,76 @@ const AreaManagementAddZonePage = () => {
           </Button>
         )}
       </Group>
+      <Modal
+        opened={openedAddLocation}
+        onClose={closeAddLocation}
+        title={<Text fw={"bold"}>Bản đồ lô</Text>}
+      >
+        <Stack mt="md" gap={"xs"}>
+          <Group align="flex-end">
+            <TextInput
+              label="Latitude"
+              value={lat}
+              onChange={(e) => setLat(e.currentTarget.value)}
+              placeholder="10.762622"
+              radius={4}
+              flex={1}
+            />
+            <TextInput
+              label="Longitude"
+              value={lng}
+              onChange={(e) => setLng(e.currentTarget.value)}
+              placeholder="106.660172"
+              radius={4}
+              flex={1}
+            />
+            <Button
+              onClick={handleAddPoint}
+              radius={4}
+              leftSection={<IconPlus size={16} />}
+            >
+              Thêm
+            </Button>
+          </Group>
+          {coords.length > 0 && (
+            <Stack gap={"xs"}>
+              <Text size="sm" c="dimmed">
+                Danh sách tọa độ ({coords.length}):
+              </Text>
+              {coords.map(([lat, lng], i) => (
+                <Group key={i} gap="xs">
+                  <Text size="sm" w={"40%"}>
+                    {i + 1}. {lat}, {lng}
+                  </Text>
+                  <ActionIcon
+                    color="red"
+                    variant="light"
+                    radius={4}
+                    onClick={() => handleRemove(i)}
+                  >
+                    <IconTrash size={16} />
+                  </ActionIcon>
+                </Group>
+              ))}
+            </Stack>
+          )}
+          {/* Cảnh báo nếu không đủ 3 điểm */}
+          {coords.length > 0 && coords.length < 3 && (
+            <Alert icon={<IconAlertTriangle />} color="yellow" radius={4}>
+              Cần ít nhất 3 điểm để tạo đa giác.
+            </Alert>
+          )}
+          Bản đồ Leaflet với polygon
+          <MapContainer
+            center={coords.length >= 1 ? coords[0] : [10.762622, 106.660172]}
+            zoom={16}
+            style={{ height: "300px", width: "100%", borderRadius: 8 }}
+          >
+            <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
+            <Polygon positions={coords} color="green" />
+          </MapContainer>
+        </Stack>
+      </Modal>
     </Paper>
   );
 };

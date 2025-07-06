@@ -4,9 +4,7 @@ import {
   Button,
   Group,
   Menu,
-  Modal,
   Stack,
-  Text,
   Title,
 } from "@mantine/core";
 import {
@@ -24,8 +22,6 @@ import type { MRT_ColumnDef } from "mantine-react-table";
 import Table from "../../../components/Table";
 import { useNavigate } from "react-router-dom";
 import { PATH } from "../../../constants/path.constants";
-import { useDisclosure } from "@mantine/hooks";
-import AddRowForm from "./components/AddRowForm";
 
 type Row = {
   name: string;
@@ -51,12 +47,12 @@ const rowData: Row[] = [
   },
 ];
 const AreaManagementRowPage = () => {
-  const [openedAddRowForm, { open: openAddRowForm, close: closeAddRowForm }] =
-    useDisclosure(false);
-
   const navigate = useNavigate();
   const onRowDetail = () => {
     navigate(PATH.AREA_ROW_DETAIL);
+  };
+  const onAddRow = () => {
+    navigate(PATH.AREA_ADD_ROW);
   };
   const rowColumns: MRT_ColumnDef<Row>[] = [
     {
@@ -110,7 +106,7 @@ const AreaManagementRowPage = () => {
 
   return (
     <Stack gap="lg">
-      <Group justify="space-between" px={"sm"}>
+      <Group justify="space-between">
         <Title flex={1} order={2}>
           Quản lý hàng
         </Title>
@@ -118,7 +114,7 @@ const AreaManagementRowPage = () => {
           <Button variant="outline" radius={4} leftSection={<IconFileExcel />}>
             Xuất File
           </Button>
-          <Button radius={4} onClick={openAddRowForm}>
+          <Button radius={4} onClick={onAddRow}>
             Tạo mới
           </Button>
         </Group>
@@ -150,13 +146,6 @@ const AreaManagementRowPage = () => {
         />
       </Group>
       <Table columns={rowColumns} data={rowData} />
-      <Modal
-        opened={openedAddRowForm}
-        onClose={closeAddRowForm}
-        title={<Text fw={"bold"}>Thêm mới hàng</Text>}
-      >
-        <AddRowForm />
-      </Modal>
     </Stack>
   );
 };

@@ -1,7 +1,11 @@
 import {
+  ActionIcon,
+  Autocomplete,
   Button,
   Group,
+  Menu,
   ScrollAreaAutosize,
+  Select,
   Stack,
   Text,
   ThemeIcon,
@@ -23,7 +27,12 @@ import {
   horizontalListSortingStrategy,
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-import { IconArrowLeft, IconTree } from "@tabler/icons-react";
+import {
+  IconArrowLeft,
+  IconExchange,
+  IconSearch,
+  IconTree,
+} from "@tabler/icons-react";
 import dayjs from "dayjs";
 import { useState } from "react";
 import type { MRT_ColumnDef } from "mantine-react-table";
@@ -326,50 +335,102 @@ const AreaManagementRowDetailPage = () => {
         </Button>
         <Title order={3}>📍 Chi tiết hàng A01</Title>
       </Group>
-      <DndContext
-        sensors={sensors}
-        collisionDetection={closestCenter}
-        onDragEnd={handleDragEnd}
-      >
-        <SortableContext
-          items={trees.map((t) => t.id)}
-          strategy={horizontalListSortingStrategy}
+      <Group justify="space-between" align="flex-start">
+        <Stack flex={1}>
+          <Text fw={"bold"} fz={"h4"}>
+            Danh sách cây trồng
+          </Text>
+          <Autocomplete
+            radius={4}
+            placeholder="Tìm kiếm cây trồng"
+            leftSection={<IconSearch size={18} />}
+          />
+          <DndContext
+            sensors={sensors}
+            collisionDetection={closestCenter}
+            onDragEnd={handleDragEnd}
+          >
+            <SortableContext
+              items={trees.map((t) => t.id)}
+              strategy={horizontalListSortingStrategy}
+            >
+              <ScrollAreaAutosize mah={300}>
+                <Stack justify="center" mt="xl">
+                  {trees.map((tree, index) => (
+                    <SortableItem key={tree.id} id={tree.id}>
+                      <Group justify="space-between" gap={"xs"} pr="md">
+                        <Group gap={"xs"}>
+                          <Text>{index}.</Text>
+                          <Tooltip label={tree.code}>
+                            <ThemeIcon
+                              size={50}
+                              radius="xl"
+                              color={
+                                selectedTreeId === tree.id ? "blue" : "gray"
+                              }
+                            >
+                              <IconTree />
+                            </ThemeIcon>
+                          </Tooltip>
+                          <Stack gap={0}>
+                            <Text fw={"bold"}>{tree.code}</Text>
+                            <Text c={"gray"}>Cây ngô </Text>
+                          </Stack>
+                        </Group>
+                        <Menu
+                          width={200}
+                          withinPortal
+                          withArrow
+                          position="bottom-end"
+                        >
+                          <Menu.Target>
+                            <ActionIcon
+                              onPointerDown={(e) => e.stopPropagation()}
+                              variant="outline"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                              }}
+                            >
+                              <IconExchange size={18} />
+                            </ActionIcon>
+                          </Menu.Target>
+                          <Menu.Dropdown>
+                            <Stack gap="xs">
+                              <Select
+                                placeholder="Chọn cây"
+                                label="Chọn cây"
+                                data={trees.map((tree) => tree.code)}
+                                radius={4}
+                                searchable
+                                scrollAreaProps={{ mah: 300 }}
+                              />
+                              <Button variant="outline" fullWidth radius={4}>
+                                Đổi
+                              </Button>
+                            </Stack>
+                          </Menu.Dropdown>
+                        </Menu>
+                      </Group>
+                    </SortableItem>
+                  ))}
+                </Stack>
+              </ScrollAreaAutosize>
+            </SortableContext>
+          </DndContext>
+        </Stack>
+        <MapContainer
+          center={position}
+          zoom={20}
+          style={{ height: "400px", width: "80%" }}
+          scrollWheelZoom={false}
         >
-          <ScrollAreaAutosize>
-            <Group wrap="nowrap" justify="center" mt="xl">
-              {trees.map((tree) => (
-                <SortableItem key={tree.id} id={tree.id}>
-                  <Stack gap={"xs"}>
-                    <Tooltip label={tree.code}>
-                      <ThemeIcon
-                        size={50}
-                        radius="xl"
-                        color={selectedTreeId === tree.id ? "blue" : "gray"}
-                      >
-                        <IconTree />
-                      </ThemeIcon>
-                    </Tooltip>
-                    <Text>{tree.code}</Text>
-                  </Stack>
-                </SortableItem>
-              ))}
-            </Group>
-          </ScrollAreaAutosize>
-        </SortableContext>
-      </DndContext>
-      <MapContainer
-        center={position}
-        zoom={20}
-        style={{ height: "400px", width: "100%" }}
-        scrollWheelZoom={false}
-      >
-        <TileLayer url="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}" />
+          <TileLayer url="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}" />
 
-        <Polyline positions={rowPoints} color="blue" />
-        {trees.map((tree, index) => {
-          const icon = L.divIcon({
-            className: "custom-tree-point",
-            html: `<div style="
+          <Polyline positions={rowPoints} color="blue" />
+          {trees.map((tree, index) => {
+            const icon = L.divIcon({
+              className: "custom-tree-point",
+              html: `<div style="
       width: 14px;
       height: 14px;
       background-color: ${selectedTreeId === tree.id ? "#1c7ed6" : "#74c0fc"};
@@ -377,29 +438,30 @@ const AreaManagementRowDetailPage = () => {
       border: 1px solid #ffffff;
       box-shadow: 0 0 2px rgba(0,0,0,0.3);
     " title="${tree.code}"></div>`,
-            iconSize: [14, 14],
-            iconAnchor: [7, 7], // center the point
-          });
+              iconSize: [14, 14],
+              iconAnchor: [7, 7], // center the point
+            });
 
-          return (
-            <Marker
-              key={tree.id}
-              draggable
-              position={[tree.gps[1], tree.gps[0]]}
-              icon={icon}
-              eventHandlers={{
-                dragend: (e) => {
-                  const latLng = e.target.getLatLng();
-                  const newTrees = [...trees];
-                  newTrees[index].gps = [latLng.lng, latLng.lat];
-                  setTrees(newTrees);
-                },
-                click: () => setSelectedTreeId(tree.id),
-              }}
-            />
-          );
-        })}
-      </MapContainer>
+            return (
+              <Marker
+                key={tree.id}
+                draggable
+                position={[tree.gps[1], tree.gps[0]]}
+                icon={icon}
+                eventHandlers={{
+                  dragend: (e) => {
+                    const latLng = e.target.getLatLng();
+                    const newTrees = [...trees];
+                    newTrees[index].gps = [latLng.lng, latLng.lat];
+                    setTrees(newTrees);
+                  },
+                  click: () => setSelectedTreeId(tree.id),
+                }}
+              />
+            );
+          })}
+        </MapContainer>
+      </Group>
       <Table
         //@ts-expect-error no check
         columns={treeColumns}

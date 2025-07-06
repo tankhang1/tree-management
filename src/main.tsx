@@ -126,6 +126,7 @@ import PesticideManagementMainDetailPage from "./pages/PesticideManagementPage/M
 import PesticideManagementMainAddPage from "./pages/PesticideManagementPage/Main/Add/index.tsx";
 import SeasonManagementGrowthDetailPage from "./pages/SeasonManagementPage/Growth/Detail/index.tsx";
 import SeasonManagementGrowthAddPage from "./pages/SeasonManagementPage/Growth/Add/index.tsx";
+import AreaManagementRowAddPage from "./pages/AreaManagementPage/Row/Add/index.tsx";
 const theme: MantineThemeOverride = {
   fontFamily: "MyFont, sans-serif",
   primaryColor: "brand",
@@ -263,6 +264,7 @@ const ROUTES = [
     path={PATH.AREA_ROW_DETAIL}
     element={<AreaManagementRowDetailPage />}
   />,
+  <Route path={PATH.AREA_ADD_ROW} element={<AreaManagementRowAddPage />} />,
   <Route path={PATH.AREA_TREE} element={<AreaManagementTreePage />} />,
   <Route path={PATH.AREA_MAP} element={<AreaManagementMapPage />} />,
   <Route path={PATH.AREA_SOIL} element={<AreaManagementSoilTypePage />} />,

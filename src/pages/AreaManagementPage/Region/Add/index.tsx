@@ -10,14 +10,35 @@ import {
   Card,
   Title,
   Collapse,
+  NumberInput,
+  Text,
+  ActionIcon,
+  Alert,
+  Modal,
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
-import { IconArrowLeft } from "@tabler/icons-react";
+import { useDisclosure } from "@mantine/hooks";
+import {
+  IconAlertTriangle,
+  IconArrowLeft,
+  IconMap,
+  IconPlus,
+  IconTrash,
+} from "@tabler/icons-react";
 import { useState } from "react";
+import { MapContainer, Polygon, TileLayer } from "react-leaflet";
 import { useNavigate } from "react-router-dom";
+type LatLng = [number, number];
 
 const AreaManagementAddRegionPage = () => {
+  const [
+    openedAddLocation,
+    { open: openAddLocation, close: closeAddLocation },
+  ] = useDisclosure(false);
   const navigate = useNavigate();
+  const [lat, setLat] = useState<string>("");
+  const [lng, setLng] = useState<string>("");
+  const [coords, setCoords] = useState<LatLng[]>([]);
   const [active, setActive] = useState(0);
   const [expandedAreas, setExpandedAreas] = useState<number[]>([]);
 
@@ -81,7 +102,19 @@ const AreaManagementAddRegionPage = () => {
   const handleSubmit = () => {
     console.log("✅ Dữ liệu toàn bộ:", form.values);
   };
+  const handleAddPoint = () => {
+    const parsedLat = parseFloat(lat);
+    const parsedLng = parseFloat(lng);
+    if (!isNaN(parsedLat) && !isNaN(parsedLng)) {
+      setCoords((prev) => [...prev, [parsedLat, parsedLng]]);
+      setLat("");
+      setLng("");
+    }
+  };
 
+  const handleRemove = (index: number) => {
+    setCoords((prev) => prev.filter((_, i) => i !== index));
+  };
   return (
     <Card withBorder shadow="sm" radius={4} p="lg">
       <Group mb={"md"}>
@@ -101,6 +134,7 @@ const AreaManagementAddRegionPage = () => {
         allowNextStepsSelect={true}
       >
         <Stepper.Step label="Vùng trồng" />
+        <Stepper.Step label="Biểu đồ vùng trồng" />
         <Stepper.Step label="Khu vực" />
       </Stepper>
 
@@ -110,8 +144,8 @@ const AreaManagementAddRegionPage = () => {
             <TextInput
               radius={4}
               label="Mã vùng (hệ thống)"
-              required
               {...form.getInputProps("region.codeSystem")}
+              disabled
             />
             <TextInput
               radius={4}
@@ -126,15 +160,13 @@ const AreaManagementAddRegionPage = () => {
             />
             <Select
               radius={4}
-              label="Doanh nghiệp / Hộ nông dân"
+              label="Chủ sở hữu (Doanh nghiệp / Hộ nông dân)"
+              searchable
+              data={["Doanh nghiệp A - XXXX", "Nông hộ B - X01"]}
               {...form.getInputProps("region.orgUnit")}
             />
-            <Select
-              radius={4}
-              label="Chọn nhân viên quản lý"
-              {...form.getInputProps("region.employee")}
-            />
-            <TextInput
+
+            <NumberInput
               radius={4}
               label="Diện tích (m²)"
               required
@@ -162,17 +194,89 @@ const AreaManagementAddRegionPage = () => {
               label="Ghi chú"
               {...form.getInputProps("region.note")}
             />
+            <Select
+              radius={4}
+              label="Nhân viên quản lý"
+              data={["Nhân viên A", "Nhân viên B"]}
+              {...form.getInputProps("region.employee")}
+            />
           </Stack>
         )}
-
         {active === 1 && (
+          <Stack mt="md" gap={"xs"}>
+            <Group align="flex-end">
+              <TextInput
+                label="Latitude"
+                value={lat}
+                onChange={(e) => setLat(e.currentTarget.value)}
+                placeholder="10.762622"
+                radius={4}
+                flex={1}
+              />
+              <TextInput
+                label="Longitude"
+                value={lng}
+                onChange={(e) => setLng(e.currentTarget.value)}
+                placeholder="106.660172"
+                radius={4}
+                flex={1}
+              />
+              <Button
+                onClick={handleAddPoint}
+                radius={4}
+                leftSection={<IconPlus size={16} />}
+              >
+                Thêm
+              </Button>
+            </Group>
+            {coords.length > 0 && (
+              <Stack gap={"xs"}>
+                <Text size="sm" c="dimmed">
+                  Danh sách tọa độ ({coords.length}):
+                </Text>
+                {coords.map(([lat, lng], i) => (
+                  <Group key={i} gap="xs">
+                    <Text size="sm" w={"40%"}>
+                      {i + 1}. {lat}, {lng}
+                    </Text>
+                    <ActionIcon
+                      color="red"
+                      variant="light"
+                      radius={4}
+                      onClick={() => handleRemove(i)}
+                    >
+                      <IconTrash size={16} />
+                    </ActionIcon>
+                  </Group>
+                ))}
+              </Stack>
+            )}
+            {/* Cảnh báo nếu không đủ 3 điểm */}
+            {coords.length > 0 && coords.length < 3 && (
+              <Alert icon={<IconAlertTriangle />} color="yellow" radius={4}>
+                Cần ít nhất 3 điểm để tạo đa giác.
+              </Alert>
+            )}
+            Bản đồ Leaflet với polygon
+            <MapContainer
+              center={coords.length >= 1 ? coords[0] : [10.762622, 106.660172]}
+              zoom={16}
+              style={{ height: "300px", width: "100%", borderRadius: 8 }}
+            >
+              <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
+              <Polygon positions={coords} color="green" />
+            </MapContainer>
+          </Stack>
+        )}
+        {active === 2 && (
           <Stack mt="md" gap={"xs"}>
             {form.values.areas.map((area, areaIdx) => (
               <Card key={areaIdx} withBorder radius={4} p="md" mb="md">
                 <Group justify="space-between">
                   <TextInput
+                    label="Nhập tên khu vực"
                     placeholder="Nhập tên khu vực"
-                    value={`Khu vực ${areaIdx + 1}`}
+                    defaultValue={`Khu vực ${areaIdx + 1}`}
                     radius={4}
                   />
                   <Button
@@ -184,22 +288,12 @@ const AreaManagementAddRegionPage = () => {
                   </Button>
                 </Group>
                 <Collapse in={expandedAreas.includes(areaIdx)}>
-                  <TextInput
-                    mt={"xs"}
-                    radius={4}
-                    label="Mã khu vực"
-                    {...form.getInputProps(`areas.${areaIdx}.code`)}
-                  />
-                  <TextInput
-                    radius={4}
-                    label="Tên khu vực"
-                    {...form.getInputProps(`areas.${areaIdx}.name`)}
-                  />
-                  <TextInput
+                  <NumberInput
                     radius={4}
                     label="Diện tích"
                     {...form.getInputProps(`areas.${areaIdx}.area`)}
                   />
+
                   <Select
                     radius={4}
                     label="Loại đất"
@@ -212,11 +306,27 @@ const AreaManagementAddRegionPage = () => {
                     data={["Cao", "Thấp", "Trũng"]}
                     {...form.getInputProps(`areas.${areaIdx}.terrain`)}
                   />
-                  <Textarea
+                  <MultiSelect
                     radius={4}
-                    label="Toạ độ GPS"
-                    {...form.getInputProps(`areas.${areaIdx}.gps`)}
+                    label="Cây trồng chính"
+                    data={["Cây trồng A", "Cây trồng B"]}
+                    {...form.getInputProps(`areas.${areaIdx}.terrain`)}
                   />
+                  <Select
+                    radius={4}
+                    label="Nhân viên quản lý"
+                    data={["Nhân viên A", "Nhân viên B"]}
+                  />
+                  <Button
+                    onClick={openAddLocation}
+                    my={"sm"}
+                    radius={4}
+                    w={"100%"}
+                    variant="outline"
+                    leftSection={<IconMap />}
+                  >
+                    Tạo bảng đồ
+                  </Button>
                   <Group mt={"xs"}>
                     <Button radius={4}>Lưu</Button>
                     <Button radius={4} color="red">
@@ -241,7 +351,7 @@ const AreaManagementAddRegionPage = () => {
           >
             Quay lại
           </Button>
-          {active < 1 ? (
+          {active < 2 ? (
             <Button radius={4} onClick={nextStep}>
               Tiếp theo
             </Button>
@@ -252,6 +362,76 @@ const AreaManagementAddRegionPage = () => {
           )}
         </Group>
       </form>
+      <Modal
+        opened={openedAddLocation}
+        onClose={closeAddLocation}
+        title={<Text fw={"bold"}>Bản đồ khu vực</Text>}
+      >
+        <Stack mt="md" gap={"xs"}>
+          <Group align="flex-end">
+            <TextInput
+              label="Latitude"
+              value={lat}
+              onChange={(e) => setLat(e.currentTarget.value)}
+              placeholder="10.762622"
+              radius={4}
+              flex={1}
+            />
+            <TextInput
+              label="Longitude"
+              value={lng}
+              onChange={(e) => setLng(e.currentTarget.value)}
+              placeholder="106.660172"
+              radius={4}
+              flex={1}
+            />
+            <Button
+              onClick={handleAddPoint}
+              radius={4}
+              leftSection={<IconPlus size={16} />}
+            >
+              Thêm
+            </Button>
+          </Group>
+          {coords.length > 0 && (
+            <Stack gap={"xs"}>
+              <Text size="sm" c="dimmed">
+                Danh sách tọa độ ({coords.length}):
+              </Text>
+              {coords.map(([lat, lng], i) => (
+                <Group key={i} gap="xs">
+                  <Text size="sm" w={"40%"}>
+                    {i + 1}. {lat}, {lng}
+                  </Text>
+                  <ActionIcon
+                    color="red"
+                    variant="light"
+                    radius={4}
+                    onClick={() => handleRemove(i)}
+                  >
+                    <IconTrash size={16} />
+                  </ActionIcon>
+                </Group>
+              ))}
+            </Stack>
+          )}
+          {/* Cảnh báo nếu không đủ 3 điểm */}
+          {coords.length > 0 && coords.length < 3 && (
+            <Alert icon={<IconAlertTriangle />} color="yellow" radius={4}>
+              Cần ít nhất 3 điểm để tạo đa giác.
+            </Alert>
+          )}
+          Bản đồ Leaflet với polygon
+          <MapContainer
+            center={coords.length >= 1 ? coords[0] : [10.762622, 106.660172]}
+            zoom={16}
+            style={{ height: "300px", width: "100%", borderRadius: 8 }}
+          >
+            <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
+            <Polygon positions={coords} color="green" />
+          </MapContainer>
+        </Stack>
+      </Modal>
     </Card>
   );
 };

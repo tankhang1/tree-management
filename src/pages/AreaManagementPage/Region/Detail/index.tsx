@@ -23,6 +23,7 @@ import {
 import { useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import MapBox from "./components/Map";
+import { PATH } from "../../../../constants/path.constants";
 const AreaManagementRegionDetailPage = () => {
   const [type, setType] = useState<string>("Toạ độ");
   const navigate = useNavigate();
@@ -149,7 +150,7 @@ const AreaManagementRegionDetailPage = () => {
             )}
             {type === "Bản đồ" && (
               <Stack h={400} w={"100%"}>
-                <MapBox />
+                <MapBox zoom={15} zone={true} />
               </Stack>
             )}
           </Stack>
@@ -161,42 +162,61 @@ const AreaManagementRegionDetailPage = () => {
       <Grid gutter="md">
         {areas.map((area, idx) => (
           <Grid.Col span={6} key={idx}>
-            <Paper withBorder shadow="xs" radius={8} p="md">
-              <Group mb="xs">
-                <Title order={5}>{area.name}</Title>
-                <Badge color="green">{area.code}</Badge>
-              </Group>
-              <Group mb={8}>
-                <ThemeIcon variant="light" color="blue" size={24}>
-                  <IconRulerMeasure size={16} />
-                </ThemeIcon>
-                <Text size="sm">{area.area} m²</Text>
-              </Group>
-              <Group mb={8}>
-                <ThemeIcon variant="light" color="orange" size={24}>
-                  <IconDroplet size={16} />
-                </ThemeIcon>
-                <Text size="sm">{area.soilType}</Text>
-              </Group>
-              <Group mb={8}>
-                <ThemeIcon variant="light" color="teal" size={24}>
-                  <IconTree size={16} />
-                </ThemeIcon>
-                <Text size="sm">{area.mainCrop}</Text>
-              </Group>
-              <Group mb={8}>
-                <ThemeIcon variant="light" color="grape" size={24}>
-                  <IconUserCog size={16} />
-                </ThemeIcon>
-                <Text size="sm">{area.manager}</Text>
-              </Group>
-              <Group gap="xs" mt="sm">
-                {area.terrain.map((t, i) => (
-                  <Badge key={i} size="xs" color="gray" variant="light">
-                    {t}
-                  </Badge>
-                ))}
-              </Group>
+            <Paper withBorder h={400} shadow="xs" radius={8} p="md">
+              <Stack>
+                <Group justify="space-between" align="flex-start">
+                  <Stack gap={4}>
+                    <Group mb="xs">
+                      <Title order={5}>{area.name}</Title>
+                      <Badge color="green">{area.code}</Badge>
+                    </Group>
+                    <Group mb={8}>
+                      <ThemeIcon variant="light" color="blue" size={24}>
+                        <IconRulerMeasure size={16} />
+                      </ThemeIcon>
+                      <Text size="sm">{area.area} m²</Text>
+                    </Group>
+                    <Group mb={8}>
+                      <ThemeIcon variant="light" color="orange" size={24}>
+                        <IconDroplet size={16} />
+                      </ThemeIcon>
+                      <Text size="sm">{area.soilType}</Text>
+                    </Group>
+                    <Group mb={8}>
+                      <ThemeIcon variant="light" color="teal" size={24}>
+                        <IconTree size={16} />
+                      </ThemeIcon>
+                      <Text size="sm">{area.mainCrop}</Text>
+                    </Group>
+                    <Group mb={8}>
+                      <ThemeIcon variant="light" color="grape" size={24}>
+                        <IconUserCog size={16} />
+                      </ThemeIcon>
+                      <Text size="sm">{area.manager}</Text>
+                    </Group>
+                    <Group gap="xs" mt="sm">
+                      {area.terrain.map((t, i) => (
+                        <Badge key={i} size="xs" color="gray" variant="light">
+                          {t}
+                        </Badge>
+                      ))}
+                    </Group>
+                  </Stack>
+
+                  <Stack h={300} w={400}>
+                    <MapBox h={300} zoom={16} area={true} />
+                  </Stack>
+                </Group>
+                <Button
+                  radius={4}
+                  variant="outline"
+                  onClick={() => {
+                    navigate(PATH.AREA_ZONE_DETAIL);
+                  }}
+                >
+                  Xem chi tiết
+                </Button>
+              </Stack>
             </Paper>
           </Grid.Col>
         ))}

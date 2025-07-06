@@ -110,15 +110,19 @@ button:focus-visible {
 .fc-col-header-cell-cushion {
   color: #495057 !important; /* Tùy chọn: xám đậm, hoặc bạn có thể dùng #000 */
 }
-.event-kehoach {
-  background-color: #228be6 !important; /* Xanh dương */
-  color: white !important;
-  border: none !important;
 
+.fc-h-event {
+  border: none !important;
+  background-color: white !important;
+}
+.fc .fc-daygrid-day-frame {
+  min-height: 250px; /* or any height you prefer */
+  gap: 2px;
 }
 
-.event-phatsinh {
-  background-color: #ae3ec9 !important; /* Tím */
-  color: white !important;
-  border: none !important;
+.fc .fc-daygrid-day-events {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  gap: 4px;
 }

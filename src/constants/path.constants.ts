@@ -47,6 +47,7 @@ export const PATH = {
   AREA_ADD_BLOCK: "/area-management/block/add",
   AREA_ROW: "/area-management/row",
   AREA_ROW_DETAIL: "/area-management/row/detail",
+  AREA_ADD_ROW: "/area-management/row/add",
   AREA_TREE: "/area-management/tree",
   AREA_MAP: "/area-management/map",
   AREA_SOIL: "/area-management/soil-type",

@@ -17,16 +17,32 @@ const LAYERS: LayerConfig[] = [
   { key: "plot", color: "#31a354", fill: true, label: "Lô" },
   { key: "row", color: "#ffff", fill: false, label: "Hàng" },
 ];
-
-const MapBox = () => {
+type TMapBox = {
+  h?: number;
+  zoom?: number;
+  zone?: boolean;
+  area?: boolean;
+  plot?: boolean;
+  row?: boolean;
+  plant?: boolean;
+};
+const MapBox = ({
+  h = 400,
+  zoom = 15,
+  zone = false,
+  area = false,
+  plot = false,
+  row = false,
+  plant = false,
+}: TMapBox) => {
   const [data, setData] = useState<Record<string, GeoJsonObject>>({});
   const [plantFeatures, setPlantFeatures] = useState<Feature<Point>[]>([]);
   const [visibleLayers, setVisibleLayers] = useState<Record<string, boolean>>({
-    zone: false,
-    area: true,
-    plot: false,
-    row: false,
-    plant: false,
+    zone: zone,
+    area: area,
+    plot: plot,
+    row: row,
+    plant: plant,
   });
   const onZoomChange = (value: number) => {
     if (value === 17) {
@@ -98,19 +114,18 @@ const MapBox = () => {
     <MapContainer
       preferCanvas
       center={[11.553203605968022, 107.12999664743181]}
-      maxZoom={20}
-      zoom={18}
+      // maxZoom={22}
+      zoom={zoom}
+      maxZoom={zoom}
+      minZoom={zoom}
       zoomControl={false}
-      zoomSnap={1}
-      minZoom={17}
+      // zoomSnap={1}
+      // minZoom={15}
       boxZoom={false}
-      style={{ height: "400px", width: "100%", borderRadius: 4 }}
+      style={{ height: `${h}px`, width: "100%", borderRadius: 4 }}
     >
       <ZoomListener onChange={onZoomChange} />
-      <TileLayer
-        attribution='Tiles &copy; <a href="https://www.esri.com/">Yis</a> & contributors'
-        url="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"
-      />
+      <TileLayer url="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}" />
 
       {LAYERS.map(
         ({ key, color, fill, label }) =>
