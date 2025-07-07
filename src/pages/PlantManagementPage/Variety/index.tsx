@@ -198,6 +198,7 @@ const PlantManagementVarietyPage = () => {
       <Modal
         opened={openedVarietyForm}
         onClose={closeVarietyForm}
+        size={"lg"}
         title={<Text fw={500}>Tạo mới giống cây</Text>}
       >
         <AddVarietyForm />

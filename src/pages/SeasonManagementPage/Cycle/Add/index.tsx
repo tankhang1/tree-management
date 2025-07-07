@@ -4,18 +4,20 @@ import {
   Stack,
   TextInput,
   NumberInput,
-  Textarea,
   Title,
   Stepper,
   Paper,
   Card,
   Select,
   FileInput,
+  Radio,
+  Text,
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { IconArrowLeft, IconFileTypePdf } from "@tabler/icons-react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import SunEditor from "suneditor-react";
 const SeasonManagementCycleAddPage = () => {
   const navigate = useNavigate();
   const [active, setActive] = useState(0);
@@ -29,7 +31,8 @@ const SeasonManagementCycleAddPage = () => {
           name: "",
           duration: 0,
           conditionNote: "",
-          document: null as File | null,
+          document: "",
+          documentType: "",
         },
       ],
     },
@@ -69,25 +72,21 @@ const SeasonManagementCycleAddPage = () => {
           {active === 0 && (
             <Stack gap={"xs"}>
               <Select
-                label="Nhóm cây trồng"
-                placeholder="Chọn nhóm cây trồng"
+                label="Nhóm cây cây trồng"
+                placeholder="Nhóm cây trồng"
                 {...form.getInputProps("varietyId")}
                 radius={4}
               />
+
               <Select
                 label="Danh mục cây trồng"
                 placeholder="Chọn danh mục cây trồng"
                 {...form.getInputProps("varietyId")}
                 radius={4}
               />
-              <Select
-                label="Giống cây trồng"
-                placeholder="VRI-001"
-                {...form.getInputProps("varietyId")}
-                radius={4}
-              />
+
               <NumberInput
-                label="Tổng thời gian phát triển"
+                label="Thời gian diễn ra chu kì ( ngày )"
                 placeholder="Nhập số ngày"
                 min={1}
                 {...form.getInputProps("duration")}
@@ -116,22 +115,44 @@ const SeasonManagementCycleAddPage = () => {
                     {...form.getInputProps(`stages.${index}.duration`)}
                     radius={4}
                   />
-                  <Textarea
-                    mt="xs"
-                    label="Điều kiện đặc thù"
-                    placeholder="Độ ẩm, ánh sáng..."
-                    {...form.getInputProps(`stages.${index}.conditionNote`)}
-                    radius={4}
-                  />
-                  <FileInput
-                    mt="xs"
-                    leftSection={<IconFileTypePdf />}
-                    label="Tài liệu đính kèm"
-                    placeholder="Chọn file PDF"
-                    accept="application/pdf"
-                    {...form.getInputProps(`stages.${index}.document`)}
-                    radius={4}
-                  />
+                  <Stack gap={"xs"}>
+                    <Radio.Group
+                      label="Tài liệu kỹ thuật"
+                      value={stage.documentType}
+                      onChange={(val) =>
+                        form.setFieldValue(`stages.${index}.documentType`, val)
+                      }
+                    >
+                      <Group mt="xs">
+                        <Radio value="file" label="Tải file PDF" />
+                        <Radio value="editor" label="Nhập nội dung trực tiếp" />
+                      </Group>
+                    </Radio.Group>
+
+                    {stage.documentType === "file" ? (
+                      <FileInput
+                        label="Tài liệu kỹ thuật (PDF)"
+                        placeholder="Chọn tài liệu"
+                        accept="application/pdf"
+                        leftSection={<IconFileTypePdf size={18} />}
+                        radius={4}
+                        {...form.getInputProps("technicalDoc")}
+                      />
+                    ) : (
+                      <Stack>
+                        <Text style={{ fontSize: 14, fontWeight: 500 }}>
+                          Nội dung kỹ thuật
+                        </Text>
+                        <SunEditor
+                          setOptions={{ height: "200px" }}
+                          setContents={stage.document}
+                          onChange={(val) =>
+                            form.setFieldValue("document", val)
+                          }
+                        />
+                      </Stack>
+                    )}
+                  </Stack>
                 </Paper>
               ))}
               <Button variant="light" onClick={handleAddStage} radius={4}>

@@ -20,7 +20,7 @@ import {
   NumberInput,
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
-import { IconArrowLeft, IconPhoto, IconPlus } from "@tabler/icons-react";
+import { IconArrowLeft, IconPhoto } from "@tabler/icons-react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 const plantVarieties = [
@@ -221,7 +221,7 @@ const PlantManagementTreeAddPage = () => {
                   >
                     <Image
                       src={seed.image}
-                      height={100}
+                      height={220}
                       fit="cover"
                       radius="md"
                       mb={8}
@@ -231,30 +231,6 @@ const PlantManagementTreeAddPage = () => {
                     </Text>
                   </Card>
                 ))}
-                <Card
-                  radius="md"
-                  withBorder
-                  padding="sm"
-                  style={{
-                    textAlign: "center",
-                    cursor: "pointer",
-                    transition: "all 0.2s ease",
-                  }}
-                  onClick={() => alert("TODO: mở form tạo giống mới")}
-                  onMouseEnter={(e) =>
-                    (e.currentTarget.style.transform = "translateY(-2px)")
-                  }
-                  onMouseLeave={(e) =>
-                    (e.currentTarget.style.transform = "none")
-                  }
-                >
-                  <Group justify="center">
-                    <IconPlus size={32} />
-                  </Group>
-                  <Text size="sm" mt={4}>
-                    Tạo giống mới
-                  </Text>
-                </Card>
               </SimpleGrid>
             </Stack>
           </Group>
@@ -275,8 +251,16 @@ const PlantManagementTreeAddPage = () => {
 
         {activeStep === 3 && (
           <Stack mt="md" gap="xs">
+            {/**Drag and drop và theo thứ tự */}
             {form.values.growthCycles.map((cycle, index) => (
-              <Card key={index} withBorder radius="md" shadow="xs" p="md">
+              <Card
+                key={index}
+                withBorder
+                radius="md"
+                shadow="xs"
+                p="md"
+                style={{ borderColor: "black" }}
+              >
                 <Stack gap="xs">
                   <Select label={"Chu kì sinh trưởng"} radius={4} />
                   <MultiSelect
@@ -295,7 +279,7 @@ const PlantManagementTreeAddPage = () => {
                     radius={4}
                   />
                   <NumberInput
-                    label="Thời gian thu hoạch dự kiến ( ngày )"
+                    label="Thời gian diễn ra chu kỳ ( ngày )"
                     placeholder="VD: 180 ngày"
                     radius={4}
                   />

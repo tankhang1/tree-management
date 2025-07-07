@@ -9,10 +9,13 @@ import {
   Image,
   ActionIcon,
   rem,
+  Radio,
+  Text,
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
-import { IconUpload, IconFileText, IconX } from "@tabler/icons-react";
+import { IconUpload, IconX, IconFileTypePdf } from "@tabler/icons-react";
 import { useState } from "react";
+import SunEditor from "suneditor-react";
 
 const AddVarietyForm = () => {
   const form = useForm({
@@ -23,6 +26,7 @@ const AddVarietyForm = () => {
       treeName: "",
       imgUrl: "",
       doc: "",
+      docType: "",
     },
   });
 
@@ -121,7 +125,7 @@ const AddVarietyForm = () => {
           </Group>
         )}
 
-        <FileInput
+        {/* <FileInput
           label="Tài liệu giống cây"
           placeholder="Tài liệu PDF/DOC"
           accept=".pdf,.doc,.docx"
@@ -132,8 +136,39 @@ const AddVarietyForm = () => {
               form.setFieldValue("doc", file.name);
             }
           }}
-        />
+        /> */}
+        <Radio.Group
+          label="Tài liệu kỹ thuật"
+          value={form.values.docType}
+          onChange={(val) => form.setFieldValue("docType", val)}
+        >
+          <Group mt="xs">
+            <Radio value="file" label="Tải file PDF" />
+            <Radio value="editor" label="Nhập nội dung trực tiếp" />
+          </Group>
+        </Radio.Group>
 
+        {form.values.docType === "file" ? (
+          <FileInput
+            label="Tài liệu kỹ thuật (PDF)"
+            placeholder="Chọn tài liệu"
+            accept="application/pdf"
+            leftSection={<IconFileTypePdf size={18} />}
+            radius={4}
+            {...form.getInputProps("technicalDoc")}
+          />
+        ) : (
+          <Stack>
+            <Text style={{ fontSize: 14, fontWeight: 500 }}>
+              Nội dung kỹ thuật
+            </Text>
+            <SunEditor
+              setOptions={{ height: "200px" }}
+              setContents={form.values.doc}
+              onChange={(val) => form.setFieldValue("doc", val)}
+            />
+          </Stack>
+        )}
         <Group justify="flex-end" mt="md">
           <Button type="submit" radius={4}>
             Tạo giống cây

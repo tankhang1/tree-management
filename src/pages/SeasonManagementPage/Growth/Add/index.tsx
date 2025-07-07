@@ -10,11 +10,14 @@ import {
   Title,
   Box,
   Card,
+  Text,
+  ScrollAreaAutosize,
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { IconArrowLeft } from "@tabler/icons-react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import SeedCard from "./components/SeedCard";
 
 // 🔁 Dữ liệu giả lập
 const cropOptions = [
@@ -112,29 +115,104 @@ const SeasonManagementGrowthAddPage = () => {
 
       <form onSubmit={form.onSubmit(nextStep)}>
         {activeStep === 0 && (
-          <Stack>
-            <TextInput
-              label="Tên mùa vụ"
-              radius={4}
-              {...form.getInputProps("name")}
-            />
-            <NumberInput
-              label="Thời gian ước tính (ngày)"
-              min={1}
-              radius={4}
-              {...form.getInputProps("estimatedDuration")}
-            />
+          <Stack gap={"xs"}>
+            <Select label="Nhóm cây" radius={4} />
+            <Select label="Danh mục cây" radius={4} />
+            <Stack>
+              <Group>
+                <Text fw={"500"} fz={14}>
+                  Danh sách giống cây
+                </Text>
+                <Button radius={4}>Thêm mới</Button>
+              </Group>
+              <Card withBorder>
+                <Stack>
+                  <Select
+                    label="Giống cây"
+                    placeholder="Chọn giống cây"
+                    radius={4}
+                  />
+                  <ScrollAreaAutosize>
+                    <Group wrap="nowrap">
+                      <SeedCard
+                        backgroundImage="https://food-map.s3.ap-southeast-1.amazonaws.com/news/2021/03/sau-rieng-ri6-3.jpg"
+                        seedCode="SR-RI6"
+                        name="Hạt giống RI6"
+                        provider="Công ty giống cây trồng"
+                        origin="Việt Nam"
+                        germinationRate={85}
+                        yield={25}
+                        description="Giống RI6 cho năng suất cao, cơm vàng đậm, vị ngọt thơm"
+                      />
+                      <SeedCard
+                        backgroundImage="https://food-map.s3.ap-southeast-1.amazonaws.com/news/2021/03/sau-rieng-ri6-3.jpg"
+                        seedCode="SR-RI4"
+                        name="Hạt giống RI4"
+                        provider="Công ty giống cây trồng"
+                        origin="Việt Nam"
+                        germinationRate={85}
+                        yield={25}
+                        description="Giống RI6 cho năng suất cao, cơm vàng đậm, vị ngọt thơm"
+                      />
+
+                      <SeedCard
+                        backgroundImage="https://food-map.s3.ap-southeast-1.amazonaws.com/news/2021/03/sau-rieng-ri6-3.jpg"
+                        seedCode="SR-RI3"
+                        name="Hạt giống RI3"
+                        provider="Công ty giống cây trồng"
+                        origin="Việt Nam"
+                        germinationRate={85}
+                        yield={25}
+                        description="Giống RI6 cho năng suất cao, cơm vàng đậm, vị ngọt thơm"
+                      />
+                      <SeedCard
+                        backgroundImage="https://food-map.s3.ap-southeast-1.amazonaws.com/news/2021/03/sau-rieng-ri6-3.jpg"
+                        seedCode="SR-RI3"
+                        name="Hạt giống RI3"
+                        provider="Công ty giống cây trồng"
+                        origin="Việt Nam"
+                        germinationRate={85}
+                        yield={25}
+                        description="Giống RI6 cho năng suất cao, cơm vàng đậm, vị ngọt thơm"
+                      />
+                      <SeedCard
+                        backgroundImage="https://food-map.s3.ap-southeast-1.amazonaws.com/news/2021/03/sau-rieng-ri6-3.jpg"
+                        seedCode="SR-RI3"
+                        name="Hạt giống RI3"
+                        provider="Công ty giống cây trồng"
+                        origin="Việt Nam"
+                        germinationRate={85}
+                        yield={25}
+                        description="Giống RI6 cho năng suất cao, cơm vàng đậm, vị ngọt thơm"
+                      />
+                    </Group>
+                  </ScrollAreaAutosize>
+                </Stack>
+              </Card>
+            </Stack>
             <Select
               label="Cây trồng"
               data={cropOptions}
               radius={4}
               {...form.getInputProps("cropId")}
             />
+            <TextInput
+              label="Tên mùa vụ"
+              radius={4}
+              {...form.getInputProps("name")}
+            />
+            <NumberInput
+              label="Thời gian diễn ra mùa vụ (ngày)"
+              min={1}
+              radius={4}
+              {...form.getInputProps("estimatedDuration")}
+            />
           </Stack>
         )}
 
         {activeStep === 1 && (
           <Stack>
+            {/**Dạng drag & drop và trình bày như cột thư mục */}
             <Select
               label="Chu kỳ sinh trưởng"
               data={growthCycleOptions}
