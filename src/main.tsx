@@ -8,6 +8,7 @@ import { PATH } from "./constants/path.constants.ts";
 import "@mantine/dates/styles.css"; //if using mantine date picker features
 import "mantine-react-table/styles.css"; //import MRT styles
 import "@mantine/core/styles.css";
+import "@mantine/dropzone/styles.css";
 import "dayjs/locale/vi";
 import "leaflet/dist/leaflet.css";
 import "suneditor/dist/css/suneditor.min.css";

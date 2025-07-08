@@ -18,11 +18,20 @@ import {
   SimpleGrid,
   Text,
   NumberInput,
+  ScrollAreaAutosize,
+  Input,
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
-import { IconArrowLeft, IconPhoto } from "@tabler/icons-react";
+import {
+  IconArrowLeft,
+  IconPhoto,
+  IconUpload,
+  IconX,
+} from "@tabler/icons-react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import SeedCard from "./components/SeedCard";
+import { Dropzone, IMAGE_MIME_TYPE } from "@mantine/dropzone";
 const plantVarieties = [
   {
     id: "v1",
@@ -71,16 +80,6 @@ const PlantManagementTreeAddPage = () => {
     console.log("🌱 Dữ liệu cây trồng:", form.values);
   };
 
-  const handlePlantImageChange = (file: File | null) => {
-    if (file) {
-      const url = URL.createObjectURL(file);
-      setPlantImagePreview(url);
-      form.setFieldValue("plantImage", file);
-    } else {
-      setPlantImagePreview(null);
-      form.setFieldValue("plantImage", null);
-    }
-  };
   return (
     <Card withBorder shadow="md" radius={12} p="xl">
       <Group mb="md">
@@ -126,21 +125,115 @@ const PlantManagementTreeAddPage = () => {
               {...form.getInputProps("id")}
               radius={4}
             />
-            <TextInput
-              label="Tên cây"
-              placeholder="Tên cây trồng"
-              required
-              {...form.getInputProps("name")}
-              radius={4}
-            />
-            <FileInput
-              label="Hình ảnh cây trồng"
-              accept="image/*"
-              {...form.getInputProps("plantImage")}
-              leftSection={<IconPhoto size={18} />}
-              radius={4}
-              onChange={handlePlantImageChange}
-            />
+            <Stack>
+              <Select
+                label="Hạt giống cây"
+                placeholder="Chọn giống cây"
+                radius={4}
+              />
+              <ScrollAreaAutosize>
+                <Group wrap="nowrap">
+                  <SeedCard
+                    backgroundImage="https://food-map.s3.ap-southeast-1.amazonaws.com/news/2021/03/sau-rieng-ri6-3.jpg"
+                    seedCode="SR-RI6"
+                    name="Hạt giống RI6"
+                    provider="Công ty giống cây trồng"
+                    origin="Việt Nam"
+                    germinationRate={85}
+                    yield={25}
+                    description="Giống RI6 cho năng suất cao, cơm vàng đậm, vị ngọt thơm"
+                  />
+                  <SeedCard
+                    backgroundImage="https://food-map.s3.ap-southeast-1.amazonaws.com/news/2021/03/sau-rieng-ri6-3.jpg"
+                    seedCode="SR-RI4"
+                    name="Hạt giống RI4"
+                    provider="Công ty giống cây trồng"
+                    origin="Việt Nam"
+                    germinationRate={85}
+                    yield={25}
+                    description="Giống RI6 cho năng suất cao, cơm vàng đậm, vị ngọt thơm"
+                  />
+
+                  <SeedCard
+                    backgroundImage="https://food-map.s3.ap-southeast-1.amazonaws.com/news/2021/03/sau-rieng-ri6-3.jpg"
+                    seedCode="SR-RI3"
+                    name="Hạt giống RI3"
+                    provider="Công ty giống cây trồng"
+                    origin="Việt Nam"
+                    germinationRate={85}
+                    yield={25}
+                    description="Giống RI6 cho năng suất cao, cơm vàng đậm, vị ngọt thơm"
+                  />
+                  <SeedCard
+                    backgroundImage="https://food-map.s3.ap-southeast-1.amazonaws.com/news/2021/03/sau-rieng-ri6-3.jpg"
+                    seedCode="SR-RI3"
+                    name="Hạt giống RI3"
+                    provider="Công ty giống cây trồng"
+                    origin="Việt Nam"
+                    germinationRate={85}
+                    yield={25}
+                    description="Giống RI6 cho năng suất cao, cơm vàng đậm, vị ngọt thơm"
+                  />
+                  <SeedCard
+                    backgroundImage="https://food-map.s3.ap-southeast-1.amazonaws.com/news/2021/03/sau-rieng-ri6-3.jpg"
+                    seedCode="SR-RI3"
+                    name="Hạt giống RI3"
+                    provider="Công ty giống cây trồng"
+                    origin="Việt Nam"
+                    germinationRate={85}
+                    yield={25}
+                    description="Giống RI6 cho năng suất cao, cơm vàng đậm, vị ngọt thơm"
+                  />
+                </Group>
+              </ScrollAreaAutosize>
+            </Stack>
+
+            <Input.Wrapper label="Ảnh cây trồng">
+              <Dropzone
+                onDrop={(files) => console.log("accepted files", files)}
+                onReject={(files) => console.log("rejected files", files)}
+                maxSize={5 * 1024 ** 2}
+                accept={IMAGE_MIME_TYPE}
+              >
+                <Group
+                  justify="center"
+                  gap="xl"
+                  mih={220}
+                  style={{ pointerEvents: "none" }}
+                >
+                  <Dropzone.Accept>
+                    <IconUpload
+                      size={52}
+                      color="var(--mantine-color-blue-6)"
+                      stroke={1.5}
+                    />
+                  </Dropzone.Accept>
+                  <Dropzone.Reject>
+                    <IconX
+                      size={52}
+                      color="var(--mantine-color-red-6)"
+                      stroke={1.5}
+                    />
+                  </Dropzone.Reject>
+                  <Dropzone.Idle>
+                    <IconPhoto
+                      size={52}
+                      color="var(--mantine-color-dimmed)"
+                      stroke={1.5}
+                    />
+                  </Dropzone.Idle>
+
+                  <div>
+                    <Text size="xl" inline>
+                      Kéo hoặc chọn để tải ảnh lên
+                    </Text>
+                    <Text size="sm" c="dimmed" inline mt={7}>
+                      Giới hạn kích thước ảnh khoản 5MB
+                    </Text>
+                  </div>
+                </Group>
+              </Dropzone>
+            </Input.Wrapper>
             {plantImagePreview && (
               <Image
                 src={plantImagePreview}

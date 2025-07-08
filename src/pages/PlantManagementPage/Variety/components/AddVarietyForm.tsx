@@ -11,11 +11,14 @@ import {
   rem,
   Radio,
   Text,
+  Input,
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { IconUpload, IconX, IconFileTypePdf } from "@tabler/icons-react";
 import { useState } from "react";
 import SunEditor from "suneditor-react";
+import { IconPhoto } from "@tabler/icons-react";
+import { Dropzone, IMAGE_MIME_TYPE } from "@mantine/dropzone";
 
 const AddVarietyForm = () => {
   const form = useForm({
@@ -78,23 +81,52 @@ const AddVarietyForm = () => {
           {...form.getInputProps("description")}
         />
 
-        <FileInput
-          label="Ảnh giống cây"
-          placeholder="Chọn ảnh"
-          accept="image/*"
-          radius={4}
-          leftSection={<IconUpload size={18} />}
-          onChange={(file) => {
-            if (file) {
-              const url = URL.createObjectURL(file);
-              form.setFieldValue("imgUrl", url);
-              setImagePreview(url);
-            }
-          }}
-          clearable
-          clearButtonProps={{ onClick: handleImageClear }}
-        />
+        <Input.Wrapper label="Ảnh giống cây">
+          <Dropzone
+            onDrop={(files) => console.log("accepted files", files)}
+            onReject={(files) => console.log("rejected files", files)}
+            maxSize={5 * 1024 ** 2}
+            accept={IMAGE_MIME_TYPE}
+          >
+            <Group
+              justify="center"
+              gap="xl"
+              mih={220}
+              style={{ pointerEvents: "none" }}
+            >
+              <Dropzone.Accept>
+                <IconUpload
+                  size={52}
+                  color="var(--mantine-color-blue-6)"
+                  stroke={1.5}
+                />
+              </Dropzone.Accept>
+              <Dropzone.Reject>
+                <IconX
+                  size={52}
+                  color="var(--mantine-color-red-6)"
+                  stroke={1.5}
+                />
+              </Dropzone.Reject>
+              <Dropzone.Idle>
+                <IconPhoto
+                  size={52}
+                  color="var(--mantine-color-dimmed)"
+                  stroke={1.5}
+                />
+              </Dropzone.Idle>
 
+              <div>
+                <Text size="xl" inline>
+                  Kéo hoặc chọn để tải ảnh lên
+                </Text>
+                <Text size="sm" c="dimmed" inline mt={7}>
+                  Giới hạn kích thước ảnh khoản 5MB
+                </Text>
+              </div>
+            </Group>
+          </Dropzone>
+        </Input.Wrapper>
         {imagePreview && (
           <Group justify="left" mt="xs">
             <div style={{ position: "relative", display: "inline-block" }}>

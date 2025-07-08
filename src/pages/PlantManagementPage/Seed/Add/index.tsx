@@ -12,12 +12,16 @@ import {
   Paper,
   Radio,
   NumberInput,
+  Input,
+  Text,
 } from "@mantine/core";
+import { Dropzone, IMAGE_MIME_TYPE } from "@mantine/dropzone";
 import { useForm } from "@mantine/form";
 import {
   IconArrowLeft,
   IconFileTypePdf,
   IconPhoto,
+  IconUpload,
   IconX,
 } from "@tabler/icons-react";
 import { useState } from "react";
@@ -174,17 +178,52 @@ const PlantManagementSeedAddPage = () => {
           )}
 
           {/* --- HÌNH ẢNH + PREVIEW --- */}
-          <FileInput
-            label="Hình ảnh hạt giống"
-            placeholder="Tải lên ảnh"
-            accept="image/*"
-            radius={4}
-            leftSection={<IconPhoto size={18} />}
-            onChange={handleImageChange}
-            clearable
-            value={form.values.image}
-          />
+          <Input.Wrapper label="Hình ảnh hạt giống">
+            <Dropzone
+              onDrop={(files) => console.log("accepted files", files)}
+              onReject={(files) => console.log("rejected files", files)}
+              maxSize={5 * 1024 ** 2}
+              accept={IMAGE_MIME_TYPE}
+            >
+              <Group
+                justify="center"
+                gap="xl"
+                mih={220}
+                style={{ pointerEvents: "none" }}
+              >
+                <Dropzone.Accept>
+                  <IconUpload
+                    size={52}
+                    color="var(--mantine-color-blue-6)"
+                    stroke={1.5}
+                  />
+                </Dropzone.Accept>
+                <Dropzone.Reject>
+                  <IconX
+                    size={52}
+                    color="var(--mantine-color-red-6)"
+                    stroke={1.5}
+                  />
+                </Dropzone.Reject>
+                <Dropzone.Idle>
+                  <IconPhoto
+                    size={52}
+                    color="var(--mantine-color-dimmed)"
+                    stroke={1.5}
+                  />
+                </Dropzone.Idle>
 
+                <div>
+                  <Text size="xl" inline>
+                    Kéo hoặc chọn để tải ảnh lên
+                  </Text>
+                  <Text size="sm" c="dimmed" inline mt={7}>
+                    Giới hạn kích thước ảnh khoản 5MB
+                  </Text>
+                </div>
+              </Group>
+            </Dropzone>
+          </Input.Wrapper>
           {imagePreview && (
             <Stack style={{ position: "relative", display: "inline-block" }}>
               <Image
