@@ -12,7 +12,6 @@ import {
   Select,
   Stepper,
   Textarea,
-  FileInput,
   MultiSelect,
   Image,
   SimpleGrid,
@@ -194,6 +193,7 @@ const PlantManagementTreeAddPage = () => {
                 onReject={(files) => console.log("rejected files", files)}
                 maxSize={5 * 1024 ** 2}
                 accept={IMAGE_MIME_TYPE}
+                onChange={() => setPlantImagePreview("")}
               >
                 <Group
                   justify="center"
@@ -234,16 +234,7 @@ const PlantManagementTreeAddPage = () => {
                 </Group>
               </Dropzone>
             </Input.Wrapper>
-            {plantImagePreview && (
-              <Image
-                src={plantImagePreview}
-                alt="Ảnh cây trồng"
-                width={220}
-                height={140}
-                radius="md"
-                fit="contain"
-              />
-            )}
+
             <Textarea
               label="Mô tả"
               {...form.getInputProps("note")}
