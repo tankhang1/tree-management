@@ -28,81 +28,65 @@ type AreaZone = {
   code: string;
   name: string;
   regionName: string;
-  employee: string;
-  orgUnit: string;
   area: number; // diện tích (m²)
   soilType: string;
   terrain: string[];
-  mainCrop: string;
   gps: string;
   numberOfLots: number;
 };
 const areaZoneData: AreaZone[] = [
   {
-    id: "V001",
-    code: "V-A1",
+    id: "K001",
+    code: "KV-A1",
     name: "Khu vực A1",
     regionName: "Vùng Trồng A",
-    orgUnit: "Hộ Ông Nguyễn Văn A",
-    employee: "Nhân viên B",
     area: 10000,
     soilType: "Đất thịt",
     terrain: ["Cao", "Dốc"],
-    mainCrop: "Sầu riêng",
     gps: "x1,y1 x2,y2 x3,y3 x4,y4",
     numberOfLots: 5,
   },
   {
-    id: "V002",
-    code: "V-B2",
+    id: "K002",
+    code: "KV-B2",
     name: "Khu vực B2",
     regionName: "Vùng Trồng B",
-    employee: "Nhân viên C",
-    orgUnit: "Doanh nghiệp VinaFarm",
     area: 8500,
     soilType: "Đất phù sa",
     terrain: ["Thấp", "Trũng"],
-    mainCrop: "Xoài",
     gps: "x1,y1 x2,y2 x3,y3 x4,y4",
     numberOfLots: 3,
   },
   {
-    id: "V003",
-    code: "V-C1",
+    id: "K003",
+    code: "KV-C1",
     name: "Khu vực C1",
     regionName: "Vùng Trồng C",
-    employee: "Nhân viên F",
-    orgUnit: "Hộ Bà Trần Thị C",
     area: 6000,
     soilType: "Đất cát",
     terrain: ["Bằng phẳng"],
-    mainCrop: "Chuối",
     gps: "x1,y1 x2,y2 x3,y3 x4,y4",
     numberOfLots: 4,
   },
 ];
-const AreaManagementRegionPage = () => {
+const MapManagementAreaPage = () => {
   const navigate = useNavigate();
-  const onRegionDetail = () => {
-    navigate(PATH.AREA_REGION_DETAIL);
+  const onAreaDetail = () => {
+    navigate(PATH.MAP_AREA_DETAIL);
   };
   const areaZoneColumns: MRT_ColumnDef<AreaZone>[] = [
     {
       accessorKey: "code",
-      header: "Mã vùng trồng",
+      header: "Mã khu vực",
       Cell: ({ row }) => <Text fw={500}>{row.original.code}</Text>,
+    },
+    {
+      accessorKey: "name",
+      header: "Tên khu vực",
     },
     {
       accessorKey: "regionName",
       header: "Vùng trồng",
-    },
-    {
-      accessorKey: "orgUnit",
-      header: "Đơn vị quản lý",
-    },
-    {
-      accessorKey: "employee",
-      header: "Người quản lý",
     },
     {
       accessorKey: "area",
@@ -127,12 +111,8 @@ const AreaManagementRegionPage = () => {
       ),
     },
     {
-      accessorKey: "mainCrop",
-      header: "Cây trồng chính",
-    },
-    {
       accessorKey: "numberOfLots",
-      header: "Số khu vực",
+      header: "Số lô",
     },
     {
       accessorKey: "actions",
@@ -150,7 +130,7 @@ const AreaManagementRegionPage = () => {
           <Menu.Dropdown>
             <Menu.Item
               leftSection={<IconEye size={18} color="gray" />}
-              onClick={onRegionDetail}
+              onClick={onAreaDetail}
             >
               Chi tiết
             </Menu.Item>
@@ -165,20 +145,20 @@ const AreaManagementRegionPage = () => {
       ),
     },
   ];
-  const onAddRegion = () => {
-    navigate(PATH.AREA_ADD_REGION);
+  const onAddArea = () => {
+    navigate(PATH.MAP_ADD_AREA);
   };
   return (
     <Stack gap="lg">
       <Group justify="space-between">
         <Title flex={1} order={2}>
-          Quản lý vùng trồng
+          Quản lý biểu đồ khu vực
         </Title>
         <Group>
           <Button variant="outline" radius={4} leftSection={<IconFileExcel />}>
             Xuất File
           </Button>
-          <Button radius={4} onClick={onAddRegion}>
+          <Button radius={4} onClick={onAddArea}>
             Thêm mới
           </Button>
         </Group>
@@ -209,4 +189,4 @@ const AreaManagementRegionPage = () => {
     </Stack>
   );
 };
-export default AreaManagementRegionPage;
+export default MapManagementAreaPage;

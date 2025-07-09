@@ -56,6 +56,18 @@ export const PATH = {
   AREA_CULTIVATION_METHOD: "/area-management/cultivation-method",
   AREA_ADD_CULTIVATION_METHOD: "/area-management/cultivation-method/add",
   AREA_HISTORY: "/area-management/history",
+  //Map Management
+  MAP_REGION: "/map-management/region",
+  MAP_ADD_REGION: "/map-management/region/add",
+  MAP_REGION_DETAIL: "/map-management/region/detail",
+  MAP_AREA: "/map-management/area",
+  MAP_AREA_DETAIL: "/map-management/area/detail",
+  MAP_ADD_AREA: "/map-management/area/add",
+  MAP_PLOT: "/map-management/plot",
+  MAP_PLOT_DETAIL: "/map-management/plot/detail",
+  MAP_ADD_PLOT: "/map-management/plot/add",
+  MAP_TERRAIN: "/map-management/terrain",
+  MAP_MAP: "/map-management/map",
 
   // Plant Management
   PLANT_MANAGEMENT: "/plant-management",

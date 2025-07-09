@@ -132,6 +132,17 @@ import AreaManagementTreeAddPage from "./pages/AreaManagementPage/Tree/Add/index
 import PlantManagementSeedAddPage from "./pages/PlantManagementPage/Seed/Add/index.tsx";
 import PlantManagementTechnicalDocDetailPage from "./pages/PlantManagementPage/TechnicalDoc/Detail/index.tsx";
 import PlantManagementTechnicalDocAddPage from "./pages/PlantManagementPage/TechnicalDoc/Add/index.tsx";
+import MapManagementAreaPage from "./pages/MapManagementPage/Area/index.tsx";
+import MapManagementPlotPage from "./pages/MapManagementPage/Plot/index.tsx";
+import MapManagementMapPage from "./pages/MapManagementPage/Map/index.tsx";
+import MapManagementTerrainPage from "./pages/MapManagementPage/Terrain/index.tsx";
+import MapManagementRegionPage from "./pages/MapManagementPage/Region/index.tsx";
+import MapManagementAddRegionPage from "./pages/MapManagementPage/Region/Add/index.tsx";
+import MapManagementRegionDetailPage from "./pages/MapManagementPage/Region/Detail/index.tsx";
+import MapManagementAddAreaPage from "./pages/MapManagementPage/Area/Add/index.tsx";
+import MapManagementAreaDetailPage from "./pages/MapManagementPage/Area/Detail/index.tsx";
+import MapManagementPlotAddPage from "./pages/MapManagementPage/Plot/Add/index.tsx";
+import MapManagementDetailPlotPage from "./pages/MapManagementPage/Plot/Detail/index.tsx";
 const theme: MantineThemeOverride = {
   fontFamily: "MyFont, sans-serif",
   primaryColor: "brand",
@@ -284,6 +295,26 @@ const ROUTES = [
     element={<AreaManagementCultivationMethodAddPage />}
   />,
   <Route path={PATH.AREA_HISTORY} element={<AreaManagementHistoryPage />} />,
+  <Route path={PATH.MAP_AREA} element={<MapManagementAreaPage />} />,
+  <Route path={PATH.MAP_ADD_AREA} element={<MapManagementAddAreaPage />} />,
+  <Route
+    path={PATH.MAP_AREA_DETAIL}
+    element={<MapManagementAreaDetailPage />}
+  />,
+  <Route path={PATH.MAP_PLOT} element={<MapManagementPlotPage />} />,
+  <Route path={PATH.MAP_ADD_PLOT} element={<MapManagementPlotAddPage />} />,
+  <Route
+    path={PATH.MAP_PLOT_DETAIL}
+    element={<MapManagementDetailPlotPage />}
+  />,
+  <Route path={PATH.MAP_MAP} element={<MapManagementMapPage />} />,
+  <Route path={PATH.MAP_TERRAIN} element={<MapManagementTerrainPage />} />,
+  <Route path={PATH.MAP_REGION} element={<MapManagementRegionPage />} />,
+  <Route path={PATH.MAP_ADD_REGION} element={<MapManagementAddRegionPage />} />,
+  <Route
+    path={PATH.MAP_REGION_DETAIL}
+    element={<MapManagementRegionDetailPage />}
+  />,
 
   <Route path={PATH.PLANT_MANAGEMENT} element={<PlantManagementPage />} />,
   <Route path={PATH.PLANT_TREE} element={<PlantManagementTreePage />} />,

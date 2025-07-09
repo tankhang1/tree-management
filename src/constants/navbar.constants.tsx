@@ -14,6 +14,7 @@ import {
   IconTractor,
   IconUsersGroup,
   IconTrees,
+  IconMap2,
 } from "@tabler/icons-react";
 import { PATH } from "./path.constants";
 
@@ -38,11 +39,21 @@ export const NAV_BAR = [
       { label: "Lô", link: PATH.AREA_BLOCK },
       { label: "Hàng", link: PATH.AREA_ROW },
       { label: "Cây", link: PATH.AREA_TREE },
-      { label: "Bản đồ địa chính", link: PATH.AREA_MAP },
       { label: "Loại đất", link: PATH.AREA_SOIL },
-      { label: "Địa hình", link: PATH.AREA_TERRAIN },
       { label: "Phương pháp canh tác", link: PATH.AREA_CULTIVATION_METHOD },
       { label: "Lịch sử", link: PATH.AREA_HISTORY },
+    ],
+  },
+  {
+    label: "Quản lý biểu đồ",
+    icon: IconMap2,
+    link: PATH.MAP_REGION,
+    children: [
+      { label: "Vùng trồng", link: PATH.MAP_REGION },
+      { label: "Khu vực", link: PATH.MAP_AREA },
+      { label: "Lô", link: PATH.MAP_PLOT },
+      { label: "Bản đồ địa chính", link: PATH.MAP_MAP },
+      { label: "Địa hình", link: PATH.MAP_TERRAIN },
     ],
   },
   {
