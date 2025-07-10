@@ -27,6 +27,7 @@ type AreaZone = {
   code: string;
   name: string;
   regionName: string;
+  orgUnit: string;
   area: number; // diện tích (m²)
   soilType: string;
   terrain: string[];
@@ -39,6 +40,7 @@ const areaZoneData: AreaZone[] = [
     code: "KV-A1",
     name: "Khu vực A1",
     regionName: "Vùng Trồng A",
+    orgUnit: "Hộ Ông Nguyễn Văn A",
     area: 10000,
     soilType: "Đất thịt",
     terrain: ["Cao", "Dốc"],
@@ -50,6 +52,7 @@ const areaZoneData: AreaZone[] = [
     code: "KV-B2",
     name: "Khu vực B2",
     regionName: "Vùng Trồng B",
+    orgUnit: "Hộ Ông Nguyễn Văn A",
     area: 8500,
     soilType: "Đất phù sa",
     terrain: ["Thấp", "Trũng"],
@@ -60,6 +63,7 @@ const areaZoneData: AreaZone[] = [
     id: "K003",
     code: "KV-C1",
     name: "Khu vực C1",
+    orgUnit: "Doanh nghiệp VinaFarm",
     regionName: "Vùng Trồng C",
     area: 6000,
     soilType: "Đất cát",
@@ -86,6 +90,10 @@ const MapManagementRegionPage = () => {
     {
       accessorKey: "regionName",
       header: "Vùng trồng",
+    },
+    {
+      accessorKey: "orgUnit",
+      header: "Doanh nghiệp / Hộ nông dân",
     },
     {
       accessorKey: "area",
@@ -152,7 +160,7 @@ const MapManagementRegionPage = () => {
     <Stack gap="lg">
       <Group justify="space-between">
         <Title flex={1} order={2}>
-          Quản lý biểu đồ vùng trồng
+          Quản lý biểu đồ phân bổ vùng trồng
         </Title>
         <Group>
           <Button variant="outline" radius={4} leftSection={<IconFileExcel />}>

@@ -155,7 +155,13 @@ const MapManagementAddRegionPage = () => {
               required
               {...form.getInputProps("region.name")}
             />
-
+            <Select
+              radius={4}
+              label="Doanh nghiệp / Hộ nông dân"
+              searchable
+              data={["Doanh nghiệp A - XXXX", "Nông hộ B - X01"]}
+              {...form.getInputProps("region.orgUnit")}
+            />
             <NumberInput
               radius={4}
               label="Diện tích (m²)"

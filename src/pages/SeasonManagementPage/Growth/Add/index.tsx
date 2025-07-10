@@ -8,22 +8,17 @@ import {
   Stepper,
   TextInput,
   Title,
-  Box,
   Card,
-  Text,
   ScrollAreaAutosize,
+  Input,
+  Accordion,
+  Text,
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { IconArrowLeft } from "@tabler/icons-react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import SeedCard from "./components/SeedCard";
-
-// 🔁 Dữ liệu giả lập
-const cropOptions = [
-  { value: "crop1", label: "Sầu riêng Ri6" },
-  { value: "crop2", label: "Xoài Cát Chu" },
-];
 
 const growthCycleOptions = [
   { value: "cycle1", label: "Chu kỳ A" },
@@ -56,11 +51,7 @@ const SeasonManagementGrowthAddPage = () => {
       estimatedDuration: 0,
       cropId: "",
     },
-    validate: {
-      name: (val) => (!val ? "Vui lòng nhập tên mùa vụ" : null),
-      estimatedDuration: (val) => (val <= 0 ? "Thời gian phải > 0" : null),
-      cropId: (val) => (!val ? "Chọn cây trồng" : null),
-    },
+    validate: {},
   });
 
   const [currentCycle, setCurrentCycle] = useState<string | null>(null);
@@ -116,86 +107,6 @@ const SeasonManagementGrowthAddPage = () => {
       <form onSubmit={form.onSubmit(nextStep)}>
         {activeStep === 0 && (
           <Stack gap={"xs"}>
-            <Select label="Nhóm cây" radius={4} />
-            <Select label="Danh mục cây" radius={4} />
-            <Stack>
-              <Group>
-                <Text fw={"500"} fz={14}>
-                  Danh sách giống cây
-                </Text>
-                <Button radius={4}>Thêm mới</Button>
-              </Group>
-              <Card withBorder>
-                <Stack>
-                  <Select
-                    label="Giống cây"
-                    placeholder="Chọn giống cây"
-                    radius={4}
-                  />
-                  <ScrollAreaAutosize>
-                    <Group wrap="nowrap">
-                      <SeedCard
-                        backgroundImage="https://food-map.s3.ap-southeast-1.amazonaws.com/news/2021/03/sau-rieng-ri6-3.jpg"
-                        seedCode="SR-RI6"
-                        name="Hạt giống RI6"
-                        provider="Công ty giống cây trồng"
-                        origin="Việt Nam"
-                        germinationRate={85}
-                        yield={25}
-                        description="Giống RI6 cho năng suất cao, cơm vàng đậm, vị ngọt thơm"
-                      />
-                      <SeedCard
-                        backgroundImage="https://food-map.s3.ap-southeast-1.amazonaws.com/news/2021/03/sau-rieng-ri6-3.jpg"
-                        seedCode="SR-RI4"
-                        name="Hạt giống RI4"
-                        provider="Công ty giống cây trồng"
-                        origin="Việt Nam"
-                        germinationRate={85}
-                        yield={25}
-                        description="Giống RI6 cho năng suất cao, cơm vàng đậm, vị ngọt thơm"
-                      />
-
-                      <SeedCard
-                        backgroundImage="https://food-map.s3.ap-southeast-1.amazonaws.com/news/2021/03/sau-rieng-ri6-3.jpg"
-                        seedCode="SR-RI3"
-                        name="Hạt giống RI3"
-                        provider="Công ty giống cây trồng"
-                        origin="Việt Nam"
-                        germinationRate={85}
-                        yield={25}
-                        description="Giống RI6 cho năng suất cao, cơm vàng đậm, vị ngọt thơm"
-                      />
-                      <SeedCard
-                        backgroundImage="https://food-map.s3.ap-southeast-1.amazonaws.com/news/2021/03/sau-rieng-ri6-3.jpg"
-                        seedCode="SR-RI3"
-                        name="Hạt giống RI3"
-                        provider="Công ty giống cây trồng"
-                        origin="Việt Nam"
-                        germinationRate={85}
-                        yield={25}
-                        description="Giống RI6 cho năng suất cao, cơm vàng đậm, vị ngọt thơm"
-                      />
-                      <SeedCard
-                        backgroundImage="https://food-map.s3.ap-southeast-1.amazonaws.com/news/2021/03/sau-rieng-ri6-3.jpg"
-                        seedCode="SR-RI3"
-                        name="Hạt giống RI3"
-                        provider="Công ty giống cây trồng"
-                        origin="Việt Nam"
-                        germinationRate={85}
-                        yield={25}
-                        description="Giống RI6 cho năng suất cao, cơm vàng đậm, vị ngọt thơm"
-                      />
-                    </Group>
-                  </ScrollAreaAutosize>
-                </Stack>
-              </Card>
-            </Stack>
-            <Select
-              label="Cây trồng"
-              data={cropOptions}
-              radius={4}
-              {...form.getInputProps("cropId")}
-            />
             <TextInput
               label="Tên mùa vụ"
               radius={4}
@@ -207,6 +118,72 @@ const SeasonManagementGrowthAddPage = () => {
               radius={4}
               {...form.getInputProps("estimatedDuration")}
             />
+            <Select label="Nhóm cây" radius={4} />
+            <Select label="Danh mục cây" radius={4} />
+            <Stack>
+              <Select
+                label="Giống cây"
+                placeholder="Chọn giống cây"
+                radius={4}
+              />
+              <Input.Wrapper label="Chọn hạt giống cây">
+                <ScrollAreaAutosize>
+                  <Group wrap="nowrap">
+                    <SeedCard
+                      backgroundImage="https://food-map.s3.ap-southeast-1.amazonaws.com/news/2021/03/sau-rieng-ri6-3.jpg"
+                      seedCode="SR-RI6"
+                      name="Hạt giống RI6"
+                      provider="Công ty giống cây trồng"
+                      origin="Việt Nam"
+                      germinationRate={85}
+                      yield={25}
+                      description="Giống RI6 cho năng suất cao, cơm vàng đậm, vị ngọt thơm"
+                    />
+                    <SeedCard
+                      backgroundImage="https://food-map.s3.ap-southeast-1.amazonaws.com/news/2021/03/sau-rieng-ri6-3.jpg"
+                      seedCode="SR-RI4"
+                      name="Hạt giống RI4"
+                      provider="Công ty giống cây trồng"
+                      origin="Việt Nam"
+                      germinationRate={85}
+                      yield={25}
+                      description="Giống RI6 cho năng suất cao, cơm vàng đậm, vị ngọt thơm"
+                    />
+
+                    <SeedCard
+                      backgroundImage="https://food-map.s3.ap-southeast-1.amazonaws.com/news/2021/03/sau-rieng-ri6-3.jpg"
+                      seedCode="SR-RI3"
+                      name="Hạt giống RI3"
+                      provider="Công ty giống cây trồng"
+                      origin="Việt Nam"
+                      germinationRate={85}
+                      yield={25}
+                      description="Giống RI6 cho năng suất cao, cơm vàng đậm, vị ngọt thơm"
+                    />
+                    <SeedCard
+                      backgroundImage="https://food-map.s3.ap-southeast-1.amazonaws.com/news/2021/03/sau-rieng-ri6-3.jpg"
+                      seedCode="SR-RI3"
+                      name="Hạt giống RI3"
+                      provider="Công ty giống cây trồng"
+                      origin="Việt Nam"
+                      germinationRate={85}
+                      yield={25}
+                      description="Giống RI6 cho năng suất cao, cơm vàng đậm, vị ngọt thơm"
+                    />
+                    <SeedCard
+                      backgroundImage="https://food-map.s3.ap-southeast-1.amazonaws.com/news/2021/03/sau-rieng-ri6-3.jpg"
+                      seedCode="SR-RI3"
+                      name="Hạt giống RI3"
+                      provider="Công ty giống cây trồng"
+                      origin="Việt Nam"
+                      germinationRate={85}
+                      yield={25}
+                      description="Giống RI6 cho năng suất cao, cơm vàng đậm, vị ngọt thơm"
+                    />
+                  </Group>
+                </ScrollAreaAutosize>
+              </Input.Wrapper>
+            </Stack>
           </Stack>
         )}
 
@@ -245,40 +222,50 @@ const SeasonManagementGrowthAddPage = () => {
 
             {cycleStageList.length > 0 && (
               <Stack mt="md">
-                <Title order={5}>Các chu kỳ đã chọn:</Title>
-                {cycleStageList.map((item, index) => {
-                  const cycleLabel =
-                    growthCycleOptions.find((c) => c.value === item.cycleId)
-                      ?.label || item.cycleId;
-                  const stageLabels = item.stageIds
-                    .map(
+                <Title order={5}>🌿 Chu kỳ sinh trưởng đã chọn:</Title>
+                <Accordion multiple variant="separated">
+                  {cycleStageList.map((item, index) => {
+                    const cycleLabel =
+                      growthCycleOptions.find((c) => c.value === item.cycleId)
+                        ?.label || item.cycleId;
+                    const stageLabels = item.stageIds.map(
                       (id) =>
                         growthStageOptions.find((s) => s.value === id)?.label ||
                         id
-                    )
-                    .join(", ");
-                  return (
-                    <Box
-                      key={index}
-                      p="sm"
-                      style={{ border: "1px solid #ccc", borderRadius: 6 }}
-                    >
-                      <Group justify="space-between">
-                        <div>
-                          <strong>{cycleLabel}</strong>: {stageLabels}
-                        </div>
-                        <Button
-                          variant="subtle"
-                          color="red"
-                          onClick={() => removeCycle(index)}
-                          radius={4}
-                        >
-                          Xoá
-                        </Button>
-                      </Group>
-                    </Box>
-                  );
-                })}
+                    );
+
+                    return (
+                      <Accordion.Item key={index} value={`cycle-${index}`}>
+                        <Accordion.Control>
+                          <Group justify="space-between" w="100%">
+                            <Text fw={500}>{cycleLabel}</Text>
+                            <Button
+                              size="xs"
+                              color="red"
+                              variant="light"
+                              radius="xl"
+                              onClick={(e) => {
+                                e.stopPropagation(); // tránh trigger toggle accordion
+                                removeCycle(index);
+                              }}
+                            >
+                              Xoá
+                            </Button>
+                          </Group>
+                        </Accordion.Control>
+                        <Accordion.Panel>
+                          <Stack gap={4}>
+                            {stageLabels.map((stage, i) => (
+                              <Text key={i} size="sm">
+                                • {stage}
+                              </Text>
+                            ))}
+                          </Stack>
+                        </Accordion.Panel>
+                      </Accordion.Item>
+                    );
+                  })}
+                </Accordion>
               </Stack>
             )}
           </Stack>

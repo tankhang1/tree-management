@@ -32,6 +32,7 @@ const MapManagementRegionDetailPage = () => {
         codeGov: "VN-REG-2025",
         name: "Vùng trồng sầu riêng Đồng Nai",
         area: "10000",
+        orgUnit: "Hộ nông dân Nguyễn Văn A",
         soilType: "Đất thịt",
         terrain: ["Cao", "Dốc"],
         gps: "10.123,106.234;10.124,106.235;...",
@@ -90,6 +91,10 @@ const MapManagementRegionDetailPage = () => {
             <Grid.Col span={6}>
               <Text fw={500}>Tên vùng trồng:</Text>
               <Text>{region.name}</Text>
+            </Grid.Col>
+            <Grid.Col span={6}>
+              <Text fw={500}>Doanh nghiệp / Hộ nông dân:</Text>
+              <Text>{region.orgUnit}</Text>
             </Grid.Col>
             <Grid.Col span={6}>
               <Text fw={500}>Diện tích:</Text>

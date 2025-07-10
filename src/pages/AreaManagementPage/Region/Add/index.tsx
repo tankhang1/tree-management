@@ -7,13 +7,36 @@ import {
   Card,
   Title,
   Text,
+  Divider,
+  Box,
+  Badge,
+  ScrollArea,
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
-import { IconArrowLeft } from "@tabler/icons-react";
+import { IconArrowLeft, IconPlus } from "@tabler/icons-react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import RegionCardSelector from "./components/RegionCards";
 import CropCards from "./components/CropCards";
+import SeedCards from "./components/SeedCards";
+export interface AreaOption {
+  code: string;
+  name: string;
+  zone: string;
+  orgUnit: string;
+  employee: string;
+  area: string;
+  soilType: string;
+  terrain: string[]; // VD: ["Cao", "Dốc"]
+}
+export interface SeedOption {
+  code: string;
+  cropName: string;
+  seedName: string;
+  description: string;
+  image: string; // URL hoặc base64 string
+}
+
 export interface RegionOption {
   code: string;
   name: string;
@@ -30,6 +53,69 @@ export interface CropOption {
   note?: string;
   image: string; // URL or base64
 }
+
+const areaOptions: AreaOption[] = [
+  {
+    code: "KV-BAC",
+    name: "Khu vực phía Bắc",
+    zone: "Vùng trồng sầu riêng Đồng Nai",
+    orgUnit: "Hộ nông dân Nguyễn Văn A",
+    employee: "Nhân viên A",
+    area: "4.500 m²",
+    soilType: "Đất thịt",
+    terrain: ["Cao"],
+  },
+  {
+    code: "KV-NAM",
+    name: "Khu vực phía Nam",
+    zone: "Vùng trồng sầu riêng Đồng Nai",
+    orgUnit: "Hộ nông dân Nguyễn Văn A",
+    employee: "Nhân viên A",
+    area: "5.500 m²",
+    soilType: "Đất thịt",
+    terrain: ["Dốc"],
+  },
+];
+const seedOptions: SeedOption[] = [
+  {
+    code: "VAR01",
+    cropName: "Sầu riêng",
+    seedName: "Sầu riêng Ri6",
+    description:
+      "Giống sầu riêng phổ biến, cơm vàng, hạt lép, thơm ngọt, xuất xứ từ miền Tây Việt Nam.",
+    image: "/images/saurieng_ri6.jpg",
+  },
+  {
+    code: "VAR02",
+    cropName: "Sầu riêng",
+    seedName: "Sầu riêng Monthong",
+    description:
+      "Giống Thái Lan, múi to, cơm dày, mùi nhẹ, dễ trồng và bảo quản.",
+    image: "/images/saurieng_monthong.jpg",
+  },
+  {
+    code: "VAR03",
+    cropName: "Xoài",
+    seedName: "Xoài Cát Chu",
+    description: "Xoài ngọt đậm, đặc sản Cao Lãnh – Đồng Tháp.",
+    image: "/images/xoai_cat_chu.jpg",
+  },
+  {
+    code: "VAR04",
+    cropName: "Xoài",
+    seedName: "Xoài Tượng",
+    description:
+      "Xoài to trái, chắc thịt, phù hợp trồng đại trà ở vùng nhiệt đới.",
+    image: "/images/xoai_tuong.jpg",
+  },
+  {
+    code: "VAR05",
+    cropName: "Chuối",
+    seedName: "Chuối già Nam Mỹ",
+    description: "Chuối xuất khẩu, năng suất cao, chịu bệnh tốt.",
+    image: "/images/chuoi_nam_my.jpg",
+  },
+];
 const cropOptions: CropOption[] = [
   {
     code: "TREE001",
@@ -60,7 +146,6 @@ const cropOptions: CropOption[] = [
       "data:image/jpeg;base64,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",
   },
 ];
-
 const regionOptions: RegionOption[] = [
   {
     code: "VT-001",
@@ -77,68 +162,79 @@ const regionOptions: RegionOption[] = [
     terrain: ["Thấp", "Trũng"],
   },
 ];
+type AreaType = {
+  code: string;
+  name: string;
+};
+
+type CropInfo = {
+  cropGroup: string;
+  cropCode: string;
+  seedCode: string;
+};
+
+type PlotType = {
+  id: string;
+  areaCode: string;
+  name: string;
+  employee: string;
+  cultivationMethod: string;
+  crops: CropInfo[];
+};
 
 const AreaManagementAddRegionPage = () => {
   const navigate = useNavigate();
   const [active, setActive] = useState(0);
 
-  const form = useForm({
+  const form = useForm<{
+    region: {
+      codeSystem: string;
+      employee: string;
+    };
+    areas: AreaType[];
+    plots: PlotType[];
+  }>({
     initialValues: {
       region: {
         codeSystem: "",
-        codeGov: "",
-        name: "",
-        orgUnit: "",
         employee: "",
-        area: "",
-        soilType: "",
-        terrain: [],
-        gps: "",
-        note: "",
       },
-      areas: [
-        {
-          code: "",
-          name: "",
-          regionRef: "",
-          orgUnit: "",
-          employee: "",
-          area: "",
-          soilType: "",
-          terrain: [],
-          mainCrop: "",
-          gps: "",
-        },
-      ],
+      areas: areaOptions,
+      plots: [],
     },
   });
 
-  const nextStep = () =>
-    setActive((current) => (current < 4 ? current + 1 : current));
+  const nextStep = () => {
+    if (active === 0) {
+      const plots: PlotType[] = form.values.areas.map((area, i) => ({
+        id: `plot-${i}`,
+        areaCode: area.code,
+        name: `Lô ${i} (${area.name})`,
+        employee: "",
+        cultivationMethod: "",
+        crops: [
+          {
+            cropGroup: "",
+            cropCode: "",
+            seedCode: "",
+          },
+        ],
+      }));
+      form.setFieldValue("plots", plots);
+    }
+    setActive((current) => (current < 2 ? current + 1 : current));
+  };
+
   const prevStep = () =>
     setActive((current) => (current > 0 ? current - 1 : current));
 
-  const handleAddArea = () => {
-    form.insertListItem("areas", {
-      code: "",
-      name: "",
-      regionRef: "",
-      orgUnit: "",
-      area: "",
-      soilType: "",
-      terrain: [],
-      mainCrop: "",
-      gps: "",
-    });
-  };
-
   const handleSubmit = () => {
-    console.log("✅ Dữ liệu toàn bộ:", form.values);
+    console.log("✅ Full form data:", form.values);
   };
 
   return (
     <Card withBorder shadow="sm" radius={4} p="lg">
-      <Group mb={"md"}>
+      <Group mb="md">
         <Button
           variant="subtle"
           radius={4}
@@ -149,106 +245,195 @@ const AreaManagementAddRegionPage = () => {
         </Button>
         <Title order={3}>Thêm mới vùng trồng theo từng bước</Title>
       </Group>
-      <Stepper
-        active={active}
-        onStepClick={setActive}
-        allowNextStepsSelect={true}
-      >
+
+      <Stepper active={active} onStepClick={setActive} allowNextStepsSelect>
         <Stepper.Step label="Vùng trồng" />
-        <Stepper.Step label="Khu vực" />
+        <Stepper.Step label="Cây trồng" />
+        <Stepper.Step label="Xác nhận" />
       </Stepper>
 
       <form onSubmit={form.onSubmit(handleSubmit)}>
         {active === 0 && (
-          <Stack mt="md" gap={"xs"}>
+          <Stack mt="md">
             <Select
-              radius={4}
-              label="Chủ sở hữu (Doanh nghiệp / Hộ nông dân)"
-              searchable
-              data={["Doanh nghiệp A - XXXX", "Nông hộ B - X01"]}
-              {...form.getInputProps("region.orgUnit")}
-            />
-
-            <Select
-              radius={4}
               label="Nhân viên quản lý"
               data={["Nhân viên A", "Nhân viên B"]}
               {...form.getInputProps("region.employee")}
+              radius={4}
             />
-            <Stack gap={"xs"}>
-              <Text fw={500} fz={15}>
-                Chọn cây trồng chính
-              </Text>
-              <CropCards
-                selected="1"
-                plants={cropOptions}
-                onSelect={(code) => form.setFieldValue("mainCrop", code)}
-              />
-            </Stack>
-            <Stack gap={"xs"}>
-              <Text fw={500} fz={15}>
-                Chọn vùng trồng
-              </Text>
-              <RegionCardSelector
-                regions={regionOptions}
-                selected={form.values.region.codeSystem}
-                onSelect={(code) =>
-                  form.setFieldValue("region.codeSystem", code)
-                }
-              />
-            </Stack>
+            <Text fw={500} fz={15}>
+              Chọn phân bổ vùng trồng
+            </Text>
+            <RegionCardSelector
+              regions={regionOptions}
+              selected={form.values.region.codeSystem}
+              onSelect={(code) => form.setFieldValue("region.codeSystem", code)}
+            />
+            <Text fw={500} fz={15}>
+              Chọn phân bổ khu vực
+            </Text>
+            <RegionCardSelector
+              regions={areaOptions}
+              selected={""}
+              onSelect={() => {}}
+            />
           </Stack>
         )}
 
         {active === 1 && (
-          <Stack mt="md" gap={"xs"}>
-            <Card withBorder radius={4} p="md" mb="md">
-              <Stack justify="space-between">
-                <Text fw={"bold"}>Khu vực tây nguyên</Text>
+          <Stack mt="md">
+            {form.values.plots.map((plot, index) => (
+              <Card key={plot.id} withBorder radius="md" shadow="xs" p="md">
+                <Group justify="space-between">
+                  <Box>
+                    <Text fw={600}>{plot.name}</Text>
+                    <Badge color="gray" variant="light" mt={4}>
+                      Mã khu vực: {plot.areaCode}
+                    </Badge>
+                  </Box>
+                </Group>
+                <Divider my="sm" />
+                <Select
+                  placeholder="Người quản lý"
+                  label="Người quản lý"
+                  radius={4}
+                  data={["Nhân viên A", "Nhân viên B"]}
+                />
                 <Select
                   radius={4}
-                  label="Nhân viên quản lý"
-                  data={["Nhân viên A", "Nhân viên B"]}
-                  {...form.getInputProps("region.employee")}
+                  label="Phương pháp canh tác"
+                  data={["Đơn canh", "Xen canh", "Luân canh"]}
+                  {...form.getInputProps(`plots.${index}.cultivationMethod`)}
                 />
+                <Divider
+                  my="sm"
+                  label="Danh sách giống cây"
+                  labelPosition="left"
+                />
+                {form.values.plots[index].crops.map((crop, cropIndex) => (
+                  <Card key={cropIndex} radius="sm" withBorder mb="sm" p="sm">
+                    <Text size="sm" fw={500}>
+                      Giống cây #{cropIndex + 1}
+                    </Text>
+                    <Stack>
+                      <Select
+                        label="Nhóm cây"
+                        data={["Nhóm A", "Nhóm B"]}
+                        radius={4}
+                      />
+                      <Stack>
+                        <Text fw={500} fz={15}>
+                          Chọn giống cây trồng
+                        </Text>
+                        <CropCards
+                          plants={cropOptions}
+                          selected={"123"}
+                          onSelect={() => {}}
+                        />
+                      </Stack>
+                      <Stack>
+                        <Text fw={500} fz={15}>
+                          Chọn hạt giống cây
+                        </Text>
+                        <ScrollArea>
+                          <SeedCards
+                            seeds={seedOptions}
+                            selected={"123"}
+                            onSelect={() => {}}
+                          />
+                        </ScrollArea>
+                      </Stack>
+                    </Stack>
+                  </Card>
+                ))}
 
-                <Stack gap={"xs"}>
-                  <Text fw={500} fz={15}>
-                    Chọn cây trồng chính
-                  </Text>
-                  <CropCards
-                    selected="1"
-                    plants={cropOptions}
-                    onSelect={(code) => form.setFieldValue("mainCrop", code)}
-                  />
-                </Stack>
-              </Stack>
-            </Card>
-            <Card withBorder radius={4} p="md" mb="md">
-              <Stack justify="space-between">
-                <Text fw={"bold"}>Khu vực nam trung bộ</Text>
-                <Select
+                <Button
+                  mt="xs"
+                  variant="light"
                   radius={4}
-                  label="Nhân viên quản lý"
-                  data={["Nhân viên A", "Nhân viên B"]}
-                  {...form.getInputProps("region.employee")}
-                />
+                  onClick={() =>
+                    form.insertListItem(`plots.${index}.crops`, {
+                      cropGroup: "",
+                      cropCode: "",
+                      seedCode: "",
+                    })
+                  }
+                  leftSection={<IconPlus size={16} />}
+                >
+                  Thêm giống cây
+                </Button>
+              </Card>
+            ))}
+          </Stack>
+        )}
 
-                <Stack>
-                  <Text fw={500} fz={15}>
-                    Chọn cây trồng chính
+        {active === 2 && (
+          <Stack mt="md" gap="lg">
+            <Card withBorder radius="md" shadow="xs" p="md">
+              <Title order={5} mb="xs">
+                📌 Thông tin vùng trồng
+              </Title>
+              <Text size="sm">
+                <strong>Nhân viên quản lý:</strong>{" "}
+                {form.values.region.employee}
+              </Text>
+              <Text size="sm">
+                <strong>Mã vùng:</strong> {form.values.region.codeSystem}
+              </Text>
+            </Card>
+
+            <Card withBorder radius="md" shadow="xs" p="md">
+              <Title order={5} mb="xs">
+                📍 Khu vực đã chọn
+              </Title>
+              {form.values.areas.map((area) => (
+                <Box key={area.code} mb="sm">
+                  <Text size="sm">
+                    <strong>{area.name}</strong> (Mã: {area.code})
                   </Text>
-                  <CropCards
-                    selected="1"
-                    plants={cropOptions}
-                    onSelect={(code) => form.setFieldValue("mainCrop", code)}
-                  />
-                </Stack>
+                </Box>
+              ))}
+            </Card>
+
+            <Card withBorder radius="md" shadow="xs" p="md">
+              <Title order={5} mb="xs">
+                🌱 Thông tin các lô cây trồng
+              </Title>
+              <Stack gap="sm">
+                {form.values.plots.map((plot) => (
+                  <Card key={plot.id} withBorder radius="sm" p="sm">
+                    <Group justify="space-between" mb="xs">
+                      <Box>
+                        <Text fw={600}>{plot.name}</Text>
+                        <Badge color="gray" variant="light" mt={4}>
+                          Mã khu vực: {plot.areaCode}
+                        </Badge>
+                      </Box>
+                      <Text size="sm" c="dimmed">
+                        {plot.cultivationMethod || "Chưa chọn phương pháp"}
+                      </Text>
+                    </Group>
+
+                    {plot.crops.map((crop, i) => (
+                      <Box key={i} mt="xs">
+                        <Text size="sm">
+                          🌾 <strong>Giống #{i + 1}</strong>
+                        </Text>
+                        <Text size="sm">
+                          - Nhóm cây: {crop.cropGroup || "Chưa chọn"}
+                        </Text>
+                        <Text size="sm">
+                          - Cây trồng: {crop.cropCode || "Chưa chọn"}
+                        </Text>
+                        <Text size="sm">
+                          - Hạt giống: {crop.seedCode || "Chưa chọn"}
+                        </Text>
+                      </Box>
+                    ))}
+                  </Card>
+                ))}
               </Stack>
             </Card>
-            <Button radius={4} variant="outline" onClick={handleAddArea}>
-              + Thêm khu vực
-            </Button>
           </Stack>
         )}
 
