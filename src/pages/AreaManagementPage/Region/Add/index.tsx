@@ -7,18 +7,17 @@ import {
   Card,
   Title,
   Text,
-  Divider,
   Box,
   Badge,
-  ScrollArea,
+  Divider,
+  Accordion,
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
-import { IconArrowLeft, IconPlus } from "@tabler/icons-react";
+import { IconArrowLeft } from "@tabler/icons-react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import RegionCardSelector from "./components/RegionCards";
 import CropCards from "./components/CropCards";
-import SeedCards from "./components/SeedCards";
 export interface AreaOption {
   code: string;
   name: string;
@@ -36,7 +35,17 @@ export interface SeedOption {
   description: string;
   image: string; // URL hoặc base64 string
 }
-
+export interface LotOption {
+  code: string;
+  name: string;
+  zone: string;
+  area: string;
+  treeType: string;
+  treeCount: number;
+  areaSize: string;
+  soilType: string;
+  status: "Đang canh tác" | "Tạm ngưng" | "Chưa sử dụng";
+}
 export interface RegionOption {
   code: string;
   name: string;
@@ -76,46 +85,31 @@ const areaOptions: AreaOption[] = [
     terrain: ["Dốc"],
   },
 ];
-const seedOptions: SeedOption[] = [
+const lotOptions: LotOption[] = [
   {
-    code: "VAR01",
-    cropName: "Sầu riêng",
-    seedName: "Sầu riêng Ri6",
-    description:
-      "Giống sầu riêng phổ biến, cơm vàng, hạt lép, thơm ngọt, xuất xứ từ miền Tây Việt Nam.",
-    image: "/images/saurieng_ri6.jpg",
+    code: "LO-A1-01",
+    name: "Lô A1-01",
+    zone: "Vùng trồng A",
+    area: "Khu vực A1",
+    treeType: "Sầu riêng Monthong",
+    treeCount: 120,
+    areaSize: "3.000 m²",
+    soilType: "Đất thịt",
+    status: "Đang canh tác",
   },
   {
-    code: "VAR02",
-    cropName: "Sầu riêng",
-    seedName: "Sầu riêng Monthong",
-    description:
-      "Giống Thái Lan, múi to, cơm dày, mùi nhẹ, dễ trồng và bảo quản.",
-    image: "/images/saurieng_monthong.jpg",
-  },
-  {
-    code: "VAR03",
-    cropName: "Xoài",
-    seedName: "Xoài Cát Chu",
-    description: "Xoài ngọt đậm, đặc sản Cao Lãnh – Đồng Tháp.",
-    image: "/images/xoai_cat_chu.jpg",
-  },
-  {
-    code: "VAR04",
-    cropName: "Xoài",
-    seedName: "Xoài Tượng",
-    description:
-      "Xoài to trái, chắc thịt, phù hợp trồng đại trà ở vùng nhiệt đới.",
-    image: "/images/xoai_tuong.jpg",
-  },
-  {
-    code: "VAR05",
-    cropName: "Chuối",
-    seedName: "Chuối già Nam Mỹ",
-    description: "Chuối xuất khẩu, năng suất cao, chịu bệnh tốt.",
-    image: "/images/chuoi_nam_my.jpg",
+    code: "LO-B2-02",
+    name: "Lô B2-02",
+    zone: "Vùng trồng B",
+    area: "Khu vực B2",
+    treeType: "Xoài cát Hòa Lộc",
+    treeCount: 80,
+    areaSize: "2.500 m²",
+    soilType: "Đất phù sa",
+    status: "Tạm ngưng",
   },
 ];
+
 const cropOptions: CropOption[] = [
   {
     code: "TREE001",
@@ -191,6 +185,7 @@ const AreaManagementAddRegionPage = () => {
       codeSystem: string;
       employee: string;
     };
+    farming: string;
     areas: AreaType[];
     plots: PlotType[];
   }>({
@@ -199,6 +194,7 @@ const AreaManagementAddRegionPage = () => {
         codeSystem: "",
         employee: "",
       },
+      farming: "",
       areas: areaOptions,
       plots: [],
     },
@@ -248,7 +244,7 @@ const AreaManagementAddRegionPage = () => {
 
       <Stepper active={active} onStepClick={setActive} allowNextStepsSelect>
         <Stepper.Step label="Vùng trồng" />
-        <Stepper.Step label="Cây trồng" />
+        <Stepper.Step label="Tạo lô" />
         <Stepper.Step label="Xác nhận" />
       </Stepper>
 
@@ -281,89 +277,259 @@ const AreaManagementAddRegionPage = () => {
         )}
 
         {active === 1 && (
-          <Stack mt="md">
-            {form.values.plots.map((plot, index) => (
-              <Card key={plot.id} withBorder radius="md" shadow="xs" p="md">
-                <Group justify="space-between">
-                  <Box>
-                    <Text fw={600}>{plot.name}</Text>
-                    <Badge color="gray" variant="light" mt={4}>
-                      Mã khu vực: {plot.areaCode}
-                    </Badge>
-                  </Box>
-                </Group>
-                <Divider my="sm" />
-                <Select
-                  placeholder="Người quản lý"
-                  label="Người quản lý"
-                  radius={4}
-                  data={["Nhân viên A", "Nhân viên B"]}
-                />
-                <Select
-                  radius={4}
-                  label="Phương pháp canh tác"
-                  data={["Đơn canh", "Xen canh", "Luân canh"]}
-                  {...form.getInputProps(`plots.${index}.cultivationMethod`)}
-                />
-                <Divider
-                  my="sm"
-                  label="Danh sách giống cây"
-                  labelPosition="left"
-                />
-                {form.values.plots[index].crops.map((crop, cropIndex) => (
-                  <Card key={cropIndex} radius="sm" withBorder mb="sm" p="sm">
-                    <Text size="sm" fw={500}>
-                      Giống cây #{cropIndex + 1}
-                    </Text>
-                    <Stack>
-                      <Select
-                        label="Nhóm cây"
-                        data={["Nhóm A", "Nhóm B"]}
-                        radius={4}
-                      />
-                      <Stack>
-                        <Text fw={500} fz={15}>
-                          Chọn giống cây trồng
-                        </Text>
-                        <CropCards
-                          plants={cropOptions}
-                          selected={"123"}
-                          onSelect={() => {}}
-                        />
-                      </Stack>
-                      <Stack>
-                        <Text fw={500} fz={15}>
-                          Chọn hạt giống cây
-                        </Text>
-                        <ScrollArea>
-                          <SeedCards
-                            seeds={seedOptions}
-                            selected={"123"}
+          <Stack mt="md" gap="md">
+            <Title order={5}>🧱 Thiết lập thông tin các lô</Title>
+            <Card>
+              <Stack>
+                <Text fw={"bold"} fz={"h4"}>
+                  Khu vực Nam Trung Bộ
+                </Text>
+                <Divider />
+                <Accordion variant="contained" radius="md">
+                  {lotOptions.map((lot, index) => (
+                    <Accordion.Item value={lot.code} key={lot.code}>
+                      <Accordion.Control>
+                        {lot.name || `Lô ${index + 1}`}
+                      </Accordion.Control>
+                      <Accordion.Panel>
+                        <Stack gap="xs">
+                          {/* Chọn cây trồng chính */}
+                          <Text fw={500} fz={15}>
+                            Chọn cây trồng chính
+                          </Text>
+                          <CropCards
+                            selected=""
+                            plants={cropOptions}
                             onSelect={() => {}}
                           />
-                        </ScrollArea>
-                      </Stack>
-                    </Stack>
-                  </Card>
-                ))}
 
-                <Button
-                  mt="xs"
-                  variant="light"
-                  radius={4}
-                  onClick={() =>
-                    form.insertListItem(`plots.${index}.crops`, {
-                      cropGroup: "",
-                      cropCode: "",
-                      seedCode: "",
-                    })
-                  }
-                  leftSection={<IconPlus size={16} />}
-                >
-                  Thêm giống cây
-                </Button>
-              </Card>
-            ))}
+                          {/* Phương pháp canh tác */}
+                          <Select
+                            label="Phương pháp canh tác"
+                            data={["Xen canh", "Truyền thống", "Công nghệ cao"]}
+                            {...form.getInputProps(`farming.${lot.id}`)}
+                            radius={4}
+                          />
+
+                          {/* Danh sách cây trồng */}
+                          <Stack gap="xs">
+                            <Group justify="space-between">
+                              <Text fw={500} fz={14}>
+                                {form.getValues().farming?.[lot.id] ===
+                                "Xen canh"
+                                  ? "Danh sách cây trồng"
+                                  : "Thông tin cây trồng"}
+                              </Text>
+                              {form.getValues().farming?.[lot.id] ===
+                                "Xen canh" && (
+                                <Button radius={4}>Thêm mới</Button>
+                              )}
+                            </Group>
+
+                            <Group wrap="wrap" gap="md">
+                              {[
+                                ...Array(
+                                  form.getValues().farming?.[lot.code] ===
+                                    "Xen canh"
+                                    ? 2
+                                    : 1
+                                ),
+                              ].map((_, idx) => (
+                                <Card w={300} key={idx}>
+                                  <Stack gap="xs">
+                                    <Select
+                                      searchable
+                                      label="Giống cây"
+                                      data={["Giống A", "Giống B"]}
+                                      radius={4}
+                                    />
+                                    <Select
+                                      searchable
+                                      label="Hạt giống"
+                                      data={["Hạt giống A", "Hạt giống B"]}
+                                      radius={4}
+                                    />
+                                    <Select
+                                      label="Phương pháp tưới tiêu"
+                                      data={[
+                                        "Tưới nhỏ giọt",
+                                        "Tưới phun mưa",
+                                        "Tưới tràn",
+                                      ]}
+                                      {...form.getInputProps(
+                                        `irrigation.${lot.code}`
+                                      )}
+                                      radius={4}
+                                    />
+                                  </Stack>
+                                </Card>
+                              ))}
+                            </Group>
+                          </Stack>
+                        </Stack>
+                      </Accordion.Panel>
+                    </Accordion.Item>
+                  ))}
+                </Accordion>
+              </Stack>
+            </Card>
+            <Card>
+              <Stack>
+                <Text fw={"bold"} fz={"h4"}>
+                  Khu vực Bắc Bộ
+                </Text>
+                <Divider />
+                <Accordion variant="contained" radius="md">
+                  {lotOptions.map((lot, index) => (
+                    <Accordion.Item value={lot.code} key={lot.code}>
+                      <Accordion.Control>
+                        {lot.name || `Lô ${index + 1}`}
+                      </Accordion.Control>
+                      <Accordion.Panel>
+                        <Stack gap="xs">
+                          {/* Chọn cây trồng chính */}
+                          <Text fw={500} fz={15}>
+                            Chọn cây trồng chính
+                          </Text>
+                          <CropCards
+                            selected=""
+                            plants={cropOptions}
+                            onSelect={() => {}}
+                          />
+
+                          {/* Phương pháp canh tác */}
+                          <Select
+                            label="Phương pháp canh tác"
+                            data={["Xen canh", "Truyền thống", "Công nghệ cao"]}
+                            {...form.getInputProps(`farming.${lot.id}`)}
+                            radius={4}
+                          />
+
+                          {/* Danh sách cây trồng */}
+                          <Stack gap="xs">
+                            <Group justify="space-between">
+                              <Text fw={500} fz={14}>
+                                {form.getValues().farming?.[lot.id] ===
+                                "Xen canh"
+                                  ? "Danh sách cây trồng"
+                                  : "Thông tin cây trồng"}
+                              </Text>
+                              {form.getValues().farming?.[lot.id] ===
+                                "Xen canh" && (
+                                <Button radius={4}>Thêm mới</Button>
+                              )}
+                            </Group>
+
+                            <Group wrap="wrap" gap="md">
+                              {[
+                                ...Array(
+                                  form.getValues().farming?.[lot.code] ===
+                                    "Xen canh"
+                                    ? 2
+                                    : 1
+                                ),
+                              ].map((_, idx) => (
+                                <Card w={300} key={idx}>
+                                  <Stack gap="xs">
+                                    <Select
+                                      searchable
+                                      label="Giống cây"
+                                      data={["Giống A", "Giống B"]}
+                                      radius={4}
+                                    />
+                                    <Select
+                                      searchable
+                                      label="Hạt giống"
+                                      data={["Hạt giống A", "Hạt giống B"]}
+                                      radius={4}
+                                    />
+                                    <Select
+                                      label="Phương pháp tưới tiêu"
+                                      data={[
+                                        "Tưới nhỏ giọt",
+                                        "Tưới phun mưa",
+                                        "Tưới tràn",
+                                      ]}
+                                      {...form.getInputProps(
+                                        `irrigation.${lot.code}`
+                                      )}
+                                      radius={4}
+                                    />
+                                  </Stack>
+                                </Card>
+                              ))}
+                            </Group>
+                          </Stack>
+                        </Stack>
+                      </Accordion.Panel>
+                    </Accordion.Item>
+                  ))}
+                </Accordion>
+              </Stack>
+            </Card>
+            <Card>
+              <Stack>
+                <Text fw={"bold"} fz={"h4"}>
+                  Khu vực Nam Bộ
+                </Text>
+                <Divider />
+                <Accordion variant="contained" radius="md">
+                  <Stack gap="xs">
+                    {/* Chọn cây trồng chính */}
+                    <Text fw={500} fz={15}>
+                      Chọn cây trồng chính
+                    </Text>
+                    <CropCards
+                      selected=""
+                      plants={cropOptions}
+                      onSelect={() => {}}
+                    />
+
+                    {/* Phương pháp canh tác */}
+                    <Select
+                      label="Phương pháp canh tác"
+                      data={["Xen canh", "Truyền thống", "Công nghệ cao"]}
+                      radius={4}
+                    />
+
+                    {/* Danh sách cây trồng */}
+                    <Stack gap="xs">
+                      <Group justify="space-between">
+                        <Text fw={500} fz={14}>
+                          Thông tin cây trồng
+                        </Text>
+                      </Group>
+
+                      <Card w={300}>
+                        <Stack gap="xs">
+                          <Select
+                            searchable
+                            label="Giống cây"
+                            data={["Giống A", "Giống B"]}
+                            radius={4}
+                          />
+                          <Select
+                            searchable
+                            label="Hạt giống"
+                            data={["Hạt giống A", "Hạt giống B"]}
+                            radius={4}
+                          />
+                          <Select
+                            label="Phương pháp tưới tiêu"
+                            data={[
+                              "Tưới nhỏ giọt",
+                              "Tưới phun mưa",
+                              "Tưới tràn",
+                            ]}
+                            radius={4}
+                          />
+                        </Stack>
+                      </Card>
+                    </Stack>
+                  </Stack>
+                </Accordion>
+              </Stack>
+            </Card>
           </Stack>
         )}
 
@@ -446,7 +612,7 @@ const AreaManagementAddRegionPage = () => {
           >
             Quay lại
           </Button>
-          {active < 2 ? (
+          {active < 3 ? (
             <Button radius={4} onClick={nextStep}>
               Tiếp theo
             </Button>
