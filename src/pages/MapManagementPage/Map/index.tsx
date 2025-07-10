@@ -43,7 +43,7 @@ const MapManagementMapPage = () => {
         style={{ zIndex: 9999 }}
         p={"sm"}
       >
-        <Stack w={300}>
+        <Stack w={300} gap={"xs"}>
           <Title order={4}>Tìm kiếm cây trồng</Title>
           <Select
             label="Chọn vùng"
@@ -58,7 +58,7 @@ const MapManagementMapPage = () => {
             clearable
           />
           <Select label="Chọn lô" placeholder="Chọn lô" radius={4} clearable />
-          <Select
+          {/* <Select
             label="Chọn hàng"
             placeholder="Chọn hàng"
             radius={4}
@@ -69,7 +69,7 @@ const MapManagementMapPage = () => {
             placeholder="Chọn cây"
             radius={4}
             clearable
-          />
+          /> */}
           <Button radius={4} leftSection={<IconSearch size={18} />}>
             Tìm kiếm
           </Button>

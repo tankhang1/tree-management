@@ -152,7 +152,7 @@ const MapManagementAreaPage = () => {
     <Stack gap="lg">
       <Group justify="space-between">
         <Title flex={1} order={2}>
-          Quản lý biểu đồ phân bổ khu vực
+          Phân bổ khu vực
         </Title>
         <Group>
           <Button variant="outline" radius={4} leftSection={<IconFileExcel />}>

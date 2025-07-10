@@ -51,7 +51,7 @@ export const NAV_BAR = [
     children: [
       { label: "Phân bổ vùng", link: PATH.MAP_REGION },
       { label: "Phân bổ khu vực", link: PATH.MAP_AREA },
-      // { label: "Lô", link: PATH.MAP_PLOT },
+      { label: "Phân bổ lô", link: PATH.MAP_PLOT },
       { label: "Bản đồ địa chính", link: PATH.MAP_MAP },
       { label: "Địa hình", link: PATH.MAP_TERRAIN },
     ],

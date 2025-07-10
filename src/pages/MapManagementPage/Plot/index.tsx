@@ -101,7 +101,7 @@ const MapManagementPlotPage = () => {
     <Stack gap="lg">
       <Group justify="space-between" px={"sm"}>
         <Title flex={1} order={2}>
-          Quản lý biểu đồ lô
+          Phân bổ lô
         </Title>
         <Group>
           <Button variant="outline" radius={4} leftSection={<IconFileExcel />}>
