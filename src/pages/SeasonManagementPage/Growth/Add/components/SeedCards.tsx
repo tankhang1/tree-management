@@ -1,5 +1,12 @@
 import { Card, Group, Stack, Text, Image, Badge } from "@mantine/core";
-import type { SeedOption } from "..";
+
+interface SeedOption {
+  code: string;
+  cropName: string;
+  seedName: string;
+  description: string;
+  image: string; // URL hoặc base64 string
+}
 
 interface SeedCardSelectorProps {
   seeds: SeedOption[];
@@ -13,9 +20,10 @@ const SeedCards: React.FC<SeedCardSelectorProps> = ({
   onSelect,
 }) => {
   return (
-    <Group gap="md" wrap="wrap" align="flex-start">
+    <Group gap="md" wrap="nowrap" align="flex-start">
       {seeds.map((seed) => (
         <Card
+          h={300}
           key={seed.code}
           withBorder
           radius="md"

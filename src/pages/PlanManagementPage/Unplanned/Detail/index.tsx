@@ -30,8 +30,10 @@ const PlanManagementUnplannedDetailPage = () => {
     departments: ["Chăm sóc cây", "Phòng BVTV"],
     employees: ["Nguyễn Văn A", "Trần Thị B"],
     creator: "Nguyễn Quản Lý",
-    supervisor: "", // optional
-    seasonPlan: "", // optional
+    supervisor: "",
+    seasonPlan: "",
+    cycle: "Chu kỳ 1",
+    stage: "Ra hoa",
     resources: [
       { type: "Vật tư", name: "Phân bón A", quantity: 20, unit: "Kg" },
       { type: "Thuốc BVTV", name: "Thuốc trừ sâu X", quantity: 5, unit: "Lít" },
@@ -64,17 +66,34 @@ const PlanManagementUnplannedDetailPage = () => {
             <Text>{assignment.name}</Text>
           </Group>
 
-          <Group grow>
-            <Group gap={6}>
-              <IconCalendarEvent size={18} />
-              <Text fw={500}>Thời gian thực hiện:</Text>
-              <Text>{assignment.startDate.toLocaleDateString()}</Text>
-            </Group>
-            <Group gap={6}>
-              <IconCalendarEvent size={18} />
-              <Text fw={500}>Thời gian hoàn thành dự kiến:</Text>
-              <Text>{assignment.endDate.toLocaleDateString()}</Text>
-            </Group>
+          <Group gap={6} align="center">
+            <IconCalendarEvent size={18} />
+            <Text fw={500}>Thời gian thực hiện:</Text>
+            <Text>{assignment.startDate.toLocaleDateString()}</Text>
+          </Group>
+
+          <Group gap={6} align="center">
+            <IconCalendarEvent size={18} />
+            <Text fw={500}>Hoàn thành dự kiến:</Text>
+            <Text>{assignment.endDate.toLocaleDateString()}</Text>
+          </Group>
+
+          <Group gap={6} align="center">
+            <IconClipboardList size={18} />
+            <Text fw={500}>Mùa vụ:</Text>
+            <Text>{assignment.seasonPlan || "--"}</Text>
+          </Group>
+
+          <Group gap={6} align="center">
+            <IconClipboardList size={18} />
+            <Text fw={500}>Chu kỳ:</Text>
+            <Text>{assignment.cycle}</Text>
+          </Group>
+
+          <Group gap={6} align="center">
+            <IconClipboardList size={18} />
+            <Text fw={500}>Giai đoạn:</Text>
+            <Text>{assignment.stage}</Text>
           </Group>
 
           <Group gap={6} align="center">
@@ -111,12 +130,6 @@ const PlanManagementUnplannedDetailPage = () => {
             <Text>{assignment.supervisor || "--"}</Text>
           </Group>
 
-          <Group gap={6}>
-            <IconClipboardList size={18} />
-            <Text fw={500}>Kế hoạch mùa vụ:</Text>
-            <Text>{assignment.seasonPlan || "--"}</Text>
-          </Group>
-
           <Divider label="Tài nguyên sử dụng" labelPosition="left" my="sm" />
 
           {[
@@ -135,8 +148,8 @@ const PlanManagementUnplannedDetailPage = () => {
           ].map(({ label, icon }) => {
             const items = groupResources(label);
             return items.length > 0 ? (
-              <Stack key={label} gap={4} mt="sm">
-                <Group gap={6}>
+              <Stack key={label} gap={"xs"} mt="sm">
+                <Group gap={6} align="center">
                   {icon}
                   <Text fw={600}>{label}</Text>
                 </Group>

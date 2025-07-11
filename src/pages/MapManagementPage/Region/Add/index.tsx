@@ -130,9 +130,9 @@ const MapManagementAddRegionPage = () => {
         onStepClick={setActive}
         allowNextStepsSelect={true}
       >
-        <Stepper.Step label="Vùng trồng" />
-        <Stepper.Step label="Biểu đồ vùng trồng" />
-        <Stepper.Step label="Khu vực" />
+        <Stepper.Step label="Bước 1" description="Vùng trồng" />
+        <Stepper.Step label="Bước 2" description="Biểu đồ vùng trồng" />
+        <Stepper.Step label="Bước 3" description="Khu vực" />
       </Stepper>
 
       <form onSubmit={form.onSubmit(handleSubmit)}>

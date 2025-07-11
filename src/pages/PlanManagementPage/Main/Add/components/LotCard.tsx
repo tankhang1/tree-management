@@ -20,7 +20,6 @@ const LotCard = ({
   treeType,
   treeCount,
   areaSize,
-  status,
   soilType,
 }: LotCardProps) => {
   return (
@@ -52,12 +51,12 @@ const LotCard = ({
           <strong>Loại đất:</strong> {soilType}
         </Text>
 
-        <Badge
+        {/* <Badge
           color={status === "Đang canh tác" ? "green" : "red"}
           variant="filled"
         >
           {status}
-        </Badge>
+        </Badge> */}
       </Stack>
     </Card>
   );

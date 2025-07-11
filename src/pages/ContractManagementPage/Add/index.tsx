@@ -59,7 +59,7 @@ const ContractManagementAddPage = () => {
           <Title order={3}>Tạo mới hợp đồng</Title>
         </Group>
         <Stepper active={activeStep} onStepClick={setActiveStep} size="sm">
-          <Stepper.Step label="Thông tin chính">
+          <Stepper.Step label="Bước 1" description="Thông tin chính">
             <Stack>
               <TextInput
                 label="Tên hợp đồng"
@@ -90,7 +90,7 @@ const ContractManagementAddPage = () => {
             </Stack>
           </Stepper.Step>
 
-          <Stepper.Step label="Chi tiết hợp đồng">
+          <Stepper.Step label="Bước 2" description="Chi tiết hợp đồng">
             <Stack>
               <Group align="flex-end">
                 <Select
@@ -135,7 +135,7 @@ const ContractManagementAddPage = () => {
             </Stack>
           </Stepper.Step>
 
-          <Stepper.Step label="Thời gian & đối tác">
+          <Stepper.Step label="Bước 3" description="Thời gian & đối tác">
             <Stack>
               <Group grow>
                 <DatePickerInput

@@ -91,11 +91,11 @@ const MapManagementPlotAddPage = () => {
         onStepClick={setActiveStep}
         allowNextStepsSelect={false}
       >
-        <Stepper.Step label="Vùng trồng" />
-        <Stepper.Step label="Khu vực" />
-        <Stepper.Step label="Tạo lô" />
-        <Stepper.Step label="Bản đồ lô" />
-        <Stepper.Step label="Tạo hàng" />
+        <Stepper.Step label="Bước 1" description="Vùng trồng" />
+        <Stepper.Step label="Bước 2" description="Khu vực" />
+        <Stepper.Step label="Bước 3" description="Tạo lô" />
+        <Stepper.Step label="Bước 4" description="Bản đồ lô" />
+        <Stepper.Step label="Bước 5" description="Tạo hàng" />
       </Stepper>
 
       <form onSubmit={form.onSubmit(handleSubmit)}>

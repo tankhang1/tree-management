@@ -1,5 +1,6 @@
 import { ActionIcon, Button, Group, Menu, Stack, Title } from "@mantine/core";
 import {
+  IconCopy,
   IconDotsVertical,
   IconEdit,
   IconEye,
@@ -91,9 +92,16 @@ const SeasonManagementGrowthPage = () => {
             >
               Chi tiết
             </Menu.Item>
+            <Menu.Item
+              leftSection={<IconCopy size={18} color="gray" />}
+              onClick={onAddGrowth}
+            >
+              Sao chép
+            </Menu.Item>
             <Menu.Item leftSection={<IconEdit size={18} color="green" />}>
               Chỉnh sửa
             </Menu.Item>
+
             <Menu.Item leftSection={<IconTrash size={18} />} color="red">
               Xoá
             </Menu.Item>

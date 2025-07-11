@@ -2,30 +2,16 @@ import {
   Button,
   Group,
   Stack,
-  TextInput,
   Select,
-  NumberInput,
-  MultiSelect,
   Text,
   Title,
   Stepper,
   Paper,
-  Alert,
-  ActionIcon,
-  Modal,
   Card,
 } from "@mantine/core";
 import { useState } from "react";
-import { MapContainer, TileLayer, Polygon } from "react-leaflet";
-import {
-  IconAlertTriangle,
-  IconArrowLeft,
-  IconMap,
-  IconPlus,
-  IconTrash,
-} from "@tabler/icons-react";
+import { IconArrowLeft } from "@tabler/icons-react";
 import { useNavigate } from "react-router-dom";
-import { useDisclosure } from "@mantine/hooks";
 import RegionCardSelector from "./components/RegionCards";
 import AreaCards from "./components/AreaCards";
 import CropCards from "./components/CropCards";
@@ -53,7 +39,6 @@ const defaultForm: AreaForm = {
   employee: "",
   gps: "",
 };
-type LatLng = [number, number];
 export interface RegionOption {
   code: string;
   name: string;
@@ -152,32 +137,9 @@ const regionOptions: RegionOption[] = [
 ];
 
 const AreaManagementAddZonePage = () => {
-  const [
-    openedAddLocation,
-    { open: openAddLocation, close: closeAddLocation },
-  ] = useDisclosure(false);
-
   const navigate = useNavigate();
-  const [form, setForm] = useState<AreaForm>(defaultForm);
+  const [form] = useState<AreaForm>(defaultForm);
   const [active, setActive] = useState(0);
-  const [lat, setLat] = useState<string>("");
-  const [lng, setLng] = useState<string>("");
-  const [coords, setCoords] = useState<LatLng[]>([]);
-
-  const handleAddPoint = () => {
-    const parsedLat = parseFloat(lat);
-    const parsedLng = parseFloat(lng);
-    if (!isNaN(parsedLat) && !isNaN(parsedLng)) {
-      setCoords((prev) => [...prev, [parsedLat, parsedLng]]);
-      setLat("");
-      setLng("");
-    }
-  };
-
-  const handleRemove = (index: number) => {
-    setCoords((prev) => prev.filter((_, i) => i !== index));
-  };
-
   const nextStep = () => setActive((cur) => Math.min(cur + 1, 3));
   const prevStep = () => setActive((cur) => Math.max(cur - 1, 0));
 
@@ -201,7 +163,7 @@ const AreaManagementAddZonePage = () => {
         allowNextStepsSelect={false}
       >
         {/* BƯỚC 1 */}
-        <Stepper.Step label="Thông tin">
+        <Stepper.Step label="Bước 1" description="Thông tin">
           <Stack gap="xs" mt="md">
             <Select label="Đơn vị quản lý" radius={4} value={form.orgUnit} />
             <Select
@@ -243,7 +205,7 @@ const AreaManagementAddZonePage = () => {
         </Stepper.Step>
 
         {/* BƯỚC 3 */}
-        <Stepper.Step label="Lô">
+        <Stepper.Step label="Bước 2" description="Lô">
           <Stack mt={"md"} gap={"xs"}>
             <Card withBorder radius={4} p="md" mb="md">
               <Stack gap={"xs"}>
@@ -360,7 +322,7 @@ const AreaManagementAddZonePage = () => {
         </Stepper.Step>
 
         {/* BƯỚC 4 */}
-        <Stepper.Step label="Xác nhận">
+        <Stepper.Step label="Bước 3" description="Xác nhận">
           <Stack gap={4} mt="md">
             <Text>
               <b>Mã:</b> {form.code}
@@ -416,76 +378,6 @@ const AreaManagementAddZonePage = () => {
           </Button>
         )}
       </Group>
-      <Modal
-        opened={openedAddLocation}
-        onClose={closeAddLocation}
-        title={<Text fw={"bold"}>Bản đồ lô</Text>}
-      >
-        <Stack mt="md" gap={"xs"}>
-          <Group align="flex-end">
-            <TextInput
-              label="Latitude"
-              value={lat}
-              onChange={(e) => setLat(e.currentTarget.value)}
-              placeholder="10.762622"
-              radius={4}
-              flex={1}
-            />
-            <TextInput
-              label="Longitude"
-              value={lng}
-              onChange={(e) => setLng(e.currentTarget.value)}
-              placeholder="106.660172"
-              radius={4}
-              flex={1}
-            />
-            <Button
-              onClick={handleAddPoint}
-              radius={4}
-              leftSection={<IconPlus size={16} />}
-            >
-              Thêm
-            </Button>
-          </Group>
-          {coords.length > 0 && (
-            <Stack gap={"xs"}>
-              <Text size="sm" c="dimmed">
-                Danh sách tọa độ ({coords.length}):
-              </Text>
-              {coords.map(([lat, lng], i) => (
-                <Group key={i} gap="xs">
-                  <Text size="sm" w={"40%"}>
-                    {i + 1}. {lat}, {lng}
-                  </Text>
-                  <ActionIcon
-                    color="red"
-                    variant="light"
-                    radius={4}
-                    onClick={() => handleRemove(i)}
-                  >
-                    <IconTrash size={16} />
-                  </ActionIcon>
-                </Group>
-              ))}
-            </Stack>
-          )}
-          {/* Cảnh báo nếu không đủ 3 điểm */}
-          {coords.length > 0 && coords.length < 3 && (
-            <Alert icon={<IconAlertTriangle />} color="yellow" radius={4}>
-              Cần ít nhất 3 điểm để tạo đa giác.
-            </Alert>
-          )}
-          Bản đồ Leaflet với polygon
-          <MapContainer
-            center={coords.length >= 1 ? coords[0] : [10.762622, 106.660172]}
-            zoom={16}
-            style={{ height: "300px", width: "100%", borderRadius: 8 }}
-          >
-            <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
-            <Polygon positions={coords} color="green" />
-          </MapContainer>
-        </Stack>
-      </Modal>
     </Paper>
   );
 };

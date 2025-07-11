@@ -122,7 +122,7 @@ const MapBox = ({
       // zoomSnap={1}
       // minZoom={15}
       boxZoom={false}
-      style={{ height: `${h}px`, width: "100%", borderRadius: 4 }}
+      style={{ height: `${h}px`, width: "auto", borderRadius: 4 }}
     >
       <ZoomListener onChange={onZoomChange} />
       <TileLayer url="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}" />

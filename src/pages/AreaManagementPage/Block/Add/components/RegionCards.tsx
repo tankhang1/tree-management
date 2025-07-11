@@ -13,7 +13,7 @@ const RegionCardSelector: React.FC<RegionCardSelectorProps> = ({
   onSelect,
 }) => {
   return (
-    <Group gap="md">
+    <Group gap="md" align="flex-start">
       {regions.map((r) => (
         <Card
           key={r.code}

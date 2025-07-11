@@ -177,10 +177,7 @@ const AreaManagementTreeAddPage = () => {
           allowNextStepsSelect={false}
         >
           {/* STEP 1: CHỌN LÔ / HÀNG */}
-          <Stepper.Step
-            label="Vị trí trồng"
-            description="Chọn lô/hàng & ngày trồng"
-          >
+          <Stepper.Step label="Bước 1" description="Vị trí trồng">
             <Stack>
               <Select
                 label="Vùng"
@@ -254,10 +251,7 @@ const AreaManagementTreeAddPage = () => {
           </Stepper.Step>
 
           {/* STEP 2: XEM THÔNG TIN */}
-          <Stepper.Step
-            label="Xác nhận thông tin"
-            description="Kiểm tra giống & phương pháp"
-          >
+          <Stepper.Step label="Bước 2" description="Xác nhận thông tin">
             <Stack>
               <Stack>
                 <Select
@@ -454,7 +448,7 @@ const AreaManagementTreeAddPage = () => {
           </Stepper.Step>
 
           {/* STEP 3: NHẬP TOẠ ĐỘ */}
-          <Stepper.Step label="Định vị GPS" description="Nhập danh vị trí">
+          <Stepper.Step label="Bước 3" description="Định vị GPS">
             <Stack mt="md" gap={"xs"}>
               <Group align="flex-end">
                 <TextInput

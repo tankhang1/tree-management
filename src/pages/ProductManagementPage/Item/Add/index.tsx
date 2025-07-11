@@ -57,7 +57,7 @@ const ProductManagementItemAddPage = () => {
           onStepClick={setActive}
           allowNextStepsSelect={false}
         >
-          <Stepper.Step label="Thông tin sản phẩm">
+          <Stepper.Step label="Bước 1" description="Thông tin sản phẩm">
             <Stack gap={"xs"}>
               <TextInput
                 label="Mã sản phẩm"
@@ -115,7 +115,7 @@ const ProductManagementItemAddPage = () => {
             </Stack>
           </Stepper.Step>
 
-          <Stepper.Step label="Nội dung mô tả">
+          <Stepper.Step label="Bước 2" description="Nội dung mô tả">
             <Textarea
               label="Mô tả chi tiết"
               placeholder="Nhập nội dung mô tả sản phẩm..."

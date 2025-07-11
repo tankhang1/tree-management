@@ -93,10 +93,10 @@ const PlantManagementTreeAddPage = () => {
         <Title order={3}>🌿 Thêm mới cây trồng</Title>
       </Group>
       <Stepper active={activeStep} onStepClick={setActiveStep} mt="xs">
-        <Stepper.Step label="Thông tin cây" />
-        <Stepper.Step label="Hạt giống" />
-        <Stepper.Step label="Hình thức thu hoạch" />
-        <Stepper.Step label="Chu kỳ sinh trưởng" />
+        <Stepper.Step label="Bước 1" description="Thông tin cây" />
+        <Stepper.Step label="Bước 2" description="Hạt giống" />
+        <Stepper.Step label="Bước 3" description="Hình thức thu hoạch" />
+        <Stepper.Step label="Bước 4" description="Chu kỳ sinh trưởng" />
       </Stepper>
 
       <form onSubmit={form.onSubmit(handleSubmit)}>

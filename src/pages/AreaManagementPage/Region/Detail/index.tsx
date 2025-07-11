@@ -203,7 +203,7 @@ const AreaManagementRegionDetailPage = () => {
                     </Group>
                   </Stack>
 
-                  <Stack h={300} w={400}>
+                  <Stack h={300} maw={400} miw={300}>
                     <MapBox h={300} zoom={16} area={true} />
                   </Stack>
                 </Group>

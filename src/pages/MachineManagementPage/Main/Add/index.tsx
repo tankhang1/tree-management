@@ -65,7 +65,7 @@ const MachineManagementMainAddPage = () => {
         <Title order={3}>Thêm mới máy móc</Title>
       </Group>
       <Stepper active={active} onStepClick={setActive}>
-        <Stepper.Step label="Thông tin" description="Cơ bản">
+        <Stepper.Step label="Bước 1" description="Thông tin">
           <Stack>
             <TextInput
               label="Mã máy"
@@ -112,7 +112,7 @@ const MachineManagementMainAddPage = () => {
           </Stack>
         </Stepper.Step>
 
-        <Stepper.Step label="Chi tiết" description="Thông số & mô tả">
+        <Stepper.Step label="Bước 1" description="Chi tiết">
           <Text size="sm" fw={500} mb={4}>
             Thông số kỹ thuật / Mô tả
           </Text>
@@ -132,7 +132,7 @@ const MachineManagementMainAddPage = () => {
           />
         </Stepper.Step>
 
-        <Stepper.Step label="Tài liệu" description="Hướng dẫn & Đăng kiểm">
+        <Stepper.Step label="Bước 1" description="Tài liệu">
           <Stack>
             <FileInput
               label="Sổ tay hướng dẫn (PDF)"

@@ -41,6 +41,9 @@ const RegionCardSelector: React.FC<RegionCardSelectorProps> = ({
             <Text size="sm">
               <strong>Địa hình:</strong> {r.terrain.join(", ")}
             </Text>
+            <Text size="sm">
+              <strong>Doanh nghiệp / nông hộ:</strong> Nguyễn Văn A
+            </Text>
           </Stack>
         </Card>
       ))}

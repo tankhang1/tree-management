@@ -1,5 +1,6 @@
 import { ActionIcon, Button, Group, Menu, Stack, Title } from "@mantine/core";
 import {
+  IconCopy,
   IconDotsVertical,
   IconEdit,
   IconEye,
@@ -100,6 +101,12 @@ const SeasonManagementCyclePage = () => {
               onClick={onCycleDetail}
             >
               Chi tiết
+            </Menu.Item>
+            <Menu.Item
+              leftSection={<IconCopy size={18} color="gray" />}
+              onClick={onAddCycle}
+            >
+              Sao chép
             </Menu.Item>
             <Menu.Item leftSection={<IconEdit size={18} color="green" />}>
               Chỉnh sửa

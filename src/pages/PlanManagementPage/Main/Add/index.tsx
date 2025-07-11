@@ -164,9 +164,9 @@ const PlanManagementMainAddPage = () => {
         <Title order={3}>Tạo mới kế hoạch mùa vụ</Title>
       </Group>
       <Stepper active={active} onStepClick={setActive} mb="lg">
-        <Stepper.Step label="Thông tin mùa vụ" />
-        <Stepper.Step label="Chọn vùng trồng" />
-        <Stepper.Step label="Phân bổ giai đoạn & vật tư" />
+        <Stepper.Step label="Bước 1" description="Thông tin mùa vụ" />
+        <Stepper.Step label="Bước 2" description="Chọn vùng trồng" />
+        <Stepper.Step label="Bước 3" description="Phân bổ giai đoạn & vật tư" />
       </Stepper>
 
       <form onSubmit={form.onSubmit((values) => console.log(values))}>
@@ -477,6 +477,146 @@ const PlanManagementMainAddPage = () => {
             <Card withBorder radius={4} shadow="sm" p="md">
               <Stack>
                 <Text fw={"bold"}>Chu kì 1</Text>
+
+                <SimpleGrid cols={{ base: 1, sm: 2, md: 3 }} spacing="md">
+                  <GrowthStageCard
+                    stageName="Giai đoạn Nảy mầm"
+                    materials={[]}
+                    equipment={[]}
+                    pesticides={[]}
+                    onAddMaterial={() =>
+                      form.insertListItem("stages.0.materials", {
+                        item: "",
+                        quantity: 0,
+                      })
+                    }
+                    onAddEquipment={() =>
+                      form.insertListItem("stages.0.equipment", {
+                        item: "",
+                        quantity: 0,
+                      })
+                    }
+                    onAddPesticide={() =>
+                      form.insertListItem("stages.0.pesticides", {
+                        item: "",
+                        quantity: 0,
+                      })
+                    }
+                    onChangeMaterial={(i, key, val) =>
+                      form.setFieldValue(`stages.0.materials.${i}.${key}`, val)
+                    }
+                    onChangeEquipment={(i, key, val) =>
+                      form.setFieldValue(`stages.0.equipment.${i}.${key}`, val)
+                    }
+                    onChangePesticide={(i, key, val) =>
+                      form.setFieldValue(`stages.0.pesticides.${i}.${key}`, val)
+                    }
+                  />
+                  <GrowthStageCard
+                    stageName="Giai đoạn sinh trưởng"
+                    materials={[]}
+                    equipment={[]}
+                    pesticides={[]}
+                    onAddMaterial={() =>
+                      form.insertListItem("stages.0.materials", {
+                        item: "",
+                        quantity: 0,
+                      })
+                    }
+                    onAddEquipment={() =>
+                      form.insertListItem("stages.0.equipment", {
+                        item: "",
+                        quantity: 0,
+                      })
+                    }
+                    onAddPesticide={() =>
+                      form.insertListItem("stages.0.pesticides", {
+                        item: "",
+                        quantity: 0,
+                      })
+                    }
+                    onChangeMaterial={(i, key, val) =>
+                      form.setFieldValue(`stages.0.materials.${i}.${key}`, val)
+                    }
+                    onChangeEquipment={(i, key, val) =>
+                      form.setFieldValue(`stages.0.equipment.${i}.${key}`, val)
+                    }
+                    onChangePesticide={(i, key, val) =>
+                      form.setFieldValue(`stages.0.pesticides.${i}.${key}`, val)
+                    }
+                  />
+                  <GrowthStageCard
+                    stageName="Giai đoạn sinh trưởng"
+                    materials={[]}
+                    equipment={[]}
+                    pesticides={[]}
+                    onAddMaterial={() =>
+                      form.insertListItem("stages.0.materials", {
+                        item: "",
+                        quantity: 0,
+                      })
+                    }
+                    onAddEquipment={() =>
+                      form.insertListItem("stages.0.equipment", {
+                        item: "",
+                        quantity: 0,
+                      })
+                    }
+                    onAddPesticide={() =>
+                      form.insertListItem("stages.0.pesticides", {
+                        item: "",
+                        quantity: 0,
+                      })
+                    }
+                    onChangeMaterial={(i, key, val) =>
+                      form.setFieldValue(`stages.0.materials.${i}.${key}`, val)
+                    }
+                    onChangeEquipment={(i, key, val) =>
+                      form.setFieldValue(`stages.0.equipment.${i}.${key}`, val)
+                    }
+                    onChangePesticide={(i, key, val) =>
+                      form.setFieldValue(`stages.0.pesticides.${i}.${key}`, val)
+                    }
+                  />
+                  <GrowthStageCard
+                    stageName="Giai đoạn sinh trưởng"
+                    materials={[]}
+                    equipment={[]}
+                    pesticides={[]}
+                    onAddMaterial={() =>
+                      form.insertListItem("stages.0.materials", {
+                        item: "",
+                        quantity: 0,
+                      })
+                    }
+                    onAddEquipment={() =>
+                      form.insertListItem("stages.0.equipment", {
+                        item: "",
+                        quantity: 0,
+                      })
+                    }
+                    onAddPesticide={() =>
+                      form.insertListItem("stages.0.pesticides", {
+                        item: "",
+                        quantity: 0,
+                      })
+                    }
+                    onChangeMaterial={(i, key, val) =>
+                      form.setFieldValue(`stages.0.materials.${i}.${key}`, val)
+                    }
+                    onChangeEquipment={(i, key, val) =>
+                      form.setFieldValue(`stages.0.equipment.${i}.${key}`, val)
+                    }
+                    onChangePesticide={(i, key, val) =>
+                      form.setFieldValue(`stages.0.pesticides.${i}.${key}`, val)
+                    }
+                  />
+                </SimpleGrid>
+              </Stack>
+            </Card>
+            <Card withBorder radius={4} shadow="sm" p="md">
+              <Stack>
+                <Text fw={"bold"}>Chu kì 2</Text>
 
                 <SimpleGrid cols={{ base: 1, sm: 2, md: 3 }} spacing="md">
                   <GrowthStageCard

@@ -64,7 +64,7 @@ const HRManagementTeamAddPage = () => {
           onStepClick={setActive}
           allowNextStepsSelect={false}
         >
-          <Stepper.Step label="Thông tin nhóm">
+          <Stepper.Step label="Bước 1" description="Thông tin nhóm">
             <Stack gap={"xs"}>
               <TextInput
                 label="Tên nhóm"
@@ -96,7 +96,7 @@ const HRManagementTeamAddPage = () => {
             </Stack>
           </Stepper.Step>
 
-          <Stepper.Step label="Thành viên nhóm">
+          <Stepper.Step label="Bước 2" description="Thành viên nhóm">
             <MultiSelect
               label="Thành viên"
               placeholder="Chọn thành viên từ nhân sự"

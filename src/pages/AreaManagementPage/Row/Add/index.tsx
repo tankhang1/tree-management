@@ -74,10 +74,10 @@ const AreaManagementRowAddPage = () => {
         onStepClick={setActiveStep}
         allowNextStepsSelect={false}
       >
-        <Stepper.Step label="Vùng trồng" />
-        <Stepper.Step label="Khu vực" />
-        <Stepper.Step label="Lô" />
-        <Stepper.Step label="Tạo hàng" />
+        <Stepper.Step label="Bước 1" description="Vùng trồng" />
+        <Stepper.Step label="Bước 2" description="Khu vực" />
+        <Stepper.Step label="Bước 3" description="Lô" />
+        <Stepper.Step label="Bước 4" description="Tạo hàng" />
       </Stepper>
 
       <form onSubmit={form.onSubmit(handleSubmit)}>

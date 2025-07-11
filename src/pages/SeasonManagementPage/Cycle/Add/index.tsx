@@ -65,8 +65,8 @@ const SeasonManagementCycleAddPage = () => {
       <form>
         <Stack gap={"xs"}>
           <Stepper active={active} onStepClick={setActive}>
-            <Stepper.Step label="Thông tin chung" />
-            <Stepper.Step label="Danh sách giai đoạn" />
+            <Stepper.Step label="Bước 1" description="Thông tin chung" />
+            <Stepper.Step label="Bước 2" description="Danh sách giai đoạn" />
           </Stepper>
 
           {active === 0 && (

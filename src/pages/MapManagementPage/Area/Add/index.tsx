@@ -105,7 +105,7 @@ const MapManagementAddAreaPage = () => {
         allowNextStepsSelect={false}
       >
         {/* BƯỚC 1 */}
-        <Stepper.Step label="Thông tin">
+        <Stepper.Step label="Bước 1" description="Thông tin">
           <Stack gap="xs" mt="md">
             <Select
               placeholder="Chọn vùng trồng"
@@ -148,7 +148,7 @@ const MapManagementAddAreaPage = () => {
         </Stepper.Step>
 
         {/* BƯỚC 2 */}
-        <Stepper.Step label="Biểu đồ khu vực">
+        <Stepper.Step label="Bước 2" description="Biểu đồ khu vực">
           <Stack mt="md" gap={"xs"}>
             <Group align="flex-end">
               <TextInput
@@ -216,7 +216,7 @@ const MapManagementAddAreaPage = () => {
         </Stepper.Step>
 
         {/* BƯỚC 3 */}
-        <Stepper.Step label="Lô">
+        <Stepper.Step label="Bước 3" description="Lô">
           <Stack mt={"md"} gap={"xs"}>
             <Card withBorder radius={4} p="md" mb="md">
               <Stack gap={"xs"}>
@@ -253,30 +253,67 @@ const MapManagementAddAreaPage = () => {
         </Stepper.Step>
 
         {/* BƯỚC 4 */}
-        <Stepper.Step label="Xác nhận">
-          <Stack gap={4} mt="md">
-            <Text>
-              <b>Mã:</b> {form.code}
-            </Text>
-            <Text>
-              <b>Tên:</b> {form.name}
-            </Text>
-            <Text>
-              <b>Diện tích:</b> {form.area.toLocaleString()} m²
-            </Text>
-            <Text>
-              <b>Loại đất:</b> {form.soilType}
-            </Text>
-            <Text>
-              <b>Địa hình:</b> {form.terrain.join(", ")}
-            </Text>
-            <Text>
-              <b>Đơn vị:</b> {form.orgUnit}
-            </Text>
+        <Stepper.Step label="Bước 4" description="Xác nhận thông tin">
+          <Stack gap="md" mt="md">
+            <Card withBorder radius="md" padding="md">
+              <Stack gap="xs">
+                <Title order={5}>📍 Thông tin khu vực</Title>
+                <Group justify="space-between">
+                  <Text fw={500}>Tên khu vực:</Text>
+                  <Text>Khu vực D4</Text>
+                </Group>
+                <Group justify="space-between">
+                  <Text fw={500}>Diện tích:</Text>
+                  <Text>11200 m²</Text>
+                </Group>
+                <Group justify="space-between">
+                  <Text fw={500}>Loại đất:</Text>
+                  <Text>Đất đỏ</Text>
+                </Group>
+                <Group justify="space-between">
+                  <Text fw={500}>Địa hình:</Text>
+                  <Text>Bằng phẳng</Text>
+                </Group>
+                <Group justify="space-between">
+                  <Text fw={500}>Đơn vị quản lý:</Text>
+                  <Text>Công ty Nông sản Nam Bộ</Text>
+                </Group>
+              </Stack>
+            </Card>
 
-            <Text>
-              <b>GPS:</b> {form.gps}
-            </Text>
+            <Card withBorder radius="md" padding="md">
+              <Stack gap="xs">
+                <Title order={5}>🧭 Toạ độ khu vực</Title>
+                {coords.length >= 3 ? (
+                  coords.map(([lat, lng], i) => (
+                    <Text size="sm" key={i}>
+                      {i + 1}. Lat: {lat} – Lng: {lng}
+                    </Text>
+                  ))
+                ) : (
+                  <Text size="sm" c="red">
+                    ⚠ Chưa đủ điểm để tạo đa giác!
+                  </Text>
+                )}
+              </Stack>
+            </Card>
+
+            {/* Optional: Preview mini bản đồ nếu muốn */}
+            <Card withBorder radius="md" padding="md">
+              <Title order={5} mb="xs">
+                🗺 Xem trước khu vực trên bản đồ
+              </Title>
+              <MapContainer
+                center={
+                  coords.length >= 1 ? coords[0] : [10.762622, 106.660172]
+                }
+                zoom={16}
+                style={{ height: "200px", width: "100%", borderRadius: 8 }}
+              >
+                <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
+                <Polygon positions={coords} color="teal" />
+              </MapContainer>
+            </Card>
           </Stack>
         </Stepper.Step>
       </Stepper>

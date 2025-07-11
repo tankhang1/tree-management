@@ -64,7 +64,7 @@ const PesticideManagementMainAddPage = () => {
         <Title order={3}>🌿 Tạo thuốc mới</Title>
       </Group>
       <Stepper active={active} onStepClick={setActive}>
-        <Stepper.Step label="Thông tin chung">
+        <Stepper.Step label="Bước 1" description="Thông tin chung">
           <Stack gap={"xs"}>
             <TextInput
               label="Mã thuốc"
@@ -95,7 +95,7 @@ const PesticideManagementMainAddPage = () => {
           </Stack>
         </Stepper.Step>
 
-        <Stepper.Step label="Thông tin thuốc">
+        <Stepper.Step label="Bước 2" description="Thông tin thuốc">
           <Stack>
             <Stack gap={"xs"}>
               <Text>🧪 Thông tin thuốc</Text>
@@ -137,7 +137,7 @@ const PesticideManagementMainAddPage = () => {
           </Stack>
         </Stepper.Step>
 
-        <Stepper.Step label="Hướng dẫn sử dụng">
+        <Stepper.Step label="Bước 3" description="Hướng dẫn sử dụng">
           <Stack gap={"xs"}>
             <Text>📋 Hướng dẫn sử dụng</Text>
             <SunEditor

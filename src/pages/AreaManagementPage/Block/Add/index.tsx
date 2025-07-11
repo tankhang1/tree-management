@@ -9,7 +9,6 @@ import {
   Stepper,
   Text,
   NumberInput,
-  Badge,
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { IconArrowLeft, IconSearch } from "@tabler/icons-react";
@@ -256,10 +255,10 @@ const AreaManagementBlockAddPage = () => {
         onStepClick={setActiveStep}
         allowNextStepsSelect={false}
       >
-        <Stepper.Step label="Vùng trồng" />
-        <Stepper.Step label="Khu vực" />
-        <Stepper.Step label="Tạo lô" />
-        <Stepper.Step label="Tạo hàng" />
+        <Stepper.Step label="Bước 1" description="Vùng trồng" />
+        <Stepper.Step label="Bước 2" description="Khu vực" />
+        <Stepper.Step label="Bước 3" description="Tạo lô" />
+        <Stepper.Step label="Bước 4" description="Tạo hàng" />
       </Stepper>
 
       <form onSubmit={form.onSubmit(handleSubmit)}>
@@ -333,17 +332,31 @@ const AreaManagementBlockAddPage = () => {
               <Text fw={500} fz={15}>
                 Danh mục cây trồng
               </Text>
+              <TextInput
+                placeholder="Tìm kiếm danh mục cây"
+                radius={4}
+                leftSection={<IconSearch size={18} />}
+              />
               <CropCards selected="" plants={cropOptions} onSelect={() => {}} />
               <Text fw={500} fz={15}>
                 Giống cây trồng
               </Text>
+              <TextInput
+                placeholder="Tìm kiếm giống cây"
+                radius={4}
+                leftSection={<IconSearch size={18} />}
+              />
               <SeedCards selected="" seeds={seedOptions} onSelect={() => {}} />
               {/* Danh sách cây trồng */}
 
               <Text fw={500} fz={15}>
                 Hạt giống
               </Text>
-
+              <TextInput
+                placeholder="Tìm kiếm hạt giống cây"
+                radius={4}
+                leftSection={<IconSearch size={18} />}
+              />
               <Group>
                 <SeedDetailCard
                   imageUrl="https://encrypted-tbn3.gstatic.com/shopping?q=tbn:ANd9GcRF920kXckailuzG5kCZA9hot1dX20ojROkZ9kD8nxA2bHwtoMg5rDkw5dYgHoWk3MCAaGzLMDI2mQOUH4MpEmsBb0qW75ztoQP3s9EaG09"
@@ -385,22 +398,32 @@ const AreaManagementBlockAddPage = () => {
                 {/**Cây trồng filter trước */}
                 <Stack gap={"xs"}>
                   <Text fw={500} fz={15}>
+                    Giống cây trồng
+                  </Text>
+                  <TextInput
+                    placeholder="Tìm kiếm giống cây trồng"
+                    radius={4}
+                    leftSection={<IconSearch size={18} />}
+                  />
+                  <SeedCards
+                    selected=""
+                    seeds={seedOptions}
+                    onSelect={() => {}}
+                  />
+                  <Text fw={500} fz={15}>
                     Chọn cây trồng
                   </Text>
+                  <TextInput
+                    placeholder="Tìm kiếm cây trồng"
+                    radius={4}
+                    leftSection={<IconSearch size={18} />}
+                  />
                   <CropCards
                     selected="1"
                     plants={cropOptions}
                     onSelect={() => {}}
                   />
                 </Stack>
-                <Text fw={500} fz={15}>
-                  Giống cây trồng
-                </Text>
-                <SeedCards
-                  selected=""
-                  seeds={seedOptions}
-                  onSelect={() => {}}
-                />
 
                 {form.getValues().farming === "Xen canh" && (
                   <Select
@@ -418,19 +441,29 @@ const AreaManagementBlockAddPage = () => {
                 {/**Cây trồng filter trước */}
                 <Stack gap={"xs"}>
                   <Text fw={500} fz={15}>
+                    Giống cây trồng
+                  </Text>
+                  <TextInput
+                    placeholder="Tìm kiếm giống cây trồng"
+                    radius={4}
+                    leftSection={<IconSearch size={18} />}
+                  />
+                  <SeedCards
+                    selected=""
+                    seeds={seedOptions}
+                    onSelect={() => {}}
+                  />
+                  <Text fw={500} fz={15}>
                     Chọn cây trồng
                   </Text>
+                  <TextInput
+                    placeholder="Tìm kiếm cây trồng"
+                    radius={4}
+                    leftSection={<IconSearch size={18} />}
+                  />
                   <CropCards
                     selected="1"
                     plants={cropOptions}
-                    onSelect={() => {}}
-                  />
-                </Stack>
-                <Stack>
-                  <Text fw={500}>Chọn giống cây trồng</Text>
-                  <SeedCards
-                    seeds={seedOptions}
-                    selected={"123"}
                     onSelect={() => {}}
                   />
                 </Stack>

@@ -9,7 +9,6 @@ import {
   Title,
 } from "@mantine/core";
 import { IconArrowLeft } from "@tabler/icons-react";
-import lodash from "lodash";
 import { useNavigate } from "react-router-dom";
 
 const PlanManagementAssignDetailPage = () => {
@@ -22,23 +21,35 @@ const PlanManagementAssignDetailPage = () => {
     departments: ["Chăm sóc cây", "Thu hoạch"],
     employees: ["Nguyễn Văn A", "Trần Thị B"],
     manager: "Nguyễn Quản Lý",
-    supervisor: "", // ví dụ không có người kiểm định chất lượng
+    supervisor: "",
     seasonPlan: "Mùa Hè 2025",
-    resources: [
-      { type: "Vật tư", name: "Phân NPK", quantity: 5, unit: "Kg" },
-      { type: "Vật tư", name: "Vôi bột", quantity: 10, unit: "Kg" },
-      { type: "Thuốc BVTV", name: "Thuốc trừ sâu A", quantity: 2, unit: "Lít" },
-      { type: "Thuốc BVTV", name: "Thuốc trừ cỏ B", quantity: 3, unit: "Lít" },
-      { type: "Thiết bị", name: "Máy bơm nước", quantity: 1 },
-      { type: "Thiết bị", name: "Xe phun thuốc", quantity: 2 },
+    stages: [
+      {
+        cycle: "Chu kỳ 1",
+        stage: "Gieo trồng",
+        leader: "Nguyễn Văn A",
+        members: ["Nguyễn Văn A", "Trần Thị B"],
+        resources: [
+          { name: "Phân NPK", quantity: 5, unit: "Kg" },
+          { name: "Thuốc trừ sâu A", quantity: 2, unit: "Lít" },
+        ],
+      },
+      {
+        cycle: "Chu kỳ 2",
+        stage: "Ra hoa",
+        leader: "Trần Thị B",
+        members: ["Trần Thị B"],
+        resources: [
+          { name: "Thuốc trừ cỏ B", quantity: 3, unit: "Lít" },
+          { name: "Máy bơm nước", quantity: 1 },
+        ],
+      },
     ],
   };
 
-  const groupResources = lodash.groupBy(data.resources, "type");
-
   return (
     <Stack justify="center" align="center">
-      <Card w="50%" withBorder shadow="md" radius={8} p="xl">
+      <Card w="100%" withBorder shadow="md" radius={8} p="xl">
         <Group mb="md">
           <Button
             variant="subtle"
@@ -104,25 +115,38 @@ const PlanManagementAssignDetailPage = () => {
             <Text>{data.seasonPlan}</Text>
           </Group>
 
-          <Divider my="sm" label="Tài nguyên sử dụng" labelPosition="left" />
+          <Divider
+            my="sm"
+            label="Chi tiết theo chu kỳ & giai đoạn"
+            labelPosition="left"
+          />
 
-          <Stack>
-            {Object.entries(groupResources).map(([type, items]) => (
-              <Stack key={type} gap={4} mt="sm">
-                <Text fw={600} c="dimmed">
-                  {type}
-                </Text>
-                {items.map((r, idx) => (
-                  <Group key={idx} justify="space-between" pl="md">
-                    <Text>- {r.name}</Text>
-                    <Text>
-                      {r.quantity} {r.unit || ""}
-                    </Text>
-                  </Group>
-                ))}
-              </Stack>
-            ))}
-          </Stack>
+          {data.stages.map((s, idx) => (
+            <Card key={idx} withBorder radius={8} p="md">
+              <Title order={5}>
+                {s.cycle} – {s.stage}
+              </Title>
+
+              <Text mt={4}>
+                <b>Trưởng nhóm:</b> {s.leader || "--"}
+              </Text>
+              <Text mt={4}>
+                <b>Thành viên:</b> {s.members.join(", ") || "--"}
+              </Text>
+
+              <Text mt={4} fw={600}>
+                Tài nguyên:
+              </Text>
+              {s.resources.map((r, i) => (
+                <Group key={i} justify="space-between" pl="md">
+                  <Text>- {r.name}</Text>
+                  <Text>
+                    {r.quantity} {r.unit || ""}
+                  </Text>
+                </Group>
+              ))}
+            </Card>
+          ))}
         </Stack>
       </Card>
     </Stack>
