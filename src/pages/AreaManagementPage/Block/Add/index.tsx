@@ -9,6 +9,8 @@ import {
   Stepper,
   Text,
   NumberInput,
+  Badge,
+  Divider,
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { IconArrowLeft, IconSearch } from "@tabler/icons-react";
@@ -20,6 +22,8 @@ import PlotCards from "./components/PlotCards";
 import CropCards from "./components/CropCards";
 import SeedCards from "./components/SeedCards";
 import SeedDetailCard from "../../Region/Add/components/SeedDetailCard";
+import type { MRT_ColumnDef } from "mantine-react-table";
+import Table from "../../../../components/Table";
 
 export interface SeedOption {
   code: string;
@@ -207,6 +211,53 @@ const regionOptions: RegionOption[] = [
     terrain: ["Thấp", "Trũng"],
   },
 ];
+const confirmDataset = {
+  areaName: "Vùng ĐBSCL",
+  zoneName: "Khu A",
+  blockName: "Lô 01",
+  farming: "Xen canh",
+  plantGroup: "Rau ăn lá",
+  plant: "Cải ngọt",
+  seed: "Cải ngọt F1",
+  seedName: "F1 - SweetGreen",
+  irrigation: "Tưới nhỏ giọt",
+  blocks: [
+    {
+      blockName: "Lô 01",
+      rows: [
+        {
+          name: "Hàng 1",
+          seed: "Cải ngọt F1",
+          crop: "Cải ngọt",
+          quantity: 100,
+        },
+        {
+          name: "Hàng 2",
+          seed: "Cải ngọt F1",
+          crop: "Cải ngọt",
+          quantity: 120,
+        },
+      ],
+    },
+    {
+      blockName: "Lô 02",
+      rows: [
+        {
+          name: "Hàng 1",
+          seed: "Cải ngọt F2",
+          crop: "Cải ngọt",
+          quantity: 90,
+        },
+      ],
+    },
+  ],
+};
+type TRow = {
+  name: string;
+  seed: string;
+  crop: string;
+  quantity: number;
+};
 const AreaManagementBlockAddPage = () => {
   const navigate = useNavigate();
   const [activeStep, setActiveStep] = useState(0);
@@ -235,7 +286,25 @@ const AreaManagementBlockAddPage = () => {
   const handleSubmit = () => {
     console.log("✅ Dữ liệu lô & hàng:", form.values);
   };
-
+  const rowColumns: MRT_ColumnDef<TRow>[] = [
+    {
+      accessorKey: "name",
+      header: "Tên hàng",
+    },
+    {
+      accessorKey: "seed",
+      header: "Giống cây",
+    },
+    {
+      accessorKey: "crop",
+      header: "Cây trồng",
+    },
+    {
+      accessorKey: "quantity",
+      header: "Số lượng cây",
+      Cell: ({ row }) => row.original.quantity.toLocaleString(),
+    },
+  ];
   return (
     <Card withBorder shadow="md" radius={12} p="xl">
       <Group mb={"md"}>
@@ -255,10 +324,10 @@ const AreaManagementBlockAddPage = () => {
         onStepClick={setActiveStep}
         allowNextStepsSelect={false}
       >
-        <Stepper.Step label="Bước 1" description="Vùng trồng" />
-        <Stepper.Step label="Bước 2" description="Khu vực" />
-        <Stepper.Step label="Bước 3" description="Tạo lô" />
-        <Stepper.Step label="Bước 4" description="Tạo hàng" />
+        <Stepper.Step label="Bước 1" description="Vùng trồng & Khu vực" />
+        <Stepper.Step label="Bước 2" description="Tạo lô" />
+        <Stepper.Step label="Bước 3" description="Tạo hàng" />
+        <Stepper.Step label="Bước 4" description="Xác nhận" />
       </Stepper>
 
       <form onSubmit={form.onSubmit(handleSubmit)}>
@@ -279,11 +348,6 @@ const AreaManagementBlockAddPage = () => {
                 onSelect={() => {}}
               />
             </Stack>
-          </Stack>
-        )}
-
-        {activeStep === 1 && (
-          <Stack mt="md">
             <Stack gap={"xs"}>
               <Text fw={500} fz={15}>
                 Chọn khu vực
@@ -302,7 +366,7 @@ const AreaManagementBlockAddPage = () => {
           </Stack>
         )}
 
-        {activeStep === 2 && (
+        {activeStep === 1 && (
           <Stack mt="md">
             <Stack gap={"xs"}>
               <Text fw={500} fz={15}>
@@ -390,7 +454,7 @@ const AreaManagementBlockAddPage = () => {
           </Stack>
         )}
 
-        {activeStep === 3 && (
+        {activeStep === 2 && (
           <Stack mt="md">
             <Card p="md" radius={4} withBorder>
               <Stack gap={"xs"}>
@@ -480,7 +544,83 @@ const AreaManagementBlockAddPage = () => {
             </Card>
           </Stack>
         )}
+        {activeStep === 3 && (
+          <Stack gap="xl" mt={"md"}>
+            <Card withBorder shadow="sm" radius="md" p="md">
+              <Stack gap="xs">
+                <Group justify="apart">
+                  <Text size="sm" fw={500}>
+                    Vùng trồng:
+                  </Text>
+                  <Badge color="green">{confirmDataset.areaName}</Badge>
+                </Group>
+                <Group justify="apart">
+                  <Text size="sm" fw={500}>
+                    Khu vực:
+                  </Text>
+                  <Badge color="green">{confirmDataset.zoneName}</Badge>
+                </Group>
+                <Group justify="apart">
+                  <Text size="sm" fw={500}>
+                    Lô:
+                  </Text>
+                  <Badge color="green">{confirmDataset.blockName}</Badge>
+                </Group>
+                <Group justify="apart">
+                  <Text size="sm" fw={500}>
+                    Phương pháp canh tác:
+                  </Text>
+                  <Text>{confirmDataset.farming}</Text>
+                </Group>
+                <Group justify="apart">
+                  <Text size="sm" fw={500}>
+                    Nhóm cây:
+                  </Text>
+                  <Text>{confirmDataset.plantGroup}</Text>
+                </Group>
+                <Group justify="apart">
+                  <Text size="sm" fw={500}>
+                    Danh mục cây:
+                  </Text>
+                  <Text>{confirmDataset.plant}</Text>
+                </Group>
+                <Group justify="apart">
+                  <Text size="sm" fw={500}>
+                    Giống cây:
+                  </Text>
+                  <Text>{confirmDataset.seed}</Text>
+                </Group>
+                <Group justify="apart">
+                  <Text size="sm" fw={500}>
+                    Hạt giống cây:
+                  </Text>
+                  <Text>{confirmDataset.seedName}</Text>
+                </Group>
+                <Group justify="apart">
+                  <Text size="sm" fw={500}>
+                    Phương pháp tưới tiêu:
+                  </Text>
+                  <Text>{confirmDataset.irrigation}</Text>
+                </Group>
+              </Stack>
+            </Card>
 
+            <Divider label="Danh sách hàng" labelPosition="center" />
+
+            {confirmDataset.blocks?.map((block, blockIndex) => (
+              <Card key={blockIndex} withBorder radius="md" shadow="xs" p="md">
+                <Stack gap="xs">
+                  <Group justify="apart" mb="xs">
+                    <Text fw={600}>Lô: {block.blockName}</Text>
+                    <Badge color="blue">{block.rows.length} hàng</Badge>
+                  </Group>
+
+                  <Table columns={rowColumns} data={block.rows} />
+                </Stack>
+              </Card>
+            ))}
+          </Stack>
+        )}
         <Group justify="space-between" mt="xl">
           <Button
             variant="default"

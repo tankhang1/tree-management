@@ -31,6 +31,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import SeedCard from "./components/SeedCard";
 import { Dropzone, IMAGE_MIME_TYPE } from "@mantine/dropzone";
+import ConfirmStep from "./components/ConfirmStep";
 const plantVarieties = [
   {
     id: "v1",
@@ -97,6 +98,7 @@ const PlantManagementTreeAddPage = () => {
         <Stepper.Step label="Bước 2" description="Hạt giống" />
         <Stepper.Step label="Bước 3" description="Hình thức thu hoạch" />
         <Stepper.Step label="Bước 4" description="Chu kỳ sinh trưởng" />
+        <Stepper.Step label="Bước 5" description="Xác nhận" />
       </Stepper>
 
       <form onSubmit={form.onSubmit(handleSubmit)}>
@@ -398,6 +400,7 @@ const PlantManagementTreeAddPage = () => {
             </Group>
           </Stack>
         )}
+        {activeStep === 4 && <ConfirmStep />}
 
         <Group justify="space-between" mt="xl">
           <Button

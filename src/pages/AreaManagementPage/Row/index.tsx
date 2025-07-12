@@ -26,6 +26,9 @@ import { PATH } from "../../../constants/path.constants";
 type Row = {
   name: string;
   code: string;
+  regionId: string;
+  areaId: string;
+  plotId: string;
   crop: string;
   treeCount: number;
   gps: string;
@@ -33,14 +36,20 @@ type Row = {
 const rowData: Row[] = [
   {
     name: "Hàng 1",
-    code: "HR-001",
+    code: "H-001",
+    regionId: "V01",
+    areaId: "V01-A01",
+    plotId: "V01-A01-P01",
     crop: "Sầu riêng",
     treeCount: 20,
     gps: "10.77,106.69 10.78,106.70",
   },
   {
     name: "Hàng 2",
-    code: "HR-002",
+    code: "H-002",
+    regionId: "V01",
+    areaId: "V01-A01",
+    plotId: "V01-A01-P01",
     crop: "Xoài",
     treeCount: 15,
     gps: "10.79,106.71 10.80,106.72",
@@ -62,6 +71,18 @@ const AreaManagementRowPage = () => {
     {
       accessorKey: "name",
       header: "Tên hàng",
+    },
+    {
+      accessorKey: "regionId",
+      header: "Tên vùng",
+    },
+    {
+      accessorKey: "areaId",
+      header: "Tên khu vực",
+    },
+    {
+      accessorKey: "plotId",
+      header: "Tên lô",
     },
     {
       accessorKey: "crop",

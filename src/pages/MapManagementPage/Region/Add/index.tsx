@@ -28,6 +28,7 @@ import {
 import { useState } from "react";
 import { MapContainer, Polygon, TileLayer } from "react-leaflet";
 import { useNavigate } from "react-router-dom";
+import { ConfirmStep } from "./components/ConfirmStep";
 type LatLng = [number, number];
 
 const MapManagementAddRegionPage = () => {
@@ -133,6 +134,7 @@ const MapManagementAddRegionPage = () => {
         <Stepper.Step label="Bước 1" description="Vùng trồng" />
         <Stepper.Step label="Bước 2" description="Biểu đồ vùng trồng" />
         <Stepper.Step label="Bước 3" description="Khu vực" />
+        <Stepper.Step label="Bước 4" description="Xác nhận" />
       </Stepper>
 
       <form onSubmit={form.onSubmit(handleSubmit)}>
@@ -180,11 +182,7 @@ const MapManagementAddRegionPage = () => {
               data={["Cao", "Thấp", "Dốc", "Trũng"]}
               {...form.getInputProps("region.terrain")}
             />
-            <Textarea
-              radius={4}
-              label="Toạ độ GPS (đa giác)"
-              {...form.getInputProps("region.gps")}
-            />
+
             <Textarea
               radius={4}
               label="Ghi chú"
@@ -321,7 +319,38 @@ const MapManagementAddRegionPage = () => {
             </Button>
           </Stack>
         )}
-
+        {active === 3 && (
+          <ConfirmStep
+            code="VTN001"
+            govCode="QG-456789"
+            name="Vùng Tây Nguyên A"
+            farmer="HTX Nông nghiệp Tây Nguyên"
+            size={12000}
+            soilType="Đất đỏ bazan"
+            terrain="Đồi thoải"
+            note="Vùng trồng được đăng ký mã số QG"
+            gps={[
+              { lat: 10.762622, lng: 106.660172 },
+              { lat: 10.76264, lng: 106.6602 },
+              { lat: 10.762665, lng: 106.660185 },
+              { lat: 10.762622, lng: 106.660172 },
+            ]}
+            zones={[
+              {
+                name: "Khu vực 1",
+                area: "5000",
+                soilType: "Đất pha cát",
+                terrain: "Bằng phẳng",
+              },
+              {
+                name: "Khu vực 2",
+                area: "7000",
+                soilType: "Đất thịt nhẹ",
+                terrain: "Thoải dốc",
+              },
+            ]}
+          />
+        )}
         <Group mt="xl" justify="space-between">
           <Button
             radius={4}

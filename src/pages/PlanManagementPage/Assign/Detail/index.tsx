@@ -69,7 +69,7 @@ const PlanManagementAssignDetailPage = () => {
           </Group>
 
           <Group justify="space-between">
-            <Text fw={500}>Thời gian thực hiện:</Text>
+            <Text fw={500}>Thời gian thực hiện dự kiến:</Text>
             <Text>{data.startDate}</Text>
           </Group>
 

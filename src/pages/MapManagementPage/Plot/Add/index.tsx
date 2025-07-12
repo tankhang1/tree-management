@@ -22,6 +22,7 @@ import {
 import { useState } from "react";
 import { MapContainer, Polygon, TileLayer } from "react-leaflet";
 import { useNavigate } from "react-router-dom";
+import { ConfirmStep } from "./components/ConfirmStep";
 type LatLng = [number, number];
 
 const MapManagementPlotAddPage = () => {
@@ -96,6 +97,7 @@ const MapManagementPlotAddPage = () => {
         <Stepper.Step label="Bước 3" description="Tạo lô" />
         <Stepper.Step label="Bước 4" description="Bản đồ lô" />
         <Stepper.Step label="Bước 5" description="Tạo hàng" />
+        <Stepper.Step label="Bước 6" description="Xác nhận" />
       </Stepper>
 
       <form onSubmit={form.onSubmit(handleSubmit)}>
@@ -220,7 +222,40 @@ const MapManagementPlotAddPage = () => {
             </Button>
           </Stack>
         )}
-
+        {activeStep === 5 && (
+          <ConfirmStep
+            region="Vùng ĐBSCL"
+            zone="Khu A1"
+            block="Lô 01"
+            area={4500}
+            contour="Địa hình thấp, thoát nước tốt"
+            elevation={15}
+            gps={[
+              { lat: 10.762622, lng: 106.660172 },
+              { lat: 10.762655, lng: 106.66019 },
+            ]}
+            rows={[
+              {
+                name: "Hàng A",
+                plantType: "Sầu riêng",
+                seed: "Ri6 F1",
+                quantity: 20,
+              },
+              {
+                name: "Hàng B",
+                plantType: "Xoài",
+                seed: "Cát Chu",
+                quantity: 18,
+              },
+              {
+                name: "Hàng C",
+                plantType: "Bưởi",
+                seed: "Da xanh",
+                quantity: 25,
+              },
+            ]}
+          />
+        )}
         <Group justify="space-between" mt="xl">
           <Button
             variant="default"
@@ -230,7 +265,7 @@ const MapManagementPlotAddPage = () => {
           >
             Quay lại
           </Button>
-          {activeStep < 4 ? (
+          {activeStep < 5 ? (
             <Button
               radius={4}
               onClick={() => setActiveStep((prev) => prev + 1)}

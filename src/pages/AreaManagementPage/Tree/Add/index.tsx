@@ -10,19 +10,25 @@ import {
   Title,
   Text,
   ThemeIcon,
+  Input,
 } from "@mantine/core";
+import { Dropzone, IMAGE_MIME_TYPE } from "@mantine/dropzone";
 import { useForm } from "@mantine/form";
 import {
   IconArrowLeft,
   IconLeaf,
+  IconPhoto,
   IconPlant,
   IconPlus,
   IconSeeding,
   IconTrash,
+  IconUpload,
+  IconX,
 } from "@tabler/icons-react";
 import { useMemo, useState } from "react";
 import { MapContainer, Polygon, TileLayer } from "react-leaflet";
 import { useNavigate } from "react-router-dom";
+import ConfirmStep from "./components/ConfirmStep";
 const regions = [
   {
     value: "R01",
@@ -104,7 +110,7 @@ const AreaManagementTreeAddPage = () => {
   });
 
   const nextStep = () =>
-    setActive((current) => (current < 2 ? current + 1 : current));
+    setActive((current) => (current < 4 ? current + 1 : current));
   const prevStep = () =>
     setActive((current) => (current > 0 ? current - 1 : current));
 
@@ -251,7 +257,7 @@ const AreaManagementTreeAddPage = () => {
           </Stepper.Step>
 
           {/* STEP 2: XEM THÔNG TIN */}
-          <Stepper.Step label="Bước 2" description="Xác nhận thông tin">
+          <Stepper.Step label="Bước 2" description="Cây trồng">
             <Stack>
               <Stack>
                 <Select
@@ -434,6 +440,52 @@ const AreaManagementTreeAddPage = () => {
                     </Stack>
                   </Card>
                 </Group>
+                <Input.Wrapper label="Hình ảnh cây trồng">
+                  <Dropzone
+                    onDrop={(files) => console.log("accepted files", files)}
+                    onReject={(files) => console.log("rejected files", files)}
+                    maxSize={5 * 1024 ** 2}
+                    accept={IMAGE_MIME_TYPE}
+                  >
+                    <Group
+                      justify="center"
+                      gap="xl"
+                      mih={220}
+                      style={{ pointerEvents: "none" }}
+                    >
+                      <Dropzone.Accept>
+                        <IconUpload
+                          size={52}
+                          color="var(--mantine-color-blue-6)"
+                          stroke={1.5}
+                        />
+                      </Dropzone.Accept>
+                      <Dropzone.Reject>
+                        <IconX
+                          size={52}
+                          color="var(--mantine-color-red-6)"
+                          stroke={1.5}
+                        />
+                      </Dropzone.Reject>
+                      <Dropzone.Idle>
+                        <IconPhoto
+                          size={52}
+                          color="var(--mantine-color-dimmed)"
+                          stroke={1.5}
+                        />
+                      </Dropzone.Idle>
+
+                      <div>
+                        <Text size="xl" inline>
+                          Kéo hoặc chọn ảnh tại đây
+                        </Text>
+                        <Text size="sm" c="dimmed" inline mt={7}>
+                          Đính kèm file ảnh dưới 5Mb
+                        </Text>
+                      </div>
+                    </Group>
+                  </Dropzone>
+                </Input.Wrapper>
               </Stack>
 
               <Group justify="space-between" mt="md">
@@ -517,6 +569,38 @@ const AreaManagementTreeAddPage = () => {
                 </Button>
               </Group>
             </Stack>
+          </Stepper.Step>
+          <Stepper.Step label="Bước 4" description="Xác nhận">
+            <ConfirmStep
+              area="Vùng Tây Nguyên"
+              zone="Khu A1"
+              block="Lô 05"
+              row="Hàng 3"
+              plantingDate="12/07/2025"
+              farmingMethod="Hữu cơ"
+              irrigation="Tưới nhỏ giọt"
+              tree={{
+                type: "Cây sầu riêng",
+                variety: "Sầu riêng Ri6",
+                seed: "Hạt giống Ri6 F1",
+              }}
+              locations={[
+                { lat: 10.762622, lng: 106.660172 },
+                { lat: 10.7627, lng: 106.66018 },
+                { lat: 10.76275, lng: 106.66022 },
+              ]}
+              imageUrls={[
+                "https://sauriengoi.vn/wp-content/uploads/2023/08/AdobeStock-93Q2EVldRH-e1697079899709.jpg",
+              ]}
+            />
+            <Group justify="space-between" mt="md">
+              <Button variant="default" onClick={prevStep} radius={4}>
+                Quay lại
+              </Button>
+              <Button onClick={nextStep} radius={4}>
+                Tiếp theo
+              </Button>
+            </Group>
           </Stepper.Step>
         </Stepper>
       </form>

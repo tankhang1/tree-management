@@ -3,6 +3,7 @@ import {
   Autocomplete,
   Button,
   Group,
+  Image,
   Menu,
   Modal,
   Stack,
@@ -31,6 +32,7 @@ type Tree = {
   zoneId: string;
   blockId: string;
   plotId: string;
+  img: string;
   treeId: string;
   plantedAt: Date;
   gps: string;
@@ -42,6 +44,7 @@ const treeData: Tree[] = [
     blockId: "LO-01",
     plotId: "RG-A",
     treeId: "TREE-001",
+    img: "https://sinhhocchaua.com/wp-content/uploads/2024/02/gioi-thieu-cay-sau-rieng-1.jpg",
     plantedAt: new Date("2022-03-15"),
     gps: "10.762622,106.660172",
   },
@@ -49,6 +52,8 @@ const treeData: Tree[] = [
     rowId: "HR-002",
     zoneId: "KV-A1",
     blockId: "LO-01",
+    img: "https://sinhhocchaua.com/wp-content/uploads/2024/02/gioi-thieu-cay-sau-rieng-1.jpg",
+
     plotId: "RG-A",
     treeId: "TREE-002",
     plantedAt: new Date("2022-03-20"),
@@ -58,6 +63,7 @@ const treeData: Tree[] = [
 type TTree = {
   type: string;
   variety: string;
+  img: string;
   seed: string;
   method: string;
   irrigation: string;
@@ -73,6 +79,7 @@ const tree: TTree = {
   variety: "Sầu riêng Ri6",
   seed: "Hạt giống Ri6 F1",
   method: "Trồng theo hố, cách 6m",
+  img: "https://sinhhocchaua.com/wp-content/uploads/2024/02/gioi-thieu-cay-sau-rieng-1.jpg",
   irrigation: "Tưới nhỏ giọt",
   plantedAt: "2024-07-05",
   region: "Vùng A",
@@ -92,6 +99,13 @@ const AreaManagementTreePage = () => {
     navigate(PATH.AREA_ADD_TREE);
   };
   const treeColumns: MRT_ColumnDef<Tree>[] = [
+    {
+      accessorKey: "img",
+      header: "Hình ảnh",
+      Cell: ({ row }) => (
+        <Image src={row.original.img} w={100} h={100} radius={4} />
+      ),
+    },
     {
       accessorKey: "treeId",
       header: "Mã cây",

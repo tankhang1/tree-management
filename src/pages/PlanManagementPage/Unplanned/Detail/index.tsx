@@ -68,7 +68,7 @@ const PlanManagementUnplannedDetailPage = () => {
 
           <Group gap={6} align="center">
             <IconCalendarEvent size={18} />
-            <Text fw={500}>Thời gian thực hiện:</Text>
+            <Text fw={500}>Thời gian thực hiện dự kiên:</Text>
             <Text>{assignment.startDate.toLocaleDateString()}</Text>
           </Group>
 

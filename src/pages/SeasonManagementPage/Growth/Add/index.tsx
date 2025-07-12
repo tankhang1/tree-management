@@ -21,6 +21,7 @@ import { useNavigate } from "react-router-dom";
 import SeedCard from "./components/SeedCard";
 import CropCards from "./components/CropCards";
 import SeedCards from "./components/SeedCards";
+import ConfirmStep from "./components/ConfirmStep";
 
 const growthCycleOptions = [
   { value: "cycle1", label: "Chu kỳ A" },
@@ -190,6 +191,7 @@ const SeasonManagementGrowthAddPage = () => {
       <Stepper active={activeStep} onStepClick={setActiveStep} my="md">
         <Stepper.Step label="Bước 1" description="Thông tin cơ bản" />
         <Stepper.Step label="Bước 2" description="Chu kỳ & giai đoạn" />
+        <Stepper.Step label="Bước 3" description="Xác nhận" />
       </Stepper>
 
       <form onSubmit={form.onSubmit(nextStep)}>
@@ -365,7 +367,7 @@ const SeasonManagementGrowthAddPage = () => {
             )}
           </Stack>
         )}
-
+        {activeStep === 2 && <ConfirmStep />}
         <Group justify="space-between" mt="md">
           {activeStep > 0 && (
             <Button

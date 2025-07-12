@@ -70,7 +70,7 @@ const PlanManagementUnplannedPage = () => {
 
   const assignmentColumns: MRT_ColumnDef<Assignment>[] = [
     { accessorKey: "name", header: "Tên công việc" },
-    { accessorKey: "startDate", header: "Thời gian thực hiện" },
+    { accessorKey: "startDate", header: "Thời gian thực hiện dự kiến" },
     { accessorKey: "endDate", header: "Thời gian hoàn thành dự kiến" },
     {
       accessorKey: "departments",

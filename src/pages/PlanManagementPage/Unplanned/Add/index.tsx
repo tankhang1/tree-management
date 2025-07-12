@@ -18,6 +18,7 @@ import { useForm } from "@mantine/form";
 import { IconArrowLeft, IconPlus } from "@tabler/icons-react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import ConfirmStep from "./components/ConfirmStep";
 
 const PlanManagementUnplannedAddPage = () => {
   const navigate = useNavigate();
@@ -74,7 +75,7 @@ const PlanManagementUnplannedAddPage = () => {
         <Stepper active={active} onStepClick={setActive} mb="xl">
           <Stepper.Step label="Bước 1" description="Thông tin chung" />
           <Stepper.Step label="Bước 2" description="Tài nguyên" />
-          <Stepper.Completed>Hoàn tất</Stepper.Completed>
+          <Stepper.Step label="Bước 3" description="Xác nhận" />
         </Stepper>
 
         {active === 0 && (
@@ -89,7 +90,7 @@ const PlanManagementUnplannedAddPage = () => {
 
             <Group grow>
               <DateInput
-                label="Thời gian thực hiện"
+                label="Thời gian thực hiện dự kiến"
                 placeholder="Chọn ngày"
                 radius={4}
                 locale="vi"
@@ -233,7 +234,7 @@ const PlanManagementUnplannedAddPage = () => {
             )}
           </Stack>
         )}
-
+        {active === 2 && <ConfirmStep />}
         <Group justify="space-between" mt="lg">
           <Button
             radius={4}

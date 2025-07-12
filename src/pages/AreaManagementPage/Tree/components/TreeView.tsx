@@ -1,4 +1,12 @@
-import { Group, Stack, Text, ThemeIcon, Divider, Grid } from "@mantine/core";
+import {
+  Group,
+  Stack,
+  Text,
+  ThemeIcon,
+  Divider,
+  Grid,
+  Image,
+} from "@mantine/core";
 import {
   IconPlant,
   IconLeaf,
@@ -11,6 +19,7 @@ import {
 type TTree = {
   type: string;
   variety: string;
+  img: string;
   seed: string;
   method: string;
   irrigation: string;
@@ -30,44 +39,46 @@ const TreeDetailView = ({
   return (
     <Stack gap="xs">
       {/* Thông tin cơ bản */}
-      <Stack>
-        <Group align="flex-start">
-          <ThemeIcon variant="light" color="green" size="lg" radius="xl">
-            <IconPlant size={20} />
-          </ThemeIcon>
-          <Stack gap={0}>
-            <Text size="sm" c="dimmed">
-              Loại cây trồng
-            </Text>
-            <Text fw={500}>{tree.type}</Text>
-          </Stack>
-        </Group>
+      <Group>
+        <Stack>
+          <Group align="flex-start">
+            <ThemeIcon variant="light" color="green" size="lg" radius="xl">
+              <IconPlant size={20} />
+            </ThemeIcon>
+            <Stack gap={0}>
+              <Text size="sm" c="dimmed">
+                Loại cây trồng
+              </Text>
+              <Text fw={500}>{tree.type}</Text>
+            </Stack>
+          </Group>
 
-        <Group align="flex-start">
-          <ThemeIcon variant="light" color="teal" size="lg" radius="xl">
-            <IconLeaf size={20} />
-          </ThemeIcon>
-          <Stack gap={0}>
-            <Text size="sm" c="dimmed">
-              Giống cây
-            </Text>
-            <Text fw={500}>{tree.variety}</Text>
-          </Stack>
-        </Group>
+          <Group align="flex-start">
+            <ThemeIcon variant="light" color="teal" size="lg" radius="xl">
+              <IconLeaf size={20} />
+            </ThemeIcon>
+            <Stack gap={0}>
+              <Text size="sm" c="dimmed">
+                Giống cây
+              </Text>
+              <Text fw={500}>{tree.variety}</Text>
+            </Stack>
+          </Group>
 
-        <Group align="flex-start">
-          <ThemeIcon variant="light" color="lime" size="lg" radius="xl">
-            <IconSeeding size={20} />
-          </ThemeIcon>
-          <Stack gap={0}>
-            <Text size="sm" c="dimmed">
-              Hạt giống
-            </Text>
-            <Text fw={500}>{tree.seed}</Text>
-          </Stack>
-        </Group>
-      </Stack>
-
+          <Group align="flex-start">
+            <ThemeIcon variant="light" color="lime" size="lg" radius="xl">
+              <IconSeeding size={20} />
+            </ThemeIcon>
+            <Stack gap={0}>
+              <Text size="sm" c="dimmed">
+                Hạt giống
+              </Text>
+              <Text fw={500}>{tree.seed}</Text>
+            </Stack>
+          </Group>
+        </Stack>
+      </Group>
+      <Image src={tree.img} radius={4} />
       <Divider label="Kỹ thuật" labelPosition="left" />
 
       {/* Phương pháp */}

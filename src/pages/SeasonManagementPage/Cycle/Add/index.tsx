@@ -18,6 +18,7 @@ import { IconArrowLeft, IconFileTypePdf } from "@tabler/icons-react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import SunEditor from "suneditor-react";
+import ConfirmStep from "./components/ConfirmStep";
 const SeasonManagementCycleAddPage = () => {
   const navigate = useNavigate();
   const [active, setActive] = useState(0);
@@ -67,6 +68,7 @@ const SeasonManagementCycleAddPage = () => {
           <Stepper active={active} onStepClick={setActive}>
             <Stepper.Step label="Bước 1" description="Thông tin chung" />
             <Stepper.Step label="Bước 2" description="Danh sách giai đoạn" />
+            <Stepper.Step label="Bước 3" description="Xác nhận" />
           </Stepper>
 
           {active === 0 && (
@@ -160,7 +162,7 @@ const SeasonManagementCycleAddPage = () => {
               </Button>
             </Stack>
           )}
-
+          {active === 2 && <ConfirmStep />}
           <Group justify="space-between" mt="md">
             <Button
               variant="default"
@@ -170,7 +172,7 @@ const SeasonManagementCycleAddPage = () => {
             >
               Quay lại
             </Button>
-            {active < 1 ? (
+            {active < 2 ? (
               <Button onClick={() => setActive(active + 1)} radius={4}>
                 Tiếp tục
               </Button>

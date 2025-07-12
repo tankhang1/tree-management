@@ -11,6 +11,8 @@ import {
   NumberInput,
   Divider,
   Stepper,
+  Modal,
+  Text,
 } from "@mantine/core";
 import { DateInput } from "@mantine/dates";
 import {
@@ -22,11 +24,16 @@ import {
 import { useForm } from "@mantine/form";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
+import { useDisclosure } from "@mantine/hooks";
+import PlanDetail from "./components/PlanDetail";
+import ConfirmStep from "./components/ConfirmStep";
 
 const CYCLES = ["Chu kỳ 1", "Chu kỳ 2"];
 const STAGES = ["Gieo trồng", "Ra hoa", "Kết trái"];
 
 const PlanManagementAssignAddPage = () => {
+  const [openedPlanDetail, { open: openPlanDetail, close: closePlanDetail }] =
+    useDisclosure(false);
   const navigate = useNavigate();
   const [active, setActive] = useState(0);
 
@@ -77,18 +84,24 @@ const PlanManagementAssignAddPage = () => {
         <Stepper active={active} onStepClick={setActive} mb="xl">
           <Stepper.Step label="Bước 1" description="Thông tin chung" />
           <Stepper.Step label="Bước 2" description="Phân công theo giai đoạn" />
-          <Stepper.Completed>Hoàn tất</Stepper.Completed>
+          <Stepper.Step label="Bước 3" description="Xác nhận" />
         </Stepper>
 
         {active === 0 && (
           <Stack gap="xs">
-            <TextInput
-              label="Tên công việc"
-              placeholder="VD: Tưới nước đợt 1"
-              radius={4}
-              leftSection={<IconClipboardCheck size={16} />}
-              {...form.getInputProps("name")}
-            />
+            <Group align="flex-end">
+              <TextInput
+                label="Tên công việc"
+                placeholder="VD: Tưới nước đợt 1"
+                radius={4}
+                leftSection={<IconClipboardCheck size={16} />}
+                {...form.getInputProps("name")}
+                flex={1}
+              />
+              <Button radius={4} onClick={openPlanDetail}>
+                Chi tiết
+              </Button>
+            </Group>
 
             <Group grow>
               <Select
@@ -109,7 +122,7 @@ const PlanManagementAssignAddPage = () => {
 
             <Group grow>
               <DateInput
-                label="Thời gian thực hiện"
+                label="Thời gian thực hiện dự kiến"
                 radius={4}
                 locale="vi"
                 leftSection={<IconCalendar size={16} />}
@@ -252,6 +265,7 @@ const PlanManagementAssignAddPage = () => {
           </Stack>
         )}
 
+        {active === 2 && <ConfirmStep />}
         <Group justify="space-between" mt="lg">
           <Button
             radius={4}
@@ -272,6 +286,13 @@ const PlanManagementAssignAddPage = () => {
           )}
         </Group>
       </form>
+      <Modal
+        opened={openedPlanDetail}
+        onClose={closePlanDetail}
+        title={<Text fw={"500"}>Kế hoạch mùa vụ</Text>}
+      >
+        <PlanDetail />
+      </Modal>
     </Card>
   );
 };
