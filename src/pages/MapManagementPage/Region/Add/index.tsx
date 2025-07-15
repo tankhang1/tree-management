@@ -360,15 +360,10 @@ const MapManagementAddRegionPage = () => {
           >
             Quay lại
           </Button>
-          {active < 2 ? (
-            <Button radius={4} onClick={nextStep}>
-              Tiếp theo
-            </Button>
-          ) : (
-            <Button radius={4} type="submit" color="green">
-              Lưu toàn bộ
-            </Button>
-          )}
+
+          <Button radius={4} onClick={nextStep}>
+            Tiếp theo
+          </Button>
         </Group>
       </form>
       <Modal

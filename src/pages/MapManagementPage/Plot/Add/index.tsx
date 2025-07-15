@@ -4,7 +4,6 @@ import {
   Group,
   Stack,
   Title,
-  Select,
   TextInput,
   Stepper,
   Text,
@@ -17,12 +16,17 @@ import {
   IconAlertTriangle,
   IconArrowLeft,
   IconPlus,
+  IconSearch,
   IconTrash,
 } from "@tabler/icons-react";
 import { useState } from "react";
 import { MapContainer, Polygon, TileLayer } from "react-leaflet";
 import { useNavigate } from "react-router-dom";
 import { ConfirmStep } from "./components/ConfirmStep";
+import RegionCardSelector from "../../../AreaManagementPage/Region/Add/components/RegionCards";
+import { regionOptions } from "../../../AreaManagementPage/Block/Add";
+import AreaCards from "../../../AreaManagementPage/Zone/Add/components/AreaCards";
+import { areaOptions } from "../../../AreaManagementPage/Row/Add";
 type LatLng = [number, number];
 
 const MapManagementPlotAddPage = () => {
@@ -63,16 +67,6 @@ const MapManagementPlotAddPage = () => {
     console.log("✅ Dữ liệu lô & hàng:", form.values);
   };
 
-  const addRow = () => {
-    form.insertListItem("rows", {
-      name: "",
-      code: "",
-      crop: "",
-      treeCount: "",
-      gps: "",
-    });
-  };
-
   return (
     <Card withBorder shadow="md" radius={12} p="xl">
       <Group mb={"md"}>
@@ -84,7 +78,7 @@ const MapManagementPlotAddPage = () => {
         >
           Quay lại
         </Button>
-        <Title order={3}>📋 Tạo mới Lô và Hàng</Title>
+        <Title order={3}>📋 Tạo mới phân bổ lô</Title>
       </Group>
 
       <Stepper
@@ -92,40 +86,50 @@ const MapManagementPlotAddPage = () => {
         onStepClick={setActiveStep}
         allowNextStepsSelect={false}
       >
-        <Stepper.Step label="Bước 1" description="Vùng trồng" />
-        <Stepper.Step label="Bước 2" description="Khu vực" />
-        <Stepper.Step label="Bước 3" description="Tạo lô" />
-        <Stepper.Step label="Bước 4" description="Bản đồ lô" />
-        <Stepper.Step label="Bước 5" description="Tạo hàng" />
-        <Stepper.Step label="Bước 6" description="Xác nhận" />
+        <Stepper.Step label="Bước 1" description="Vùng trồng & Khu vực" />
+        <Stepper.Step label="Bước 2" description="Tạo lô" />
+        <Stepper.Step label="Bước 3" description="Bản đồ lô" />
+        {/* <Stepper.Step label="Bước 4" description="Tạo hàng" /> */}
+        <Stepper.Step label="Bước 4" description="Xác nhận" />
       </Stepper>
 
       <form onSubmit={form.onSubmit(handleSubmit)}>
         {activeStep === 0 && (
           <Stack mt="md">
-            <Select
-              label="Chọn vùng trồng"
-              placeholder="Chọn vùng"
-              data={["RG001 - Vùng A", "RG002 - Vùng B"]}
-              {...form.getInputProps("regionId")}
-              radius={4}
-            />
+            <Stack gap={"xs"}>
+              <Text fw={500} fz={15}>
+                Chọn vùng trồng (chọn một)
+              </Text>
+              <TextInput
+                placeholder="Tìm kiếm vùng trồng"
+                radius={4}
+                leftSection={<IconSearch size={18} />}
+              />
+              <RegionCardSelector
+                regions={regionOptions}
+                selected={"12"}
+                onSelect={() => {}}
+              />
+            </Stack>
+            <Stack gap={"xs"}>
+              <Text fw={500} fz={15}>
+                Chọn khu vực (chọn một)
+              </Text>
+              <TextInput
+                placeholder="Tìm kiếm khu vực"
+                radius={4}
+                leftSection={<IconSearch size={18} />}
+              />
+              <AreaCards
+                areas={areaOptions}
+                selected={""}
+                onSelect={() => {}}
+              />
+            </Stack>
           </Stack>
         )}
 
         {activeStep === 1 && (
-          <Stack mt="md">
-            <Select
-              label="Chọn khu vực"
-              placeholder="Chọn khu vực"
-              data={["KV001 - Khu vực A1", "KV002 - Khu vực B1"]}
-              {...form.getInputProps("areaId")}
-              radius={4}
-            />
-          </Stack>
-        )}
-
-        {activeStep === 2 && (
           <Stack mt="md">
             <TextInput
               label="Tên lô"
@@ -143,7 +147,7 @@ const MapManagementPlotAddPage = () => {
             <NumberInput label="Cao độ (m)" radius={4} />
           </Stack>
         )}
-        {activeStep === 3 && (
+        {activeStep === 2 && (
           <Stack mt="md" gap={"xs"}>
             <Group align="flex-end">
               <TextInput
@@ -204,7 +208,7 @@ const MapManagementPlotAddPage = () => {
             </MapContainer>
           </Stack>
         )}
-        {activeStep === 4 && (
+        {/* {activeStep === 3 && (
           <Stack mt="md">
             {form.values.rows.map((row, index) => (
               <Card key={index} p="md" radius={4} withBorder>
@@ -221,8 +225,8 @@ const MapManagementPlotAddPage = () => {
               + Thêm hàng
             </Button>
           </Stack>
-        )}
-        {activeStep === 5 && (
+        )} */}
+        {activeStep === 3 && (
           <ConfirmStep
             region="Vùng ĐBSCL"
             zone="Khu A1"
@@ -265,7 +269,7 @@ const MapManagementPlotAddPage = () => {
           >
             Quay lại
           </Button>
-          {activeStep < 5 ? (
+          {activeStep < 3 ? (
             <Button
               radius={4}
               onClick={() => setActiveStep((prev) => prev + 1)}

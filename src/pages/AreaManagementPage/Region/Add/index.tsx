@@ -382,7 +382,7 @@ const AreaManagementAddRegionPage = () => {
             />
             <Stack gap={"xs"}>
               <Text fw={500} fz={15}>
-                Chọn phân bổ vùng trồng
+                Chọn phân bổ vùng trồng (chọn một)
               </Text>
               <Autocomplete
                 placeholder="Tìm kiếm vùng trồng"
@@ -399,7 +399,7 @@ const AreaManagementAddRegionPage = () => {
             </Stack>
             <Stack gap={"xs"}>
               <Text fw={500} fz={15}>
-                Chọn phân bổ khu vực
+                Chọn phân bổ khu vực (chọn nhiều)
               </Text>
               <Autocomplete
                 placeholder="Tìm kiếm khu vực"
@@ -470,7 +470,7 @@ const AreaManagementAddRegionPage = () => {
                           radius={4}
                         />
                         <Text fw={500} fz={15}>
-                          Danh mục cây trồng
+                          Danh mục cây trồng (chọn một)
                         </Text>
                         <TextInput
                           leftSection={<IconSearch size={18} />}
@@ -483,7 +483,7 @@ const AreaManagementAddRegionPage = () => {
                           onSelect={() => {}}
                         />
                         <Text fw={500} fz={15}>
-                          Giống cây trồng
+                          Giống cây trồng (chọn một)
                         </Text>
                         <TextInput
                           leftSection={<IconSearch size={18} />}
@@ -498,7 +498,7 @@ const AreaManagementAddRegionPage = () => {
                         {/* Danh sách cây trồng */}
 
                         <Text fw={500} fz={15}>
-                          Hạt giống
+                          Hạt giống (chọn một)
                         </Text>
                         <TextInput
                           leftSection={<IconSearch size={18} />}
@@ -550,7 +550,7 @@ const AreaManagementAddRegionPage = () => {
                         />
                         <Group>
                           <Text fw={"500"} fz={15}>
-                            Danh sách cây trồng
+                            Danh sách cây trồng (chọn một)
                           </Text>
                           <Button radius={4}>Thêm mới</Button>
                         </Group>
@@ -562,7 +562,7 @@ const AreaManagementAddRegionPage = () => {
                               radius={4}
                             />
                             <Text fw={500} fz={15}>
-                              Danh mục cây trồng
+                              Danh mục cây trồng (chọn nhiều)
                             </Text>
                             <TextInput
                               leftSection={<IconSearch size={18} />}
@@ -575,7 +575,7 @@ const AreaManagementAddRegionPage = () => {
                               onSelect={() => {}}
                             />
                             <Text fw={500} fz={15}>
-                              Giống cây trồng
+                              Giống cây trồng (chọn nhiều)
                             </Text>
                             <TextInput
                               leftSection={<IconSearch size={18} />}
@@ -590,7 +590,7 @@ const AreaManagementAddRegionPage = () => {
                             {/* Danh sách cây trồng */}
 
                             <Text fw={500} fz={15}>
-                              Hạt giống
+                              Hạt giống (chọn nhiều)
                             </Text>
                             <TextInput
                               leftSection={<IconSearch size={18} />}

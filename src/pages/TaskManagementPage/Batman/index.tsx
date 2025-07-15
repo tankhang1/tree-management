@@ -4,7 +4,9 @@ import {
   Button,
   Group,
   Menu,
+  Modal,
   Stack,
+  Text,
   Title,
 } from "@mantine/core";
 import {
@@ -15,6 +17,8 @@ import {
 } from "@tabler/icons-react";
 import type { MRT_ColumnDef } from "mantine-react-table";
 import Table from "../../../components/Table";
+import { useDisclosure } from "@mantine/hooks";
+import CreateBatmanTaskForm from "./components/CreateBatmanTaskForm";
 type EmployeeTask = {
   employee: string;
   taskName: string;
@@ -52,6 +56,8 @@ const employeeTasks: EmployeeTask[] = [
 ];
 
 const TaskManagementBatmanPage = () => {
+  const [openedAddTask, { open: openAddTask, close: closeAddTask }] =
+    useDisclosure(false);
   const columns: MRT_ColumnDef<EmployeeTask>[] = [
     { accessorKey: "employee", header: "Nhân viên" },
     { accessorKey: "taskName", header: "Tên công việc" },
@@ -113,11 +119,20 @@ const TaskManagementBatmanPage = () => {
           <Button variant="outline" radius={4} leftSection={<IconFileExcel />}>
             Xuất File
           </Button>
-          <Button radius={4}>Thêm mới</Button>
+          <Button onClick={openAddTask} radius={4}>
+            Thêm mới
+          </Button>
         </Group>
       </Group>
 
       <Table columns={columns} data={employeeTasks} />
+      <Modal
+        opened={openedAddTask}
+        onClose={closeAddTask}
+        title={<Text fw={"500"}>Tạo mới công việc BATMAN</Text>}
+      >
+        <CreateBatmanTaskForm />
+      </Modal>
     </Stack>
   );
 };

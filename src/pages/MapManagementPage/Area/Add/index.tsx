@@ -22,10 +22,13 @@ import {
   IconArrowLeft,
   IconMap,
   IconPlus,
+  IconSearch,
   IconTrash,
 } from "@tabler/icons-react";
 import { useNavigate } from "react-router-dom";
 import { useDisclosure } from "@mantine/hooks";
+import RegionCardSelector from "../../../AreaManagementPage/Region/Add/components/RegionCards";
+import { regionOptions } from "../../../AreaManagementPage/Block/Add";
 
 type AreaForm = {
   code: string;
@@ -107,11 +110,21 @@ const MapManagementAddAreaPage = () => {
         {/* BƯỚC 1 */}
         <Stepper.Step label="Bước 1" description="Thông tin">
           <Stack gap="xs" mt="md">
-            <Select
-              placeholder="Chọn vùng trồng"
-              label="Chọn vùng trồng"
-              radius={4}
-            />
+            <Stack gap={"xs"}>
+              <Text fw={500} fz={15}>
+                Chọn vùng trồng (chọn một)
+              </Text>
+              <TextInput
+                placeholder="Tìm kiếm vùng trồng"
+                radius={4}
+                leftSection={<IconSearch size={18} />}
+              />
+              <RegionCardSelector
+                regions={regionOptions}
+                selected={"12"}
+                onSelect={() => {}}
+              />
+            </Stack>
 
             <TextInput
               label="Tên khu vực"

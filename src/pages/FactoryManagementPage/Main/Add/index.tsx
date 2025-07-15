@@ -9,11 +9,14 @@ import {
   Group,
   Title,
   NumberInput,
+  Text,
 } from "@mantine/core";
 import { DateInput } from "@mantine/dates";
 import { useForm } from "@mantine/form";
-import { IconArrowLeft } from "@tabler/icons-react";
+import { IconArrowLeft, IconSearch } from "@tabler/icons-react";
 import { useNavigate } from "react-router-dom";
+import RegionCardSelector from "../../../AreaManagementPage/Region/Add/components/RegionCards";
+import { regionOptions } from "../../../AreaManagementPage/Block/Add";
 const FactoryManagementMainAddPage = () => {
   const navigate = useNavigate();
   const form = useForm({
@@ -59,12 +62,21 @@ const FactoryManagementMainAddPage = () => {
             placeholder="Tên nhà máy"
             radius={4}
           />
-          <Select
-            label="Chọn vùng trồng"
-            {...form.getInputProps("area")}
-            radius={4}
-            placeholder="Chọn vùng trồng"
-          />
+          <Stack gap={"xs"}>
+            <Text fw={500} fz={15}>
+              Chọn vùng trồng
+            </Text>
+            <TextInput
+              placeholder="Tìm kiếm vùng trồng"
+              radius={4}
+              leftSection={<IconSearch size={18} />}
+            />
+            <RegionCardSelector
+              regions={regionOptions}
+              selected={"12"}
+              onSelect={() => {}}
+            />
+          </Stack>
           <Textarea
             label="Địa chỉ"
             autosize
@@ -101,6 +113,7 @@ const FactoryManagementMainAddPage = () => {
             required
             radius={4}
             placeholder="DD/MM/YYYY"
+            locale="vi"
           />
           <Select
             label="Trạng thái"
@@ -113,7 +126,7 @@ const FactoryManagementMainAddPage = () => {
             radius={4}
           />
           <Group>
-            <Button type="submit" radius={4}>
+            <Button variant="outline" w={"100%"} type="submit" radius={4}>
               🚀 Tạo nhà máy
             </Button>
           </Group>

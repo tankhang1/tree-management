@@ -10,6 +10,7 @@ import {
   Text,
   Card,
   Title,
+  Radio,
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { IconArrowLeft, IconFileTypePdf } from "@tabler/icons-react";
@@ -22,6 +23,7 @@ const MachineManagementMainAddPage = () => {
   const [inspectionPreviewUrl, setInspectionPreviewUrl] = useState<
     string | null
   >(null);
+
   const [active, setActive] = useState(0);
   const form = useForm({
     initialValues: {
@@ -32,6 +34,7 @@ const MachineManagementMainAddPage = () => {
       price: 0,
       quantity: 1,
       specs: "",
+      fileType: "0",
       manualFile: null,
       inspectionFile: null,
     },
@@ -66,10 +69,11 @@ const MachineManagementMainAddPage = () => {
       </Group>
       <Stepper active={active} onStepClick={setActive}>
         <Stepper.Step label="Bước 1" description="Thông tin">
-          <Stack>
+          <Stack gap={"xs"}>
             <TextInput
               label="Mã máy"
               radius={4}
+              disabled
               {...form.getInputProps("id")}
               required
             />
@@ -112,27 +116,39 @@ const MachineManagementMainAddPage = () => {
           </Stack>
         </Stepper.Step>
 
-        <Stepper.Step label="Bước 1" description="Chi tiết">
-          <Text size="sm" fw={500} mb={4}>
-            Thông số kỹ thuật / Mô tả
-          </Text>
-          <SunEditor
-            setOptions={{
-              height: "200px",
-              buttonList: [
-                ["formatBlock", "bold", "italic", "underline", "strike"],
-                ["fontColor", "hiliteColor"],
-                ["align", "list", "table"],
-                ["link", "image", "video"],
-                ["undo", "redo"],
-              ],
-            }}
-            onChange={(content) => form.setFieldValue("specs", content)}
-            defaultValue={form.values.specs}
-          />
+        <Stepper.Step label="Bước 2" description="Chi tiết">
+          <Stack gap={"xs"}>
+            <Radio.Group
+              label="Tài liệu kỹ thuật"
+              onChange={(val) => form.setFieldValue(`fileType`, val)}
+            >
+              <Group mt="xs">
+                <Radio value="0" label="Tải file PDF" />
+                <Radio value="1" label="Nhập nội dung trực tiếp" />
+              </Group>
+            </Radio.Group>
+
+            {form.getValues().fileType === "0" ? (
+              <FileInput
+                label="Tài liệu kỹ thuật (PDF)"
+                placeholder="Chọn tài liệu"
+                accept="application/pdf"
+                leftSection={<IconFileTypePdf size={18} />}
+                radius={4}
+                {...form.getInputProps("technicalDoc")}
+              />
+            ) : (
+              <Stack>
+                <Text style={{ fontSize: 14, fontWeight: 500 }}>
+                  Nội dung kỹ thuật
+                </Text>
+                <SunEditor setOptions={{ height: "200px" }} />
+              </Stack>
+            )}
+          </Stack>
         </Stepper.Step>
 
-        <Stepper.Step label="Bước 1" description="Tài liệu">
+        <Stepper.Step label="Bước 3" description="Tài liệu">
           <Stack>
             <FileInput
               label="Sổ tay hướng dẫn (PDF)"
@@ -153,7 +169,7 @@ const MachineManagementMainAddPage = () => {
                 <iframe
                   src={manualPreviewUrl}
                   width="100%"
-                  height="400px"
+                  height="600px"
                   style={{ border: "1px solid #ccc", borderRadius: "8px" }}
                 />
               </>
@@ -180,7 +196,7 @@ const MachineManagementMainAddPage = () => {
                 <iframe
                   src={inspectionPreviewUrl}
                   width="100%"
-                  height="400px"
+                  height="600px"
                   style={{ border: "1px solid #ccc", borderRadius: "8px" }}
                 />
               </>

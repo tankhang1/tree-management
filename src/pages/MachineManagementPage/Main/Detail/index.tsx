@@ -9,11 +9,14 @@ import {
   Grid,
   Group,
   Button,
+  Paper,
+  Space,
 } from "@mantine/core";
 import type { MRT_ColumnDef } from "mantine-react-table";
 import Table from "../../../../components/Table";
 import { IconArrowLeft } from "@tabler/icons-react";
 import { useNavigate } from "react-router-dom";
+
 type MaintenanceRecord = {
   id: string;
   date: string;
@@ -65,6 +68,7 @@ const machine = {
   manualFile: "https://pdfobject.com/pdf/sample.pdf",
   inspectionFile: "https://pdfobject.com/pdf/sample.pdf",
 };
+
 const MachineManagementMainDetailPage = () => {
   const navigate = useNavigate();
   const {
@@ -105,103 +109,113 @@ const MachineManagementMainDetailPage = () => {
       : "gray";
 
   return (
-    <Card radius="md" shadow="sm" p="lg" withBorder>
+    <Card radius="md" shadow="md" p="xl" withBorder>
       <Stack gap="lg">
-        <Group mb={"md"}>
-          <Button
-            variant="subtle"
-            radius={4}
-            leftSection={<IconArrowLeft size={18} />}
-            onClick={() => navigate(-1)}
-          >
-            Quay lại
-          </Button>
-          <Title order={3}>🛠️ Thông tin máy móc</Title>
+        {/* Header */}
+        <Group justify="space-between">
+          <Group>
+            <Button
+              variant="light"
+              radius="md"
+              leftSection={<IconArrowLeft size={18} />}
+              onClick={() => navigate(-1)}
+            >
+              Quay lại
+            </Button>
+            <Title order={3} fw={600}>
+              Chi tiết máy móc
+            </Title>
+          </Group>
         </Group>
-        {/* Thông tin chung */}
+
+        {/* Section: Thông tin chung */}
+        <Divider label="Thông tin chung" labelPosition="left" />
         <Grid>
           <Grid.Col span={6}>
-            <Text size="sm" color="dimmed">
-              Mã máy:
+            <Text size="sm" c="dimmed">
+              Mã máy
             </Text>
             <Text fw={500}>{id}</Text>
           </Grid.Col>
           <Grid.Col span={6}>
-            <Text size="sm" color="dimmed">
-              Tên máy:
+            <Text size="sm" c="dimmed">
+              Tên máy
             </Text>
             <Text fw={500}>{name}</Text>
           </Grid.Col>
-
           <Grid.Col span={6}>
-            <Text size="sm" color="dimmed">
-              Loại xe:
+            <Text size="sm" c="dimmed">
+              Loại xe
             </Text>
             <Text fw={500}>{type}</Text>
           </Grid.Col>
           <Grid.Col span={6}>
-            <Text size="sm" color="dimmed">
-              Trạng thái:
+            <Text size="sm" c="dimmed">
+              Trạng thái
             </Text>
-            <Badge color={statusColor}>{status}</Badge>
+            <Badge color={statusColor} variant="light" size="sm">
+              {status}
+            </Badge>
           </Grid.Col>
-
           <Grid.Col span={6}>
-            <Text size="sm" color="dimmed">
-              Giá:
+            <Text size="sm" c="dimmed">
+              Giá
             </Text>
             <Text fw={500}>{formatCurrency(price)}</Text>
           </Grid.Col>
           <Grid.Col span={6}>
-            <Text size="sm" color="dimmed">
-              Số lượng:
+            <Text size="sm" c="dimmed">
+              Số lượng
             </Text>
             <Text fw={500}>{quantity}</Text>
           </Grid.Col>
         </Grid>
 
-        {/* Thông số kỹ thuật */}
-        <Divider label="📑 Thông số kỹ thuật" labelPosition="center" />
-        <Box
-          style={{
-            border: "1px solid #ddd",
-            borderRadius: 4,
-            padding: 12,
-            backgroundColor: "#fafafa",
-            fontSize: 14,
-          }}
-          dangerouslySetInnerHTML={{ __html: specs }}
-        />
+        {/* Section: Thông số kỹ thuật */}
+        <Divider label="Thông số kỹ thuật" labelPosition="left" />
+        <Paper withBorder p="md" radius="md" bg="gray.0">
+          <Box
+            style={{ fontSize: 14 }}
+            dangerouslySetInnerHTML={{ __html: specs }}
+          />
+        </Paper>
 
-        {/* Tài liệu PDF */}
-        {manualFile && (
-          <>
-            <Divider label="📘 Sổ tay hướng dẫn" labelPosition="center" />
-            <iframe
-              src={manualFile}
-              height="400px"
-              width="100%"
-              style={{ border: "1px solid #ccc", borderRadius: "8px" }}
-              title="manual-pdf"
-            />
-          </>
-        )}
-        {inspectionFile && (
-          <>
-            <Divider label="📄 Biên bản đăng kiểm" labelPosition="center" />
-            <iframe
-              src={inspectionFile}
-              height="400px"
-              width="100%"
-              style={{ border: "1px solid #ccc", borderRadius: "8px" }}
-              title="inspection-pdf"
-            />
-          </>
-        )}
+        <Group>
+          {/* Section: Tài liệu */}
+          {manualFile && (
+            <Stack flex={1}>
+              <Divider label="Sổ tay hướng dẫn" labelPosition="left" />
+              <Paper withBorder radius="md" p="sm" bg="gray.0">
+                <iframe
+                  src={manualFile}
+                  height="500px"
+                  width="100%"
+                  style={{ border: "none", borderRadius: 6 }}
+                  title="manual-pdf"
+                />
+              </Paper>
+            </Stack>
+          )}
+          {inspectionFile && (
+            <Stack flex={1}>
+              <Divider label="Biên bản đăng kiểm" labelPosition="left" />
+              <Paper withBorder radius="md" p="sm" bg="gray.0">
+                <iframe
+                  src={inspectionFile}
+                  height="500px"
+                  width="100%"
+                  style={{ border: "none", borderRadius: 6 }}
+                  title="inspection-pdf"
+                />
+              </Paper>
+            </Stack>
+          )}
+        </Group>
 
-        {/* Lịch sử bảo trì */}
-        <Divider label="🛠️ Lịch sử bảo trì" labelPosition="center" />
+        {/* Section: Lịch sử bảo trì */}
+        <Divider label="Lịch sử bảo trì" labelPosition="left" />
         <Table columns={maintenanceColumns} data={maintenanceRecords} />
+        <Space h="xs" />
       </Stack>
     </Card>
   );

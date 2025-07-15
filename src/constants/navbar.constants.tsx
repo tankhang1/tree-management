@@ -36,9 +36,9 @@ export const NAV_BAR = [
     children: [
       { label: "Khu vực canh tác", link: PATH.AREA_REGION },
       // { label: "Khu vực", link: PATH.AREA_ZONE },
-      { label: "Lô canh tác", link: PATH.AREA_BLOCK },
-      { label: "Hàng", link: PATH.AREA_ROW },
-      { label: "Cây", link: PATH.AREA_TREE },
+      // { label: "Lô canh tác", link: PATH.AREA_BLOCK },
+      // { label: "Hàng", link: PATH.AREA_ROW },
+      { label: "Cây canh tác", link: PATH.AREA_TREE },
       { label: "Loại đất", link: PATH.AREA_SOIL },
       { label: "Phương pháp canh tác", link: PATH.AREA_CULTIVATION_METHOD },
       { label: "Lịch sử", link: PATH.AREA_HISTORY },

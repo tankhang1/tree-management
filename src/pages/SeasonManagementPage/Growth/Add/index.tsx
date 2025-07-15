@@ -210,7 +210,7 @@ const SeasonManagementGrowthAddPage = () => {
             />
             <Select label="Nhóm cây" radius={4} />
             <Text fw={500} fz={15}>
-              Danh mục cây trồng
+              Danh mục cây trồng (chọn nhiều)
             </Text>
             <TextInput
               leftSection={<IconSearch size={18} />}
@@ -219,7 +219,7 @@ const SeasonManagementGrowthAddPage = () => {
             />
             <CropCards selected="" plants={cropOptions} onSelect={() => {}} />
             <Text fw={500} fz={15}>
-              Giống cây trồng
+              Giống cây trồng (chọn nhiều)
             </Text>
             <TextInput
               leftSection={<IconSearch size={18} />}
@@ -228,7 +228,7 @@ const SeasonManagementGrowthAddPage = () => {
             />
             <SeedCards selected="" seeds={seedOptions} onSelect={() => {}} />
             <Text fw={500} fz={15}>
-              Hạt giống
+              Hạt giống (chọn nhiều)
             </Text>
             <TextInput
               leftSection={<IconSearch size={18} />}

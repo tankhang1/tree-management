@@ -195,7 +195,7 @@ const areaOptions: AreaOption[] = [
   },
 ];
 
-const regionOptions: RegionOption[] = [
+export const regionOptions: RegionOption[] = [
   {
     code: "VT-001",
     name: "Vùng Trồng Tây Nguyên",
@@ -335,7 +335,7 @@ const AreaManagementBlockAddPage = () => {
           <Stack mt="md">
             <Stack gap={"xs"}>
               <Text fw={500} fz={15}>
-                Chọn vùng trồng
+                Chọn vùng trồng (chọn một)
               </Text>
               <TextInput
                 placeholder="Tìm kiếm vùng trồng"

@@ -43,13 +43,8 @@ export function ConfirmStep({
   }[];
 }) {
   return (
-    <Stack gap="xl">
-      <Title order={2}>
-        📋 Xác nhận tạo mới{" "}
-        <Text span c="green">
-          Lô và Hàng
-        </Text>
-      </Title>
+    <Stack gap="xl" mt="md">
+      <Title order={2}>📋 Xác nhận tạo mới lô</Title>
 
       <Card withBorder radius="lg" shadow="sm" p="lg">
         <Grid gutter="xl">

@@ -4,7 +4,9 @@ import {
   Button,
   Group,
   Menu,
+  Modal,
   Stack,
+  Text,
   Title,
 } from "@mantine/core";
 import {
@@ -18,6 +20,8 @@ import type { MRT_ColumnDef } from "mantine-react-table";
 import Table from "../../../components/Table";
 import { useNavigate } from "react-router-dom";
 import { PATH } from "../../../constants/path.constants";
+import { useDisclosure } from "@mantine/hooks";
+import UnPlannedDetail from "./components/UnPlannedDetail";
 type EmployeeTask = {
   employee: string;
   taskName: string;
@@ -60,13 +64,23 @@ const employeeTasks: EmployeeTask[] = [
 
 const TaskManagementMainPage = () => {
   const navigate = useNavigate();
+  const [openedPlan, { open: openPlan, close: closePlan }] =
+    useDisclosure(false);
   const onMainDetail = () => {
     navigate(PATH.TASK_MAIN_DETAIL);
   };
   const columns: MRT_ColumnDef<EmployeeTask>[] = [
     { accessorKey: "employee", header: "Nhân viên" },
     { accessorKey: "taskName", header: "Tên công việc" },
-    { accessorKey: "assignment", header: "Phiếu công việc" },
+    {
+      accessorKey: "assignment",
+      header: "Phiếu công việc",
+      Cell: ({ row }) => (
+        <Text c={"green"} onClick={openPlan}>
+          {row.original.assignment}
+        </Text>
+      ),
+    },
     { accessorKey: "startDate", header: "Bắt đầu" },
     { accessorKey: "endDate", header: "Kết thúc" },
     {
@@ -136,6 +150,13 @@ const TaskManagementMainPage = () => {
       </Group>
 
       <Table columns={columns} data={employeeTasks} />
+      <Modal
+        opened={openedPlan}
+        onClose={closePlan}
+        title={<Text fw={"500"}>Chi tiết kế hoạch phát sinh</Text>}
+      >
+        <UnPlannedDetail />
+      </Modal>
     </Stack>
   );
 };
