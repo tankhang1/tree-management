@@ -158,18 +158,75 @@ const PesticideManagementMainAddPage = () => {
             />
           </Stack>
         </Stepper.Step>
+        <Stepper.Step label="Bước 4" description="Xác nhận thông tin">
+          <Stack gap="xs">
+            <Title order={5}>📦 Thông tin chung</Title>
+            <Text>
+              <b>Mã thuốc:</b> {form.values.id}
+            </Text>
+            <Text>
+              <b>Tên thuốc:</b> {form.values.name}
+            </Text>
+            <Text>
+              <b>Loại thuốc:</b>{" "}
+              {pesticideTypes.find((t) => t.value === form.values.typeId)
+                ?.label || form.values.typeId}
+            </Text>
+            <Text>
+              <b>Đơn vị:</b> {form.values.unit}
+            </Text>
+            <Text>
+              <b>Hoạt chất:</b>
+            </Text>
+            <Title order={5} mt="sm">
+              🧪 Thông tin thuốc
+            </Title>
+            <div
+              dangerouslySetInnerHTML={{ __html: form.values.info }}
+              style={{
+                border: "1px solid #ccc",
+                padding: "8px",
+                borderRadius: 4,
+              }}
+            />
+
+            <Title order={5} mt="sm">
+              🧬 Thành phần
+            </Title>
+            <div
+              dangerouslySetInnerHTML={{ __html: form.values.ingredients }}
+              style={{
+                border: "1px solid #ccc",
+                padding: "8px",
+                borderRadius: 4,
+              }}
+            />
+
+            <Title order={5} mt="sm">
+              📋 Hướng dẫn sử dụng
+            </Title>
+            <div
+              dangerouslySetInnerHTML={{ __html: form.values.usage }}
+              style={{
+                border: "1px solid #ccc",
+                padding: "8px",
+                borderRadius: 4,
+              }}
+            />
+          </Stack>
+        </Stepper.Step>
       </Stepper>
 
       <Group mt="xl" justify="space-between">
         <Button variant="default" radius={4} onClick={prevStep}>
           Quay lại
         </Button>
-        {active < 2 && (
+        {active < 3 && (
           <Button onClick={nextStep} radius={4}>
             Tiếp theo
           </Button>
         )}
-        {active === 2 && <Button radius={4}>Lưu</Button>}
+        {active === 3 && <Button radius={4}>Lưu</Button>}
       </Group>
     </Card>
   );

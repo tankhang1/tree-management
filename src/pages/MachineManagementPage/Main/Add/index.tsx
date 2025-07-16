@@ -148,56 +148,84 @@ const MachineManagementMainAddPage = () => {
           </Stack>
         </Stepper.Step>
 
-        <Stepper.Step label="Bước 3" description="Tài liệu">
+        <Stepper.Step label="Bước 3" description="Xác nhận thông tin">
           <Stack>
-            <FileInput
-              label="Sổ tay hướng dẫn (PDF)"
-              placeholder="Sổ tay hướng dẫn (PDF)"
-              radius={4}
-              accept="application/pdf"
-              leftSection={<IconFileTypePdf />}
-              value={form.values.manualFile}
-              onChange={(file) => {
-                //@ts-expect-error no check
-                form.setFieldValue("manualFile", file);
-                setManualPreviewUrl(file ? URL.createObjectURL(file) : null);
-              }}
-            />
-            {manualPreviewUrl && (
-              <>
-                <Text size="sm">📘 Xem trước sổ tay:</Text>
+            <Title order={5}>📄 Thông tin tổng quan</Title>
+            <Text>
+              <b>Mã máy:</b> {form.values.id}
+            </Text>
+            <Text>
+              <b>Tên máy:</b> {form.values.name}
+            </Text>
+            <Text>
+              <b>Loại:</b> {form.values.type}
+            </Text>
+            <Text>
+              <b>Tình trạng:</b> {form.values.status}
+            </Text>
+            <Text>
+              <b>Giá:</b> {form.values.price.toLocaleString()} VNĐ
+            </Text>
+            <Text>
+              <b>Số lượng:</b> {form.values.quantity}
+            </Text>
+
+            <Title order={5} mt="md">
+              📘 Tài liệu kỹ thuật
+            </Title>
+            <Text>
+              <b>Loại tài liệu:</b>{" "}
+              {form.values.fileType === "0"
+                ? "Tải file PDF"
+                : "Nội dung trực tiếp"}
+            </Text>
+            {form.values.fileType === "0" && form.values?.technicalDoc ? (
+              <Stack gap={"xs"}>
+                <Text>📄 Tệp đã tải lên:</Text>
                 <iframe
-                  src={manualPreviewUrl}
+                  src={URL.createObjectURL(form.values?.technicalDoc || "")}
                   width="100%"
-                  height="600px"
-                  style={{ border: "1px solid #ccc", borderRadius: "8px" }}
+                  height="400px"
+                  style={{ border: "1px solid #ccc", borderRadius: 8 }}
+                />
+              </Stack>
+            ) : (
+              <Text>
+                ✍️ Nội dung kỹ thuật đã nhập (không hiển thị preview ở bước
+                này).
+              </Text>
+            )}
+
+            {form.values.manualFile && (
+              <>
+                <Title order={5} mt="md">
+                  📕 Sổ tay hướng dẫn
+                </Title>
+                <iframe
+                  src={
+                    manualPreviewUrl ||
+                    URL.createObjectURL(form.values.manualFile)
+                  }
+                  width="100%"
+                  height="400px"
+                  style={{ border: "1px solid #ccc", borderRadius: 8 }}
                 />
               </>
             )}
-            <FileInput
-              label="Biên bản đăng kiểm (PDF)"
-              accept="application/pdf"
-              placeholder="Biên bản đăng kiểm (PDF)"
-              {...form.getInputProps("inspectionFile")}
-              leftSection={<IconFileTypePdf />}
-              radius={4}
-              value={form.values.inspectionFile}
-              onChange={(file) => {
-                //@ts-expect-error no check
-                form.setFieldValue("inspectionFile", file);
-                setInspectionPreviewUrl(
-                  file ? URL.createObjectURL(file) : null
-                );
-              }}
-            />
-            {inspectionPreviewUrl && (
+
+            {form.values.inspectionFile && (
               <>
-                <Text size="sm">📄 Xem trước biên bản:</Text>
+                <Title order={5} mt="md">
+                  📑 Biên bản đăng kiểm
+                </Title>
                 <iframe
-                  src={inspectionPreviewUrl}
+                  src={
+                    inspectionPreviewUrl ||
+                    URL.createObjectURL(form.values.inspectionFile)
+                  }
                   width="100%"
-                  height="600px"
-                  style={{ border: "1px solid #ccc", borderRadius: "8px" }}
+                  height="400px"
+                  style={{ border: "1px solid #ccc", borderRadius: 8 }}
                 />
               </>
             )}
