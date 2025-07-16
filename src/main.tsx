@@ -152,6 +152,8 @@ import FertilizerManagementMainPage from "./pages/FertilizerManagementPage/Main/
 import StockManagementDeliveryPage from "./pages/StockManagementPage/Delivery/index.tsx";
 import StockManagementAddDeliveryPage from "./pages/StockManagementPage/Delivery/Add/index.tsx";
 import StockManagementDeliveryDetailPage from "./pages/StockManagementPage/Delivery/Detail/index.tsx";
+import CompanyPage from "./pages/CompanyPage/index.tsx";
+import VendorPage from "./pages/VendorPage/index.tsx";
 const theme: MantineThemeOverride = {
   fontFamily: "MyFont, sans-serif",
   primaryColor: "brand",
@@ -551,6 +553,8 @@ const ROUTES = [
     path={PATH.STOCK_DELIVERY_DETAIL}
     element={<StockManagementDeliveryDetailPage />}
   />,
+  <Route path={PATH.COMPANY} element={<CompanyPage />} />,
+  <Route path={PATH.VENDOR} element={<VendorPage />} />,
 ];
 
 createRoot(document.getElementById("root")!).render(

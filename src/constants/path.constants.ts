@@ -177,7 +177,9 @@ export const PATH = {
   STOCK_FERTILIZER: "/stock-management/fertilizer",
   STOCK_MACHINE: "/stock-management/machine",
   STOCK_SEED: "/stock-management/seed",
-
+  // Company & Stack Holder
+  COMPANY: "/company",
+  VENDOR: "/vendor",
   // Purchase & Sales
   PURCHASE: "/purchase",
   SELL: "/sell",
