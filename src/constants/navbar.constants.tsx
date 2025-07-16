@@ -171,8 +171,8 @@ export const NAV_BAR = [
     icon: IconBox,
     link: "12123",
     children: [
-      { label: "Loại phân bón", link: PATH.STOCK_SUPPLY },
-      { label: "Thông tin phân bón", link: PATH.STOCK_SUPPLY },
+      { label: "Loại phân bón", link: PATH.FERTILIZER_TYPE },
+      { label: "Thông tin phân bón", link: PATH.FERTILIZER_MAIN },
     ],
   },
   {
@@ -180,12 +180,13 @@ export const NAV_BAR = [
     icon: IconCoin,
     link: PATH.STOCK_MANAGEMENT,
     children: [
-      { label: "Khu vực quản lý", link: PATH.STOCK_SUPPLY },
+      { label: "Khu vực quản lý", link: PATH.STOCK_AREA },
+      { label: "Kho vận", link: PATH.STOCK_DELIVERY },
       { label: "Xuất/nhập vật tư", link: PATH.STOCK_SUPPLY },
       { label: "Xuất/nhập thuốc", link: PATH.STOCK_PESTICIDE },
       { label: "Xuất/nhập máy móc", link: PATH.STOCK_MACHINE },
       { label: "Xuất/nhập hạt giống", link: PATH.STOCK_SEED },
-      { label: "Xuất/nhập phân", link: PATH.STOCK_SEED },
+      { label: "Xuất/nhập phân bón", link: PATH.STOCK_FERTILIZER },
     ],
   },
   {

@@ -143,6 +143,15 @@ import MapManagementAddAreaPage from "./pages/MapManagementPage/Area/Add/index.t
 import MapManagementAreaDetailPage from "./pages/MapManagementPage/Area/Detail/index.tsx";
 import MapManagementPlotAddPage from "./pages/MapManagementPage/Plot/Add/index.tsx";
 import MapManagementDetailPlotPage from "./pages/MapManagementPage/Plot/Detail/index.tsx";
+import StockManagementAreaPage from "./pages/StockManagementPage/Area/index.tsx";
+import StockManagementAddAreaPage from "./pages/StockManagementPage/Area/Add/index.tsx";
+import StockManagementAreaDetailPage from "./pages/StockManagementPage/Area/Detail/index.tsx";
+import StockManagementFertilizerPage from "./pages/StockManagementPage/Fertilizer/index.tsx";
+import FertilizerManagementTypePage from "./pages/FertilizerManagementPage/Type/index.tsx";
+import FertilizerManagementMainPage from "./pages/FertilizerManagementPage/Main/index.tsx";
+import StockManagementDeliveryPage from "./pages/StockManagementPage/Delivery/index.tsx";
+import StockManagementAddDeliveryPage from "./pages/StockManagementPage/Delivery/Add/index.tsx";
+import StockManagementDeliveryDetailPage from "./pages/StockManagementPage/Delivery/Detail/index.tsx";
 const theme: MantineThemeOverride = {
   fontFamily: "MyFont, sans-serif",
   primaryColor: "brand",
@@ -497,6 +506,12 @@ const ROUTES = [
   />,
 
   <Route path={PATH.SUPPLY_MANAGEMENT} element={<SupplyManagementPage />} />,
+  <Route path={PATH.STOCK_AREA} element={<StockManagementAreaPage />} />,
+  <Route path={PATH.STOCK_ADD_AREA} element={<StockManagementAddAreaPage />} />,
+  <Route
+    path={PATH.STOCK_AREA_DETAIL}
+    element={<StockManagementAreaDetailPage />}
+  />,
 
   <Route path={PATH.STOCK_MANAGEMENT} element={<StockManagementPage />} />,
   <Route path={PATH.STOCK_SUPPLY} element={<StockManagementSupplyPage />} />,
@@ -504,6 +519,11 @@ const ROUTES = [
     path={PATH.STOCK_PESTICIDE}
     element={<StockManagementPesticidePage />}
   />,
+  <Route
+    path={PATH.STOCK_FERTILIZER}
+    element={<StockManagementFertilizerPage />}
+  />,
+
   <Route path={PATH.STOCK_MACHINE} element={<StockManagementMachinePage />} />,
   <Route path={PATH.STOCK_SEED} element={<StockManagementSeedPage />} />,
 
@@ -511,6 +531,26 @@ const ROUTES = [
   <Route path={PATH.SELL} element={<SellPage />} />,
 
   <Route path={PATH.FINANCE_ACCOUNT} element={<FinanceAccountPage />} />,
+  <Route
+    path={PATH.FERTILIZER_TYPE}
+    element={<FertilizerManagementTypePage />}
+  />,
+  <Route
+    path={PATH.FERTILIZER_MAIN}
+    element={<FertilizerManagementMainPage />}
+  />,
+  <Route
+    path={PATH.STOCK_DELIVERY}
+    element={<StockManagementDeliveryPage />}
+  />,
+  <Route
+    path={PATH.STOCK_ADD_DELIVERY}
+    element={<StockManagementAddDeliveryPage />}
+  />,
+  <Route
+    path={PATH.STOCK_DELIVERY_DETAIL}
+    element={<StockManagementDeliveryDetailPage />}
+  />,
 ];
 
 createRoot(document.getElementById("root")!).render(

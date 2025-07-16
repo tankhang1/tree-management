@@ -6,9 +6,16 @@ import {
   TextInput,
   Textarea,
   NumberInput,
+  Text,
 } from "@mantine/core";
 import { DatePickerInput } from "@mantine/dates";
 import { useForm } from "@mantine/form";
+import {
+  IconCancel,
+  IconInputSpark,
+  IconTruckDelivery,
+  IconUser,
+} from "@tabler/icons-react";
 import { useEffect, useMemo, useState } from "react";
 
 // Mock Data
@@ -22,17 +29,10 @@ const pesticides = [
   { id: "TH002", typeId: "TYPE02", name: "BioShield", unit: "g" },
 ];
 
-const staffOptions = [
-  { value: "EMP001", label: "Nguyễn Văn A" },
-  { value: "EMP002", label: "Trần Thị B" },
-];
-
-const typeOptions = [
-  { value: "nhập", label: "Nhập" },
-  { value: "xuất", label: "Xuất" },
-  { value: "huỷ", label: "Huỷ" },
-];
-const AddPesticideForm = () => {
+type TAddPesticideForm = {
+  onFilter: () => void;
+};
+const AddPesticideForm = ({ onFilter }: TAddPesticideForm) => {
   const [unit, setUnit] = useState<string>("");
 
   const form = useForm({
@@ -71,6 +71,33 @@ const AddPesticideForm = () => {
   return (
     <form>
       <Stack gap="xs">
+        <Group>
+          <Button
+            radius={4}
+            variant="outline"
+            onClick={() => form.setFieldValue("type", "xuất")}
+            leftSection={<IconTruckDelivery />}
+          >
+            Xuất
+          </Button>
+          <Button
+            onClick={() => form.setFieldValue("type", "nhập")}
+            radius={4}
+            variant="outline"
+            leftSection={<IconInputSpark />}
+          >
+            Nhập
+          </Button>
+          <Button
+            radius={4}
+            onClick={() => form.setFieldValue("type", "huỷ")}
+            color="red"
+            variant="outline"
+            leftSection={<IconCancel />}
+          >
+            Huỷ
+          </Button>
+        </Group>
         <Select
           label="Loại thuốc"
           data={pesticideTypes}
@@ -98,15 +125,34 @@ const AddPesticideForm = () => {
             required
           />
           <TextInput label="Đơn vị tính" radius={4} disabled value={unit} />
+          <Select label="Quy cách đóng gói" required radius={4} />
         </Group>
-
-        <Select
-          label="Loại phiếu"
-          data={typeOptions}
-          radius={4}
-          {...form.getInputProps("type")}
-          required
-        />
+        {form.getValues().type === "xuất" && (
+          <Stack gap={"xs"}>
+            <Select
+              label="Kho xuất hàng"
+              data={["Kho A", "Kho B"]}
+              radius={4}
+              {...form.getInputProps("staffId")}
+            />
+          </Stack>
+        )}
+        {form.getValues().type === "nhập" && (
+          <Select
+            label="Kho nhập hàng"
+            data={["Kho A", "Kho B"]}
+            radius={4}
+            {...form.getInputProps("staffId")}
+          />
+        )}
+        {form.getValues().type === "huỷ" && (
+          <Select
+            label="Kho xuất hàng"
+            data={["Kho A", "Kho B"]}
+            radius={4}
+            {...form.getInputProps("staffId")}
+          />
+        )}
 
         <DatePickerInput
           label="Ngày thực hiện"
@@ -116,13 +162,19 @@ const AddPesticideForm = () => {
           required
         />
 
-        <Select
-          label="Nhân viên thực hiện"
-          data={staffOptions}
-          radius={4}
-          {...form.getInputProps("staffId")}
-        />
-
+        <Group>
+          <Text fw={"500"} fz={15}>
+            Nhân viên thực hiện
+          </Text>
+          <Button
+            variant="light"
+            radius={4}
+            onClick={onFilter}
+            leftSection={<IconUser size={18} />}
+          >
+            Chọn người thực hiện
+          </Button>
+        </Group>
         <Textarea
           label="Ghi chú"
           minRows={3}

@@ -161,12 +161,20 @@ export const PATH = {
 
   // Supply Management
   SUPPLY_MANAGEMENT: "/supply-management",
-
+  //Fertilizer Management
+  FERTILIZER_TYPE: "/fertilizer-management/type",
+  FERTILIZER_MAIN: "/fertilizer-management/main",
   // Stock Management
   STOCK_AREA: "/stock-area",
+  STOCK_ADD_AREA: "/stock-area/add",
+  STOCK_AREA_DETAIL: "/stock-area/detail",
+  STOCK_DELIVERY: "/stock-delivery",
+  STOCK_DELIVERY_DETAIL: "/stock-delivery/add",
+  STOCK_ADD_DELIVERY: "/stock-delivery/detail",
   STOCK_MANAGEMENT: "/stock-management",
   STOCK_SUPPLY: "/stock-management/supply",
   STOCK_PESTICIDE: "/stock-management/pesticide",
+  STOCK_FERTILIZER: "/stock-management/fertilizer",
   STOCK_MACHINE: "/stock-management/machine",
   STOCK_SEED: "/stock-management/seed",
 

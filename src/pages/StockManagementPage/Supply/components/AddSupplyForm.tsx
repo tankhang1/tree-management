@@ -6,9 +6,16 @@ import {
   TextInput,
   NumberInput,
   Textarea,
+  Text,
 } from "@mantine/core";
 import { DatePickerInput } from "@mantine/dates";
 import { useForm } from "@mantine/form";
+import {
+  IconCancel,
+  IconInputSpark,
+  IconTruckDelivery,
+  IconUser,
+} from "@tabler/icons-react";
 
 // Giả lập danh sách vật tư (VI.1) và nhân viên (XI)
 const materialOptions = [
@@ -17,18 +24,11 @@ const materialOptions = [
   { value: "VT003", label: "Bạt phủ nilon" },
 ];
 
-const staffOptions = [
-  { value: "EMP001", label: "Nguyễn Văn A" },
-  { value: "EMP002", label: "Trần Thị B" },
-];
+type TAddSupplyForm = {
+  onFilter: () => void;
+};
 
-const typeOptions = [
-  { value: "nhập", label: "Nhập" },
-  { value: "xuất", label: "Xuất" },
-  { value: "huỷ", label: "Huỷ" },
-];
-
-const AddSupplyForm = () => {
+const AddSupplyForm = ({ onFilter }: TAddSupplyForm) => {
   const form = useForm({
     initialValues: {
       id: "",
@@ -53,6 +53,33 @@ const AddSupplyForm = () => {
   return (
     <form>
       <Stack gap="xs">
+        <Group>
+          <Button
+            radius={4}
+            variant="outline"
+            onClick={() => form.setFieldValue("type", "xuất")}
+            leftSection={<IconTruckDelivery />}
+          >
+            Xuất
+          </Button>
+          <Button
+            onClick={() => form.setFieldValue("type", "nhập")}
+            radius={4}
+            variant="outline"
+            leftSection={<IconInputSpark />}
+          >
+            Nhập
+          </Button>
+          <Button
+            radius={4}
+            onClick={() => form.setFieldValue("type", "huỷ")}
+            color="red"
+            variant="outline"
+            leftSection={<IconCancel />}
+          >
+            Huỷ
+          </Button>
+        </Group>
         <TextInput
           label="Mã phiếu"
           radius={4}
@@ -83,38 +110,62 @@ const AddSupplyForm = () => {
             required
             {...form.getInputProps("unit")}
           />
+          <Select label="Quy cách đóng gói" radius={4} required />
         </Group>
-
-        <Select
-          label="Nhân viên thực hiện"
-          data={staffOptions}
-          radius={4}
-          {...form.getInputProps("staffId")}
-        />
+        {form.getValues().type === "huỷ" && (
+          <Select
+            label="Kho xuất hàng"
+            data={["Kho A", "Kho B"]}
+            radius={4}
+            {...form.getInputProps("staffId")}
+          />
+        )}
+        {form.getValues().type === "nhập" && (
+          <Select
+            label="Kho nhập hàng"
+            data={["Kho A", "Kho B"]}
+            radius={4}
+            {...form.getInputProps("staffId")}
+          />
+        )}
+        {form.getValues().type === "xuất" && (
+          <Select
+            label="Kho xuất hàng"
+            data={["Kho A", "Kho B"]}
+            radius={4}
+            {...form.getInputProps("staffId")}
+          />
+        )}
+        <Group>
+          <Text fw={"500"} fz={15}>
+            Nhân viên thực hiện
+          </Text>
+          <Button
+            variant="light"
+            radius={4}
+            onClick={onFilter}
+            leftSection={<IconUser size={18} />}
+          >
+            Chọn người thực hiện
+          </Button>
+        </Group>
 
         <Group grow>
           <DatePickerInput
-            label="Ngày sử dụng"
+            label="Ngày nhập kho"
             radius={4}
             required
             locale="vi"
             {...form.getInputProps("usageDate")}
           />
           <DatePickerInput
-            label="Ngày trả (nếu có)"
+            label="Ngày xuất kho"
+            required
             radius={4}
             locale="vi"
             {...form.getInputProps("returnDate")}
           />
         </Group>
-
-        <Select
-          label="Loại phiếu"
-          data={typeOptions}
-          radius={4}
-          required
-          {...form.getInputProps("type")}
-        />
 
         <Textarea
           label="Ghi chú"

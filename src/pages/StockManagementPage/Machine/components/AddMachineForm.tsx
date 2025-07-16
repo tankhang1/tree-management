@@ -5,14 +5,16 @@ import {
   Stack,
   Textarea,
   NumberInput,
-  Badge,
+  Text,
 } from "@mantine/core";
-import { DatePickerInput } from "@mantine/dates";
+import { DatePickerInput, DateTimePicker } from "@mantine/dates";
 import { useForm } from "@mantine/form";
 import {
+  IconCalendar,
   IconCancel,
   IconInputSpark,
   IconTruckDelivery,
+  IconUser,
 } from "@tabler/icons-react";
 
 // Mock danh sách máy móc và nhân viên
@@ -22,17 +24,10 @@ const machineOptions = [
   { value: "MC003", label: "Xe múc Komatsu PC200" },
 ];
 
-const staffOptions = [
-  { value: "EMP001", label: "Nguyễn Văn A" },
-  { value: "EMP002", label: "Trần Thị B" },
-];
-
-const transactionTypes = [
-  { value: "nhập", label: "Nhập" },
-  { value: "xuất", label: "Xuất" },
-  { value: "huỷ", label: "Huỷ" },
-];
-const AddMachineForm = () => {
+type TAddMachineForm = {
+  onFilter: () => void;
+};
+const AddMachineForm = ({ onFilter }: TAddMachineForm) => {
   const form = useForm({
     initialValues: {
       machineId: "",
@@ -99,17 +94,33 @@ const AddMachineForm = () => {
           />
         </Group>
 
-        {form.getValues().type !== "xuất" && (
+        {form.getValues().type === "xuất" && (
+          <Stack gap={"xs"}>
+            <Select
+              label="Kho xuất hàng"
+              data={["Kho A", "Kho B"]}
+              radius={4}
+              {...form.getInputProps("staffId")}
+            />
+            <DateTimePicker
+              leftSection={<IconCalendar size={18} />}
+              radius={4}
+              locale="vi"
+              label="Thời gian dự kiến"
+            />
+          </Stack>
+        )}
+        {form.getValues().type === "nhập" && (
           <Select
-            label="Kho xuất hàng"
+            label="Kho nhập hàng"
             data={["Kho A", "Kho B"]}
             radius={4}
             {...form.getInputProps("staffId")}
           />
         )}
-        {form.getValues().type !== "nhập" && (
+        {form.getValues().type === "huỷ" && (
           <Select
-            label="Kho nhập hàng"
+            label="Kho xuất hàng"
             data={["Kho A", "Kho B"]}
             radius={4}
             {...form.getInputProps("staffId")}
@@ -123,13 +134,19 @@ const AddMachineForm = () => {
           required
         />
 
-        <Select
-          label="Nhân viên thực hiện"
-          data={staffOptions}
-          radius={4}
-          {...form.getInputProps("staffId")}
-        />
-
+        <Group>
+          <Text fw={"500"} fz={15}>
+            Nhân viên thực hiện
+          </Text>
+          <Button
+            variant="light"
+            radius={4}
+            onClick={onFilter}
+            leftSection={<IconUser size={18} />}
+          >
+            Chọn người thực hiện
+          </Button>
+        </Group>
         <Textarea
           label="Ghi chú"
           placeholder="Ghi chú thêm nếu có..."

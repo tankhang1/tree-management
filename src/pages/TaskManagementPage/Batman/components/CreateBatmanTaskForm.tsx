@@ -87,7 +87,7 @@ const CreateBatmanTaskForm = ({ onFilter }: TCreateBatmanTaskForm) => {
             onClick={onFilter}
             leftSection={<IconUser size={18} />}
           >
-            Chọn quản lý
+            Chọn người kiểm duyệt
           </Button>
         </Group>
         <Textarea

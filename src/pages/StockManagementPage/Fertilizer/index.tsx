@@ -12,6 +12,7 @@ import {
   Text,
   Title,
 } from "@mantine/core";
+import { useDisclosure } from "@mantine/hooks";
 import {
   IconDotsVertical,
   IconEye,
@@ -21,56 +22,88 @@ import {
 } from "@tabler/icons-react";
 import type { MRT_ColumnDef } from "mantine-react-table";
 import Table from "../../../components/Table";
-import { useDisclosure } from "@mantine/hooks";
-import AddSupplyForm from "./components/AddSupplyForm";
 import { useState } from "react";
+import AddFertilizerForm from "./components/AddFertilizerForm";
+type FertilizerTransactionType = "nhập" | "xuất";
+type FertilizerTransactionStatus = "chờ duyệt" | "đã duyệt" | "đã hủy";
 
-type MaterialUsageType = "nhập" | "xuất" | "huỷ";
-type MaterialUsage = {
-  id: string; // Mã phiếu
-  materialId: string; // Mã vật tư (VI.1)
-  quantity: number; // Số lượng
-  unit: string; // Đơn vị tính
-  staffId: string; // Mã nhân viên (XI)
-  usageDate: string; // Ngày sử dụng
-  returnDate?: string; // Ngày trả (nếu có)
-  type: MaterialUsageType; // Loại (nhập / xuất / huỷ)
-  note?: string; // Ghi chú
-};
-const materialUsages: MaterialUsage[] = [
+interface FertilizerItem {
+  id: string;
+  productId: string;
+  productName: string;
+  quantity: number;
+  unit: string;
+  batchCode?: string;
+  expiryDate?: string;
+  note?: string;
+}
+
+interface FertilizerTransaction {
+  id: string;
+  type: FertilizerTransactionType;
+  date: string;
+  createdBy: string;
+  approvedBy?: string;
+  status: FertilizerTransactionStatus;
+  warehouseFrom?: string;
+  warehouseTo?: string;
+  areaName?: string;
+  note?: string;
+  items: FertilizerItem[];
+}
+
+const fertilizerTransactionData: FertilizerTransaction[] = [
   {
-    id: "MU001",
-    materialId: "VT001",
-    quantity: 50,
-    unit: "kg",
-    staffId: "EMP001",
-    usageDate: "2024-06-20",
-    returnDate: "2024-06-25",
+    id: "PX001",
     type: "xuất",
-    note: "Dùng bón lô số 2",
+    date: "2025-07-16",
+    createdBy: "Nguyễn Văn A",
+    approvedBy: "Trần B",
+    status: "đã duyệt",
+    warehouseFrom: "Kho trung tâm",
+    areaName: "Khu A1",
+    note: "Xuất theo kế hoạch K1",
+    items: [
+      {
+        id: "1",
+        productId: "PB001",
+        productName: "Phân NPK 16-16-8",
+        quantity: 500,
+        unit: "kg",
+        batchCode: "LO001",
+        expiryDate: "2025-12-31",
+      },
+      {
+        id: "2",
+        productId: "PB002",
+        productName: "Phân Ure",
+        quantity: 300,
+        unit: "kg",
+        note: "Cho lô phía Bắc",
+      },
+    ],
   },
   {
-    id: "MU002",
-    materialId: "VT002",
-    quantity: 100,
-    unit: "lit",
-    staffId: "EMP002",
-    usageDate: "2024-06-18",
+    id: "PN002",
     type: "nhập",
-    note: "Nhập kho từ nhà cung cấp Tân Phú",
-  },
-  {
-    id: "MU003",
-    materialId: "VT003",
-    quantity: 10,
-    unit: "cuộn",
-    staffId: "EMP003",
-    usageDate: "2024-06-19",
-    type: "huỷ",
-    note: "Bạt hỏng, không sử dụng được",
+    date: "2025-07-10",
+    createdBy: "Nguyễn Văn C",
+    status: "chờ duyệt",
+    warehouseTo: "Kho 2",
+    note: "Nhập từ nhà cung cấp ABC",
+    items: [
+      {
+        id: "1",
+        productId: "PB003",
+        productName: "Phân Kali",
+        quantity: 200,
+        unit: "kg",
+      },
+    ],
   },
 ];
-const StockManagementSupplyPage = () => {
+
+const StockManagementFertilizerPage = () => {
   const [
     openedFilterEmployee,
     { open: openFilterEmployee, close: closeFilterEmployee },
@@ -78,40 +111,33 @@ const StockManagementSupplyPage = () => {
   const [mode, setMode] = useState("");
 
   const [
-    openedStockSupply,
-    { open: openStockSupply, close: closeStockSupply },
+    openedStockMachine,
+    { open: openStockMachine, close: closeStockMachine },
   ] = useDisclosure(false);
-  const materialUsageColumns: MRT_ColumnDef<MaterialUsage>[] = [
+  const fertilizerTransactionColumns: MRT_ColumnDef<FertilizerTransaction>[] = [
     { accessorKey: "id", header: "Mã phiếu" },
-    { accessorKey: "materialId", header: "Mã vật tư" },
-    { accessorKey: "quantity", header: "Số lượng" },
-    { accessorKey: "unit", header: "Đơn vị" },
-    { accessorKey: "staffId", header: "Nhân viên" },
-    {
-      accessorKey: "usageDate",
-      header: "Ngày sử dụng",
-      Cell: ({ cell }) =>
-        new Date(cell.getValue<string>()).toLocaleDateString("vi-VN"),
-    },
-    {
-      accessorKey: "returnDate",
-      header: "Ngày trả",
-      Cell: ({ cell }) =>
-        cell.getValue()
-          ? new Date(cell.getValue<string>()).toLocaleDateString("vi-VN")
-          : "-",
-    },
     {
       accessorKey: "type",
-      header: "Loại",
+      header: "Loại phiếu",
       Cell: ({ cell }) => {
-        const type = cell.getValue<MaterialUsageType>();
+        const value = cell.getValue<FertilizerTransactionType>();
         const color =
-          type === "nhập" ? "green" : type === "xuất" ? "blue" : "red";
-        return <Badge color={color}>{type.toUpperCase()}</Badge>;
+          value === "nhập" ? "green" : value === "xuất" ? "blue" : "red";
+        return <Badge color={color}>{value.toUpperCase()}</Badge>;
       },
     },
+    { accessorKey: "date", header: "Ngày giao dịch" },
+    { accessorKey: "createdBy", header: "Người tạo" },
+    { accessorKey: "approvedBy", header: "Người duyệt" },
+    { accessorKey: "warehouseFrom", header: "Kho nguồn" },
+    { accessorKey: "warehouseTo", header: "Kho đích" },
+    { accessorKey: "areaName", header: "Khu vực áp dụng" },
     { accessorKey: "note", header: "Ghi chú" },
+    {
+      accessorKey: "items",
+      header: "Số dòng sản phẩm",
+      Cell: ({ cell }) => cell.getValue<FertilizerItem[]>().length,
+    },
     {
       accessorKey: "actions",
       header: "",
@@ -138,30 +164,34 @@ const StockManagementSupplyPage = () => {
       ),
     },
   ];
-
   return (
     <Stack gap="lg">
       <Group justify="space-between">
         <Title flex={1} order={2}>
-          Quản lý phiếu xuất nhập vật tư
+          Quản lý xuất nhập phân bón
         </Title>
         <Group>
           <Button variant="outline" radius={4} leftSection={<IconFileExcel />}>
             Xuất File
           </Button>
-          <Button radius={4} onClick={openStockSupply}>
+          <Button radius={4} onClick={openStockMachine}>
             Thêm mới
           </Button>
         </Group>
       </Group>
 
-      <Table columns={materialUsageColumns} data={materialUsages} />
+      <Table
+        //@ts-expect-error no check
+        columns={fertilizerTransactionColumns}
+        //@ts-expect-error no check
+        data={fertilizerTransactionData}
+      />
       <Modal
-        opened={openedStockSupply}
-        onClose={closeStockSupply}
-        title={<Text fw="bold">Thêm mới phiếu xuất/nhập vật tư</Text>}
+        opened={openedStockMachine}
+        onClose={closeStockMachine}
+        title={<Text fw="bold">Thêm mới phiếu xuất/nhập phân bón</Text>}
       >
-        <AddSupplyForm onFilter={openFilterEmployee} />
+        <AddFertilizerForm onFilter={openFilterEmployee} />
       </Modal>
       <Modal
         opened={openedFilterEmployee}
@@ -224,4 +254,4 @@ const StockManagementSupplyPage = () => {
   );
 };
 
-export default StockManagementSupplyPage;
+export default StockManagementFertilizerPage;
