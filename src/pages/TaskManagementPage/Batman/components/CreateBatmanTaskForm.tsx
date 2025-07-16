@@ -3,13 +3,17 @@ import {
   Group,
   Select,
   Stack,
+  Text,
   TextInput,
   Textarea,
 } from "@mantine/core";
 import { DatePickerInput } from "@mantine/dates";
 import { useForm } from "@mantine/form";
-
-const CreateBatmanTaskForm = () => {
+import { IconUser } from "@tabler/icons-react";
+type TCreateBatmanTaskForm = {
+  onFilter: () => void;
+};
+const CreateBatmanTaskForm = ({ onFilter }: TCreateBatmanTaskForm) => {
   const form = useForm({
     initialValues: {
       employee: "",
@@ -27,13 +31,19 @@ const CreateBatmanTaskForm = () => {
   return (
     <form onSubmit={form.onSubmit((values) => console.log(values))}>
       <Stack gap="xs">
-        <Select
-          label="Nhân viên"
-          placeholder="Chọn nhân viên"
-          data={["Nguyễn Văn A", "Trần Thị B", "Nguyễn Văn C"]}
-          {...form.getInputProps("employee")}
-          radius={4}
-        />
+        <Group>
+          <Text fw={"500"} fz={15}>
+            Nhân sự tham gia
+          </Text>
+          <Button
+            variant="light"
+            radius={4}
+            onClick={onFilter}
+            leftSection={<IconUser size={18} />}
+          >
+            Chọn quản lý
+          </Button>
+        </Group>
 
         <TextInput
           label="Tên công việc"
@@ -67,14 +77,19 @@ const CreateBatmanTaskForm = () => {
           radius={4}
         />
 
-        <Select
-          label="Người kiểm duyệt"
-          placeholder="Chọn người kiểm duyệt"
-          data={["Lê Quang D", "Ngô Thanh T", "Phạm Minh H"]}
-          {...form.getInputProps("reviewer")}
-          radius={4}
-        />
-
+        <Group>
+          <Text fw={"500"} fz={15}>
+            Người kiểm duyệt
+          </Text>
+          <Button
+            variant="light"
+            radius={4}
+            onClick={onFilter}
+            leftSection={<IconUser size={18} />}
+          >
+            Chọn quản lý
+          </Button>
+        </Group>
         <Textarea
           label="Ghi chú (tuỳ chọn)"
           placeholder="Nhập ghi chú nếu có"
