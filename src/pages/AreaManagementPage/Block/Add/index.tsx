@@ -141,7 +141,7 @@ export interface CropOption {
   note?: string;
   image: string; // URL or base64
 }
-const cropOptions: CropOption[] = [
+export const cropOptions: CropOption[] = [
   {
     code: "TREE001",
     name: "Sầu riêng",

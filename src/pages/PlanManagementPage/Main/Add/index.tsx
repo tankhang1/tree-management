@@ -317,14 +317,18 @@ const PlanManagementMainAddPage = () => {
           </Stack>
         )}
         {active === 2 && (
-          <Stack>
-            <Select
-              placeholder="Danh mục cây trồng"
-              label="Danh mục cây trồng"
-              radius={4}
-            />
+          <Stack gap={"xs"}>
             <Text fw={500} fz={15}>
-              Chọn cây trồng
+              Danh mục cây trồng (chọn một)
+            </Text>
+            <TextInput
+              placeholder="Tìm kiếm danh mục cây"
+              radius={4}
+              leftSection={<IconSearch size={18} />}
+            />
+            <CropCards selected="" plants={cropOptions} onSelect={() => {}} />
+            <Text fw={500} fz={15}>
+              Chọn cây trồng (chọn một)
             </Text>
             <TextInput
               placeholder="Tìm kiếm cây trồng"

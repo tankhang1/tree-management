@@ -24,6 +24,7 @@ import { useForm } from "@mantine/form";
 import {
   IconArrowLeft,
   IconPhoto,
+  IconSearch,
   IconUpload,
   IconX,
 } from "@tabler/icons-react";
@@ -32,6 +33,10 @@ import { useNavigate } from "react-router-dom";
 import SeedCard from "./components/SeedCard";
 import { Dropzone, IMAGE_MIME_TYPE } from "@mantine/dropzone";
 import ConfirmStep from "./components/ConfirmStep";
+import { cropOptions } from "../../../AreaManagementPage/Block/Add";
+import CropCards from "../../../AreaManagementPage/Region/Add/components/CropCards";
+import SeedCards from "../../../AreaManagementPage/Region/Add/components/SeedCards";
+import { seedOptions } from "../../../AreaManagementPage/Row/Add";
 const plantVarieties = [
   {
     id: "v1",
@@ -109,16 +114,24 @@ const PlantManagementTreeAddPage = () => {
               placeholder="Chọn nhóm cây trồng"
               radius={4}
             />
-            <Select
-              label="Danh mục cây trồng"
-              placeholder="Chọn danh mục cây trồng"
+            <Text fw={500} fz={15}>
+              Danh mục cây trồng (chọn một)
+            </Text>
+            <TextInput
+              placeholder="Tìm kiếm danh mục cây"
               radius={4}
+              leftSection={<IconSearch size={18} />}
             />
-            <Select
-              label="Giống cây"
-              placeholder="Chọn giống cây trồng"
+            <CropCards selected="" plants={cropOptions} onSelect={() => {}} />
+            <Text fw={500} fz={15}>
+              Giống cây trồng (chọn một)
+            </Text>
+            <TextInput
+              leftSection={<IconSearch size={18} />}
               radius={4}
+              placeholder="Tìm kiếm giống cây trồng"
             />
+            <SeedCards selected="" seeds={seedOptions} onSelect={() => {}} />
             <TextInput
               label="Mã cây"
               placeholder="Mã cây"
@@ -128,7 +141,7 @@ const PlantManagementTreeAddPage = () => {
             />
             <Stack>
               <Select
-                label="Hạt giống cây"
+                label="Hạt giống cây (chọn một)"
                 placeholder="Chọn giống cây"
                 radius={4}
               />

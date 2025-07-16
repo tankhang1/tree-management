@@ -1,6 +1,5 @@
 import {
   IconBook2,
-  IconBuildingFactory,
   IconBuildingStore,
   IconCalendarWeek,
   IconCoin,
@@ -15,6 +14,7 @@ import {
   IconUsersGroup,
   IconTrees,
   IconMap2,
+  IconBox,
 } from "@tabler/icons-react";
 import { PATH } from "./path.constants";
 
@@ -129,19 +129,19 @@ export const NAV_BAR = [
     children: [
       { label: "Phòng ban", link: PATH.HR_DEPARTMENT },
       { label: "Vị trí", link: PATH.HR_POSITION },
-      { label: "Tổ đội", link: PATH.HR_TEAM },
-      { label: "Nhân viên", link: PATH.HR_EMPLOYEE },
+      { label: "Đội nhóm", link: PATH.HR_TEAM },
+      { label: "Nhân sự", link: PATH.HR_EMPLOYEE },
     ],
   },
-  {
-    label: "Quản lý nhà máy",
-    icon: IconBuildingFactory,
-    link: PATH.FACTORY_MANAGEMENT,
-    children: [
-      { label: "Nhà máy", link: PATH.FACTORY_MAIN },
-      { label: "Lịch sử chỉnh sửa", link: PATH.FACTORY_HISTORY },
-    ],
-  },
+  // {
+  //   label: "Quản lý nhà máy",
+  //   icon: IconBuildingFactory,
+  //   link: PATH.FACTORY_MANAGEMENT,
+  //   children: [
+  //     { label: "Nhà máy", link: PATH.FACTORY_MAIN },
+  //     { label: "Lịch sử chỉnh sửa", link: PATH.FACTORY_HISTORY },
+  //   ],
+  // },
   {
     label: "Quản lý máy móc",
     icon: IconTractor,
@@ -167,14 +167,25 @@ export const NAV_BAR = [
     link: PATH.SUPPLY_MANAGEMENT,
   },
   {
+    label: "Quản lý phân bón",
+    icon: IconBox,
+    link: "12123",
+    children: [
+      { label: "Loại phân bón", link: PATH.STOCK_SUPPLY },
+      { label: "Thông tin phân bón", link: PATH.STOCK_SUPPLY },
+    ],
+  },
+  {
     label: "Quản lý kho",
     icon: IconCoin,
     link: PATH.STOCK_MANAGEMENT,
     children: [
+      { label: "Khu vực quản lý", link: PATH.STOCK_SUPPLY },
       { label: "Xuất/nhập vật tư", link: PATH.STOCK_SUPPLY },
       { label: "Xuất/nhập thuốc", link: PATH.STOCK_PESTICIDE },
       { label: "Xuất/nhập máy móc", link: PATH.STOCK_MACHINE },
       { label: "Xuất/nhập hạt giống", link: PATH.STOCK_SEED },
+      { label: "Xuất/nhập phân", link: PATH.STOCK_SEED },
     ],
   },
   {

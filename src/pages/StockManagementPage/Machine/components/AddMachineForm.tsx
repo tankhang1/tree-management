@@ -5,9 +5,15 @@ import {
   Stack,
   Textarea,
   NumberInput,
+  Badge,
 } from "@mantine/core";
 import { DatePickerInput } from "@mantine/dates";
 import { useForm } from "@mantine/form";
+import {
+  IconCancel,
+  IconInputSpark,
+  IconTruckDelivery,
+} from "@tabler/icons-react";
 
 // Mock danh sách máy móc và nhân viên
 const machineOptions = [
@@ -46,6 +52,33 @@ const AddMachineForm = () => {
   return (
     <form>
       <Stack gap="xs">
+        <Group>
+          <Button
+            radius={4}
+            variant="outline"
+            onClick={() => form.setFieldValue("type", "xuất")}
+            leftSection={<IconTruckDelivery />}
+          >
+            Xuất
+          </Button>
+          <Button
+            onClick={() => form.setFieldValue("type", "nhập")}
+            radius={4}
+            variant="outline"
+            leftSection={<IconInputSpark />}
+          >
+            Nhập
+          </Button>
+          <Button
+            radius={4}
+            onClick={() => form.setFieldValue("type", "huỷ")}
+            color="red"
+            variant="outline"
+            leftSection={<IconCancel />}
+          >
+            Huỷ
+          </Button>
+        </Group>
         <Select
           label="Máy móc"
           placeholder="Chọn máy"
@@ -64,15 +97,24 @@ const AddMachineForm = () => {
             {...form.getInputProps("quantity")}
             required
           />
-          <Select
-            label="Loại phiếu"
-            data={transactionTypes}
-            radius={4}
-            {...form.getInputProps("type")}
-            required
-          />
         </Group>
 
+        {form.getValues().type !== "xuất" && (
+          <Select
+            label="Kho xuất hàng"
+            data={["Kho A", "Kho B"]}
+            radius={4}
+            {...form.getInputProps("staffId")}
+          />
+        )}
+        {form.getValues().type !== "nhập" && (
+          <Select
+            label="Kho nhập hàng"
+            data={["Kho A", "Kho B"]}
+            radius={4}
+            {...form.getInputProps("staffId")}
+          />
+        )}
         <DatePickerInput
           label="Ngày thực hiện"
           radius={4}

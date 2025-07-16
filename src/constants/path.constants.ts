@@ -163,6 +163,7 @@ export const PATH = {
   SUPPLY_MANAGEMENT: "/supply-management",
 
   // Stock Management
+  STOCK_AREA: "/stock-area",
   STOCK_MANAGEMENT: "/stock-management",
   STOCK_SUPPLY: "/stock-management/supply",
   STOCK_PESTICIDE: "/stock-management/pesticide",

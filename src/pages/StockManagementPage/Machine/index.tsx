@@ -15,7 +15,6 @@ import {
   IconEdit,
   IconEye,
   IconFileExcel,
-  IconTrash,
 } from "@tabler/icons-react";
 import type { MRT_ColumnDef } from "mantine-react-table";
 import Table from "../../../components/Table";
@@ -106,9 +105,6 @@ const StockManagementMachinePage = () => {
             </Menu.Item>
             <Menu.Item leftSection={<IconEdit size={18} color="green" />}>
               Chỉnh sửa
-            </Menu.Item>
-            <Menu.Item leftSection={<IconTrash size={18} />} color="red">
-              Xoá
             </Menu.Item>
           </Menu.Dropdown>
         </Menu>

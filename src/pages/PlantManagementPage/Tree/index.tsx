@@ -140,7 +140,7 @@ const PlantManagementTreePage = () => {
 
   return (
     <Stack gap="lg">
-      <Group justify="space-between" px={"sm"}>
+      <Group justify="space-between">
         <Title flex={1} order={2}>
           Quản lý cây trồng
         </Title>

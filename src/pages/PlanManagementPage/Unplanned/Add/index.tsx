@@ -12,18 +12,43 @@ import {
   ActionIcon,
   Stepper,
   Text,
+  Modal,
+  Radio,
+  Autocomplete,
 } from "@mantine/core";
 import { DateInput } from "@mantine/dates";
 import { useForm } from "@mantine/form";
-import { IconArrowLeft, IconPlus } from "@tabler/icons-react";
+import {
+  IconArrowLeft,
+  IconPlus,
+  IconSearch,
+  IconTrash,
+  IconUser,
+} from "@tabler/icons-react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import ConfirmStep from "./components/ConfirmStep";
-
+import { useDisclosure } from "@mantine/hooks";
+const employees = [
+  {
+    name: "Nguyễn Văn A",
+    role: "Tổ trưởng",
+    department: "Ban kỹ thuật",
+  },
+  {
+    name: "Trần Thị B",
+    role: "Giám đốc",
+    department: "Ban tài chính",
+  },
+];
 const PlanManagementUnplannedAddPage = () => {
   const navigate = useNavigate();
   const [active, setActive] = useState(0);
-
+  const [
+    openedFilterEmployee,
+    { open: openFilterEmployee, close: closeFilterEmployee },
+  ] = useDisclosure(false);
+  const [mode, setMode] = useState<"group" | "dept">("group");
   const form = useForm({
     initialValues: {
       name: "",
@@ -46,7 +71,10 @@ const PlanManagementUnplannedAddPage = () => {
     quantity: 1,
     unit: "",
   });
-
+  const options = employees.map((e) => ({
+    value: e.name,
+    label: `${e.name} - [${e.role}] - [${e.department}, Ban kinh doanh]`,
+  }));
   const handleAddResource = () => {
     if (!newResource.name || newResource.quantity <= 0) return;
     //@ts-expect-error no check
@@ -132,30 +160,80 @@ const PlanManagementUnplannedAddPage = () => {
               {...form.getInputProps("stage")}
             />
 
-            <MultiSelect
-              label="Phòng ban"
-              placeholder="Chọn nhiều phòng ban"
-              radius={4}
-              data={["Chăm sóc cây", "Phòng BVTV", "Vận hành"]}
-              {...form.getInputProps("departments")}
-            />
-
-            <MultiSelect
-              label="Nhân sự"
-              placeholder="Chọn nhân sự từ phòng ban"
-              radius={4}
-              data={["Nguyễn Văn A", "Trần Thị B"]}
-              {...form.getInputProps("employees")}
-            />
-
-            <Select
-              label="Người kiểm định chất lượng"
-              placeholder="Chọn người kiểm định (không bắt buộc)"
-              radius={4}
-              data={["Phạm Văn B", "Lê Kiểm Tra"]}
-              clearable
-              {...form.getInputProps("supervisor")}
-            />
+            <Stack gap={"xs"}>
+              <Group>
+                <Text fw={"500"} fz={15}>
+                  Nhân sự
+                </Text>
+                <Button
+                  variant="light"
+                  radius={4}
+                  onClick={openFilterEmployee}
+                  leftSection={<IconUser size={18} />}
+                >
+                  Chọn nhân sự
+                </Button>
+              </Group>
+              <Group mt="md">
+                {employees.map((emp, idx) => (
+                  <Card key={idx} shadow="sm" radius="md" withBorder>
+                    <Group justify="space-between" align="flex-start">
+                      <Stack gap={2}>
+                        <Group>
+                          <Title order={5}>{emp.name}</Title>
+                          <ActionIcon variant="light" size={18} color={"red"}>
+                            <IconTrash size={14} />
+                          </ActionIcon>
+                        </Group>
+                        <Text size="sm" c="dimmed">
+                          Nhân viên
+                        </Text>
+                        <Text size="sm" c="dimmed">
+                          {emp.department}
+                        </Text>
+                      </Stack>
+                    </Group>
+                  </Card>
+                ))}
+              </Group>
+            </Stack>
+            <Stack gap={"xs"}>
+              <Group>
+                <Text fw={"500"} fz={15}>
+                  Người kiểm định chất lượng
+                </Text>
+                <Button
+                  variant="light"
+                  radius={4}
+                  onClick={openFilterEmployee}
+                  leftSection={<IconUser size={18} />}
+                >
+                  Chọn người kiểm định chất lượng
+                </Button>
+              </Group>
+              <Group mt="md">
+                {employees.map((emp, idx) => (
+                  <Card key={idx} shadow="sm" radius="md" withBorder>
+                    <Group justify="space-between" align="flex-start">
+                      <Stack gap={2}>
+                        <Group>
+                          <Title order={5}>{emp.name}</Title>
+                          <ActionIcon variant="light" size={18} color={"red"}>
+                            <IconTrash size={14} />
+                          </ActionIcon>
+                        </Group>
+                        <Text size="sm" c="dimmed">
+                          {emp.role}
+                        </Text>
+                        <Text size="sm" c="dimmed">
+                          {emp.department}
+                        </Text>
+                      </Stack>
+                    </Group>
+                  </Card>
+                ))}
+              </Group>
+            </Stack>
           </Stack>
         )}
 
@@ -255,6 +333,65 @@ const PlanManagementUnplannedAddPage = () => {
           )}
         </Group>
       </form>
+      <Modal
+        opened={openedFilterEmployee}
+        onClose={closeFilterEmployee}
+        title={<Text fw={"bold"}>Lọc nhân sự</Text>}
+      >
+        <Stack gap={"xs"}>
+          <Radio.Group
+            label="Phương thức lọc"
+            value={mode}
+            onChange={(val) => setMode(val as "group" | "dept")}
+          >
+            <Radio value="group" mb={"xs"} label="Chọn theo đội nhóm" />
+            <Radio value="dept" label="Chọn theo phòng ban và vai trò" />
+          </Radio.Group>
+
+          {mode === "group" && (
+            <MultiSelect
+              label="Chọn đội nhóm"
+              radius={4}
+              data={["Nhóm Canh tác", "Nhóm Vật tư"]}
+            />
+          )}
+
+          {mode === "dept" && (
+            <>
+              <MultiSelect
+                label="Chọn phòng ban"
+                radius={4}
+                data={["Ban tài chính", "Ban kĩ thuật", "Ban kế hoạch"]}
+              />
+              <MultiSelect
+                label="Chọn vai trò"
+                radius={4}
+                data={["Giám đốc", "Tổ trưởng", "Trưởng phòng"]}
+              />
+            </>
+          )}
+          <Autocomplete
+            label="Tìm kiếm nhân sự"
+            placeholder="Nhập tên hoặc chức vụ..."
+            leftSection={<IconSearch size={18} />}
+            radius={4}
+            value="Nguyễn Văn A"
+            data={options}
+          />
+        </Stack>
+
+        <Group mt="md" justify="flex-end">
+          <Button
+            radius={4}
+            variant="outline"
+            color="red"
+            onClick={closeFilterEmployee}
+          >
+            Huỷ
+          </Button>
+          <Button radius={4}>Xác nhận</Button>
+        </Group>
+      </Modal>
     </Card>
   );
 };

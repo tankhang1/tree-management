@@ -97,6 +97,8 @@ const PesticideManagementMainAddPage = () => {
 
         <Stepper.Step label="Bước 2" description="Thông tin thuốc">
           <Stack>
+            {/**Filter theo loại thuốc */}
+            <Select label="Hoạt chất" radius={4} />
             <Stack gap={"xs"}>
               <Text>🧪 Thông tin thuốc</Text>
               <SunEditor
