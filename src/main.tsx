@@ -154,6 +154,8 @@ import StockManagementAddDeliveryPage from "./pages/StockManagementPage/Delivery
 import StockManagementDeliveryDetailPage from "./pages/StockManagementPage/Delivery/Detail/index.tsx";
 import CompanyPage from "./pages/CompanyPage/index.tsx";
 import VendorPage from "./pages/VendorPage/index.tsx";
+import CompanyDetailPage from "./pages/CompanyPage/Detail/index.tsx";
+import { CompanyAddPage } from "./pages/CompanyPage/Add/index.tsx";
 const theme: MantineThemeOverride = {
   fontFamily: "MyFont, sans-serif",
   primaryColor: "brand",
@@ -554,6 +556,8 @@ const ROUTES = [
     element={<StockManagementDeliveryDetailPage />}
   />,
   <Route path={PATH.COMPANY} element={<CompanyPage />} />,
+  <Route path={PATH.COMPANY_DETAIL} element={<CompanyDetailPage />} />,
+  <Route path={PATH.COMPANY_ADD} element={<CompanyAddPage />} />,
   <Route path={PATH.VENDOR} element={<VendorPage />} />,
 ];
 

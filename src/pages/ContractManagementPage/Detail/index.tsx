@@ -120,7 +120,7 @@ const ContractManagementDetailPage = () => {
           )}
 
           <Divider
-            label={<Text fw={600}>🧰 Tài nguyên liên quan</Text>}
+            label={<Text fw={600}>🧰 Tài sản liên quan</Text>}
             labelPosition="left"
             my="sm"
           />

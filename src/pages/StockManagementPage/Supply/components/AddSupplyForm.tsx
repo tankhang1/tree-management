@@ -110,7 +110,11 @@ const AddSupplyForm = ({ onFilter }: TAddSupplyForm) => {
             required
             {...form.getInputProps("unit")}
           />
-          <Select label="Quy cách đóng gói" radius={4} required />
+          <Select
+            radius={4}
+            label="Quy cách đóng gói"
+            data={["Hộp", "Chai", "Lọ", "Gói"]}
+          />
         </Group>
         {form.getValues().type === "huỷ" && (
           <Select

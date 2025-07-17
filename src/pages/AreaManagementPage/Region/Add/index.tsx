@@ -16,9 +16,11 @@ import {
   SimpleGrid,
   Checkbox,
   TextInput,
+  Radio,
+  MultiSelect,
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
-import { IconArrowLeft, IconSearch } from "@tabler/icons-react";
+import { IconArrowLeft, IconSearch, IconUser } from "@tabler/icons-react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import RegionCardSelector from "./components/RegionCards";
@@ -26,6 +28,7 @@ import CropCards from "./components/CropCards";
 import SeedCards from "./components/SeedCards";
 import SeedDetailCard from "./components/SeedDetailCard";
 import LotCard from "./components/LotCard";
+import { useDisclosure } from "@mantine/hooks";
 export interface AreaOption {
   code: string;
   name: string;
@@ -146,6 +149,18 @@ const regionOptions: RegionOption[] = [
     terrain: ["Thấp", "Trũng"],
   },
 ];
+const employees = [
+  {
+    name: "Nguyễn Văn A",
+    role: "Tổ trưởng",
+    department: "Ban kỹ thuật",
+  },
+  {
+    name: "Trần Thị B",
+    role: "Giám đốc",
+    department: "Ban tài chính",
+  },
+];
 const seedOptions: SeedOption[] = [
   {
     code: "VAR01",
@@ -238,6 +253,12 @@ const lotOptions: TLotOption[] = [
 ];
 const AreaManagementAddRegionPage = () => {
   const navigate = useNavigate();
+  const [
+    openedFilterEmployee,
+    { open: openFilterEmployee, close: closeFilterEmployee },
+  ] = useDisclosure(false);
+  const [mode, setMode] = useState<"group" | "dept">("group");
+
   const [active, setActive] = useState(0);
   const [opened, setOpened] = useState(false);
   const [selectedLots, setSelectedLots] = useState<string[]>([]);
@@ -322,7 +343,10 @@ const AreaManagementAddRegionPage = () => {
       ],
     },
   });
-
+  const options = employees.map((e) => ({
+    value: e.name,
+    label: `${e.name} - [${e.role}] - [${e.department}, Ban kinh doanh]`,
+  }));
   const nextStep = () => {
     if (active === 0) {
       const plots: PlotType[] = form.values.areas.map((area, i) => ({
@@ -374,12 +398,19 @@ const AreaManagementAddRegionPage = () => {
       <form onSubmit={form.onSubmit(handleSubmit)}>
         {active === 0 && (
           <Stack mt="md">
-            <Select
-              label="Nhân viên quản lý"
-              data={["Nhân viên A", "Nhân viên B"]}
-              {...form.getInputProps("region.employee")}
-              radius={4}
-            />
+            <Group>
+              <Text fw={"500"} fz={15}>
+                Nhân viên quản lý
+              </Text>
+              <Button
+                variant="light"
+                radius={4}
+                onClick={openFilterEmployee}
+                leftSection={<IconUser size={18} />}
+              >
+                Chọn nhân viên quản lý
+              </Button>
+            </Group>
             <Stack gap={"xs"}>
               <Text fw={500} fz={15}>
                 Chọn phân bổ vùng trồng (chọn một)
@@ -762,6 +793,65 @@ const AreaManagementAddRegionPage = () => {
             <Button radius={4}>Xác nhận</Button>
           </Group>
         </Stack>
+      </Modal>
+      <Modal
+        opened={openedFilterEmployee}
+        onClose={closeFilterEmployee}
+        title={<Text fw={"bold"}>Lọc nhân sự</Text>}
+      >
+        <Stack gap={"xs"}>
+          <Radio.Group
+            label="Phương thức lọc"
+            value={mode}
+            onChange={(val) => setMode(val as "group" | "dept")}
+          >
+            <Radio value="group" mb={"xs"} label="Chọn theo đội nhóm" />
+            <Radio value="dept" label="Chọn theo phòng ban và vai trò" />
+          </Radio.Group>
+
+          {mode === "group" && (
+            <MultiSelect
+              label="Chọn đội nhóm"
+              radius={4}
+              data={["Nhóm Canh tác", "Nhóm Vật tư"]}
+            />
+          )}
+
+          {mode === "dept" && (
+            <>
+              <MultiSelect
+                label="Chọn phòng ban"
+                radius={4}
+                data={["Ban tài chính", "Ban kĩ thuật", "Ban kế hoạch"]}
+              />
+              <MultiSelect
+                label="Chọn vai trò"
+                radius={4}
+                data={["Giám đốc", "Tổ trưởng", "Trưởng phòng"]}
+              />
+            </>
+          )}
+          <Autocomplete
+            label="Tìm kiếm nhân sự"
+            placeholder="Nhập tên hoặc chức vụ..."
+            leftSection={<IconSearch size={18} />}
+            radius={4}
+            value="Nguyễn Văn A"
+            data={options}
+          />
+        </Stack>
+
+        <Group mt="md" justify="flex-end">
+          <Button
+            radius={4}
+            variant="outline"
+            color="red"
+            onClick={closeFilterEmployee}
+          >
+            Huỷ
+          </Button>
+          <Button radius={4}>Xác nhận</Button>
+        </Group>
       </Modal>
     </Card>
   );

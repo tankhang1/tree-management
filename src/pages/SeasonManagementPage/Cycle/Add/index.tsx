@@ -19,6 +19,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import SunEditor from "suneditor-react";
 import ConfirmStep from "./components/ConfirmStep";
+import CatalogList from "../../../../components/CatalogList";
 const SeasonManagementCycleAddPage = () => {
   const navigate = useNavigate();
   const [active, setActive] = useState(0);
@@ -80,13 +81,7 @@ const SeasonManagementCycleAddPage = () => {
                 radius={4}
               />
 
-              <Select
-                label="Danh mục cây trồng"
-                placeholder="Chọn danh mục cây trồng"
-                {...form.getInputProps("varietyId")}
-                radius={4}
-              />
-
+              <CatalogList />
               <NumberInput
                 label="Thời gian diễn ra chu kì ( ngày )"
                 placeholder="Nhập số ngày"

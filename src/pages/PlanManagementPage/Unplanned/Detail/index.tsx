@@ -130,7 +130,7 @@ const PlanManagementUnplannedDetailPage = () => {
             <Text>{assignment.supervisor || "--"}</Text>
           </Group>
 
-          <Divider label="Tài nguyên sử dụng" labelPosition="left" my="sm" />
+          <Divider label="Tài sản sử dụng" labelPosition="left" my="sm" />
 
           {[
             {

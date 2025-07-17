@@ -358,7 +358,7 @@ const PlanManagementAssignAddPage = () => {
                     </Stack>
 
                     <Divider
-                      label="Tài nguyên cho giai đoạn này"
+                      label="Tài sản cho giai đoạn này"
                       labelPosition="left"
                       mt="md"
                     />
@@ -367,7 +367,7 @@ const PlanManagementAssignAddPage = () => {
                       <Group key={i} gap="xs" mt="xs">
                         <Select
                           data={["Phân bón", "Thuốc BVTV", "Thiết bị"]}
-                          placeholder="Loại tài nguyên"
+                          placeholder="Loại tài sản"
                           radius={4}
                           value={res.type}
                           onChange={(val) => {
@@ -419,7 +419,7 @@ const PlanManagementAssignAddPage = () => {
                         setFormDataByStage(newStages);
                       }}
                     >
-                      Thêm tài nguyên
+                      Thêm tài sản
                     </Button>
                   </Card>
                 ))}

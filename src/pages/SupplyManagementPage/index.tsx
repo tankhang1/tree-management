@@ -109,6 +109,7 @@ const SupplyManagementPage = () => {
 
       <Table columns={supplyTypeColumns} data={supplyTypes} />
       <Modal
+        size={"lg"}
         opened={openedSupplyForm}
         onClose={closeSupplyForm}
         title={<Text fw={"bold"}>Thêm mới vật tư</Text>}

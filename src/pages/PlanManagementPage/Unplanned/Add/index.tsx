@@ -102,7 +102,7 @@ const PlanManagementUnplannedAddPage = () => {
       <form onSubmit={form.onSubmit((values) => console.log(values))}>
         <Stepper active={active} onStepClick={setActive} mb="xl">
           <Stepper.Step label="Bước 1" description="Thông tin chung" />
-          <Stepper.Step label="Bước 2" description="Tài nguyên" />
+          <Stepper.Step label="Bước 2" description="Tài sản" />
           <Stepper.Step label="Bước 3" description="Xác nhận" />
         </Stepper>
 
@@ -240,14 +240,14 @@ const PlanManagementUnplannedAddPage = () => {
         {active === 1 && (
           <Stack>
             <Divider
-              label="Tài nguyên sử dụng (tùy chọn)"
+              label="Tài sản sử dụng (tùy chọn)"
               labelPosition="left"
               my="sm"
             />
 
             <Group align="flex-end">
               <Select
-                label="Loại tài nguyên"
+                label="Loại tài sản"
                 radius={4}
                 data={["Vật tư", "Thuốc BVTV", "Thiết bị"]}
                 value={newResource.type}
@@ -258,7 +258,7 @@ const PlanManagementUnplannedAddPage = () => {
               />
               <TextInput
                 label="Tên"
-                placeholder="Tên tài nguyên"
+                placeholder="Tên tài sản"
                 radius={4}
                 value={newResource.name}
                 onChange={(e) =>

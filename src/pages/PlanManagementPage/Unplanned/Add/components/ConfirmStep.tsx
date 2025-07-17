@@ -100,7 +100,7 @@ const ConfirmStep = () => {
         </Stack>
       </Card>
 
-      <Divider label="Tài nguyên sử dụng" labelPosition="center" my="md" />
+      <Divider label="Tài sản sử dụng" labelPosition="center" my="md" />
       <Card withBorder p="md" radius="md">
         <Grid gutter="sm">
           {data.resources.map((r, i) => (

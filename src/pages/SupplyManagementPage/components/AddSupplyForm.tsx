@@ -1,5 +1,6 @@
-import { Button, Group, Select, Stack, TextInput } from "@mantine/core";
+import { Button, Group, ScrollArea, Stack, TextInput } from "@mantine/core";
 import { useForm } from "@mantine/form";
+import { VendorList } from "../../../components/VendorList";
 
 const AddSupplyForm = () => {
   const form = useForm({
@@ -16,7 +17,7 @@ const AddSupplyForm = () => {
   });
   return (
     <form>
-      <Stack gap="xs">
+      <Stack gap="xs" w={"100%"}>
         <TextInput
           label="Mã vật tư"
           radius={4}
@@ -29,12 +30,7 @@ const AddSupplyForm = () => {
           {...form.getInputProps("name")}
           required
         />
-        <Select
-          label="Chọn nhà cung cấp"
-          radius={4}
-          {...form.getInputProps("supplier")}
-          required
-        />
+        <VendorList />
         <Group justify="right" mt="md">
           <Button radius={4}>Lưu</Button>
         </Group>

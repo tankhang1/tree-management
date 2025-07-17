@@ -215,7 +215,7 @@ const ConfirmStep = () => {
                     ))}
                   </Group>
 
-                  <Divider label="Tài nguyên" labelPosition="left" my="xs" />
+                  <Divider label="Tài sản" labelPosition="left" my="xs" />
                   {stage.resources.map((res, i) => (
                     <Text key={i} size="sm">
                       📌 {res.type}: {res.amount} {res.unit || ""}

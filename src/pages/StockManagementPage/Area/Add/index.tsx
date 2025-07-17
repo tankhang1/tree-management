@@ -15,6 +15,7 @@ import { useForm } from "@mantine/form";
 import { useEffect, useState } from "react";
 import { IconMapPin, IconRuler, IconArrowLeft } from "@tabler/icons-react";
 import { useNavigate } from "react-router-dom";
+import { MapContainer, Polygon, TileLayer } from "react-leaflet";
 
 interface SubArea {
   id: string;
@@ -150,18 +151,35 @@ export default function StockManagementAddAreaPage() {
             required
             {...form.getInputProps("name")}
           />
-          <Group grow>
-            <NumberInput
+          <Group align="flex-end">
+            <TextInput
+              label="Latitude"
+              placeholder="10.762622"
               radius={4}
-              label="Vĩ độ"
-              {...form.getInputProps("latitude")}
+              flex={1}
             />
-            <NumberInput
+            <TextInput
+              label="Longitude"
+              placeholder="106.660172"
               radius={4}
-              label="Kinh độ"
-              {...form.getInputProps("longitude")}
+              flex={1}
             />
           </Group>
+
+          <Stack mt={"md"}>
+            <MapContainer
+              center={[10.762622, 106.660172]}
+              zoom={16}
+              style={{
+                height: "300px",
+                width: "100%",
+                borderRadius: 8,
+              }}
+            >
+              <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
+              <Polygon positions={[]} color="green" />
+            </MapContainer>
+          </Stack>
           <NumberInput
             radius={4}
             leftSection={<IconRuler size={18} />}
@@ -193,21 +211,39 @@ export default function StockManagementAddAreaPage() {
             <Stack gap={"xs"}>
               {subAreas.map((sub, index) => (
                 <Card key={sub.id} shadow="xs" radius="xs" withBorder>
-                  <Title order={5}>Khu phụ {index + 1}</Title>
-                  <Group grow mt="xs">
-                    <NumberInput
-                      label="Vĩ độ"
+                  <TextInput
+                    radius={4}
+                    label={`Tên khu vực phụ ${index + 1}`}
+                  ></TextInput>
+                  <Group mt="xs" align="flex-end">
+                    <TextInput
+                      label="Latitude"
+                      placeholder="10.762622"
                       radius={4}
-                      value={sub.latitude}
-                      onChange={(v) => updateSubArea(index, "latitude", v)}
+                      flex={1}
                     />
-                    <NumberInput
-                      label="Kinh độ"
+                    <TextInput
+                      label="Longitude"
+                      placeholder="106.660172"
                       radius={4}
-                      value={sub.longitude}
-                      onChange={(v) => updateSubArea(index, "longitude", v)}
+                      flex={1}
                     />
                   </Group>
+
+                  <Stack mt={"md"}>
+                    <MapContainer
+                      center={[10.762622, 106.660172]}
+                      zoom={16}
+                      style={{
+                        height: "300px",
+                        width: "100%",
+                        borderRadius: 8,
+                      }}
+                    >
+                      <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
+                      <Polygon positions={[]} color="green" />
+                    </MapContainer>
+                  </Stack>
                   <NumberInput
                     mt="xs"
                     radius={4}
@@ -265,6 +301,20 @@ export default function StockManagementAddAreaPage() {
                   readOnly
                 />
               </Group>
+              <Stack mt={"md"}>
+                <MapContainer
+                  center={[10.762622, 106.660172]}
+                  zoom={16}
+                  style={{
+                    height: "300px",
+                    width: "100%",
+                    borderRadius: 8,
+                  }}
+                >
+                  <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
+                  <Polygon positions={[]} color="green" />
+                </MapContainer>
+              </Stack>
               <NumberInput
                 radius={4}
                 label="Diện tích (m²)"
@@ -304,6 +354,20 @@ export default function StockManagementAddAreaPage() {
                         readOnly
                       />
                     </Group>
+                    <Stack mt={"md"}>
+                      <MapContainer
+                        center={[10.762622, 106.660172]}
+                        zoom={16}
+                        style={{
+                          height: "300px",
+                          width: "100%",
+                          borderRadius: 8,
+                        }}
+                      >
+                        <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
+                        <Polygon positions={[]} color="green" />
+                      </MapContainer>
+                    </Stack>
                     <NumberInput
                       label="Diện tích (m²)"
                       value={s.area}

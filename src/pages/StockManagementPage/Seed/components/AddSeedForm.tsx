@@ -109,7 +109,11 @@ const AddSeedForm = ({ onFilter }: TAddSeedForm) => {
             required
           />
           <TextInput label="Đơn vị" radius={4} disabled value={unit} />
-          <Select label="Quy cách đóng gói" required radius={4} />
+          <Select
+            radius={4}
+            label="Quy cách đóng gói"
+            data={["Hộp", "Chai", "Lọ", "Gói"]}
+          />
         </Group>
         {form.getValues().type === "huỷ" && (
           <Select

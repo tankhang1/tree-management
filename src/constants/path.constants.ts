@@ -179,6 +179,8 @@ export const PATH = {
   STOCK_SEED: "/stock-management/seed",
   // Company & Stack Holder
   COMPANY: "/company",
+  COMPANY_DETAIL: "/company/detail",
+  COMPANY_ADD: "/company/add",
   VENDOR: "/vendor",
   // Purchase & Sales
   PURCHASE: "/purchase",

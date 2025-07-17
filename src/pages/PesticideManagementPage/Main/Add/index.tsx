@@ -2,6 +2,7 @@ import {
   Button,
   Card,
   Group,
+  Paper,
   Select,
   Stack,
   Stepper,
@@ -13,8 +14,8 @@ import { useForm } from "@mantine/form";
 import { IconArrowLeft } from "@tabler/icons-react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import SunEditor from "suneditor-react";
 import "suneditor/dist/css/suneditor.min.css";
+import Document from "../../../../components/Document";
 
 // Giả lập loại thuốc từ danh mục V.1
 const pesticideTypes = [
@@ -99,64 +100,16 @@ const PesticideManagementMainAddPage = () => {
           <Stack>
             {/**Filter theo loại thuốc */}
             <Select label="Hoạt chất" radius={4} />
-            <Stack gap={"xs"}>
-              <Text>🧪 Thông tin thuốc</Text>
-              <SunEditor
-                height="200px"
-                setOptions={{
-                  buttonList: [
-                    ["formatBlock", "bold", "italic", "underline", "strike"],
-                    ["fontColor", "hiliteColor"],
-                    ["align", "list", "table"],
-                    ["link", "image", "video"],
-                    ["undo", "redo"],
-                  ],
-                }}
-                onChange={(content) => form.setFieldValue("info", content)}
-                defaultValue={form.values.info}
-              />
-            </Stack>
-
-            <Stack>
-              <Text>🧬 Thành phần công thức</Text>
-              <SunEditor
-                height="200px"
-                setOptions={{
-                  buttonList: [
-                    ["formatBlock", "bold", "italic", "underline", "strike"],
-                    ["fontColor", "hiliteColor"],
-                    ["align", "list", "table"],
-                    ["link", "image", "video"],
-                    ["undo", "redo"],
-                  ],
-                }}
-                onChange={(content) =>
-                  form.setFieldValue("ingredients", content)
-                }
-                defaultValue={form.values.ingredients}
-              />
-            </Stack>
+            <Document title1="Thông tin thuốc" title2="Nội dung thuốc" />
+            <Document
+              title1="Thành phần công thức"
+              title2="Nội dung công thức"
+            />
           </Stack>
         </Stepper.Step>
 
         <Stepper.Step label="Bước 3" description="Hướng dẫn sử dụng">
-          <Stack gap={"xs"}>
-            <Text>📋 Hướng dẫn sử dụng</Text>
-            <SunEditor
-              height="200px"
-              setOptions={{
-                buttonList: [
-                  ["formatBlock", "bold", "italic", "underline", "strike"],
-                  ["fontColor", "hiliteColor"],
-                  ["align", "list", "table"],
-                  ["link", "image", "video"],
-                  ["undo", "redo"],
-                ],
-              }}
-              onChange={(content) => form.setFieldValue("usage", content)}
-              defaultValue={form.values.usage}
-            />
-          </Stack>
+          <Document title1="Hướng dẫn sử dụng" title2="Nội dung" />
         </Stepper.Step>
         <Stepper.Step label="Bước 4" description="Xác nhận thông tin">
           <Stack gap="xs">
@@ -181,38 +134,61 @@ const PesticideManagementMainAddPage = () => {
             <Title order={5} mt="sm">
               🧪 Thông tin thuốc
             </Title>
-            <div
-              dangerouslySetInnerHTML={{ __html: form.values.info }}
-              style={{
-                border: "1px solid #ccc",
-                padding: "8px",
-                borderRadius: 4,
-              }}
-            />
 
+            <Paper
+              shadow="xs"
+              radius="4"
+              p="md"
+              withBorder
+              style={{
+                backgroundColor: "#f9f9f9",
+              }}
+            >
+              <div
+                dangerouslySetInnerHTML={{ __html: form.values.info }}
+                style={{
+                  lineHeight: 1.6,
+                }}
+              />
+            </Paper>
             <Title order={5} mt="sm">
               🧬 Thành phần
             </Title>
-            <div
-              dangerouslySetInnerHTML={{ __html: form.values.ingredients }}
+            <Paper
+              shadow="xs"
+              radius="4"
+              p="md"
+              withBorder
               style={{
-                border: "1px solid #ccc",
-                padding: "8px",
-                borderRadius: 4,
+                backgroundColor: "#f9f9f9",
               }}
-            />
-
+            >
+              <div
+                dangerouslySetInnerHTML={{ __html: form.values.info }}
+                style={{
+                  lineHeight: 1.6,
+                }}
+              />
+            </Paper>
             <Title order={5} mt="sm">
               📋 Hướng dẫn sử dụng
             </Title>
-            <div
-              dangerouslySetInnerHTML={{ __html: form.values.usage }}
+            <Paper
+              shadow="xs"
+              radius="4"
+              p="md"
+              withBorder
               style={{
-                border: "1px solid #ccc",
-                padding: "8px",
-                borderRadius: 4,
+                backgroundColor: "#f9f9f9",
               }}
-            />
+            >
+              <div
+                dangerouslySetInnerHTML={{ __html: form.values.info }}
+                style={{
+                  lineHeight: 1.6,
+                }}
+              />
+            </Paper>
           </Stack>
         </Stepper.Step>
       </Stepper>

@@ -1,13 +1,4 @@
-import {
-  ActionIcon,
-  Button,
-  Group,
-  Menu,
-  Modal,
-  Stack,
-  Text,
-  Title,
-} from "@mantine/core";
+import { ActionIcon, Button, Group, Menu, Stack, Title } from "@mantine/core";
 import {
   IconDotsVertical,
   IconEdit,
@@ -17,8 +8,8 @@ import {
 } from "@tabler/icons-react";
 import type { MRT_ColumnDef } from "mantine-react-table";
 import Table from "../../components/Table";
-import { useDisclosure } from "@mantine/hooks";
-import CompanyForm from "./components/CompanyForm";
+import { useNavigate } from "react-router-dom";
+import { PATH } from "../../constants/path.constants";
 type FarmerEntity = {
   id: string;
   name: string;
@@ -69,8 +60,14 @@ const farmerDataset: FarmerEntity[] = [
 ];
 
 const CompanyPage = () => {
-  const [openedAddCompany, { open: openAddCompany, close: closeAddCompany }] =
-    useDisclosure(false);
+  const navigate = useNavigate();
+
+  const onAddCompany = () => {
+    navigate(PATH.COMPANY_ADD);
+  };
+  const onCompanyDetail = () => {
+    navigate(PATH.COMPANY_DETAIL);
+  };
   const farmerColumns: MRT_ColumnDef<FarmerEntity>[] = [
     { accessorKey: "name", header: "Tên đơn vị" },
     { accessorKey: "type", header: "Loại hình" },
@@ -95,7 +92,10 @@ const CompanyPage = () => {
           </Menu.Target>
 
           <Menu.Dropdown>
-            <Menu.Item leftSection={<IconEye size={18} color="gray" />}>
+            <Menu.Item
+              onClick={onCompanyDetail}
+              leftSection={<IconEye size={18} color="gray" />}
+            >
               Chi tiết
             </Menu.Item>
             <Menu.Item leftSection={<IconEdit size={18} color="green" />}>
@@ -120,20 +120,13 @@ const CompanyPage = () => {
           <Button variant="outline" radius={4} leftSection={<IconFileExcel />}>
             Xuất File
           </Button>
-          <Button radius={4} onClick={openAddCompany}>
+          <Button radius={4} onClick={onAddCompany}>
             Thêm mới
           </Button>
         </Group>
       </Group>
 
       <Table columns={farmerColumns} data={farmerDataset} />
-      <Modal
-        opened={openedAddCompany}
-        onClose={closeAddCompany}
-        title={<Text fw={"bold"}>Tạo mới doanh nghiệp hộ / nông dân</Text>}
-      >
-        <CompanyForm />
-      </Modal>
     </Stack>
   );
 };

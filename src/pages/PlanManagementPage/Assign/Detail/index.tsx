@@ -135,7 +135,7 @@ const PlanManagementAssignDetailPage = () => {
               </Text>
 
               <Text mt={4} fw={600}>
-                Tài nguyên:
+                Tài sản:
               </Text>
               {s.resources.map((r, i) => (
                 <Group key={i} justify="space-between" pl="md">

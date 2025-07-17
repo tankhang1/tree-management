@@ -29,6 +29,7 @@ import { useState } from "react";
 import { MapContainer, Polygon, TileLayer } from "react-leaflet";
 import { useNavigate } from "react-router-dom";
 import { ConfirmStep } from "./components/ConfirmStep";
+import { CompanyList } from "../../../../components/CompanyList";
 type LatLng = [number, number];
 
 const MapManagementAddRegionPage = () => {
@@ -157,13 +158,7 @@ const MapManagementAddRegionPage = () => {
               required
               {...form.getInputProps("region.name")}
             />
-            <Select
-              radius={4}
-              label="Doanh nghiệp / Hộ nông dân"
-              searchable
-              data={["Doanh nghiệp A - XXXX", "Nông hộ B - X01"]}
-              {...form.getInputProps("region.orgUnit")}
-            />
+            <CompanyList />
             <NumberInput
               radius={4}
               label="Diện tích (m²)"

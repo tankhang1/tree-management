@@ -27,6 +27,7 @@ import {
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import SunEditor from "suneditor-react";
+import { VendorList } from "../../../../components/VendorList";
 
 const PlantManagementSeedAddPage = () => {
   const navigate = useNavigate();
@@ -100,13 +101,7 @@ const PlantManagementSeedAddPage = () => {
             required
           />
 
-          <Select
-            label="Nhà cung cấp"
-            placeholder="Công ty giống cây trồng"
-            data={["Green Seed Co.", "Trại giống Long An", "BioSeed Việt Nam"]}
-            {...form.getInputProps("supplier")}
-            radius={4}
-          />
+          <VendorList />
 
           <Select
             label="Xuất xứ (quốc gia)"

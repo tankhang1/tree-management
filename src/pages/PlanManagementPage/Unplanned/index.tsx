@@ -101,7 +101,7 @@ const PlanManagementUnplannedPage = () => {
     { accessorKey: "locationPath", header: "Vị trí thực hiện" },
     {
       accessorKey: "resources",
-      header: "Tài nguyên",
+      header: "Tài sản",
       Cell: ({ row }) => (
         <Stack gap="xs">
           {row.original.resources.map((r, i) => (
