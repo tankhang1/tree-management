@@ -1,9 +1,12 @@
 import { ActionIcon, Button, Group, Menu, Stack, Title } from "@mantine/core";
 import {
+  IconBuilding,
   IconDotsVertical,
   IconEdit,
   IconEye,
   IconFileExcel,
+  IconHome,
+  IconMap,
   IconTrash,
 } from "@tabler/icons-react";
 import type { MRT_ColumnDef } from "mantine-react-table";
@@ -125,7 +128,29 @@ const CompanyPage = () => {
           </Button>
         </Group>
       </Group>
-
+      <Group>
+        <Button
+          leftSection={<IconBuilding size={18} />}
+          variant="filled"
+          radius={4}
+        >
+          Doanh nghiệp
+        </Button>
+        <Button
+          leftSection={<IconHome size={18} />}
+          variant="outline"
+          radius={4}
+        >
+          Nông hộ
+        </Button>
+        <Button
+          leftSection={<IconMap size={18} />}
+          variant="outline"
+          radius={4}
+        >
+          Hợp tác xã
+        </Button>
+      </Group>
       <Table columns={farmerColumns} data={farmerDataset} />
     </Stack>
   );

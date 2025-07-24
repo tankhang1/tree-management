@@ -156,6 +156,11 @@ import CompanyPage from "./pages/CompanyPage/index.tsx";
 import VendorPage from "./pages/VendorPage/index.tsx";
 import CompanyDetailPage from "./pages/CompanyPage/Detail/index.tsx";
 import { CompanyAddPage } from "./pages/CompanyPage/Add/index.tsx";
+import HRManagementEmployeeAddPage from "./pages/HRManagementPage/Employee/Add/index.tsx";
+import HRManagementEmployeeDetailPage from "./pages/HRManagementPage/Employee/Detail/index.tsx";
+import SupplyManagementAddPage from "./pages/SupplyManagementPage/Add/index.tsx";
+import FertilizerManagementMainAddPage from "./pages/FertilizerManagementPage/Main/Add/index.tsx";
+import StockManagementIOPage from "./pages/StockManagementPage/Supply/Add/index.tsx";
 const theme: MantineThemeOverride = {
   fontFamily: "MyFont, sans-serif",
   primaryColor: "brand",
@@ -437,6 +442,28 @@ const ROUTES = [
     path={PATH.CONTRACT_MANAGEMENT}
     element={<ContractManagementPage />}
   />,
+  <Route path={PATH.CONTRACT_SALE} element={<ContractManagementPage />} />,
+  <Route path={PATH.CONTRACT_EXCHANGE} element={<ContractManagementPage />} />,
+  <Route path={PATH.CONTRACT_GIFT} element={<ContractManagementPage />} />,
+  <Route path={PATH.CONTRACT_LOAN} element={<ContractManagementPage />} />,
+  <Route path={PATH.CONTRACT_RENT} element={<ContractManagementPage />} />,
+  <Route path={PATH.CONTRACT_BORROW} element={<ContractManagementPage />} />,
+  <Route path={PATH.CONTRACT_SERVICE} element={<ContractManagementPage />} />,
+  <Route path={PATH.CONTRACT_TRANSPORT} element={<ContractManagementPage />} />,
+  <Route
+    path={PATH.CONTRACT_PROCESSING}
+    element={<ContractManagementPage />}
+  />,
+  <Route path={PATH.CONTRACT_STORAGE} element={<ContractManagementPage />} />,
+  <Route
+    path={PATH.CONTRACT_AUTHORIZATION}
+    element={<ContractManagementPage />}
+  />,
+  <Route
+    path={PATH.CONTRACT_PARTNERSHIP}
+    element={<ContractManagementPage />}
+  />,
+
   <Route
     path={PATH.CONTRACT_MANAGEMENT_DETAIL}
     element={<ContractManagementDetailPage />}
@@ -453,6 +480,14 @@ const ROUTES = [
   <Route path={PATH.HR_TEAM_DETAIL} element={<HRManagementTeamDetailPage />} />,
   <Route path={PATH.HR_ADD_TEAM} element={<HRManagementTeamAddPage />} />,
   <Route path={PATH.HR_EMPLOYEE} element={<HRManagementEmployeePage />} />,
+  <Route
+    path={PATH.HR_ADD_EMPLOYEE}
+    element={<HRManagementEmployeeAddPage />}
+  />,
+  <Route
+    path={PATH.HR_EMPLOYEE_DETAIL}
+    element={<HRManagementEmployeeDetailPage />}
+  />,
 
   <Route path={PATH.FACTORY_MANAGEMENT} element={<FactoryManagementPage />} />,
   <Route path={PATH.FACTORY_MAIN} element={<FactoryManagementMainPage />} />,
@@ -510,6 +545,10 @@ const ROUTES = [
   />,
 
   <Route path={PATH.SUPPLY_MANAGEMENT} element={<SupplyManagementPage />} />,
+  <Route
+    path={PATH.SUPPLY_MANAGEMENT_ADD}
+    element={<SupplyManagementAddPage />}
+  />,
   <Route path={PATH.STOCK_AREA} element={<StockManagementAreaPage />} />,
   <Route path={PATH.STOCK_ADD_AREA} element={<StockManagementAddAreaPage />} />,
   <Route
@@ -519,6 +558,7 @@ const ROUTES = [
 
   <Route path={PATH.STOCK_MANAGEMENT} element={<StockManagementPage />} />,
   <Route path={PATH.STOCK_SUPPLY} element={<StockManagementSupplyPage />} />,
+  <Route path={PATH.STOCK_MANAGEMENT_IO} element={<StockManagementIOPage />} />,
   <Route
     path={PATH.STOCK_PESTICIDE}
     element={<StockManagementPesticidePage />}
@@ -544,6 +584,10 @@ const ROUTES = [
     element={<FertilizerManagementMainPage />}
   />,
   <Route
+    path={PATH.FERTILIZER_MAIN_ADD}
+    element={<FertilizerManagementMainAddPage />}
+  />,
+  <Route
     path={PATH.STOCK_DELIVERY}
     element={<StockManagementDeliveryPage />}
   />,
@@ -556,6 +600,9 @@ const ROUTES = [
     element={<StockManagementDeliveryDetailPage />}
   />,
   <Route path={PATH.COMPANY} element={<CompanyPage />} />,
+  <Route path={PATH.COMPANY_CUSTOMER} element={<CompanyPage />} />,
+  <Route path={PATH.COMPANY_PARTNER} element={<CompanyPage />} />,
+
   <Route path={PATH.COMPANY_DETAIL} element={<CompanyDetailPage />} />,
   <Route path={PATH.COMPANY_ADD} element={<CompanyAddPage />} />,
   <Route path={PATH.VENDOR} element={<VendorPage />} />,

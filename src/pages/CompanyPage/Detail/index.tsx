@@ -1,4 +1,12 @@
-import { Group, Stack, Title, Text, Paper, Card, Button } from "@mantine/core";
+import {
+  Group,
+  Stack,
+  Title,
+  Text,
+  Card,
+  Button,
+  SimpleGrid,
+} from "@mantine/core";
 import { useState } from "react";
 import {
   IconUser,
@@ -77,93 +85,121 @@ const CompanyDetailPage = () => {
         </Button>
         <Title order={3}>Thông tin doanh nghiệp / hộ nông dân</Title>
       </Group>
-      <Stack>
-        <Paper withBorder p="md" radius="md">
-          <Stack gap="xs">
-            <Group>
+      <Stack gap="md">
+        {/* THÔNG TIN CƠ BẢN */}
+        <Stack>
+          <Title order={5}>📄 Thông tin cơ bản</Title>
+          <SimpleGrid cols={{ base: 1, sm: 2 }} spacing="xs">
+            <Group gap="xs">
               <IconBuildingFactory size={18} />
               <Text size="sm">Loại: {formData.type}</Text>
             </Group>
-            <Group>
+            <Group gap="xs">
               <IconId size={18} />
               <Text size="sm">Mã định danh: {formData.code}</Text>
             </Group>
-            <Group>
+            <Group gap="xs">
               <IconUser size={18} />
               <Text size="sm">Tên: {formData.name}</Text>
             </Group>
-            <Group>
+            <Group gap="xs">
               <IconUser size={18} />
               <Text size="sm">Thương hiệu: {formData.brand}</Text>
             </Group>
-            <Group>
+            <Group gap="xs">
               <IconUser size={18} />
               <Text size="sm">Người đại diện: {formData.representative}</Text>
             </Group>
-            <Group>
+            <Group gap="xs">
               <IconPhone size={18} />
               <Text size="sm">Số điện thoại: {formData.phone}</Text>
             </Group>
-            <Group>
+            <Group gap="xs">
               <IconMail size={18} />
               <Text size="sm">Email: {formData.email}</Text>
             </Group>
-            <Group>
+            <Group gap="xs">
               <IconMapPin size={18} />
               <Text size="sm">Địa chỉ: {formData.address}</Text>
             </Group>
-            <Group>
+            <Group gap="xs">
               <IconId size={18} />
               <Text size="sm">Mã số thuế: {formData.taxCode}</Text>
             </Group>
-            <Group>
+            <Group gap="xs">
               <IconMapPin size={18} />
               <Text size="sm">Địa chỉ thuế: {formData.taxAddress}</Text>
             </Group>
-            <Group>
+            <Group gap="xs">
               <Text size="sm">Phân loại: {formData.category}</Text>
             </Group>
-            <Group>
+            <Group gap="xs">
               <Text size="sm">Ghi chú: {formData.note}</Text>
             </Group>
-          </Stack>
-        </Paper>
+          </SimpleGrid>
+        </Stack>
 
-        <Title order={5} mt="md">
-          Chi nhánh
-        </Title>
-        <Group grow>
-          {branches.map((b, i) => (
-            <Paper key={i} withBorder p="md" radius="md">
-              <Stack gap="xs">
-                <Text size="sm">Tên: {b.name}</Text>
-                <Text size="sm">SĐT: {b.phone}</Text>
-                <Text size="sm">Email: {b.email}</Text>
-                <Text size="sm">Địa chỉ: {b.address}</Text>
-                <Text size="sm">MST: {b.taxCode}</Text>
-                <Text size="sm">Địa chỉ thuế: {b.taxAddress}</Text>
-                <Text size="sm">Ghi chú: {b.note}</Text>
-              </Stack>
-            </Paper>
-          ))}
-        </Group>
+        {/* CHI NHÁNH */}
+        <Stack>
+          <Title order={5}>🏢 Chi nhánh</Title>
+          <SimpleGrid cols={{ base: 1, sm: 2, md: 3 }} spacing="md">
+            {branches.map((b, i) => (
+              <Card key={i} withBorder radius="md" p="sm">
+                <Stack gap={2}>
+                  <Text size="sm">
+                    <strong>Tên:</strong> {b.name}
+                  </Text>
+                  <Text size="sm">
+                    <strong>SĐT:</strong> {b.phone}
+                  </Text>
+                  <Text size="sm">
+                    <strong>Email:</strong> {b.email}
+                  </Text>
+                  <Text size="sm">
+                    <strong>Địa chỉ:</strong> {b.address}
+                  </Text>
+                  <Text size="sm">
+                    <strong>MST:</strong> {b.taxCode}
+                  </Text>
+                  <Text size="sm">
+                    <strong>Địa chỉ thuế:</strong> {b.taxAddress}
+                  </Text>
+                  <Text size="sm">
+                    <strong>Ghi chú:</strong> {b.note}
+                  </Text>
+                </Stack>
+              </Card>
+            ))}
+          </SimpleGrid>
+        </Stack>
 
-        <Title order={5} mt="md">
-          Ngân hàng
-        </Title>
-        <Group grow>
-          {banks.map((b, i) => (
-            <Paper key={i} withBorder p="md" radius="md">
-              <Stack gap="xs">
-                <Text size="sm">Ngân hàng: {b.bank}</Text>
-                <Text size="sm">Chủ tài khoản: {b.accountHolder}</Text>
-                <Text size="sm">Số tài khoản: {b.accountNumber}</Text>
-                <Text size="sm">Chi nhánh: {b.branch}</Text>
-                <Text size="sm">Ghi chú: {b.note}</Text>
-              </Stack>
-            </Paper>
-          ))}
-        </Group>
+        {/* NGÂN HÀNG */}
+        <Stack>
+          <Title order={5}>🏦 Ngân hàng</Title>
+          <SimpleGrid cols={{ base: 1, sm: 2, md: 3 }} spacing="md">
+            {banks.map((b, i) => (
+              <Card key={i} withBorder radius="md" p="sm">
+                <Stack gap={2}>
+                  <Text size="sm">
+                    <strong>Ngân hàng:</strong> {b.bank}
+                  </Text>
+                  <Text size="sm">
+                    <strong>Chủ tài khoản:</strong> {b.accountHolder}
+                  </Text>
+                  <Text size="sm">
+                    <strong>Số tài khoản:</strong> {b.accountNumber}
+                  </Text>
+                  <Text size="sm">
+                    <strong>Chi nhánh:</strong> {b.branch}
+                  </Text>
+                  <Text size="sm">
+                    <strong>Ghi chú:</strong> {b.note}
+                  </Text>
+                </Stack>
+              </Card>
+            ))}
+          </SimpleGrid>
+        </Stack>
       </Stack>
     </Card>
   );

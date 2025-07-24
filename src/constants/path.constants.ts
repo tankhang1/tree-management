@@ -128,6 +128,19 @@ export const PATH = {
   CONTRACT_ADD_MANAGEMENT: "/contract-management/add",
   CONTRACT_MANAGEMENT_DETAIL: "/contract-management/detail",
 
+  CONTRACT_SALE: "/contract-management/sale",
+  CONTRACT_EXCHANGE: "/contract-management/exchange",
+  CONTRACT_GIFT: "/contract-management/gift",
+  CONTRACT_LOAN: "/contract-management/loan",
+  CONTRACT_RENT: "/contract-management/rent",
+  CONTRACT_BORROW: "/contract-management/borrow",
+  CONTRACT_SERVICE: "/contract-management/service",
+  CONTRACT_TRANSPORT: "/contract-management/transport",
+  CONTRACT_PROCESSING: "/contract-management/processing",
+  CONTRACT_STORAGE: "/contract-management/storage",
+  CONTRACT_AUTHORIZATION: "/contract-management/authorization",
+  CONTRACT_PARTNERSHIP: "/contract-management/partnership",
+
   // HR Management
   HR_MANAGEMENT: "/hr-management",
   HR_DEPARTMENT: "/hr-management/department",
@@ -136,6 +149,8 @@ export const PATH = {
   HR_TEAM_DETAIL: "/hr-management/team/detail",
   HR_ADD_TEAM: "/hr-management/team/add",
   HR_EMPLOYEE: "/hr-management/employee",
+  HR_ADD_EMPLOYEE: "/hr-management/employee/add",
+  HR_EMPLOYEE_DETAIL: "/hr-management/employee/detail",
 
   // Factory Management
   FACTORY_MANAGEMENT: "/factory-management",
@@ -161,24 +176,29 @@ export const PATH = {
 
   // Supply Management
   SUPPLY_MANAGEMENT: "/supply-management",
+  SUPPLY_MANAGEMENT_ADD: "/supply-management/add",
   //Fertilizer Management
   FERTILIZER_TYPE: "/fertilizer-management/type",
   FERTILIZER_MAIN: "/fertilizer-management/main",
+  FERTILIZER_MAIN_ADD: "/fertilizer-management/main/add",
   // Stock Management
   STOCK_AREA: "/stock-area",
   STOCK_ADD_AREA: "/stock-area/add",
   STOCK_AREA_DETAIL: "/stock-area/detail",
   STOCK_DELIVERY: "/stock-delivery",
-  STOCK_DELIVERY_DETAIL: "/stock-delivery/add",
-  STOCK_ADD_DELIVERY: "/stock-delivery/detail",
+  STOCK_DELIVERY_DETAIL: "/stock-delivery/detail",
+  STOCK_ADD_DELIVERY: "/stock-delivery/add",
   STOCK_MANAGEMENT: "/stock-management",
   STOCK_SUPPLY: "/stock-management/supply",
+  STOCK_MANAGEMENT_IO: "/stock-management/io",
   STOCK_PESTICIDE: "/stock-management/pesticide",
   STOCK_FERTILIZER: "/stock-management/fertilizer",
   STOCK_MACHINE: "/stock-management/machine",
   STOCK_SEED: "/stock-management/seed",
   // Company & Stack Holder
   COMPANY: "/company",
+  COMPANY_CUSTOMER: "/company/customers",
+  COMPANY_PARTNER: "/company/partners",
   COMPANY_DETAIL: "/company/detail",
   COMPANY_ADD: "/company/add",
   VENDOR: "/vendor",

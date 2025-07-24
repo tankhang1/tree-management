@@ -1,20 +1,21 @@
-// Updated: PesticideManagementMainAddPage with new requirements
+// Updated: PesticideManagementMainAddPage to match Fertilizer-style step-by-step form
 
 import {
   Button,
   Card,
   Group,
+  Paper,
+  Select,
   Stack,
   Stepper,
   Text,
   TextInput,
   Title,
-  MultiSelect,
   Textarea,
   Input,
-  Paper,
-  Divider,
   Image,
+  Divider,
+  MultiSelect,
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import {
@@ -27,42 +28,52 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { SelectableSupplierCards } from "../../../SupplyManagementPage/Add/components/SelectableSupplierCards";
 import { Dropzone, IMAGE_MIME_TYPE } from "@mantine/dropzone";
-
 const pesticideTypes = [
-  { value: "TYPE01", label: "Thuốc trừ sâu" },
-  { value: "TYPE02", label: "Thuốc trừ bệnh" },
-  { value: "TYPE03", label: "Phân bón lá" },
-  { value: "TYPE04", label: "Chất kích thích sinh trưởng" },
+  {
+    value: "Hữu cơ",
+    label: "Hữu cơ",
+    image:
+      "https://makagarden.vn/wp-content/uploads/2023/06/cac-loai-phan-bon-huu-co-duoc-su-dung-pho-bien-nhat-hien-nay.jpg",
+  },
+  {
+    value: "Vô cơ",
+    label: "Vô cơ",
+    image:
+      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTq_l-0ogNl_hTwySfEfMO8cFa0VtMETY6DYA&s",
+  },
+  {
+    value: "Vi sinh",
+    label: "Vi sinh",
+    image: "https://xuannong.vn/images/phan_bon_vi_sinh.png",
+  },
 ];
 
-const units = ["ml", "lit", "g", "kg"];
-const packageForms = ["Chai", "Bao", "Thùng"];
+const units = ["kg", "bao", "gói", "lít"];
 
-const PesticideManagementMainAddPage = () => {
+const FertilizerManagementMainAddPage = () => {
   const navigate = useNavigate();
   const [active, setActive] = useState(0);
 
   const form = useForm({
     initialValues: {
-      image: null,
-      id: "",
-      name: "",
-      typeIds: [],
-      ingredients: "",
-      usage: "",
-      note: "",
-      suppliers: [],
-      units: [],
-      packages: [],
+      name: "Phân NPK",
+      type: "Hữu cơ",
+      nutrientContent: "NPK 16-16-8",
+      unit: "kg",
+      manufacturer: "Công ty Phân bón Miền Nam",
+      description: "Dùng cho cây ăn trái giai đoạn phát triển tán lá.",
     },
     validate: {
-      id: (val) => (!val ? "Vui lòng nhập mã thuốc" : null),
-      name: (val) => (!val ? "Vui lòng nhập tên thuốc" : null),
-      typeIds: (val) => (val.length === 0 ? "Chọn ít nhất 1 loại thuốc" : null),
+      name: (v) => (!v ? "Vui lòng nhập tên phân bón" : null),
+      type: (v) => (!v ? "Vui lòng chọn loại phân bón" : null),
+      nutrientContent: (v) =>
+        !v ? "Vui lòng nhập hàm lượng dinh dưỡng" : null,
+      unit: (v) => (!v ? "Vui lòng chọn đơn vị" : null),
+      manufacturer: (v) => (!v ? "Vui lòng nhập nhà sản xuất" : null),
     },
   });
 
-  const nextStep = () => setActive((cur) => (cur < 2 ? cur + 1 : cur));
+  const nextStep = () => setActive((cur) => (cur < 3 ? cur + 1 : cur));
   const prevStep = () => setActive((cur) => (cur > 0 ? cur - 1 : cur));
 
   return (
@@ -76,18 +87,17 @@ const PesticideManagementMainAddPage = () => {
         >
           Quay lại
         </Button>
-        <Title order={3}>🌿 Thêm thuốc bảo vệ thực vật</Title>
+        <Title order={3}>🌿 Tạo phân bón mới</Title>
       </Group>
 
       <Stepper
         active={active}
         onStepClick={setActive}
-        allowNextStepsSelect={false}
+        allowNextStepsSelect={true}
       >
-        {/* Step 1 */}
         <Stepper.Step label="Bước 1" description="Thông tin cơ bản">
           <Stack gap={"xs"}>
-            <Input.Wrapper label="Ảnh thuốc">
+            <Input.Wrapper label="Ảnh phân bón">
               <Dropzone
                 onDrop={(files) => console.log("accepted files", files)}
                 onReject={(files) => console.log("rejected files", files)}
@@ -124,59 +134,67 @@ const PesticideManagementMainAddPage = () => {
 
                   <div>
                     <Text size="xl" inline>
-                      Bỏ và thả ảnh thuốc tại đây
+                      Bỏ và thả ảnh phân bón tại đây
                     </Text>
                     <Text size="sm" c="dimmed" inline mt={7}>
-                      Đính kèm ảnh thuốc (tối đa 5MB)
+                      Đính kèm ảnh phân bón (tối đa 5MB)
                     </Text>
                   </div>
                 </Group>
               </Dropzone>
             </Input.Wrapper>
             <TextInput
-              label="Mã thuốc"
-              required
-              radius={4}
-              {...form.getInputProps("id")}
-            />
-            <TextInput
-              label="Tên thuốc"
-              required
+              label="Tên phân bón"
+              placeholder="VD: Phân NPK, Phân Urê"
+              withAsterisk
               radius={4}
               {...form.getInputProps("name")}
             />
-            <MultiSelect
-              label="Loại thuốc"
-              data={pesticideTypes}
-              required
+            <Input.Wrapper label="Loại phân bón">
+              <Group gap="sm">
+                {pesticideTypes.map((item) => (
+                  <Paper
+                    key={item.value}
+                    withBorder
+                    p="xs"
+                    radius="md"
+                    shadow={form.values.type === item.value ? "md" : "xs"}
+                    style={{
+                      cursor: "pointer",
+                      borderColor:
+                        form.values.type === item.value ? "green" : undefined,
+                    }}
+                    onClick={() => form.setFieldValue("type", item.value)}
+                  >
+                    <Stack align="center" gap={4}>
+                      <Image
+                        src={item.image}
+                        width={60}
+                        height={60}
+                        fit="contain"
+                      />
+                      <Text
+                        size="sm"
+                        fw={form.values.type === item.value ? 600 : 400}
+                      >
+                        {item.label}
+                      </Text>
+                    </Stack>
+                  </Paper>
+                ))}
+              </Group>
+            </Input.Wrapper>
+            <TextInput
+              label="Hàm lượng dinh dưỡng"
+              placeholder="VD: NPK 16-16-8, Đạm 46%"
               radius={4}
-              {...form.getInputProps("typeIds")}
-            />
-            <Textarea
-              label="Công thức hoạt chất"
-              radius={4}
-              {...form.getInputProps("ingredients")}
-            />
-            <Textarea
-              label="Công dụng"
-              radius={4}
-              {...form.getInputProps("usage")}
-            />
-            <Textarea
-              label="Ghi chú"
-              radius={4}
-              {...form.getInputProps("note")}
-            />
-            <MultiSelect
-              label="Tài sản thuộc nhóm"
-              data={["Sử dụng thường xuyên", "Sử dụng mùa hè"]}
-              radius={4}
+              withAsterisk
+              {...form.getInputProps("nutrientContent")}
             />
           </Stack>
         </Stepper.Step>
 
-        {/* Step 2 */}
-        <Stepper.Step label="Bước 2" description="Nhà cung cấp & đóng gói">
+        <Stepper.Step label="Bước 2" description="Đóng gói & sản xuất">
           <Stack gap={"xs"}>
             <TextInput
               label="Nhà cung cấp"
@@ -185,69 +203,64 @@ const PesticideManagementMainAddPage = () => {
               {...form.getInputProps("suppliers")}
             />
             <SelectableSupplierCards isCheckbox={true} />
-            <MultiSelect
-              label="Đơn vị tính"
-              radius={4}
+            <Select
+              label="Đơn vị"
+              placeholder="Chọn đơn vị tính"
               data={units}
-              placeholder="Chọn đơn vị"
-              {...form.getInputProps("units")}
+              withAsterisk
+              radius={4}
+              {...form.getInputProps("unit")}
             />
             <MultiSelect
               label="Quy cách đóng gói"
+              placeholder="Chọn quy cách đóng gói"
+              data={["Bao 50kg", "Gói 1kg", "Thùng 10kg"]}
+              withAsterisk
               radius={4}
-              data={packageForms}
-              placeholder="Chọn quy cách"
-              {...form.getInputProps("packages")}
+            />
+            <Textarea
+              label="Ghi chú"
+              placeholder="Mô tả thêm (tuỳ chọn)"
+              radius={4}
+              minRows={2}
+              autosize
+              {...form.getInputProps("description")}
             />
           </Stack>
         </Stepper.Step>
 
-        {/* Step 3 */}
         <Stepper.Step label="Bước 3" description="Xác nhận thông tin">
-          <Stack gap="sm">
-            <Title order={4}>📦 Thông tin chung</Title>
-            <Group align="flex-start" grow>
+          <Stack gap="xs">
+            <Title order={4}>📄 Thông tin phân bón</Title>
+            <Group grow align="flex-start">
               <Paper p="md" withBorder radius="md" h={300}>
                 <Stack gap="xs">
                   <Text>
-                    <b>Mã thuốc:</b> {form.values.id}
+                    <b>Tên:</b> {form.values.name}
                   </Text>
                   <Text>
-                    <b>Tên thuốc:</b> {form.values.name}
+                    <b>Loại:</b> {form.values.type}
                   </Text>
                   <Text>
-                    <b>Loại thuốc:</b>{" "}
-                    {form.values.typeIds
-                      .map(
-                        (v) => pesticideTypes.find((t) => t.value === v)?.label
-                      )
-                      .join(", ")}
+                    <b>Hàm lượng:</b> {form.values.nutrientContent}
                   </Text>
                   <Text>
-                    <b>Hoạt chất:</b> {form.values.ingredients}
+                    <b>Đơn vị:</b> {form.values.unit}
                   </Text>
                   <Text>
-                    <b>Công dụng:</b> {form.values.usage}
-                  </Text>
-                  <Text>
-                    <b>Ghi chú:</b> {form.values.note}
+                    <b>Ghi chú:</b> {form.values.description || "(Không có)"}
                   </Text>
                 </Stack>
               </Paper>
               <Paper p="md" withBorder radius="md" h={300}>
-                <Title order={5} mb="xs">
-                  🖼 Hình ảnh sản phẩm
-                </Title>
-                <Stack justify="center" align="center" h="100%">
+                <Stack gap="xs">
+                  <Title order={4}>Hình ảnh minh hoạ</Title>
                   <Image
                     src={
-                      "https://product.hstatic.net/200000722083/product/hinh_thuoc___41__fefe01ef5e524613a722da13c8250a50_1024x1024.png"
+                      "https://product.hstatic.net/1000269461/product/kali-bot-mop-phu-my-bao-50kg_1_b44d5c566ca84922aa7b3f505334b057_7ccb2df2abdd4ce29fd88f65203960f0_large.jpg"
                     }
-                    alt="Hình ảnh sản phẩm"
-                    width={100}
-                    height={200}
+                    h={200}
                     fit="contain"
-                    radius="md"
                   />
                 </Stack>
               </Paper>
@@ -283,4 +296,4 @@ const PesticideManagementMainAddPage = () => {
   );
 };
 
-export default PesticideManagementMainAddPage;
+export default FertilizerManagementMainAddPage;

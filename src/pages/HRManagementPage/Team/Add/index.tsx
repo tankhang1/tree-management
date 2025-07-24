@@ -10,15 +10,11 @@ import {
   Title,
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
-import { IconArrowLeft } from "@tabler/icons-react";
+import { IconArrowLeft, IconSearch } from "@tabler/icons-react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-
-const mockDepartments = [
-  { value: "hr", label: "Nhân sự" },
-  { value: "it", label: "CNTT" },
-  { value: "finance", label: "Kế toán" },
-];
+import { DepartmentCardList } from "./components/DepartmentCardList";
+import { EmployeeCardList } from "./components/EmployeeCardList";
 
 const mockRoles = [
   { value: "leader", label: "Trưởng nhóm" },
@@ -26,11 +22,6 @@ const mockRoles = [
   { value: "viewer", label: "Người xem" },
 ];
 
-const mockEmployees = [
-  { value: "1", label: "Nguyễn Văn A - Nhân viên" },
-  { value: "2", label: "Trần Thị B - Kế toán" },
-  { value: "3", label: "Lê Văn C - Kỹ thuật" },
-];
 const HRManagementTeamAddPage = () => {
   const navigate = useNavigate();
   const [active, setActive] = useState(0);
@@ -79,13 +70,14 @@ const HRManagementTeamAddPage = () => {
                 {...form.getInputProps("description")}
                 radius={4}
               />
-              <MultiSelect
+              <TextInput
                 label="Phòng ban"
-                placeholder="Chọn các phòng ban liên quan"
-                data={mockDepartments}
+                placeholder="Tìm kiếm phòng ban liên quan"
                 {...form.getInputProps("departments")}
+                leftSection={<IconSearch size={16} />}
                 radius={4}
               />
+              <DepartmentCardList />
               <MultiSelect
                 label="Vai trò"
                 placeholder="Chọn vai trò của nhóm"
@@ -97,15 +89,16 @@ const HRManagementTeamAddPage = () => {
           </Stepper.Step>
 
           <Stepper.Step label="Bước 2" description="Thành viên nhóm">
-            <MultiSelect
-              label="Thành viên"
-              placeholder="Chọn thành viên từ nhân sự"
-              data={mockEmployees}
-              searchable
-              nothingFoundMessage="Không tìm thấy"
-              {...form.getInputProps("members")}
-              radius={4}
-            />
+            <Stack gap={"xs"}>
+              <TextInput
+                label="Tìm kiếm nhân viên"
+                placeholder="Chọn thành viên từ nhân sự"
+                leftSection={<IconSearch size={16} />}
+                {...form.getInputProps("members")}
+                radius={4}
+              />
+              <EmployeeCardList />
+            </Stack>
           </Stepper.Step>
         </Stepper>
 

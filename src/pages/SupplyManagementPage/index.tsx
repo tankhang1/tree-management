@@ -1,13 +1,4 @@
-import {
-  ActionIcon,
-  Button,
-  Group,
-  Menu,
-  Modal,
-  Stack,
-  Text,
-  Title,
-} from "@mantine/core";
+import { ActionIcon, Button, Group, Menu, Stack, Title } from "@mantine/core";
 import {
   IconDotsVertical,
   IconEdit,
@@ -16,9 +7,9 @@ import {
   IconTrash,
 } from "@tabler/icons-react";
 import type { MRT_ColumnDef } from "mantine-react-table";
-import { useDisclosure } from "@mantine/hooks";
 import Table from "../../components/Table";
-import AddSupplyForm from "./components/AddSupplyForm";
+import { useNavigate } from "react-router-dom";
+import { PATH } from "../../constants/path.constants";
 type SupplyType = {
   id: string; // Mã vật tư
   name: string; // Tên vật tư
@@ -48,8 +39,8 @@ export const supplyTypes: SupplyType[] = [
 ];
 
 const SupplyManagementPage = () => {
-  const [openedSupplyForm, { open: openSupplyForm, close: closeSupplyForm }] =
-    useDisclosure(false);
+  const navigate = useNavigate();
+
   const supplyTypeColumns: MRT_ColumnDef<SupplyType>[] = [
     {
       accessorKey: "id",
@@ -91,6 +82,9 @@ const SupplyManagementPage = () => {
       ),
     },
   ];
+  const onAddSupply = () => {
+    navigate(PATH.SUPPLY_MANAGEMENT_ADD);
+  };
   return (
     <Stack gap="lg">
       <Group justify="space-between">
@@ -101,21 +95,13 @@ const SupplyManagementPage = () => {
           <Button variant="outline" radius={4} leftSection={<IconFileExcel />}>
             Xuất File
           </Button>
-          <Button radius={4} onClick={openSupplyForm}>
+          <Button radius={4} onClick={onAddSupply}>
             Thêm mới
           </Button>
         </Group>
       </Group>
 
       <Table columns={supplyTypeColumns} data={supplyTypes} />
-      <Modal
-        size={"lg"}
-        opened={openedSupplyForm}
-        onClose={closeSupplyForm}
-        title={<Text fw={"bold"}>Thêm mới vật tư</Text>}
-      >
-        <AddSupplyForm />
-      </Modal>
     </Stack>
   );
 };

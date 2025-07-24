@@ -3,7 +3,6 @@ import {
   Button,
   Group,
   Menu,
-  Modal,
   Stack,
   Text,
   Title,
@@ -17,8 +16,8 @@ import {
 } from "@tabler/icons-react";
 import type { MRT_ColumnDef } from "mantine-react-table";
 import Table from "../../../components/Table";
-import { useDisclosure } from "@mantine/hooks";
-import FertilizerCreateForm from "./components/FertilizerCreateForm";
+import { useNavigate } from "react-router-dom";
+import { PATH } from "../../../constants/path.constants";
 type Fertilizer = {
   id: string;
   name: string; // Tên phân bón
@@ -58,8 +57,7 @@ const mockFertilizers: Fertilizer[] = [
   },
 ];
 const FertilizerManagementMainPage = () => {
-  const [openedAddForm, { open: openAddForm, close: closeAddForm }] =
-    useDisclosure(false);
+  const navigate = useNavigate();
   const fertilizerColumns: MRT_ColumnDef<Fertilizer>[] = [
     {
       accessorKey: "id",
@@ -126,7 +124,9 @@ const FertilizerManagementMainPage = () => {
       ),
     },
   ];
-
+  const onFertilizerAdd = () => {
+    navigate(PATH.FERTILIZER_MAIN_ADD);
+  };
   return (
     <Stack gap="lg">
       <Group justify="space-between">
@@ -137,20 +137,13 @@ const FertilizerManagementMainPage = () => {
           <Button variant="outline" radius={4} leftSection={<IconFileExcel />}>
             Xuất File
           </Button>
-          <Button radius={4} onClick={openAddForm}>
+          <Button radius={4} onClick={onFertilizerAdd}>
             Thêm mới
           </Button>
         </Group>
       </Group>
 
       <Table columns={fertilizerColumns} data={mockFertilizers} />
-      <Modal
-        opened={openedAddForm}
-        onClose={closeAddForm}
-        title={<Text fw={"bold"}>Tạo mới loại phân bón</Text>}
-      >
-        <FertilizerCreateForm onSubmit={() => {}} />
-      </Modal>
     </Stack>
   );
 };

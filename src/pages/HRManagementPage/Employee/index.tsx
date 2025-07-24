@@ -5,10 +5,8 @@ import {
   Button,
   Group,
   Menu,
-  Modal,
   Select,
   Stack,
-  Text,
   Title,
 } from "@mantine/core";
 import { DateInput } from "@mantine/dates";
@@ -23,8 +21,8 @@ import {
 } from "@tabler/icons-react";
 import type { MRT_ColumnDef } from "mantine-react-table";
 import Table from "../../../components/Table";
-import AddEmployeeForm from "./components/AddEmployeeForm";
-import { useDisclosure } from "@mantine/hooks";
+import { useNavigate } from "react-router-dom";
+import { PATH } from "../../../constants/path.constants";
 type Staff = {
   id: string; // Mã nhân sự
   username: string; // Tên đăng nhập / username
@@ -65,10 +63,8 @@ const staffDataset: Staff[] = [
 ];
 
 const HRManagementEmployeePage = () => {
-  const [
-    openedEmployeeForm,
-    { open: openEmployeeForm, close: closeEmployeeForm },
-  ] = useDisclosure(false);
+  const navigate = useNavigate();
+
   const staffColumns: MRT_ColumnDef<Staff>[] = [
     {
       accessorKey: "avatarUrl",
@@ -112,7 +108,10 @@ const HRManagementEmployeePage = () => {
           </Menu.Target>
 
           <Menu.Dropdown>
-            <Menu.Item leftSection={<IconEye size={18} color="gray" />}>
+            <Menu.Item
+              leftSection={<IconEye size={18} color="gray" />}
+              onClick={onEmployeeDetail}
+            >
               Chi tiết
             </Menu.Item>
             <Menu.Item leftSection={<IconEdit size={18} color="green" />}>
@@ -126,7 +125,12 @@ const HRManagementEmployeePage = () => {
       ),
     },
   ];
-
+  const onAddEmployee = () => {
+    navigate(PATH.HR_ADD_EMPLOYEE);
+  };
+  const onEmployeeDetail = () => {
+    navigate(PATH.HR_EMPLOYEE_DETAIL);
+  };
   return (
     <Stack gap="lg">
       <Group justify="space-between">
@@ -137,7 +141,7 @@ const HRManagementEmployeePage = () => {
           <Button variant="outline" radius={4} leftSection={<IconFileExcel />}>
             Xuất File
           </Button>
-          <Button radius={4} onClick={openEmployeeForm}>
+          <Button radius={4} onClick={onAddEmployee}>
             Thêm mới
           </Button>
         </Group>
@@ -163,13 +167,6 @@ const HRManagementEmployeePage = () => {
         <Select radius={4} placeholder="Trạng thái" />
       </Group>
       <Table columns={staffColumns} data={staffDataset} />
-      <Modal
-        opened={openedEmployeeForm}
-        onClose={closeEmployeeForm}
-        title={<Text fw={"bold"}>🧑‍💼 Tạo mới nhân sự</Text>}
-      >
-        <AddEmployeeForm />
-      </Modal>
     </Stack>
   );
 };

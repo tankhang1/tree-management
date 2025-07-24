@@ -15,8 +15,8 @@ import {
   Modal,
   Text,
   Radio,
-  Autocomplete,
   ActionIcon,
+  ScrollArea,
 } from "@mantine/core";
 import { DateInput } from "@mantine/dates";
 import {
@@ -34,6 +34,8 @@ import { useState } from "react";
 import PlanDetail from "./components/PlanDetail";
 import ConfirmStep from "./components/ConfirmStep";
 import { useDisclosure } from "@mantine/hooks";
+import { EmployeeCardList } from "../../../HRManagementPage/Team/Add/components/EmployeeCardList";
+import { DepartmentCardList } from "../../../HRManagementPage/Team/Add/components/DepartmentCardList";
 
 const CYCLES = ["Chu kỳ 1", "Chu kỳ 2"];
 const STAGES = ["Gieo trồng", "Ra hoa", "Kết trái"];
@@ -86,10 +88,7 @@ const PlanManagementAssignAddPage = () => {
 
   const nextStep = () => setActive((current) => Math.min(current + 1, 2));
   const prevStep = () => setActive((current) => Math.max(current - 1, 0));
-  const options = employees.map((e) => ({
-    value: e.name,
-    label: `${e.name} - [${e.role}] - [${e.department}, Ban kinh doanh]`,
-  }));
+
   return (
     <Card withBorder radius={8} shadow="sm" p="md">
       <Group mb="md">
@@ -479,11 +478,14 @@ const PlanManagementAssignAddPage = () => {
 
           {mode === "dept" && (
             <>
-              <MultiSelect
-                label="Chọn phòng ban"
+              <TextInput
+                label="Phòng ban"
+                placeholder="Tìm kiếm phòng ban liên quan"
+                {...form.getInputProps("departments")}
+                leftSection={<IconSearch size={16} />}
                 radius={4}
-                data={["Ban tài chính", "Ban kĩ thuật", "Ban kế hoạch"]}
               />
+              <DepartmentCardList />
               <MultiSelect
                 label="Chọn vai trò"
                 radius={4}
@@ -491,14 +493,13 @@ const PlanManagementAssignAddPage = () => {
               />
             </>
           )}
-          <Autocomplete
-            label="Tìm kiếm nhân sự"
-            placeholder="Nhập tên hoặc chức vụ..."
-            leftSection={<IconSearch size={18} />}
+          <TextInput
+            label="Tìm kiếm nhân viên"
+            placeholder="Chọn thành viên từ nhân sự"
+            leftSection={<IconSearch size={16} />}
             radius={4}
-            value="Nguyễn Văn A"
-            data={options}
           />
+          <EmployeeCardList />
         </Stack>
 
         <Group mt="md" justify="flex-end">

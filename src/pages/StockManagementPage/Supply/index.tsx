@@ -1,29 +1,22 @@
 import {
   ActionIcon,
-  Autocomplete,
   Badge,
   Button,
   Group,
   Menu,
-  Modal,
-  MultiSelect,
-  Radio,
   Stack,
-  Text,
   Title,
 } from "@mantine/core";
 import {
   IconDotsVertical,
   IconEye,
   IconFileExcel,
-  IconSearch,
   IconTrash,
 } from "@tabler/icons-react";
 import type { MRT_ColumnDef } from "mantine-react-table";
 import Table from "../../../components/Table";
-import { useDisclosure } from "@mantine/hooks";
-import AddSupplyForm from "./components/AddSupplyForm";
-import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { PATH } from "../../../constants/path.constants";
 
 type MaterialUsageType = "nhập" | "xuất" | "huỷ";
 type MaterialUsage = {
@@ -71,16 +64,8 @@ const materialUsages: MaterialUsage[] = [
   },
 ];
 const StockManagementSupplyPage = () => {
-  const [
-    openedFilterEmployee,
-    { open: openFilterEmployee, close: closeFilterEmployee },
-  ] = useDisclosure(false);
-  const [mode, setMode] = useState("");
+  const navigate = useNavigate();
 
-  const [
-    openedStockSupply,
-    { open: openStockSupply, close: closeStockSupply },
-  ] = useDisclosure(false);
   const materialUsageColumns: MRT_ColumnDef<MaterialUsage>[] = [
     { accessorKey: "id", header: "Mã phiếu" },
     { accessorKey: "materialId", header: "Mã vật tư" },
@@ -138,7 +123,10 @@ const StockManagementSupplyPage = () => {
       ),
     },
   ];
-
+  const onAddSupply = () => {
+    navigate(PATH.STOCK_MANAGEMENT_IO);
+    // Handle the logic to add a new supply
+  };
   return (
     <Stack gap="lg">
       <Group justify="space-between">
@@ -149,77 +137,13 @@ const StockManagementSupplyPage = () => {
           <Button variant="outline" radius={4} leftSection={<IconFileExcel />}>
             Xuất File
           </Button>
-          <Button radius={4} onClick={openStockSupply}>
+          <Button radius={4} onClick={onAddSupply}>
             Thêm mới
           </Button>
         </Group>
       </Group>
 
       <Table columns={materialUsageColumns} data={materialUsages} />
-      <Modal
-        opened={openedStockSupply}
-        onClose={closeStockSupply}
-        title={<Text fw="bold">Thêm mới phiếu xuất/nhập vật tư</Text>}
-      >
-        <AddSupplyForm onFilter={openFilterEmployee} />
-      </Modal>
-      <Modal
-        opened={openedFilterEmployee}
-        onClose={closeFilterEmployee}
-        title={<Text fw={"bold"}>Lọc nhân sự</Text>}
-      >
-        <Stack gap={"xs"}>
-          <Radio.Group
-            label="Phương thức lọc"
-            value={mode}
-            onChange={(val) => setMode(val as "group" | "dept")}
-          >
-            <Radio value="group" mb={"xs"} label="Chọn theo đội nhóm" />
-            <Radio value="dept" label="Chọn theo phòng ban và vai trò" />
-          </Radio.Group>
-
-          {mode === "group" && (
-            <MultiSelect
-              label="Chọn đội nhóm"
-              radius={4}
-              data={["Nhóm Canh tác", "Nhóm Vật tư"]}
-            />
-          )}
-
-          {mode === "dept" && (
-            <>
-              <MultiSelect
-                label="Chọn phòng ban"
-                radius={4}
-                data={["Ban tài chính", "Ban kĩ thuật", "Ban kế hoạch"]}
-              />
-              <MultiSelect
-                label="Chọn vai trò"
-                radius={4}
-                data={["Giám đốc", "Tổ trưởng", "Trưởng phòng"]}
-              />
-            </>
-          )}
-          <Autocomplete
-            label="Tìm kiếm nhân sự"
-            placeholder="Nhập tên hoặc chức vụ..."
-            leftSection={<IconSearch size={18} />}
-            radius={4}
-          />
-        </Stack>
-
-        <Group mt="md" justify="flex-end">
-          <Button
-            radius={4}
-            variant="outline"
-            color="red"
-            onClick={closeFilterEmployee}
-          >
-            Huỷ
-          </Button>
-          <Button radius={4}>Xác nhận</Button>
-        </Group>
-      </Modal>
     </Stack>
   );
 };

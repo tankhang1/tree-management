@@ -29,6 +29,8 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import ConfirmStep from "./components/ConfirmStep";
 import { useDisclosure } from "@mantine/hooks";
+import { EmployeeCardList } from "../../../HRManagementPage/Team/Add/components/EmployeeCardList";
+import { DepartmentCardList } from "../../../HRManagementPage/Team/Add/components/DepartmentCardList";
 const employees = [
   {
     name: "Nguyễn Văn A",
@@ -358,11 +360,14 @@ const PlanManagementUnplannedAddPage = () => {
 
           {mode === "dept" && (
             <>
-              <MultiSelect
-                label="Chọn phòng ban"
+              <TextInput
+                label="Phòng ban"
+                placeholder="Tìm kiếm phòng ban liên quan"
+                {...form.getInputProps("departments")}
+                leftSection={<IconSearch size={16} />}
                 radius={4}
-                data={["Ban tài chính", "Ban kĩ thuật", "Ban kế hoạch"]}
               />
+              <DepartmentCardList />
               <MultiSelect
                 label="Chọn vai trò"
                 radius={4}
@@ -370,14 +375,14 @@ const PlanManagementUnplannedAddPage = () => {
               />
             </>
           )}
-          <Autocomplete
-            label="Tìm kiếm nhân sự"
-            placeholder="Nhập tên hoặc chức vụ..."
-            leftSection={<IconSearch size={18} />}
+          <TextInput
+            label="Tìm kiếm nhân viên"
+            placeholder="Chọn thành viên từ nhân sự"
+            leftSection={<IconSearch size={16} />}
+            {...form.getInputProps("members")}
             radius={4}
-            value="Nguyễn Văn A"
-            data={options}
           />
+          <EmployeeCardList />
         </Stack>
 
         <Group mt="md" justify="flex-end">

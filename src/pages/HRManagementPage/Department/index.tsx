@@ -139,29 +139,30 @@ const HRManagementDepartmentPage = () => {
         radius={4}
       >
         <form>
-          <TextInput
-            label="Mã phòng ban"
-            placeholder="PB-KT"
-            withAsterisk
-            {...form.getInputProps("code")}
-            radius={4}
-          />
-          <TextInput
-            label="Tên phòng ban"
-            placeholder="Phòng Kỹ thuật"
-            withAsterisk
-            mt="md"
-            {...form.getInputProps("name")}
-            radius={4}
-          />
-          <Textarea
-            label="Mô tả"
-            placeholder="Mô tả chức năng, nhiệm vụ..."
-            mt="md"
-            {...form.getInputProps("description")}
-            radius={4}
-          />
-
+          <Stack gap={"xs"}>
+            <TextInput
+              label="Mã phòng ban"
+              placeholder="PB-KT"
+              withAsterisk
+              {...form.getInputProps("code")}
+              radius={4}
+            />
+            <TextInput
+              label="Tên phòng ban"
+              placeholder="Phòng Kỹ thuật"
+              withAsterisk
+              mt="md"
+              {...form.getInputProps("name")}
+              radius={4}
+            />
+            <Textarea
+              label="Mô tả"
+              placeholder="Mô tả chức năng, nhiệm vụ..."
+              mt="md"
+              {...form.getInputProps("description")}
+              radius={4}
+            />
+          </Stack>
           <Group justify="flex-end" mt="lg">
             <Button type="submit" radius={4}>
               Lưu

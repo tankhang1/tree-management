@@ -1,6 +1,5 @@
 import {
   ActionIcon,
-  Autocomplete,
   Badge,
   Button,
   Group,
@@ -10,6 +9,7 @@ import {
   Radio,
   Stack,
   Text,
+  TextInput,
   Title,
 } from "@mantine/core";
 import {
@@ -24,6 +24,8 @@ import Table from "../../../components/Table";
 import { useDisclosure } from "@mantine/hooks";
 import CreateBatmanTaskForm from "./components/CreateBatmanTaskForm";
 import { useState } from "react";
+import { EmployeeCardList } from "../../HRManagementPage/Team/Add/components/EmployeeCardList";
+import { DepartmentCardList } from "../../HRManagementPage/Team/Add/components/DepartmentCardList";
 type EmployeeTask = {
   employee: string;
   taskName: string;
@@ -168,11 +170,13 @@ const TaskManagementBatmanPage = () => {
 
           {mode === "dept" && (
             <>
-              <MultiSelect
-                label="Chọn phòng ban"
+              <TextInput
+                label="Phòng ban"
+                placeholder="Tìm kiếm phòng ban liên quan"
+                leftSection={<IconSearch size={16} />}
                 radius={4}
-                data={["Ban tài chính", "Ban kĩ thuật", "Ban kế hoạch"]}
               />
+              <DepartmentCardList />
               <MultiSelect
                 label="Chọn vai trò"
                 radius={4}
@@ -180,12 +184,13 @@ const TaskManagementBatmanPage = () => {
               />
             </>
           )}
-          <Autocomplete
-            label="Tìm kiếm nhân sự"
-            placeholder="Nhập tên hoặc chức vụ..."
-            leftSection={<IconSearch size={18} />}
+          <TextInput
+            label="Tìm kiếm nhân viên"
+            placeholder="Chọn thành viên từ nhân sự"
+            leftSection={<IconSearch size={16} />}
             radius={4}
           />
+          <EmployeeCardList />
         </Stack>
 
         <Group mt="md" justify="flex-end">

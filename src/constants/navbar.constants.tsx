@@ -123,6 +123,20 @@ export const NAV_BAR = [
     label: "Quản lý hợp đồng",
     icon: IconReportMoney,
     link: PATH.CONTRACT_MANAGEMENT,
+    children: [
+      { label: "Hợp đồng mua bán", link: PATH.CONTRACT_SALE },
+      { label: "Hợp đồng trao đổi", link: PATH.CONTRACT_EXCHANGE },
+      { label: "Hợp đồng cho tặng", link: PATH.CONTRACT_GIFT },
+      { label: "Hợp đồng vay", link: PATH.CONTRACT_LOAN },
+      { label: "Hợp đồng thuê", link: PATH.CONTRACT_RENT },
+      { label: "Hợp đồng mượn", link: PATH.CONTRACT_BORROW },
+      { label: "Hợp đồng dịch vụ", link: PATH.CONTRACT_SERVICE },
+      { label: "Hợp đồng vận chuyển", link: PATH.CONTRACT_TRANSPORT },
+      { label: "Hợp đồng gia công", link: PATH.CONTRACT_PROCESSING },
+      { label: "Hợp đồng gửi giữ tài sản", link: PATH.CONTRACT_STORAGE },
+      { label: "Hợp đồng ủy quyền", link: PATH.CONTRACT_AUTHORIZATION },
+      { label: "Hợp đồng hợp tác", link: PATH.CONTRACT_PARTNERSHIP },
+    ],
   },
   {
     label: "Quản lý nhân sự",
@@ -195,6 +209,20 @@ export const NAV_BAR = [
     label: "Doanh nghiệp / Hộ nông dân",
     icon: IconBuildings,
     link: PATH.COMPANY,
+    children: [
+      {
+        label: "Nhà cung cấp",
+        link: PATH.COMPANY,
+      },
+      {
+        label: "Khách hàng",
+        link: PATH.COMPANY_CUSTOMER,
+      },
+      {
+        label: "Đối tác",
+        link: PATH.COMPANY_PARTNER,
+      },
+    ],
   },
   {
     label: "Quản lý nhà cung cấp",

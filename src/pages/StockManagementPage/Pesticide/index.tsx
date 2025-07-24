@@ -1,29 +1,22 @@
 import {
   ActionIcon,
-  Autocomplete,
   Badge,
   Button,
   Group,
   Menu,
-  Modal,
-  MultiSelect,
-  Radio,
   Stack,
-  Text,
   Title,
 } from "@mantine/core";
 import {
   IconDotsVertical,
   IconEye,
   IconFileExcel,
-  IconSearch,
   IconTrash,
 } from "@tabler/icons-react";
 import type { MRT_ColumnDef } from "mantine-react-table";
 import Table from "../../../components/Table";
-import { useDisclosure } from "@mantine/hooks";
-import AddPesticideForm from "./components/AddPesicideForm";
-import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { PATH } from "../../../constants/path.constants";
 
 type PesticideTransactionType = "nhập" | "xuất" | "huỷ";
 type PesticideTransaction = {
@@ -74,16 +67,7 @@ const pesticideTransactions: PesticideTransaction[] = [
   },
 ];
 const StockManagementPesticidePage = () => {
-  const [
-    openedFilterEmployee,
-    { open: openFilterEmployee, close: closeFilterEmployee },
-  ] = useDisclosure(false);
-  const [mode, setMode] = useState("");
-
-  const [
-    openedStockPesticide,
-    { open: openStockPesticide, close: closeStockPesticide },
-  ] = useDisclosure(false);
+  const navigate = useNavigate();
   const pesticideTransactionColumns: MRT_ColumnDef<PesticideTransaction>[] = [
     { accessorKey: "id", header: "Mã phiếu" },
     { accessorKey: "typeId", header: "Loại thuốc" }, // bạn có thể map sang tên
@@ -134,7 +118,9 @@ const StockManagementPesticidePage = () => {
       ),
     },
   ];
-
+  const onAdd = () => {
+    navigate(PATH.STOCK_MANAGEMENT_IO);
+  };
   return (
     <Stack gap="lg">
       <Group justify="space-between">
@@ -145,7 +131,7 @@ const StockManagementPesticidePage = () => {
           <Button variant="outline" radius={4} leftSection={<IconFileExcel />}>
             Xuất File
           </Button>
-          <Button radius={4} onClick={openStockPesticide}>
+          <Button radius={4} onClick={onAdd}>
             Thêm mới
           </Button>
         </Group>
@@ -155,70 +141,6 @@ const StockManagementPesticidePage = () => {
         columns={pesticideTransactionColumns}
         data={pesticideTransactions}
       />
-      <Modal
-        opened={openedStockPesticide}
-        onClose={closeStockPesticide}
-        title={<Text fw="bold">Thêm mới phiếu xuất/nhập thuốc</Text>}
-      >
-        <AddPesticideForm onFilter={openFilterEmployee} />
-      </Modal>
-      <Modal
-        opened={openedFilterEmployee}
-        onClose={closeFilterEmployee}
-        title={<Text fw={"bold"}>Lọc nhân sự</Text>}
-      >
-        <Stack gap={"xs"}>
-          <Radio.Group
-            label="Phương thức lọc"
-            value={mode}
-            onChange={(val) => setMode(val as "group" | "dept")}
-          >
-            <Radio value="group" mb={"xs"} label="Chọn theo đội nhóm" />
-            <Radio value="dept" label="Chọn theo phòng ban và vai trò" />
-          </Radio.Group>
-
-          {mode === "group" && (
-            <MultiSelect
-              label="Chọn đội nhóm"
-              radius={4}
-              data={["Nhóm Canh tác", "Nhóm Vật tư"]}
-            />
-          )}
-
-          {mode === "dept" && (
-            <>
-              <MultiSelect
-                label="Chọn phòng ban"
-                radius={4}
-                data={["Ban tài chính", "Ban kĩ thuật", "Ban kế hoạch"]}
-              />
-              <MultiSelect
-                label="Chọn vai trò"
-                radius={4}
-                data={["Giám đốc", "Tổ trưởng", "Trưởng phòng"]}
-              />
-            </>
-          )}
-          <Autocomplete
-            label="Tìm kiếm nhân sự"
-            placeholder="Nhập tên hoặc chức vụ..."
-            leftSection={<IconSearch size={18} />}
-            radius={4}
-          />
-        </Stack>
-
-        <Group mt="md" justify="flex-end">
-          <Button
-            radius={4}
-            variant="outline"
-            color="red"
-            onClick={closeFilterEmployee}
-          >
-            Huỷ
-          </Button>
-          <Button radius={4}>Xác nhận</Button>
-        </Group>
-      </Modal>
     </Stack>
   );
 };

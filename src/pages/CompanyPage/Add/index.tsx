@@ -9,20 +9,22 @@ import {
   Card,
   Stack,
   Title,
-  ActionIcon,
   Text,
   Paper,
+  SimpleGrid,
 } from "@mantine/core";
 import { useState } from "react";
 import {
   IconArrowLeft,
+  IconBuilding,
   IconBuildingFactory,
+  IconHome,
   IconId,
   IconMail,
+  IconMap,
   IconMapPin,
   IconPhone,
   IconPlus,
-  IconTrash,
   IconUser,
 } from "@tabler/icons-react";
 import { useNavigate } from "react-router-dom";
@@ -38,32 +40,54 @@ export function CompanyAddPage() {
   const navigate = useNavigate();
   const [active, setActive] = useState(0);
   const [formData, setFormData] = useState({
-    type: "",
-    code: "",
-    name: "",
-    brand: "",
-    representative: "",
-    phone: "",
-    email: "",
-    address: "",
-    taxCode: "",
-    taxAddress: "",
-    category: "",
-    note: "",
+    type: "Doanh nghiệp",
+    code: "ENT-001",
+    name: "Công ty TNHH Nông sản Xanh",
+    brand: "GreenAgro",
+    representative: "Nguyễn Văn A",
+    phone: "0909123456",
+    email: "contact@greenagro.vn",
+    address: "123 Đường Lê Lợi, Quận 1, TP.HCM",
+    taxCode: "0301234567",
+    taxAddress: "123 Đường Trần Hưng Đạo, Quận 5, TP.HCM",
+    category: "Sản xuất & phân phối",
+    note: "Khách hàng ưu tiên",
   });
   const [branches, setBranches] = useState([
     {
-      name: "",
-      phone: "",
-      email: "",
-      address: "",
-      taxCode: "",
-      taxAddress: "",
-      note: "",
+      name: "Chi nhánh Hà Nội",
+      phone: "0241234567",
+      email: "hanoi@greenagro.vn",
+      address: "456 Phố Huế, Hai Bà Trưng, Hà Nội",
+      taxCode: "0101122334",
+      taxAddress: "456 Trần Nhân Tông, Hai Bà Trưng, Hà Nội",
+      note: "Chi nhánh phía Bắc",
+    },
+    {
+      name: "Chi nhánh Cần Thơ",
+      phone: "02921234567",
+      email: "cantho@greenagro.vn",
+      address: "789 Nguyễn Trãi, Ninh Kiều, Cần Thơ",
+      taxCode: "1800456789",
+      taxAddress: "789 Hòa Bình, Ninh Kiều, Cần Thơ",
+      note: "Chi nhánh miền Tây",
     },
   ]);
   const [banks, setBanks] = useState([
-    { bank: "", accountHolder: "", accountNumber: "", branch: "", note: "" },
+    {
+      bank: "Techcombank (TCB)",
+      accountHolder: "Nguyễn Văn A",
+      accountNumber: "19001234567890",
+      branch: "Chi nhánh Sài Gòn",
+      note: "Tài khoản giao dịch chính",
+    },
+    {
+      bank: "Vietcombank (VCB)",
+      accountHolder: "Nguyễn Văn A",
+      accountNumber: "0011001234567",
+      branch: "Chi nhánh Hà Nội",
+      note: "Dùng cho thanh toán nội bộ",
+    },
   ]);
 
   const nextStep = () =>
@@ -87,150 +111,207 @@ export function CompanyAddPage() {
 
       <Stepper active={active} onStepClick={setActive}>
         <Stepper.Step label="Bước 1" description="Thông tin cơ bản">
-          <Stack gap={"xs"}>
-            <Select
-              label="Loại đối tượng"
-              data={["Doanh nghiệp", "Nông hộ", "Hợp tác xã"]}
-              placeholder="Chọn loại"
-              value={formData.type}
-              radius={4}
-              onChange={(val) => setFormData({ ...formData, type: val! })}
-            />
-            <TextInput
-              label="Mã định danh"
-              value={formData.code}
-              radius={4}
-              onChange={(e) =>
-                setFormData({ ...formData, code: e.target.value })
-              }
-            />
-            <TextInput
-              label="Tên đối tượng"
-              placeholder="Công ty TNHH ABC"
-              value={formData.name}
-              radius={4}
-              onChange={(e) =>
-                setFormData({ ...formData, name: e.target.value })
-              }
-            />
-            <TextInput
-              label="Thương hiệu"
-              placeholder="ABC Mart"
-              value={formData.brand}
-              radius={4}
-              onChange={(e) =>
-                setFormData({ ...formData, brand: e.target.value })
-              }
-            />
-            <TextInput
-              label="Người đại diện"
-              value={formData.representative}
-              radius={4}
-              onChange={(e) =>
-                setFormData({ ...formData, representative: e.target.value })
-              }
-            />
-            <TextInput
-              label="Số điện thoại"
-              value={formData.phone}
-              radius={4}
-              onChange={(e) =>
-                setFormData({ ...formData, phone: e.target.value })
-              }
-            />
-            <TextInput
-              label="Email"
-              value={formData.email}
-              radius={4}
-              onChange={(e) =>
-                setFormData({ ...formData, email: e.target.value })
-              }
-            />
-            <TextInput
-              label="Địa chỉ"
-              value={formData.address}
-              radius={4}
-              onChange={(e) =>
-                setFormData({ ...formData, address: e.target.value })
-              }
-            />
-            <Title order={6}>Thông tin thuế</Title>
-            <TextInput
-              label="Mã số thuế (MST)"
-              radius={4}
-              value={formData.taxCode}
-              onChange={(e) =>
-                setFormData({ ...formData, taxCode: e.target.value })
-              }
-            />
-            <TextInput
-              label="Địa chỉ thuế"
-              value={formData.taxAddress}
-              radius={4}
-              onChange={(e) =>
-                setFormData({ ...formData, taxAddress: e.target.value })
-              }
-            />
-            <Select
-              label="Phân loại"
-              radius={4}
-              data={["Khách hàng", "Nhà cung cấp", "Đối tác"]}
-              value={formData.category}
-              onChange={(val) => setFormData({ ...formData, category: val! })}
-            />
-            <Textarea
-              label="Ghi chú"
-              radius={4}
-              minRows={2}
-              value={formData.note}
-              onChange={(e) =>
-                setFormData({ ...formData, note: e.target.value })
-              }
-            />
-          </Stack>
+          <Group grow align="flex-start">
+            <Card withBorder radius={4}>
+              <Stack gap={"xs"}>
+                <Title order={6}>Thông tin cơ bản</Title>
+                <Group>
+                  <Button
+                    leftSection={<IconBuilding size={18} />}
+                    variant="filled"
+                    radius={4}
+                  >
+                    Doanh nghiệp
+                  </Button>
+                  <Button
+                    leftSection={<IconHome size={18} />}
+                    variant="outline"
+                    radius={4}
+                  >
+                    Nông hộ
+                  </Button>
+                  <Button
+                    leftSection={<IconMap size={18} />}
+                    variant="outline"
+                    radius={4}
+                  >
+                    Hợp tác xã
+                  </Button>
+                </Group>
+                <TextInput
+                  label="Mã định danh"
+                  value={formData.code}
+                  radius={4}
+                  onChange={(e) =>
+                    setFormData({ ...formData, code: e.target.value })
+                  }
+                />
+                <TextInput
+                  label="Tên đối tượng"
+                  placeholder="Công ty TNHH ABC"
+                  value={formData.name}
+                  radius={4}
+                  onChange={(e) =>
+                    setFormData({ ...formData, name: e.target.value })
+                  }
+                />
+                <TextInput
+                  label="Thương hiệu"
+                  placeholder="ABC Mart"
+                  value={formData.brand}
+                  radius={4}
+                  onChange={(e) =>
+                    setFormData({ ...formData, brand: e.target.value })
+                  }
+                />
+                <TextInput
+                  label="Người đại diện"
+                  value={formData.representative}
+                  radius={4}
+                  onChange={(e) =>
+                    setFormData({ ...formData, representative: e.target.value })
+                  }
+                />
+                <TextInput
+                  label="Số điện thoại"
+                  value={formData.phone}
+                  radius={4}
+                  onChange={(e) =>
+                    setFormData({ ...formData, phone: e.target.value })
+                  }
+                />
+                <TextInput
+                  label="Email"
+                  value={formData.email}
+                  radius={4}
+                  onChange={(e) =>
+                    setFormData({ ...formData, email: e.target.value })
+                  }
+                />
+                <TextInput
+                  label="Địa chỉ"
+                  value={formData.address}
+                  radius={4}
+                  onChange={(e) =>
+                    setFormData({ ...formData, address: e.target.value })
+                  }
+                />
+              </Stack>
+            </Card>
+            <Card withBorder radius={4}>
+              <Stack gap={"xs"}>
+                <Title order={6}>Thông tin thuế</Title>
+                <TextInput
+                  label="Mã số thuế (MST)"
+                  radius={4}
+                  value={formData.taxCode}
+                  onChange={(e) =>
+                    setFormData({ ...formData, taxCode: e.target.value })
+                  }
+                />
+                <TextInput
+                  label="Địa chỉ thuế"
+                  value={formData.taxAddress}
+                  radius={4}
+                  onChange={(e) =>
+                    setFormData({ ...formData, taxAddress: e.target.value })
+                  }
+                />
+                <Select
+                  label="Phân loại"
+                  radius={4}
+                  data={["Khách hàng", "Nhà cung cấp", "Đối tác"]}
+                  value={formData.category}
+                  onChange={(val) =>
+                    setFormData({ ...formData, category: val! })
+                  }
+                />
+                <Textarea
+                  label="Ghi chú"
+                  radius={4}
+                  minRows={2}
+                  value={formData.note}
+                  onChange={(e) =>
+                    setFormData({ ...formData, note: e.target.value })
+                  }
+                />
+              </Stack>
+            </Card>
+          </Group>
         </Stepper.Step>
 
         <Stepper.Step label="Bước 2" description="Thông tin chi nhánh">
           <Stack gap={"xs"}>
             {branches.map((b, idx) => (
-              <Card key={idx} withBorder>
-                <Grid>
-                  <Grid.Col span={6}>
-                    <TextInput label="Tên chi nhánh" radius={4} />
-                  </Grid.Col>
-                  <Grid.Col span={6}>
-                    <TextInput label="Số điện thoại" radius={4} />
-                  </Grid.Col>
-                  <Grid.Col span={6}>
-                    <TextInput label="Email" radius={4} />
-                  </Grid.Col>
-                  <Grid.Col span={6}>
-                    <TextInput label="Địa chỉ" radius={4} />
-                  </Grid.Col>
-                  <Grid.Col span={6}>
-                    <TextInput label="MST" radius={4} />
-                  </Grid.Col>
-                  <Grid.Col span={6}>
-                    <TextInput label="Địa chỉ thuế" radius={4} />
-                  </Grid.Col>
-                  <Grid.Col span={12}>
-                    <Textarea label="Ghi chú" radius={4} minRows={2} />
-                  </Grid.Col>
-                  <Grid.Col span={12}>
-                    <Group justify="flex-end">
-                      <ActionIcon
-                        color="red"
+              <Card key={idx} withBorder radius={4}>
+                <Stack gap={"xs"}>
+                  <Group grow align="flex-start">
+                    <Stack gap={"xs"}>
+                      <Title order={6}>Thông tin chi nhánh</Title>
+
+                      <TextInput label="Tên chi nhánh" radius={4} />
+                      <TextInput label="Số điện thoại" radius={4} />
+                      <TextInput label="Email" radius={4} />
+                      <TextInput label="Địa chỉ" radius={4} />
+                      <TextInput label="MST" radius={4} />
+                      <TextInput label="Địa chỉ thuế" radius={4} />
+                      <Textarea label="Ghi chú" radius={4} minRows={2} />
+                    </Stack>
+
+                    <Stack gap={"xs"}>
+                      <Title order={6}>Thông tin thuế</Title>
+                      <TextInput
+                        label="Mã số thuế (MST)"
                         radius={4}
-                        variant="light"
-                        onClick={() =>
-                          setBranches(branches.filter((_, i) => i !== idx))
+                        value={formData.taxCode}
+                        onChange={(e) =>
+                          setFormData({ ...formData, taxCode: e.target.value })
                         }
-                      >
-                        <IconTrash />
-                      </ActionIcon>
-                    </Group>
-                  </Grid.Col>
-                </Grid>
+                      />
+                      <TextInput
+                        label="Địa chỉ thuế"
+                        value={formData.taxAddress}
+                        radius={4}
+                        onChange={(e) =>
+                          setFormData({
+                            ...formData,
+                            taxAddress: e.target.value,
+                          })
+                        }
+                      />
+                      <Select
+                        label="Phân loại"
+                        radius={4}
+                        data={["Khách hàng", "Nhà cung cấp", "Đối tác"]}
+                        value={formData.category}
+                        onChange={(val) =>
+                          setFormData({ ...formData, category: val! })
+                        }
+                      />
+                      <Textarea
+                        label="Ghi chú"
+                        radius={4}
+                        minRows={2}
+                        value={formData.note}
+                        onChange={(e) =>
+                          setFormData({ ...formData, note: e.target.value })
+                        }
+                      />
+                    </Stack>
+                  </Group>
+                  <Group justify="flex-end">
+                    <Button
+                      color="red"
+                      radius={4}
+                      variant="light"
+                      onClick={() =>
+                        setBranches(branches.filter((_, i) => i !== idx))
+                      }
+                    >
+                      Xoá
+                    </Button>
+                  </Group>
+                </Stack>
               </Card>
             ))}
             <Button
@@ -269,10 +350,10 @@ export function CompanyAddPage() {
                     <TextInput label="Chủ tài khoản" radius={4} />
                   </Grid.Col>
                   <Grid.Col span={6}>
-                    <TextInput label="Số tài khoản" />
+                    <TextInput label="Số tài khoản" radius={4} />
                   </Grid.Col>
                   <Grid.Col span={6}>
-                    <TextInput label="Chi nhánh (nếu có)" />
+                    <TextInput label="Chi nhánh (nếu có)" radius={4} />
                   </Grid.Col>
                   <Grid.Col span={12}>
                     <Textarea label="Ghi chú" minRows={2} radius={4} />
@@ -317,83 +398,126 @@ export function CompanyAddPage() {
         </Stepper.Step>
 
         <Stepper.Step label="Bước 4" description="Xác nhận thông tin">
-          <Stack gap={"xs"}>
-            <Title order={5}>Thông tin cơ bản</Title>
-            <Group>
-              <IconBuildingFactory size={18} />
-              <Text size="sm">Loại: {formData.type}</Text>
-            </Group>
-            <Group>
-              <IconId size={18} />
-              <Text size="sm">Mã định danh: {formData.code}</Text>
-            </Group>
-            <Group>
-              <IconUser size={18} />
-              <Text size="sm">Tên: {formData.name}</Text>
-            </Group>
-            <Group>
-              <IconUser size={18} />
-              <Text size="sm">Thương hiệu: {formData.brand}</Text>
-            </Group>
-            <Group>
-              <IconUser size={18} />
-              <Text size="sm">Người đại diện: {formData.representative}</Text>
-            </Group>
-            <Group>
-              <IconPhone size={18} />
-              <Text size="sm">Số điện thoại: {formData.phone}</Text>
-            </Group>
-            <Group>
-              <IconMail size={18} />
-              <Text size="sm">Email: {formData.email}</Text>
-            </Group>
-            <Group>
-              <IconMapPin size={18} />
-              <Text size="sm">Địa chỉ: {formData.address}</Text>
-            </Group>
-            <Group>
-              <IconId size={18} />
-              <Text size="sm">Mã số thuế: {formData.taxCode}</Text>
-            </Group>
-            <Group>
-              <IconMapPin size={18} />
-              <Text size="sm">Địa chỉ thuế: {formData.taxAddress}</Text>
-            </Group>
-            <Group>
-              <Text size="sm">Phân loại: {formData.category}</Text>
-            </Group>
-            <Group>
-              <Text size="sm">Ghi chú: {formData.note}</Text>
-            </Group>
+          <Card withBorder radius="md" shadow="xs" p="lg">
+            <Stack gap="md">
+              {/* THÔNG TIN CƠ BẢN */}
+              <Stack>
+                <Title order={5}>📄 Thông tin cơ bản</Title>
+                <SimpleGrid cols={{ base: 1, sm: 2 }} spacing="xs">
+                  <Group gap="xs">
+                    <IconBuildingFactory size={18} />
+                    <Text size="sm">Loại: {formData.type}</Text>
+                  </Group>
+                  <Group gap="xs">
+                    <IconId size={18} />
+                    <Text size="sm">Mã định danh: {formData.code}</Text>
+                  </Group>
+                  <Group gap="xs">
+                    <IconUser size={18} />
+                    <Text size="sm">Tên: {formData.name}</Text>
+                  </Group>
+                  <Group gap="xs">
+                    <IconUser size={18} />
+                    <Text size="sm">Thương hiệu: {formData.brand}</Text>
+                  </Group>
+                  <Group gap="xs">
+                    <IconUser size={18} />
+                    <Text size="sm">
+                      Người đại diện: {formData.representative}
+                    </Text>
+                  </Group>
+                  <Group gap="xs">
+                    <IconPhone size={18} />
+                    <Text size="sm">Số điện thoại: {formData.phone}</Text>
+                  </Group>
+                  <Group gap="xs">
+                    <IconMail size={18} />
+                    <Text size="sm">Email: {formData.email}</Text>
+                  </Group>
+                  <Group gap="xs">
+                    <IconMapPin size={18} />
+                    <Text size="sm">Địa chỉ: {formData.address}</Text>
+                  </Group>
+                  <Group gap="xs">
+                    <IconId size={18} />
+                    <Text size="sm">Mã số thuế: {formData.taxCode}</Text>
+                  </Group>
+                  <Group gap="xs">
+                    <IconMapPin size={18} />
+                    <Text size="sm">Địa chỉ thuế: {formData.taxAddress}</Text>
+                  </Group>
+                  <Group gap="xs">
+                    <Text size="sm">Phân loại: {formData.category}</Text>
+                  </Group>
+                  <Group gap="xs">
+                    <Text size="sm">Ghi chú: {formData.note}</Text>
+                  </Group>
+                </SimpleGrid>
+              </Stack>
 
-            <Title order={5} mt="md">
-              Chi nhánh
-            </Title>
-            {branches.map((b, i) => (
-              <Card key={i} withBorder>
-                <Text size="sm">Tên: {b.name}</Text>
-                <Text size="sm">SĐT: {b.phone}</Text>
-                <Text size="sm">Email: {b.email}</Text>
-                <Text size="sm">Địa chỉ: {b.address}</Text>
-                <Text size="sm">MST: {b.taxCode}</Text>
-                <Text size="sm">Địa chỉ thuế: {b.taxAddress}</Text>
-                <Text size="sm">Ghi chú: {b.note}</Text>
-              </Card>
-            ))}
+              {/* CHI NHÁNH */}
+              <Stack>
+                <Title order={5}>🏢 Chi nhánh</Title>
+                <SimpleGrid cols={{ base: 1, sm: 2, md: 3 }} spacing="md">
+                  {branches.map((b, i) => (
+                    <Card key={i} withBorder radius="md" p="sm">
+                      <Stack gap={2}>
+                        <Text size="sm">
+                          <strong>Tên:</strong> {b.name}
+                        </Text>
+                        <Text size="sm">
+                          <strong>SĐT:</strong> {b.phone}
+                        </Text>
+                        <Text size="sm">
+                          <strong>Email:</strong> {b.email}
+                        </Text>
+                        <Text size="sm">
+                          <strong>Địa chỉ:</strong> {b.address}
+                        </Text>
+                        <Text size="sm">
+                          <strong>MST:</strong> {b.taxCode}
+                        </Text>
+                        <Text size="sm">
+                          <strong>Địa chỉ thuế:</strong> {b.taxAddress}
+                        </Text>
+                        <Text size="sm">
+                          <strong>Ghi chú:</strong> {b.note}
+                        </Text>
+                      </Stack>
+                    </Card>
+                  ))}
+                </SimpleGrid>
+              </Stack>
 
-            <Title order={5} mt="md">
-              Ngân hàng
-            </Title>
-            {banks.map((b, i) => (
-              <Card key={i} withBorder>
-                <Text size="sm">Ngân hàng: {b.bank}</Text>
-                <Text size="sm">Chủ tài khoản: {b.accountHolder}</Text>
-                <Text size="sm">Số tài khoản: {b.accountNumber}</Text>
-                <Text size="sm">Chi nhánh: {b.branch}</Text>
-                <Text size="sm">Ghi chú: {b.note}</Text>
-              </Card>
-            ))}
-          </Stack>
+              {/* NGÂN HÀNG */}
+              <Stack>
+                <Title order={5}>🏦 Ngân hàng</Title>
+                <SimpleGrid cols={{ base: 1, sm: 2, md: 3 }} spacing="md">
+                  {banks.map((b, i) => (
+                    <Card key={i} withBorder radius="md" p="sm">
+                      <Stack gap={2}>
+                        <Text size="sm">
+                          <strong>Ngân hàng:</strong> {b.bank}
+                        </Text>
+                        <Text size="sm">
+                          <strong>Chủ tài khoản:</strong> {b.accountHolder}
+                        </Text>
+                        <Text size="sm">
+                          <strong>Số tài khoản:</strong> {b.accountNumber}
+                        </Text>
+                        <Text size="sm">
+                          <strong>Chi nhánh:</strong> {b.branch}
+                        </Text>
+                        <Text size="sm">
+                          <strong>Ghi chú:</strong> {b.note}
+                        </Text>
+                      </Stack>
+                    </Card>
+                  ))}
+                </SimpleGrid>
+              </Stack>
+            </Stack>
+          </Card>
         </Stepper.Step>
 
         <Stepper.Completed>

@@ -29,11 +29,18 @@ import {
   IconDownload,
   IconMail,
   IconMapPin,
+  IconPlant2,
+  IconPlus,
+  IconSearch,
+  IconSpray,
+  IconTools,
+  IconTractor,
   IconUser,
 } from "@tabler/icons-react";
 import { useDisclosure } from "@mantine/hooks";
 import { useNavigate } from "react-router-dom";
 import AreaCard from "./components/AreaCard";
+import { SelectableEnterpriseCards } from "./components/SelectableEnterpriseCards";
 type SubArea = {
   id: string;
   name: string;
@@ -140,6 +147,40 @@ const areaGroups = [
     children: [],
   },
 ];
+const assetTypes = [
+  {
+    label: "Thuốc BVTV",
+    value: "Thuốc bảo vệ thực vật",
+    icon: <IconSpray size={18} />,
+  },
+  {
+    label: "Vật tư",
+    value: "Vật tư",
+    icon: <IconTools size={18} />,
+  },
+  {
+    label: "Phân bón",
+    value: "Phân bón",
+    icon: <IconPlant2 size={18} />,
+  },
+  {
+    label: "Máy móc",
+    value: "Máy móc",
+    icon: <IconTractor size={18} />,
+  },
+];
+const company = {
+  id: "ent-2",
+  name: "HTX Nông nghiệp Bền Vững",
+  type: "hợp tác xã",
+  owner: "Trần Thị B",
+  cccd: "123456789012",
+  phone: "0938123456",
+  email: "info@benvungcoop.vn",
+  address: "Xã Phú Riềng, huyện Phú Riềng, Bình Phước",
+  taxCode: "0401234567",
+  landCode: "HTX-98765432",
+};
 
 export default function StockManagementAddDeliveryPage() {
   const navigate = useNavigate();
@@ -216,8 +257,14 @@ export default function StockManagementAddDeliveryPage() {
         <Stepper.Step label="Bước 1" description="Xác định vị trí">
           <form onSubmit={form.onSubmit(() => setActive(1))}>
             <Stack gap="xs">
+              <TextInput
+                label="Chọn doanh nghiệp / hộ nông dân (chọn một)"
+                placeholder="Tìm kiếm doanh nghiệp"
+                leftSection={<IconSearch size={18} />}
+              />
+              <SelectableEnterpriseCards />
               <Text fw={500} fz={15}>
-                Chọn khu vực
+                Chọn khu vực (chọn nhiều)
               </Text>
               <Grid>
                 {areaGroups.map((group) => (
@@ -324,173 +371,191 @@ export default function StockManagementAddDeliveryPage() {
         </Stepper.Step>
 
         <Stepper.Step label="Bước 2" description="Thông tin vật tư">
-          <Stack gap="md">
-            <Select
-              label="Kho"
-              data={["Kho A", "Kho B"]}
-              radius={4}
-              placeholder="Nhập tên kho mới"
-              withAsterisk
-              {...form.getInputProps("warehouseName")}
-            />
-            <Input.Wrapper label="Loại kho">
-              <ScrollArea type="always" offsetScrollbars>
-                <Flex gap="md" py="md" px="xs" wrap="nowrap">
-                  {warehouseTypes.map((w, idx) => (
-                    <Card
-                      key={idx}
-                      shadow="sm"
-                      padding="lg"
-                      radius="md"
-                      withBorder
-                      style={{
-                        width: 200,
-                        minWidth: 200,
-                        cursor: "pointer",
-                        transition: "all 0.2s",
-                      }}
-                      onMouseEnter={(e) =>
-                        (e.currentTarget.style.boxShadow =
-                          "0 0 10px rgba(0,0,0,0.1)")
-                      }
-                      onMouseLeave={(e) =>
-                        (e.currentTarget.style.boxShadow =
-                          "var(--mantine-shadow-sm)")
-                      }
-                    >
-                      <Stack align="center" justify="center" gap={4}>
-                        {w.icon}
-                        <Text size="sm" fw={600}>
-                          {w.title}
-                        </Text>
-                        <Text size="xs" c="dimmed" ta="center">
-                          {w.desc}
-                        </Text>
-                      </Stack>
-                    </Card>
-                  ))}
-                </Flex>
-              </ScrollArea>
-            </Input.Wrapper>
-            <SegmentedControl
-              radius={4}
-              fullWidth
-              value={inputMode}
-              onChange={(val) => setInputMode(val as "upload" | "manual")}
-              data={[
-                { label: "Tải file Excel", value: "upload" },
-                { label: "Tạo mới thủ công", value: "manual" },
-              ]}
-            />
-
-            {inputMode === "upload" && (
-              <Stack gap={"xs"}>
-                <Group justify="apart">
-                  <FileButton onChange={handleUploadFile} accept=".xlsx,.xls">
-                    {(props) => (
-                      <Button
-                        radius={4}
-                        {...props}
-                        leftSection={<IconDownload size={16} />}
-                      >
-                        Tải file Excel
-                      </Button>
-                    )}
-                  </FileButton>
-                  <Text size="sm" color="dimmed">
-                    Chỉ chấp nhận định dạng .xlsx hoặc .xls
-                  </Text>
-                </Group>
-              </Stack>
-            )}
-
-            {inputMode === "manual" && (
+          <Stack gap="xs">
+            <Card withBorder radius="md" shadow="sm" p="md">
               <Stack>
                 <Select
+                  label="Kho"
+                  data={["Kho A", "Kho B"]}
                   radius={4}
-                  label="Loại tài sản"
-                  placeholder="VD: Phân NPK 16-16-8"
+                  placeholder="Nhập tên kho mới"
+                  withAsterisk
+                  {...form.getInputProps("warehouseName")}
+                />
+                <Input.Wrapper label="Loại kho">
+                  <ScrollArea type="always" offsetScrollbars>
+                    <Flex gap="md" py="md" px="xs" wrap="nowrap">
+                      {warehouseTypes.map((w, idx) => (
+                        <Card
+                          key={idx}
+                          shadow="sm"
+                          padding="lg"
+                          radius="md"
+                          withBorder
+                          style={{
+                            width: 200,
+                            minWidth: 200,
+                            cursor: "pointer",
+                            transition: "all 0.2s",
+                          }}
+                          onMouseEnter={(e) =>
+                            (e.currentTarget.style.boxShadow =
+                              "0 0 10px rgba(0,0,0,0.1)")
+                          }
+                          onMouseLeave={(e) =>
+                            (e.currentTarget.style.boxShadow =
+                              "var(--mantine-shadow-sm)")
+                          }
+                        >
+                          <Stack align="center" justify="center" gap={4}>
+                            {w.icon}
+                            <Text size="sm" fw={600}>
+                              {w.title}
+                            </Text>
+                            <Text size="xs" c="dimmed" ta="center">
+                              {w.desc}
+                            </Text>
+                          </Stack>
+                        </Card>
+                      ))}
+                    </Flex>
+                  </ScrollArea>
+                </Input.Wrapper>
+                <SegmentedControl
+                  radius={4}
+                  fullWidth
+                  value={inputMode}
+                  onChange={(val) => setInputMode(val as "upload" | "manual")}
                   data={[
-                    "Thuốc bảo vệ thực vật",
-                    "Vật tư",
-                    "Phân bón",
-                    "Máy móc",
+                    { label: "Tải file Excel", value: "upload" },
+                    { label: "Tạo mới thủ công", value: "manual" },
                   ]}
-                  required
                 />
 
-                <TextInput
-                  radius={4}
-                  label="Nhóm vật tư"
-                  placeholder="VD: Phân bón, BVTV, Máy móc"
-                  required
-                />
+                {inputMode === "upload" && (
+                  <Stack gap={"xs"}>
+                    <Group justify="apart">
+                      <FileButton
+                        onChange={handleUploadFile}
+                        accept=".xlsx,.xls"
+                      >
+                        {(props) => (
+                          <Button
+                            radius={4}
+                            {...props}
+                            leftSection={<IconDownload size={16} />}
+                          >
+                            Tải file Excel
+                          </Button>
+                        )}
+                      </FileButton>
+                      <Text size="sm" color="dimmed">
+                        Chỉ chấp nhận định dạng .xlsx hoặc .xls
+                      </Text>
+                    </Group>
+                  </Stack>
+                )}
 
-                <TextInput
-                  radius={4}
-                  label="Số lượng"
-                  placeholder="VD: 100"
-                  type="number"
-                  required
-                />
-
-                <Select
-                  radius={4}
-                  label="Đơn vị"
-                  data={["lít", "ml", "g", "kg"]}
-                  required
-                />
-
-                <Select
-                  radius={4}
-                  label="Quy cách đóng gói"
-                  data={["Hộp", "Chai", "Lọ", "Gói"]}
-                />
-
-                <Button
-                  radius={4}
-                  variant="light"
-                  onClick={() => {
-                    // Tạm tạo dữ liệu mẫu; bạn nên dùng useForm để lấy giá trị từ input
-                    setImportedItems((prev) => [
-                      ...prev,
-                      {
-                        group: "Phân bón",
-                        name: "Phân NPK 16-16-8",
-                        quantity: 100,
-                        unit: "bao",
-                        packing: "25kg/bao",
-                      },
-                    ]);
-                  }}
-                >
-                  Thêm vật tư
-                </Button>
-              </Stack>
-            )}
-
-            <Divider label="Danh sách vật tư" labelPosition="center" my="sm" />
-
-            <Grid gutter="sm">
-              {importedItems.map((item, index) => (
-                <Grid.Col span={{ base: 12, sm: 6, md: 4 }} key={index}>
-                  <Card shadow="sm" radius="md" withBorder>
-                    <Stack gap="xs">
-                      <Group justify="space-between">
-                        <Text fw={600}>{item.name}</Text>
-                        <Badge color="green" variant="light">
-                          {item.group}
-                        </Badge>
+                {inputMode === "manual" && (
+                  <Stack>
+                    <Input.Wrapper label="Loại tài sản">
+                      <Group gap="sm" wrap="wrap">
+                        {assetTypes.map((type, index) => (
+                          <Button
+                            key={type.value}
+                            leftSection={type.icon}
+                            radius={4}
+                            variant={index === 0 ? "filled" : "outline"}
+                          >
+                            {type.label}
+                          </Button>
+                        ))}
                       </Group>
-                      <Text size="sm">Số lượng: {item.quantity}</Text>
-                      <Text size="sm">Đơn vị: {item.unit}</Text>
-                      <Text size="sm">Quy cách: {item.packing}</Text>
-                    </Stack>
-                  </Card>
-                </Grid.Col>
-              ))}
-            </Grid>
+                    </Input.Wrapper>
+                    <TextInput
+                      radius={4}
+                      label="Nhóm vật tư"
+                      placeholder="VD: Phân bón, BVTV, Máy móc"
+                      required
+                    />
 
+                    <TextInput
+                      radius={4}
+                      label="Số lượng"
+                      placeholder="VD: 100"
+                      type="number"
+                      required
+                    />
+
+                    <Select
+                      radius={4}
+                      label="Đơn vị"
+                      data={["lít", "ml", "g", "kg"]}
+                      required
+                    />
+
+                    <Select
+                      radius={4}
+                      label="Quy cách đóng gói"
+                      data={["Hộp", "Chai", "Lọ", "Gói"]}
+                    />
+
+                    <Button
+                      radius={4}
+                      variant="light"
+                      onClick={() => {
+                        // Tạm tạo dữ liệu mẫu; bạn nên dùng useForm để lấy giá trị từ input
+                        setImportedItems((prev) => [
+                          ...prev,
+                          {
+                            group: "Phân bón",
+                            name: "Phân NPK 16-16-8",
+                            quantity: 100,
+                            unit: "bao",
+                            packing: "25kg/bao",
+                          },
+                        ]);
+                      }}
+                    >
+                      Thêm vật tư
+                    </Button>
+                  </Stack>
+                )}
+
+                <Divider
+                  label="Danh sách vật tư"
+                  labelPosition="center"
+                  my="sm"
+                />
+
+                <Grid gutter="sm">
+                  {importedItems.map((item, index) => (
+                    <Grid.Col span={{ base: 12, sm: 6, md: 4 }} key={index}>
+                      <Card shadow="sm" radius="md" withBorder>
+                        <Stack gap="xs">
+                          <Group justify="space-between">
+                            <Text fw={600}>{item.name}</Text>
+                            <Badge color="green" variant="light">
+                              {item.group}
+                            </Badge>
+                          </Group>
+                          <Text size="sm">Số lượng: {item.quantity}</Text>
+                          <Text size="sm">Đơn vị: {item.unit}</Text>
+                          <Text size="sm">Quy cách: {item.packing}</Text>
+                        </Stack>
+                      </Card>
+                    </Grid.Col>
+                  ))}
+                </Grid>
+              </Stack>
+            </Card>
+            <Button
+              radius={4}
+              variant="outline"
+              leftSection={<IconPlus size={18} />}
+            >
+              Thêm mới
+            </Button>
             <Group justify="space-between">
               <Button radius={4} variant="default" onClick={() => setActive(0)}>
                 Quay lại
@@ -504,27 +569,74 @@ export default function StockManagementAddDeliveryPage() {
 
         <Stepper.Step label="Bước 3" description="Xác nhận">
           <Stack gap="lg">
-            <Title order={3}>Xác nhận thông tin kho</Title>
+            <Title order={3}>🗂️ Xác nhận thông tin kho</Title>
 
-            {/* Thông tin kho */}
-            <Card withBorder radius="md" shadow="sm" p="md">
-              <Stack gap="xs">
-                <Group justify="space-between">
-                  <Text fw={500}>Tên kho:</Text>
-                  <Text>{form.values.warehouseName}</Text>
-                </Group>
-                <Group justify="space-between">
-                  <Text fw={500}>Khu vực đã chọn:</Text>
-                  <Text>{form.values.areaDetail}</Text>
-                </Group>
-                <Group justify="space-between">
-                  <Text fw={500}>Mã khu phụ:</Text>
-                  <Text>{form.values.areaId}</Text>
-                </Group>
-              </Stack>
-            </Card>
+            {/* THÔNG TIN KHO + DOANH NGHIỆP */}
+            <SimpleGrid cols={{ base: 1, sm: 2 }} spacing="md">
+              {/* Thông tin kho */}
+              <Card withBorder radius="md" shadow="sm" p="md">
+                <Title order={5} mb="xs">
+                  🏬 Kho lưu trữ
+                </Title>
+                <Stack gap="xs">
+                  <Group justify="space-between">
+                    <Text size="sm" c="dimmed">
+                      Tên kho:
+                    </Text>
+                    <Text fw={500}>Kho miền nam</Text>
+                  </Group>
+                  <Group justify="space-between">
+                    <Text size="sm" c="dimmed">
+                      Khu vực đã chọn:
+                    </Text>
+                    <Text fw={500}>Khu vực A</Text>
+                  </Group>
+                  <Group justify="space-between">
+                    <Text size="sm" c="dimmed">
+                      Mã khu phụ:
+                    </Text>
+                    <Text fw={500}>Khu phụ A1</Text>
+                  </Group>
+                </Stack>
+              </Card>
 
-            {/* Danh sách vật tư */}
+              {/* Doanh nghiệp */}
+              <Card withBorder radius="md" shadow="sm" p="md">
+                <Title order={5} mb="xs">
+                  🏢 {company.name}
+                </Title>
+                <Stack gap={4}>
+                  <Text size="sm">
+                    <strong>Loại hình:</strong> {company.type}
+                  </Text>
+                  <Text size="sm">
+                    <strong>Chủ sở hữu:</strong> {company.owner}
+                  </Text>
+                  <Text size="sm">
+                    <strong>CCCD/CMND:</strong> {company.cccd}
+                  </Text>
+                  <Text size="sm">
+                    <strong>Số điện thoại:</strong> {company.phone}
+                  </Text>
+                  <Text size="sm">
+                    <strong>Email:</strong> {company.email}
+                  </Text>
+                  <Text size="sm">
+                    <strong>Địa chỉ:</strong> {company.address}
+                  </Text>
+                  {company.taxCode && (
+                    <Text size="sm">
+                      <strong>Mã số thuế:</strong> {company.taxCode}
+                    </Text>
+                  )}
+                  <Text size="sm">
+                    <strong>Số sổ đỏ:</strong> {company.landCode}
+                  </Text>
+                </Stack>
+              </Card>
+            </SimpleGrid>
+
+            {/* DANH SÁCH VẬT TƯ */}
             <Divider label="Danh sách vật tư" labelPosition="center" my="md" />
 
             {importedItems.length === 0 ? (
@@ -532,34 +644,57 @@ export default function StockManagementAddDeliveryPage() {
                 Không có vật tư nào được thêm.
               </Text>
             ) : (
-              <Grid gutter="sm">
+              <SimpleGrid cols={{ base: 1, sm: 2, md: 3 }} spacing="md">
                 {importedItems.map((item, index) => (
-                  <Grid.Col span={{ base: 12, sm: 6, md: 4 }} key={index}>
-                    <Card shadow="sm" radius="md" withBorder>
-                      <Stack gap="xs">
-                        <Group justify="space-between">
-                          <Text fw={600}>{item.name}</Text>
-                          <Badge color="green" variant="light">
-                            {item.group}
-                          </Badge>
-                        </Group>
-                        <Text size="sm">Số lượng: {item.quantity}</Text>
-                        <Text size="sm">Đơn vị: {item.unit}</Text>
-                        <Text size="sm">Quy cách: {item.packing}</Text>
-                      </Stack>
-                    </Card>
-                  </Grid.Col>
+                  <Card key={index} withBorder shadow="sm" radius="md" p="md">
+                    <Stack gap="xs">
+                      <Group justify="space-between">
+                        <Text fw={600}>{item.name}</Text>
+                        <Badge color="green" variant="light">
+                          {item.group}
+                        </Badge>
+                      </Group>
+                      <Group justify="space-between">
+                        <Text size="sm" c="dimmed">
+                          Số lượng:
+                        </Text>
+                        <Text size="sm" fw={500}>
+                          {item.quantity}
+                        </Text>
+                      </Group>
+                      <Group justify="space-between">
+                        <Text size="sm" c="dimmed">
+                          Đơn vị:
+                        </Text>
+                        <Text size="sm" fw={500}>
+                          {item.unit}
+                        </Text>
+                      </Group>
+                      <Group justify="space-between">
+                        <Text size="sm" c="dimmed">
+                          Quy cách:
+                        </Text>
+                        <Text size="sm" fw={500}>
+                          {item.packing}
+                        </Text>
+                      </Group>
+                    </Stack>
+                  </Card>
                 ))}
-              </Grid>
+              </SimpleGrid>
             )}
 
-            {/* Nút điều hướng */}
+            {/* Nút xác nhận */}
             <Group justify="space-between" mt="lg">
-              <Button radius={4} variant="default" onClick={() => setActive(1)}>
+              <Button
+                radius="md"
+                variant="default"
+                onClick={() => setActive(1)}
+              >
                 Quay lại
               </Button>
               <Button
-                radius={4}
+                radius="md"
                 leftSection={<IconCheck size={18} />}
                 color="teal"
                 onClick={() => alert("✅ Đã lưu thành công!")}

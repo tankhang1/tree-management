@@ -29,6 +29,7 @@ import SeedCards from "./components/SeedCards";
 import SeedDetailCard from "./components/SeedDetailCard";
 import LotCard from "./components/LotCard";
 import { useDisclosure } from "@mantine/hooks";
+import { EmployeeCardList } from "../../../HRManagementPage/Team/Add/components/EmployeeCardList";
 export interface AreaOption {
   code: string;
   name: string;
@@ -149,18 +150,7 @@ const regionOptions: RegionOption[] = [
     terrain: ["Thấp", "Trũng"],
   },
 ];
-const employees = [
-  {
-    name: "Nguyễn Văn A",
-    role: "Tổ trưởng",
-    department: "Ban kỹ thuật",
-  },
-  {
-    name: "Trần Thị B",
-    role: "Giám đốc",
-    department: "Ban tài chính",
-  },
-];
+
 const seedOptions: SeedOption[] = [
   {
     code: "VAR01",
@@ -343,10 +333,7 @@ const AreaManagementAddRegionPage = () => {
       ],
     },
   });
-  const options = employees.map((e) => ({
-    value: e.name,
-    label: `${e.name} - [${e.role}] - [${e.department}, Ban kinh doanh]`,
-  }));
+
   const nextStep = () => {
     if (active === 0) {
       const plots: PlotType[] = form.values.areas.map((area, i) => ({
@@ -831,14 +818,14 @@ const AreaManagementAddRegionPage = () => {
               />
             </>
           )}
-          <Autocomplete
-            label="Tìm kiếm nhân sự"
-            placeholder="Nhập tên hoặc chức vụ..."
-            leftSection={<IconSearch size={18} />}
+          <TextInput
+            label="Tìm kiếm nhân viên"
+            placeholder="Chọn thành viên từ nhân sự"
+            leftSection={<IconSearch size={16} />}
+            {...form.getInputProps("members")}
             radius={4}
-            value="Nguyễn Văn A"
-            data={options}
           />
+          <EmployeeCardList />
         </Stack>
 
         <Group mt="md" justify="flex-end">
