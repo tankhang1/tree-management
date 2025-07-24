@@ -29,7 +29,6 @@ import {
   IconMail,
   IconMapPin,
   IconPlant2,
-  IconPlus,
   IconSearch,
   IconSpray,
   IconTools,
@@ -228,11 +227,11 @@ export default function StockManagementAddDeliveryPage() {
           <form onSubmit={form.onSubmit(() => setActive(1))}>
             <Stack gap="xs">
               <TextInput
-                label="Chọn doanh nghiệp / hộ nông dân (chọn một)"
+                label="Doanh nghiệp / hộ nông dân (chọn một)"
                 placeholder="Tìm kiếm doanh nghiệp"
                 leftSection={<IconSearch size={18} />}
               />
-              <SelectableEnterpriseCards />
+              <SelectableEnterpriseCards isCheckbox={false} isMulti={false} />
               <Text fw={500} fz={15}>
                 Chọn khu vực (chọn một)
               </Text>
@@ -267,42 +266,37 @@ export default function StockManagementAddDeliveryPage() {
               </Grid>
               <Stack gap={"xs"}>
                 <Text fw={500} fz={15}>
-                  Danh sách khu vực phụ đã chọn
+                  Khu vực phụ (chọn một)
                 </Text>
-                <Card withBorder>
-                  <Stack>
-                    <Text fw={"bold"}>Khu vực A</Text>
-                    <Stack>
-                      <Group>
-                        {[
-                          {
-                            id: "KV001-1",
-                            name: "Khu phụ A1",
-                            latitude: 10.763,
-                            longitude: 106.661,
-                            areaSize: 500,
-                          },
-                          {
-                            id: "KV001-2",
-                            name: "Khu phụ A2",
-                            latitude: 10.764,
-                            longitude: 106.662,
-                            areaSize: 700,
-                          },
-                        ].map((group, index) => (
-                          <AreaCard
-                            isCheckbox
-                            key={group.id}
-                            {...group}
-                            selected={index === 0}
-                            onToggle={() => {}}
-                            closable={false}
-                          />
-                        ))}
-                      </Group>
-                    </Stack>
-                  </Stack>
-                </Card>
+                <Stack>
+                  <Group>
+                    {[
+                      {
+                        id: "KV001-1",
+                        name: "Khu phụ A1",
+                        latitude: 10.763,
+                        longitude: 106.661,
+                        areaSize: 500,
+                      },
+                      {
+                        id: "KV001-2",
+                        name: "Khu phụ A2",
+                        latitude: 10.764,
+                        longitude: 106.662,
+                        areaSize: 700,
+                      },
+                    ].map((group, index) => (
+                      <AreaCard
+                        isCheckbox
+                        key={group.id}
+                        {...group}
+                        selected={index === 0}
+                        onToggle={() => {}}
+                        closable={false}
+                      />
+                    ))}
+                  </Group>
+                </Stack>
               </Stack>
               <Group justify="right">
                 <Button type="submit" radius={4}>
@@ -316,31 +310,29 @@ export default function StockManagementAddDeliveryPage() {
         <Stepper.Step label="Bước 2" description="Thông tin vật tư">
           <Stack gap="xs">
             <Group>
-              {["Khu A - Khu phụ A1 - Kho A", "Khu A - Khu phụ A2 - Kho B"].map(
-                (area) => (
-                  <Card
-                    key={area}
-                    withBorder
-                    shadow="md"
-                    radius="4"
-                    p="xs"
-                    style={{ transition: "transform 0.2s", cursor: "pointer" }}
-                    onMouseEnter={(e) =>
-                      (e.currentTarget.style.transform = "scale(1.03)")
-                    }
-                    onMouseLeave={(e) =>
-                      (e.currentTarget.style.transform = "scale(1)")
-                    }
-                  >
-                    <Center>
-                      <Group gap="sm">
-                        <IconMapPin size={20} color="teal" />
-                        <Text fw={600}>{area}</Text>
-                      </Group>
-                    </Center>
-                  </Card>
-                )
-              )}
+              {["Khu A - Khu phụ A1 - Kho A"].map((area) => (
+                <Card
+                  key={area}
+                  withBorder
+                  shadow="md"
+                  radius="4"
+                  p="xs"
+                  style={{ transition: "transform 0.2s", cursor: "pointer" }}
+                  onMouseEnter={(e) =>
+                    (e.currentTarget.style.transform = "scale(1.03)")
+                  }
+                  onMouseLeave={(e) =>
+                    (e.currentTarget.style.transform = "scale(1)")
+                  }
+                >
+                  <Center>
+                    <Group gap="sm">
+                      <IconMapPin size={20} color="teal" />
+                      <Text fw={600}>{area}</Text>
+                    </Group>
+                  </Center>
+                </Card>
+              ))}
             </Group>
             <Card withBorder radius="md" shadow="sm" p="md">
               <Stack>
@@ -522,13 +514,7 @@ export default function StockManagementAddDeliveryPage() {
                 </Grid>
               </Stack>
             </Card>
-            <Button
-              radius={4}
-              variant="outline"
-              leftSection={<IconPlus size={18} />}
-            >
-              Thêm mới
-            </Button>
+
             <Group justify="space-between">
               <Button radius={4} variant="default" onClick={() => setActive(0)}>
                 Quay lại
@@ -659,15 +645,11 @@ export default function StockManagementAddDeliveryPage() {
 
             {/* Nút xác nhận */}
             <Group justify="space-between" mt="lg">
-              <Button
-                radius="md"
-                variant="default"
-                onClick={() => setActive(1)}
-              >
+              <Button variant="default" radius={4} onClick={() => setActive(1)}>
                 Quay lại
               </Button>
               <Button
-                radius="md"
+                radius={4}
                 leftSection={<IconCheck size={18} />}
                 color="teal"
                 onClick={() => alert("✅ Đã lưu thành công!")}

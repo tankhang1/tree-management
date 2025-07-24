@@ -38,14 +38,23 @@ const enterprises = [
 
 type TEnterprise = {
   isCheckbox?: boolean;
+  isMulti?: boolean;
 };
-export function SelectableEnterpriseCards({ isCheckbox = true }: TEnterprise) {
+export function SelectableEnterpriseCards({
+  isCheckbox = true,
+  isMulti = true,
+}: TEnterprise) {
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
 
   const toggleSelection = (id: string) => {
-    setSelectedIds((prev) =>
-      prev.includes(id) ? prev.filter((i) => i !== id) : [...prev, id]
-    );
+    if (!isMulti) {
+      setSelectedIds([id]);
+      return;
+    } else {
+      setSelectedIds((prev) =>
+        prev.includes(id) ? prev.filter((i) => i !== id) : [...prev, id]
+      );
+    }
   };
 
   return (
