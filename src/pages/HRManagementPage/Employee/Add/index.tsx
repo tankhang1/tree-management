@@ -62,94 +62,98 @@ const HRManagementEmployeeAddPage = () => {
           allowNextStepsSelect={false}
         >
           <Stepper.Step label="Bước 1" description="Thông tin cơ bản">
-            <Stack gap={"xs"}>
-              <Input.Wrapper label="Ảnh đại diện">
-                <Dropzone
-                  onDrop={(files) => console.log("accepted files", files)}
-                  onReject={(files) => console.log("rejected files", files)}
-                  maxSize={5 * 1024 ** 2}
-                  accept={IMAGE_MIME_TYPE}
-                >
-                  <Group
-                    justify="center"
-                    gap="xl"
-                    mih={220}
-                    style={{ pointerEvents: "none" }}
-                  >
-                    <Dropzone.Accept>
-                      <IconUpload
-                        size={52}
-                        color="var(--mantine-color-blue-6)"
-                        stroke={1.5}
-                      />
-                    </Dropzone.Accept>
-                    <Dropzone.Reject>
-                      <IconX
-                        size={52}
-                        color="var(--mantine-color-red-6)"
-                        stroke={1.5}
-                      />
-                    </Dropzone.Reject>
-                    <Dropzone.Idle>
-                      <IconPhoto
-                        size={52}
-                        color="var(--mantine-color-dimmed)"
-                        stroke={1.5}
-                      />
-                    </Dropzone.Idle>
-
-                    <div>
-                      <Text size="xl" inline>
-                        Drag images here or click to select files
-                      </Text>
-                      <Text size="sm" c="dimmed" inline mt={7}>
-                        Attach as many files as you like, each file should not
-                        exceed 5mb
-                      </Text>
-                    </div>
-                  </Group>
-                </Dropzone>
-              </Input.Wrapper>
-              <TextInput label="Tên" placeholder="Tên" radius={4} />
-              <TextInput
-                label="Số điện thoại"
-                placeholder="Số điện thoại"
-                radius={4}
-              />
-              <Select
-                placeholder="Chọn tỉnh thành/ thành phố"
-                label="Chọn tỉnh thành"
-                radius={4}
-              />
-              {/* <Select
+            <Group grow align="flex-start">
+              <Stack gap={"xs"}>
+                <TextInput label="Tên" placeholder="Tên" radius={4} />
+                <TextInput
+                  label="Số điện thoại"
+                  placeholder="Số điện thoại"
+                  radius={4}
+                />
+                <Select
+                  placeholder="Chọn tỉnh thành/ thành phố"
+                  label="Chọn tỉnh thành"
+                  radius={4}
+                />
+                {/* <Select
                 placeholder="Chọn thành phố"
                 label="Chọn thành phố"
                 radius={4}
               /> */}
-              <Select
-                placeholder="Chọn phường/xã"
-                label="Chọn phường/xã"
-                radius={4}
-              />
-              <TextInput
-                label="Địa chỉ chi tiết"
-                placeholder="Địa chỉ chi tiết"
-                radius={4}
-              />
-              <TextInput
-                label="Mã số thuế"
-                placeholder="Mã số thuế"
-                radius={4}
-              />
-              <Group justify="space-between" mt="md">
-                <Button variant="default" onClick={prevStep} radius={4}>
-                  Quay lại
-                </Button>
-                <Button onClick={nextStep} radius={4}>
-                  Tiếp theo
-                </Button>
-              </Group>
-            </Stack>
+                <Select
+                  placeholder="Chọn phường/xã"
+                  label="Chọn phường/xã"
+                  radius={4}
+                />
+                <TextInput
+                  label="Địa chỉ chi tiết"
+                  placeholder="Địa chỉ chi tiết"
+                  radius={4}
+                />
+                <TextInput
+                  label="Mã số thuế"
+                  placeholder="Mã số thuế"
+                  radius={4}
+                />
+              </Stack>
+              <Stack gap={"xs"}>
+                <Input.Wrapper label="Ảnh đại diện">
+                  <Dropzone
+                    onDrop={(files) => console.log("accepted files", files)}
+                    onReject={(files) => console.log("rejected files", files)}
+                    maxSize={5 * 1024 ** 2}
+                    accept={IMAGE_MIME_TYPE}
+                  >
+                    <Group
+                      justify="center"
+                      gap="xl"
+                      mih={220}
+                      style={{ pointerEvents: "none" }}
+                    >
+                      <Dropzone.Accept>
+                        <IconUpload
+                          size={52}
+                          color="var(--mantine-color-blue-6)"
+                          stroke={1.5}
+                        />
+                      </Dropzone.Accept>
+                      <Dropzone.Reject>
+                        <IconX
+                          size={52}
+                          color="var(--mantine-color-red-6)"
+                          stroke={1.5}
+                        />
+                      </Dropzone.Reject>
+                      <Dropzone.Idle>
+                        <IconPhoto
+                          size={52}
+                          color="var(--mantine-color-dimmed)"
+                          stroke={1.5}
+                        />
+                      </Dropzone.Idle>
+
+                      <div>
+                        <Text size="xl" inline>
+                          Drag images here or click to select files
+                        </Text>
+                        <Text size="sm" c="dimmed" inline mt={7}>
+                          Attach as many files as you like, each file should not
+                          exceed 5mb
+                        </Text>
+                      </div>
+                    </Group>
+                  </Dropzone>
+                </Input.Wrapper>
+              </Stack>
+            </Group>
+            <Group justify="space-between" mt="md">
+              <Button variant="default" onClick={prevStep} radius={4}>
+                Quay lại
+              </Button>
+              <Button onClick={nextStep} radius={4}>
+                Tiếp theo
+              </Button>
+            </Group>
           </Stepper.Step>
           <Stepper.Step label="Bước 2" description="Thông tin trực thuộc">
             <Stack gap={"xs"}>
