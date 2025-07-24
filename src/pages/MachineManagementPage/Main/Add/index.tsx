@@ -196,7 +196,7 @@ const MachineManagementMainAddPage = () => {
             ) : (
               <Stack>
                 <Text style={{ fontSize: 14, fontWeight: 500 }}>
-                  Nội dung kỹ thuật
+                  Tài liệu kỹ thuật
                 </Text>
                 <SunEditor setOptions={{ height: "200px" }} />
               </Stack>
@@ -240,7 +240,7 @@ const MachineManagementMainAddPage = () => {
           </Stack>
         </Stepper.Step>
 
-        <Stepper.Step label="Bước 3" description="Xác nhận thông tin">
+        <Stepper.Step label="Bước 4" description="Xác nhận thông tin">
           <Stack>
             <Title order={5}>📄 Thông tin tổng quan</Title>
             <Group grow align="flex-start">
