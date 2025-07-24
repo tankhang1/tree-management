@@ -5,7 +5,7 @@ import {
   Stepper,
   TextInput,
   Textarea,
-  MultiSelect,
+  // MultiSelect,
   Stack,
   Title,
 } from "@mantine/core";
@@ -16,11 +16,11 @@ import { useNavigate } from "react-router-dom";
 import { DepartmentCardList } from "./components/DepartmentCardList";
 import { EmployeeCardList } from "./components/EmployeeCardList";
 
-const mockRoles = [
-  { value: "leader", label: "Trưởng nhóm" },
-  { value: "member", label: "Thành viên" },
-  { value: "viewer", label: "Người xem" },
-];
+// const mockRoles = [
+//   { value: "leader", label: "Trưởng nhóm" },
+//   { value: "member", label: "Thành viên" },
+//   { value: "viewer", label: "Người xem" },
+// ];
 
 const HRManagementTeamAddPage = () => {
   const navigate = useNavigate();
@@ -78,13 +78,13 @@ const HRManagementTeamAddPage = () => {
                 radius={4}
               />
               <DepartmentCardList />
-              <MultiSelect
+              {/* <MultiSelect
                 label="Vai trò"
                 placeholder="Chọn vai trò của nhóm"
                 data={mockRoles}
                 {...form.getInputProps("roles")}
                 radius={4}
-              />
+              /> */}
             </Stack>
           </Stepper.Step>
 

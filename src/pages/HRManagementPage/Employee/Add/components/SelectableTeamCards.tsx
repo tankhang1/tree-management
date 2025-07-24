@@ -78,7 +78,7 @@ export function SelectableTeamCards({
             ))}
           </Group>
 
-          <Text size="xs" fw={500}>
+          {/* <Text size="xs" fw={500}>
             Vai trò:
           </Text>
           <Group gap={4} mb={4}>
@@ -98,7 +98,7 @@ export function SelectableTeamCards({
                 {m.name} ({m.role})
               </Badge>
             ))}
-          </Group>
+          </Group> */}
         </Card>
       ))}
     </Group>

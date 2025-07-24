@@ -12,6 +12,7 @@ import {
   Text,
   Paper,
   SimpleGrid,
+  MultiSelect,
 } from "@mantine/core";
 import { useState } from "react";
 import {
@@ -23,8 +24,10 @@ import {
   IconMail,
   IconMap,
   IconMapPin,
+  IconNote,
   IconPhone,
   IconPlus,
+  IconTypeface,
   IconUser,
 } from "@tabler/icons-react";
 import { useNavigate } from "react-router-dom";
@@ -196,27 +199,6 @@ export function CompanyAddPage() {
                     setFormData({ ...formData, address: e.target.value })
                   }
                 />
-              </Stack>
-            </Card>
-            <Card withBorder radius={4}>
-              <Stack gap={"xs"}>
-                <Title order={6}>Thông tin thuế</Title>
-                <TextInput
-                  label="Mã số thuế (MST)"
-                  radius={4}
-                  value={formData.taxCode}
-                  onChange={(e) =>
-                    setFormData({ ...formData, taxCode: e.target.value })
-                  }
-                />
-                <TextInput
-                  label="Địa chỉ thuế"
-                  value={formData.taxAddress}
-                  radius={4}
-                  onChange={(e) =>
-                    setFormData({ ...formData, taxAddress: e.target.value })
-                  }
-                />
                 <Select
                   label="Phân loại"
                   radius={4}
@@ -226,17 +208,55 @@ export function CompanyAddPage() {
                     setFormData({ ...formData, category: val! })
                   }
                 />
-                <Textarea
-                  label="Ghi chú"
-                  radius={4}
-                  minRows={2}
-                  value={formData.note}
-                  onChange={(e) =>
-                    setFormData({ ...formData, note: e.target.value })
-                  }
-                />
               </Stack>
             </Card>
+            <Stack>
+              <Card withBorder radius={4}>
+                <Stack gap={"xs"}>
+                  <Title order={6}>Thông tin thuế</Title>
+                  <TextInput
+                    label="Mã số thuế (MST)"
+                    radius={4}
+                    value={formData.taxCode}
+                    onChange={(e) =>
+                      setFormData({ ...formData, taxCode: e.target.value })
+                    }
+                  />
+                  <TextInput
+                    label="Địa chỉ thuế"
+                    value={formData.taxAddress}
+                    radius={4}
+                    onChange={(e) =>
+                      setFormData({ ...formData, taxAddress: e.target.value })
+                    }
+                  />
+
+                  <Textarea
+                    label="Ghi chú"
+                    radius={4}
+                    minRows={2}
+                    value={formData.note}
+                    onChange={(e) =>
+                      setFormData({ ...formData, note: e.target.value })
+                    }
+                  />
+                </Stack>
+              </Card>
+              <Card withBorder radius={4}>
+                <Stack gap={"xs"}>
+                  <Title order={6}>Mối quan hệ</Title>
+                  <MultiSelect
+                    radius={4}
+                    data={[
+                      "Khách hàng",
+                      "Nhà cung cấp",
+                      "Đối tác",
+                      "Đối tác chiến lược",
+                    ]}
+                  />
+                </Stack>
+              </Card>
+            </Stack>
           </Group>
         </Stepper.Step>
 
@@ -253,9 +273,6 @@ export function CompanyAddPage() {
                       <TextInput label="Số điện thoại" radius={4} />
                       <TextInput label="Email" radius={4} />
                       <TextInput label="Địa chỉ" radius={4} />
-                      <TextInput label="MST" radius={4} />
-                      <TextInput label="Địa chỉ thuế" radius={4} />
-                      <Textarea label="Ghi chú" radius={4} minRows={2} />
                     </Stack>
 
                     <Stack gap={"xs"}>
@@ -403,56 +420,68 @@ export function CompanyAddPage() {
               {/* THÔNG TIN CƠ BẢN */}
               <Stack>
                 <Title order={5}>📄 Thông tin cơ bản</Title>
-                <SimpleGrid cols={{ base: 1, sm: 2 }} spacing="xs">
-                  <Group gap="xs">
-                    <IconBuildingFactory size={18} />
-                    <Text size="sm">Loại: {formData.type}</Text>
-                  </Group>
-                  <Group gap="xs">
-                    <IconId size={18} />
-                    <Text size="sm">Mã định danh: {formData.code}</Text>
-                  </Group>
-                  <Group gap="xs">
-                    <IconUser size={18} />
-                    <Text size="sm">Tên: {formData.name}</Text>
-                  </Group>
-                  <Group gap="xs">
-                    <IconUser size={18} />
-                    <Text size="sm">Thương hiệu: {formData.brand}</Text>
-                  </Group>
-                  <Group gap="xs">
-                    <IconUser size={18} />
-                    <Text size="sm">
-                      Người đại diện: {formData.representative}
-                    </Text>
-                  </Group>
-                  <Group gap="xs">
-                    <IconPhone size={18} />
-                    <Text size="sm">Số điện thoại: {formData.phone}</Text>
-                  </Group>
-                  <Group gap="xs">
-                    <IconMail size={18} />
-                    <Text size="sm">Email: {formData.email}</Text>
-                  </Group>
-                  <Group gap="xs">
-                    <IconMapPin size={18} />
-                    <Text size="sm">Địa chỉ: {formData.address}</Text>
-                  </Group>
-                  <Group gap="xs">
-                    <IconId size={18} />
-                    <Text size="sm">Mã số thuế: {formData.taxCode}</Text>
-                  </Group>
-                  <Group gap="xs">
-                    <IconMapPin size={18} />
-                    <Text size="sm">Địa chỉ thuế: {formData.taxAddress}</Text>
-                  </Group>
-                  <Group gap="xs">
-                    <Text size="sm">Phân loại: {formData.category}</Text>
-                  </Group>
-                  <Group gap="xs">
-                    <Text size="sm">Ghi chú: {formData.note}</Text>
-                  </Group>
-                </SimpleGrid>
+                <Group grow>
+                  <Card h={230} withBorder radius="md" p="sm">
+                    <Stack gap={"xs"}>
+                      <Group gap="xs">
+                        <IconBuildingFactory size={18} />
+                        <Text size="sm">Loại: {formData.type}</Text>
+                      </Group>
+                      <Group gap="xs">
+                        <IconId size={18} />
+                        <Text size="sm">Mã định danh: {formData.code}</Text>
+                      </Group>
+                      <Group gap="xs">
+                        <IconUser size={18} />
+                        <Text size="sm">Tên: {formData.name}</Text>
+                      </Group>
+                      <Group gap="xs">
+                        <IconUser size={18} />
+                        <Text size="sm">Thương hiệu: {formData.brand}</Text>
+                      </Group>
+                      <Group gap="xs">
+                        <IconUser size={18} />
+                        <Text size="sm">
+                          Người đại diện: {formData.representative}
+                        </Text>
+                      </Group>
+                      <Group gap="xs">
+                        <IconPhone size={18} />
+                        <Text size="sm">Số điện thoại: {formData.phone}</Text>
+                      </Group>
+                      <Group gap="xs">
+                        <IconMail size={18} />
+                        <Text size="sm">Email: {formData.email}</Text>
+                      </Group>
+                    </Stack>
+                  </Card>
+                  <Card h={230} withBorder radius="md" p="sm">
+                    <Stack gap={"xs"}>
+                      <Group gap="xs">
+                        <IconId size={18} />
+                        <Text size="sm">Mã số thuế: {formData.taxCode}</Text>
+                      </Group>
+                      <Group gap="xs">
+                        <IconMapPin size={18} />
+                        <Text size="sm">
+                          Địa chỉ thuế: {formData.taxAddress}
+                        </Text>
+                      </Group>
+                      <Group gap="xs">
+                        <IconTypeface size={18} />
+                        <Text size="sm">Phân loại: {formData.category}</Text>
+                      </Group>
+                      <Group gap="xs">
+                        <IconNote size={18} />
+                        <Text size="sm">Ghi chú: {formData.note}</Text>
+                      </Group>
+                      <Group gap="xs">
+                        <IconMapPin size={18} />
+                        <Text size="sm">Địa chỉ: {formData.address}</Text>
+                      </Group>
+                    </Stack>
+                  </Card>
+                </Group>
               </Stack>
 
               {/* CHI NHÁNH */}

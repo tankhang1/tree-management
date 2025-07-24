@@ -117,15 +117,15 @@ const HRManagementEmployeeAddPage = () => {
                 radius={4}
               />
               <Select
-                placeholder="Chọn tỉnh thành"
+                placeholder="Chọn tỉnh thành/ thành phố"
                 label="Chọn tỉnh thành"
                 radius={4}
               />
-              <Select
+              {/* <Select
                 placeholder="Chọn thành phố"
                 label="Chọn thành phố"
                 radius={4}
-              />
+              /> */}
               <Select
                 placeholder="Chọn phường/xã"
                 label="Chọn phường/xã"
