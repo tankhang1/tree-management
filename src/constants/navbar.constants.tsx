@@ -16,7 +16,6 @@ import {
   IconMap2,
   IconBox,
   IconBuildings,
-  IconBuildingWarehouse,
 } from "@tabler/icons-react";
 import { PATH } from "./path.constants";
 
@@ -224,11 +223,11 @@ export const NAV_BAR = [
       },
     ],
   },
-  {
-    label: "Quản lý nhà cung cấp",
-    icon: IconBuildingWarehouse,
-    link: PATH.VENDOR,
-  },
+  // {
+  //   label: "Quản lý nhà cung cấp",
+  //   icon: IconBuildingWarehouse,
+  //   link: PATH.VENDOR,
+  // },
   {
     label: "Mua hàng",
     icon: IconShoppingCart,
