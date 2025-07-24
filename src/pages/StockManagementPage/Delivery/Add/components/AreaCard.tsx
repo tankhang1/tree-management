@@ -1,12 +1,4 @@
-import {
-  Card,
-  Text,
-  Group,
-  Badge,
-  Stack,
-  ActionIcon,
-  Checkbox,
-} from "@mantine/core";
+import { Card, Text, Group, Badge, Stack, ActionIcon } from "@mantine/core";
 import { IconTrash } from "@tabler/icons-react";
 
 interface AreaCardProps {
@@ -30,7 +22,6 @@ const AreaCard = ({
   selected = false,
   onToggle,
   closable = false,
-  isCheckbox = false,
 }: AreaCardProps) => {
   return (
     <Card
@@ -38,9 +29,11 @@ const AreaCard = ({
       shadow={selected ? "md" : "xs"}
       radius="md"
       padding="md"
-      bg={selected ? "green.0" : "white"}
+      style={{
+        borderColor: selected ? "green" : undefined,
+      }}
+      bg={"white"}
       onClick={onToggle}
-      style={{ cursor: "pointer" }}
     >
       <Stack gap={4}>
         <Group justify="space-between">
@@ -49,7 +42,6 @@ const AreaCard = ({
             <Badge color="green" variant="light">
               {id}
             </Badge>
-            {isCheckbox && <Checkbox radius={4} checked={selected} />}
             {closable && (
               <ActionIcon color="red">
                 <IconTrash size={18} />

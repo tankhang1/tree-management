@@ -11,14 +11,13 @@ import {
   Badge,
   Divider,
   Grid,
-  Modal,
   SegmentedControl,
   Select,
-  Checkbox,
   SimpleGrid,
   ScrollArea,
   Flex,
   Input,
+  Center,
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { useState } from "react";
@@ -37,28 +36,9 @@ import {
   IconTractor,
   IconUser,
 } from "@tabler/icons-react";
-import { useDisclosure } from "@mantine/hooks";
 import { useNavigate } from "react-router-dom";
 import AreaCard from "./components/AreaCard";
 import { SelectableEnterpriseCards } from "./components/SelectableEnterpriseCards";
-type SubArea = {
-  id: string;
-  name: string;
-  latitude: number;
-  longitude: number;
-  areaSize: number;
-};
-
-type AreaGroup = {
-  parentId: string;
-  parentName: string;
-  latitude: number;
-  longitude: number;
-  areaSize: number;
-  note: string;
-  subAreaCount: number;
-  children: SubArea[];
-};
 
 type WarehouseItem = {
   group: string;
@@ -186,11 +166,6 @@ export default function StockManagementAddDeliveryPage() {
   const navigate = useNavigate();
   const [active, setActive] = useState(0);
   const [importedItems, setImportedItems] = useState<WarehouseItem[]>([]);
-  const [selectedAreaGroup, setSelectedAreaGroup] = useState<AreaGroup | null>(
-    null
-  );
-  const [modalOpened, { open: openModal, close: closeModal }] =
-    useDisclosure(false);
   const [inputMode, setInputMode] = useState<"upload" | "manual">("upload");
   const form = useForm<{
     warehouseName: string;
@@ -230,11 +205,6 @@ export default function StockManagementAddDeliveryPage() {
     ]);
   };
 
-  const handleAreaCardClick = (group: AreaGroup) => {
-    setSelectedAreaGroup(group);
-    openModal();
-  };
-
   return (
     <Card withBorder shadow="sm" radius={4} p="lg">
       <Group mb={"md"}>
@@ -264,22 +234,19 @@ export default function StockManagementAddDeliveryPage() {
               />
               <SelectableEnterpriseCards />
               <Text fw={500} fz={15}>
-                Chọn khu vực (chọn nhiều)
+                Chọn khu vực (chọn một)
               </Text>
               <Grid>
-                {areaGroups.map((group) => (
+                {areaGroups.map((group, index) => (
                   <Grid.Col span={{ base: 12, sm: 6 }} key={group.parentId}>
                     <Card
                       withBorder
                       shadow="xs"
                       radius="md"
-                      onClick={() => handleAreaCardClick(group)}
+                      // onClick={() => handleAreaCardClick(group)}
                       style={{
                         cursor: "pointer",
-                        borderColor:
-                          selectedAreaGroup?.parentId === group.parentId
-                            ? "green"
-                            : undefined,
+                        borderColor: index === 0 ? "green" : undefined,
                       }}
                     >
                       <Group justify="apart">
@@ -322,13 +289,14 @@ export default function StockManagementAddDeliveryPage() {
                             longitude: 106.662,
                             areaSize: 700,
                           },
-                        ].map((group) => (
+                        ].map((group, index) => (
                           <AreaCard
+                            isCheckbox
                             key={group.id}
                             {...group}
-                            selected={false}
+                            selected={index === 0}
                             onToggle={() => {}}
-                            closable={true}
+                            closable={false}
                           />
                         ))}
                       </Group>
@@ -343,40 +311,45 @@ export default function StockManagementAddDeliveryPage() {
               </Group>
             </Stack>
           </form>
-
-          <Modal
-            opened={modalOpened}
-            onClose={closeModal}
-            size={"lg"}
-            title={
-              <Text fw={"500"} fz={16}>
-                Danh sách khu vực phụ
-              </Text>
-            }
-          >
-            <Stack>
-              <Group>
-                <Checkbox label="Tất cả" radius={4} />
-              </Group>
-              <SimpleGrid cols={2} spacing="md">
-                {selectedAreaGroup?.children.map((group) => (
-                  <AreaCard key={group.id} {...group} isCheckbox />
-                ))}
-              </SimpleGrid>
-              <Group justify="flex-end">
-                <Button radius={4}>Xác nhận</Button>
-              </Group>
-            </Stack>
-          </Modal>
         </Stepper.Step>
 
         <Stepper.Step label="Bước 2" description="Thông tin vật tư">
           <Stack gap="xs">
+            <Group>
+              {["Khu A - Khu phụ A1 - Kho A", "Khu A - Khu phụ A2 - Kho B"].map(
+                (area) => (
+                  <Card
+                    key={area}
+                    withBorder
+                    shadow="md"
+                    radius="4"
+                    p="xs"
+                    style={{ transition: "transform 0.2s", cursor: "pointer" }}
+                    onMouseEnter={(e) =>
+                      (e.currentTarget.style.transform = "scale(1.03)")
+                    }
+                    onMouseLeave={(e) =>
+                      (e.currentTarget.style.transform = "scale(1)")
+                    }
+                  >
+                    <Center>
+                      <Group gap="sm">
+                        <IconMapPin size={20} color="teal" />
+                        <Text fw={600}>{area}</Text>
+                      </Group>
+                    </Center>
+                  </Card>
+                )
+              )}
+            </Group>
             <Card withBorder radius="md" shadow="sm" p="md">
               <Stack>
                 <Select
                   label="Kho"
-                  data={["Kho A", "Kho B"]}
+                  data={[
+                    "Khu A - Khu phụ A1 - Kho A",
+                    "Khu A - Khu phụ A2 - Kho B",
+                  ]}
                   radius={4}
                   placeholder="Nhập tên kho mới"
                   withAsterisk

@@ -14,6 +14,8 @@ import {
   Input,
   Image,
   MultiSelect,
+  Divider,
+  Badge,
 } from "@mantine/core";
 import { Dropzone, IMAGE_MIME_TYPE } from "@mantine/dropzone";
 import { useForm } from "@mantine/form";
@@ -21,6 +23,7 @@ import {
   IconArrowLeft,
   IconFileTypePdf,
   IconPhoto,
+  IconPlus,
   IconUpload,
   IconX,
 } from "@tabler/icons-react";
@@ -28,6 +31,18 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import SunEditor from "suneditor-react";
 import { SelectableSupplierCards } from "../../../SupplyManagementPage/Add/components/SelectableSupplierCards";
+const s = {
+  id: "sup-1",
+  name: "Công ty TNHH Nông Nghiệp Xanh",
+  type: "Doanh nghiệp",
+  representative: "Nguyễn Văn A",
+  phone: "0912345678",
+  email: "contact@nongnghiepxanh.vn",
+  address: "123 Đường Lê Lợi, Quận 1, TP.HCM",
+  taxCode: "0312345678",
+  sectors: ["Phân bón", "Thuốc BVTV"],
+  note: "Đối tác lâu năm",
+};
 const MachineManagementMainAddPage = () => {
   const navigate = useNavigate();
   const [manualPreviewUrl, setManualPreviewUrl] = useState<string | null>(null);
@@ -102,29 +117,7 @@ const MachineManagementMainAddPage = () => {
                 radius={4}
                 required
               />
-              <Select
-                label="Tình trạng"
-                data={["Đang vận hành", "Đang bảo trì", "Đang trống"]}
-                {...form.getInputProps("status")}
-                radius={4}
-                required
-              />
-              <Group grow>
-                <NumberInput
-                  label="Giá"
-                  {...form.getInputProps("price")}
-                  min={0}
-                  hideControls
-                  radius={4}
-                  thousandSeparator
-                />
-                <NumberInput
-                  label="Số lượng"
-                  {...form.getInputProps("quantity")}
-                  radius={4}
-                  min={1}
-                />
-              </Group>
+
               <MultiSelect
                 label="Tài sản thuộc nhóm"
                 data={["Sử dụng thường xuyên", "Sử dụng mùa hè"]}
@@ -180,17 +173,6 @@ const MachineManagementMainAddPage = () => {
           </Group>
         </Stepper.Step>
         <Stepper.Step label="Bước 2" description="Tài liệu kỹ thuật">
-          <TextInput
-            label="Nhà cung cấp"
-            radius={4}
-            placeholder="Chọn nhà cung cấp"
-            {...form.getInputProps("suppliers")}
-          />
-          <SelectableSupplierCards isCheckbox={true} />
-          <Select label="Đơn vị tính" placeholder="Đơn vị tính" radius={4} />
-        </Stepper.Step>
-
-        <Stepper.Step label="Bước 2" description="Chi tiết">
           <Stack gap={"xs"}>
             <Radio.Group
               label="Tài liệu kỹ thuật"
@@ -222,12 +204,49 @@ const MachineManagementMainAddPage = () => {
           </Stack>
         </Stepper.Step>
 
+        <Stepper.Step label="Bước 3" description="Nhà cung cấp">
+          <Stack gap={"xs"}>
+            <Card withBorder radius={4} p="md">
+              <Stack gap={"xs"}>
+                <TextInput
+                  label="Nhà cung cấp"
+                  radius={4}
+                  placeholder="Chọn nhà cung cấp"
+                  {...form.getInputProps("suppliers")}
+                />
+                <SelectableSupplierCards isCheckbox={false} />
+                <Group grow>
+                  <NumberInput
+                    label="Đơn giá"
+                    placeholder="Giá tiền"
+                    radius={4}
+                  />
+                  <NumberInput
+                    label="Số lượng"
+                    placeholder="Số lượng"
+                    radius={4}
+                  />
+                  <Select label="Đơn vị" placeholder="Đơn vị" radius={4} />
+                </Group>
+              </Stack>
+            </Card>
+            <Button
+              radius={4}
+              variant="outline"
+              leftSection={<IconPlus size={18} />}
+            >
+              Thêm mới
+            </Button>
+          </Stack>
+        </Stepper.Step>
+
         <Stepper.Step label="Bước 3" description="Xác nhận thông tin">
           <Stack>
             <Title order={5}>📄 Thông tin tổng quan</Title>
             <Group grow align="flex-start">
-              <Card withBorder radius={4} p="md" style={{ flex: 1 }}>
+              <Card h={300} withBorder radius={4} p="md" style={{ flex: 1 }}>
                 <Stack gap={"xs"}>
+                  <Title order={4}>Thông tin cơ bản</Title>
                   <Text>
                     <b>Mã máy:</b> {form.values.id}
                   </Text>
@@ -236,15 +255,6 @@ const MachineManagementMainAddPage = () => {
                   </Text>
                   <Text>
                     <b>Loại:</b> {form.values.type}
-                  </Text>
-                  <Text>
-                    <b>Tình trạng:</b> {form.values.status}
-                  </Text>
-                  <Text>
-                    <b>Giá:</b> {form.values.price.toLocaleString()} VNĐ
-                  </Text>
-                  <Text>
-                    <b>Số lượng:</b> {form.values.quantity}
                   </Text>
                 </Stack>
               </Card>
@@ -256,7 +266,82 @@ const MachineManagementMainAddPage = () => {
                 />
               </Stack>
             </Group>
+            <Divider label="Nhà cung cấp" />
+            <Group>
+              <Card key={s.id} withBorder radius="md" p="md">
+                <Group justify="space-between" mb="xs">
+                  <Text fw={600}>{s.name}</Text>
+                </Group>
+                <Stack gap={2}>
+                  <Text size="sm">
+                    <strong>Loại:</strong> {s.type}
+                  </Text>
+                  <Text size="sm">
+                    <strong>Người đại diện:</strong> {s.representative}
+                  </Text>
+                  <Text size="sm">
+                    <strong>SĐT:</strong> {s.phone}
+                  </Text>
+                  <Text size="sm">
+                    <strong>Đơn giá:</strong> 122.000.000 VNĐ
+                  </Text>
+                  <Text size="sm">
+                    <strong>Số lượng:</strong> 12
+                  </Text>
+                  <Text size="sm">
+                    <strong>Đơn vị:</strong> chiếc
+                  </Text>
+                  {s.email && (
+                    <Text size="sm">
+                      <strong>Email:</strong> {s.email}
+                    </Text>
+                  )}
 
+                  {s.note && (
+                    <Text size="sm" c="dimmed">
+                      💬 {s.note}
+                    </Text>
+                  )}
+                </Stack>
+              </Card>
+              <Card key={s.id} withBorder radius="md" p="md">
+                <Group justify="space-between" mb="xs">
+                  <Text fw={600}>{s.name}</Text>
+                </Group>
+                <Stack gap={2}>
+                  <Text size="sm">
+                    <strong>Loại:</strong> {s.type}
+                  </Text>
+                  <Text size="sm">
+                    <strong>Người đại diện:</strong> {s.representative}
+                  </Text>
+                  <Text size="sm">
+                    <strong>SĐT:</strong> {s.phone}
+                  </Text>
+                  <Text size="sm">
+                    <strong>Đơn giá:</strong> 122.000.000 VNĐ
+                  </Text>
+                  <Text size="sm">
+                    <strong>Số lượng:</strong> 12
+                  </Text>
+                  <Text size="sm">
+                    <strong>Đơn vị:</strong> chiếc
+                  </Text>
+                  {s.email && (
+                    <Text size="sm">
+                      <strong>Email:</strong> {s.email}
+                    </Text>
+                  )}
+
+                  {s.note && (
+                    <Text size="sm" c="dimmed">
+                      💬 {s.note}
+                    </Text>
+                  )}
+                </Stack>
+              </Card>
+            </Group>
+            <Divider label="Tài liệu kỹ thuật" />
             <Title order={5} mt="md">
               📘 Tài liệu kỹ thuật
             </Title>
