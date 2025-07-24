@@ -176,7 +176,7 @@ const AddVarietyForm = () => {
         >
           <Group mt="xs">
             <Radio value="file" label="Tải file PDF" />
-            <Radio value="editor" label="Nhập nội dung trực tiếp" />
+            <Radio value="editor" label="Tài liệu kỹ thuật" />
           </Group>
         </Radio.Group>
 

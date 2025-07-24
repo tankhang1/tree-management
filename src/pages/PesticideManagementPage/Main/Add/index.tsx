@@ -15,11 +15,17 @@ import {
   Paper,
   Divider,
   Image,
+  Select,
+  NumberInput,
+  FileInput,
+  Radio,
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import {
   IconArrowLeft,
+  IconFileTypePdf,
   IconPhoto,
+  IconPlus,
   IconUpload,
   IconX,
 } from "@tabler/icons-react";
@@ -27,6 +33,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { SelectableSupplierCards } from "../../../SupplyManagementPage/Add/components/SelectableSupplierCards";
 import { Dropzone, IMAGE_MIME_TYPE } from "@mantine/dropzone";
+import SunEditor from "suneditor-react";
 
 const pesticideTypes = [
   { value: "TYPE01", label: "Thuốc trừ sâu" },
@@ -34,9 +41,6 @@ const pesticideTypes = [
   { value: "TYPE03", label: "Phân bón lá" },
   { value: "TYPE04", label: "Chất kích thích sinh trưởng" },
 ];
-
-const units = ["ml", "lit", "g", "kg"];
-const packageForms = ["Chai", "Bao", "Thùng"];
 
 const PesticideManagementMainAddPage = () => {
   const navigate = useNavigate();
@@ -54,6 +58,7 @@ const PesticideManagementMainAddPage = () => {
       suppliers: [],
       units: [],
       packages: [],
+      fileType: "0",
     },
     validate: {
       id: (val) => (!val ? "Vui lòng nhập mã thuốc" : null),
@@ -87,123 +92,168 @@ const PesticideManagementMainAddPage = () => {
         {/* Step 1 */}
         <Stepper.Step label="Bước 1" description="Thông tin cơ bản">
           <Stack gap={"xs"}>
-            <Input.Wrapper label="Ảnh thuốc">
-              <Dropzone
-                onDrop={(files) => console.log("accepted files", files)}
-                onReject={(files) => console.log("rejected files", files)}
-                maxSize={5 * 1024 ** 2}
-                accept={IMAGE_MIME_TYPE}
-              >
-                <Group
-                  justify="center"
-                  gap="xl"
-                  mih={220}
-                  style={{ pointerEvents: "none" }}
+            <Group grow align="flex-start">
+              <Stack gap={"xs"}>
+                <TextInput
+                  label="Mã thuốc"
+                  required
+                  radius={4}
+                  {...form.getInputProps("id")}
+                />
+                <TextInput
+                  label="Tên thuốc"
+                  required
+                  radius={4}
+                  {...form.getInputProps("name")}
+                />
+                <MultiSelect
+                  label="Loại thuốc"
+                  data={pesticideTypes}
+                  required
+                  radius={4}
+                  {...form.getInputProps("typeIds")}
+                />
+                <Textarea
+                  label="Công thức hoạt chất"
+                  radius={4}
+                  {...form.getInputProps("ingredients")}
+                />
+                <Textarea
+                  label="Công dụng"
+                  radius={4}
+                  {...form.getInputProps("usage")}
+                />
+                <Textarea
+                  label="Ghi chú"
+                  radius={4}
+                  {...form.getInputProps("note")}
+                />
+                <MultiSelect
+                  label="Tài sản thuộc nhóm"
+                  data={["Sử dụng thường xuyên", "Sử dụng mùa hè"]}
+                  radius={4}
+                />
+              </Stack>
+              <Input.Wrapper label="Ảnh thuốc">
+                <Dropzone
+                  onDrop={(files) => console.log("accepted files", files)}
+                  onReject={(files) => console.log("rejected files", files)}
+                  maxSize={5 * 1024 ** 2}
+                  accept={IMAGE_MIME_TYPE}
                 >
-                  <Dropzone.Accept>
-                    <IconUpload
-                      size={52}
-                      color="var(--mantine-color-blue-6)"
-                      stroke={1.5}
-                    />
-                  </Dropzone.Accept>
-                  <Dropzone.Reject>
-                    <IconX
-                      size={52}
-                      color="var(--mantine-color-red-6)"
-                      stroke={1.5}
-                    />
-                  </Dropzone.Reject>
-                  <Dropzone.Idle>
-                    <IconPhoto
-                      size={52}
-                      color="var(--mantine-color-dimmed)"
-                      stroke={1.5}
-                    />
-                  </Dropzone.Idle>
+                  <Group
+                    justify="center"
+                    gap="xl"
+                    mih={220}
+                    style={{ pointerEvents: "none" }}
+                  >
+                    <Dropzone.Accept>
+                      <IconUpload
+                        size={52}
+                        color="var(--mantine-color-blue-6)"
+                        stroke={1.5}
+                      />
+                    </Dropzone.Accept>
+                    <Dropzone.Reject>
+                      <IconX
+                        size={52}
+                        color="var(--mantine-color-red-6)"
+                        stroke={1.5}
+                      />
+                    </Dropzone.Reject>
+                    <Dropzone.Idle>
+                      <IconPhoto
+                        size={52}
+                        color="var(--mantine-color-dimmed)"
+                        stroke={1.5}
+                      />
+                    </Dropzone.Idle>
 
-                  <div>
-                    <Text size="xl" inline>
-                      Bỏ và thả ảnh thuốc tại đây
-                    </Text>
-                    <Text size="sm" c="dimmed" inline mt={7}>
-                      Đính kèm ảnh thuốc (tối đa 5MB)
-                    </Text>
-                  </div>
-                </Group>
-              </Dropzone>
-            </Input.Wrapper>
-            <TextInput
-              label="Mã thuốc"
-              required
-              radius={4}
-              {...form.getInputProps("id")}
-            />
-            <TextInput
-              label="Tên thuốc"
-              required
-              radius={4}
-              {...form.getInputProps("name")}
-            />
-            <MultiSelect
-              label="Loại thuốc"
-              data={pesticideTypes}
-              required
-              radius={4}
-              {...form.getInputProps("typeIds")}
-            />
-            <Textarea
-              label="Công thức hoạt chất"
-              radius={4}
-              {...form.getInputProps("ingredients")}
-            />
-            <Textarea
-              label="Công dụng"
-              radius={4}
-              {...form.getInputProps("usage")}
-            />
-            <Textarea
-              label="Ghi chú"
-              radius={4}
-              {...form.getInputProps("note")}
-            />
-            <MultiSelect
-              label="Tài sản thuộc nhóm"
-              data={["Sử dụng thường xuyên", "Sử dụng mùa hè"]}
-              radius={4}
-            />
+                    <div>
+                      <Text size="xl" inline>
+                        Bỏ và thả ảnh thuốc tại đây
+                      </Text>
+                      <Text size="sm" c="dimmed" inline mt={7}>
+                        Đính kèm ảnh thuốc (tối đa 5MB)
+                      </Text>
+                    </div>
+                  </Group>
+                </Dropzone>
+              </Input.Wrapper>
+            </Group>
           </Stack>
         </Stepper.Step>
 
-        {/* Step 2 */}
-        <Stepper.Step label="Bước 2" description="Nhà cung cấp & đóng gói">
+        <Stepper.Step label="Bước 2" description="Tài liệu kỹ thuật">
           <Stack gap={"xs"}>
-            <TextInput
-              label="Nhà cung cấp"
+            <Radio.Group
+              label="Tài liệu kỹ thuật"
+              onChange={(val) => form.setFieldValue(`fileType`, val)}
+            >
+              <Group mt="xs">
+                <Radio value="0" label="Tải file PDF" />
+                <Radio value="1" label="Tài liệu kỹ thuật" />
+              </Group>
+            </Radio.Group>
+
+            {form.getValues().fileType === "0" ? (
+              <FileInput
+                label="Tài liệu kỹ thuật (PDF)"
+                placeholder="Chọn tài liệu"
+                accept="application/pdf"
+                leftSection={<IconFileTypePdf size={18} />}
+                radius={4}
+                {...form.getInputProps("technicalDoc")}
+              />
+            ) : (
+              <Stack>
+                <Text style={{ fontSize: 14, fontWeight: 500 }}>
+                  Tài liệu kỹ thuật
+                </Text>
+                <SunEditor setOptions={{ height: "200px" }} />
+              </Stack>
+            )}
+          </Stack>
+        </Stepper.Step>
+
+        <Stepper.Step label="Bước 3" description="Nhà cung cấp">
+          <Stack gap={"xs"}>
+            <Card withBorder radius={4} p="md">
+              <Stack gap={"xs"}>
+                <TextInput
+                  label="Nhà cung cấp"
+                  radius={4}
+                  placeholder="Chọn nhà cung cấp"
+                  {...form.getInputProps("suppliers")}
+                />
+                <SelectableSupplierCards isCheckbox={false} />
+                <Group grow>
+                  <NumberInput
+                    label="Đơn giá"
+                    placeholder="Giá tiền"
+                    radius={4}
+                  />
+                  <NumberInput
+                    label="Số lượng"
+                    placeholder="Số lượng"
+                    radius={4}
+                  />
+                  <Select label="Đơn vị" placeholder="Đơn vị" radius={4} />
+                </Group>
+              </Stack>
+            </Card>
+            <Button
               radius={4}
-              placeholder="Chọn nhà cung cấp"
-              {...form.getInputProps("suppliers")}
-            />
-            <SelectableSupplierCards isCheckbox={true} />
-            <MultiSelect
-              label="Đơn vị tính"
-              radius={4}
-              data={units}
-              placeholder="Chọn đơn vị"
-              {...form.getInputProps("units")}
-            />
-            <MultiSelect
-              label="Quy cách đóng gói"
-              radius={4}
-              data={packageForms}
-              placeholder="Chọn quy cách"
-              {...form.getInputProps("packages")}
-            />
+              variant="outline"
+              leftSection={<IconPlus size={18} />}
+            >
+              Thêm mới
+            </Button>
           </Stack>
         </Stepper.Step>
 
         {/* Step 3 */}
-        <Stepper.Step label="Bước 3" description="Xác nhận thông tin">
+        <Stepper.Step label="Bước 4" description="Xác nhận thông tin">
           <Stack gap="sm">
             <Title order={4}>📦 Thông tin chung</Title>
             <Group align="flex-start" grow>

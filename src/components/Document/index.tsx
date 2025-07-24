@@ -17,7 +17,7 @@ const Document = ({
       <Radio.Group label={title1} onChange={setType}>
         <Group mt="xs">
           <Radio value="0" label="Tải file PDF" />
-          <Radio value="1" label="Nhập nội dung trực tiếp" />
+          <Radio value="1" label="Tài liệu kỹ thuật" />
         </Group>
       </Radio.Group>
 
