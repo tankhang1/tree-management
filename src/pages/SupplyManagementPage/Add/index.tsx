@@ -11,6 +11,7 @@ import {
   Divider,
   Image,
   MultiSelect,
+  Input,
 } from "@mantine/core";
 import { Dropzone, IMAGE_MIME_TYPE } from "@mantine/dropzone";
 import { IconArrowLeft, IconSearch } from "@tabler/icons-react";
@@ -54,49 +55,60 @@ export default function SupplyManagementPage() {
       {/* Bước 1 */}
       {active === 0 && (
         <Stack gap="sm">
-          <Dropzone
-            accept={IMAGE_MIME_TYPE}
-            onDrop={(files) =>
-              setFormData({
-                ...formData,
-                //@ts-expect-error no check
-                image: files[0]!,
-              })
-            }
-            maxSize={5 * 1024 ** 2}
-          >
-            <Group justify="center" mih={150}>
-              <Text>📷 Thêm ảnh vật tư (tối đa 5MB)</Text>
-            </Group>
-          </Dropzone>
+          <Group grow align="flex-start">
+            <Stack gap={"xs"}>
+              <TextInput
+                label="Mã vật tư"
+                value={formData.code}
+                onChange={(e) =>
+                  setFormData({ ...formData, code: e.target.value })
+                }
+                required
+                radius={4}
+              />
 
-          <TextInput
-            label="Mã vật tư"
-            value={formData.code}
-            onChange={(e) => setFormData({ ...formData, code: e.target.value })}
-            required
-            radius={4}
-          />
+              <TextInput
+                label="Tên vật tư"
+                value={formData.name}
+                onChange={(e) =>
+                  setFormData({ ...formData, name: e.target.value })
+                }
+                required
+                radius={4}
+              />
 
-          <TextInput
-            label="Tên vật tư"
-            value={formData.name}
-            onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-            required
-            radius={4}
-          />
-
-          <Textarea
-            label="Ghi chú"
-            value={formData.note}
-            onChange={(e) => setFormData({ ...formData, note: e.target.value })}
-            radius={4}
-          />
-          <MultiSelect
-            label="Tài sản thuộc nhóm"
-            data={["Sử dụng thường xuyên", "Sử dụng mùa hè"]}
-            radius={4}
-          />
+              <Textarea
+                label="Ghi chú"
+                value={formData.note}
+                onChange={(e) =>
+                  setFormData({ ...formData, note: e.target.value })
+                }
+                radius={4}
+              />
+              <MultiSelect
+                label="Tài sản thuộc nhóm"
+                data={["Sử dụng thường xuyên", "Sử dụng mùa hè"]}
+                radius={4}
+              />
+            </Stack>
+            <Input.Wrapper label="Ảnh vật tư">
+              <Dropzone
+                accept={IMAGE_MIME_TYPE}
+                onDrop={(files) =>
+                  setFormData({
+                    ...formData,
+                    //@ts-expect-error no check
+                    image: files[0]!,
+                  })
+                }
+                maxSize={5 * 1024 ** 2}
+              >
+                <Group justify="center" mih={150}>
+                  <Text>📷 Thêm ảnh vật tư (tối đa 5MB)</Text>
+                </Group>
+              </Dropzone>
+            </Input.Wrapper>
+          </Group>
           <Group justify="space-between" mt="md">
             <div />
             <Button radius={4} onClick={nextStep}>
