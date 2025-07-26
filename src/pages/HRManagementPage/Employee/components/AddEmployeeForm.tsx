@@ -1,14 +1,14 @@
-import {
-  Button,
-  Group,
-  Stack,
-  TextInput,
-  Select,
-  FileInput,
-} from "@mantine/core";
+import { Button, Group, Stack, TextInput, Select, Text } from "@mantine/core";
 import { DateInput } from "@mantine/dates";
+import { Dropzone, IMAGE_MIME_TYPE } from "@mantine/dropzone";
 import { useForm } from "@mantine/form";
-import { IconUser, IconCalendar, IconCamera } from "@tabler/icons-react";
+import {
+  IconUser,
+  IconCalendar,
+  IconUpload,
+  IconX,
+  IconPhoto,
+} from "@tabler/icons-react";
 
 const AddEmployeeForm = () => {
   const form = useForm({
@@ -62,14 +62,46 @@ const AddEmployeeForm = () => {
         {...form.getInputProps("birthDate")}
       />
 
-      <FileInput
-        label="Ảnh đại diện"
-        placeholder="Tải lên hình ảnh"
-        accept="image/*"
-        leftSection={<IconCamera size={16} />}
-        radius={4}
-        {...form.getInputProps("avatar")}
-      />
+      <Dropzone
+        onDrop={(files) => console.log("accepted files", files)}
+        onReject={(files) => console.log("rejected files", files)}
+        maxSize={5 * 1024 ** 2}
+        accept={IMAGE_MIME_TYPE}
+      >
+        <Group
+          justify="center"
+          gap="xl"
+          mih={220}
+          style={{ pointerEvents: "none" }}
+        >
+          <Dropzone.Accept>
+            <IconUpload
+              size={52}
+              color="var(--mantine-color-blue-6)"
+              stroke={1.5}
+            />
+          </Dropzone.Accept>
+          <Dropzone.Reject>
+            <IconX size={52} color="var(--mantine-color-red-6)" stroke={1.5} />
+          </Dropzone.Reject>
+          <Dropzone.Idle>
+            <IconPhoto
+              size={52}
+              color="var(--mantine-color-dimmed)"
+              stroke={1.5}
+            />
+          </Dropzone.Idle>
+
+          <div>
+            <Text size="xl" inline>
+              Bỏ và thả ảnh đại diện tại đây
+            </Text>
+            <Text size="sm" c="dimmed" inline mt={7}>
+              Đính kèm ảnh đại diện (tối đa 5MB)
+            </Text>
+          </div>
+        </Group>
+      </Dropzone>
 
       <Group grow>
         <Select

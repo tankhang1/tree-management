@@ -167,7 +167,7 @@ export const PATH = {
   MACHINE_ADD_MAIN: "/machine-management/main/add",
   MACHINE_USAGE_HISTORY: "/machine-management/usage-history",
   MACHINE_MAINTENANCE_HISTORY: "/machine-management/maintenance-history",
-  MACHINE_DISPOSAL_HISTORY: " /machine-management/disposal-history",
+  MACHINE_DISPOSAL_HISTORY: "/machine-management/disposal-history",
 
   // Pesticide Management
   PESTICIDE_MANAGEMENT: "/pesticide-management",

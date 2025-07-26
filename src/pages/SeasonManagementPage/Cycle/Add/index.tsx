@@ -170,10 +170,10 @@ const SeasonManagementCycleAddPage = () => {
 
                           <div>
                             <Text size="xl" inline>
-                              Bỏ và thả tài liệu kỹ thuật tại đây
+                              Bỏ và thả file tại đây
                             </Text>
                             <Text size="sm" c="dimmed" inline mt={7}>
-                              Đính kèm tài liệu (tối đa 5MB)
+                              Đính kèm file (tối đa 5MB)
                             </Text>
                           </div>
                         </Group>

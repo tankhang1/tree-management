@@ -1,6 +1,5 @@
 import {
   Button,
-  FileInput,
   Group,
   Image,
   Stack,
@@ -8,9 +7,16 @@ import {
   Text,
   Card,
   Select,
+  Input,
 } from "@mantine/core";
+import { Dropzone } from "@mantine/dropzone";
 import { useForm } from "@mantine/form";
-import { IconArrowLeft, IconPhoto } from "@tabler/icons-react";
+import {
+  IconArrowLeft,
+  IconPhoto,
+  IconUpload,
+  IconX,
+} from "@tabler/icons-react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import SunEditor from "suneditor-react";
@@ -66,14 +72,52 @@ const PlantManagementTechnicalDocAddPage = () => {
             {...form.getInputProps("templateCode")}
           />
 
-          <FileInput
-            label="Hình ảnh minh hoạ"
-            placeholder="Chọn ảnh minh hoạ"
-            accept="image/*"
-            leftSection={<IconPhoto size={18} />}
-            radius={4}
-            onChange={handleImageChange}
-          />
+          <Input.Wrapper label="Hình ảnh minh hoạ">
+            <Dropzone
+              onDrop={(files) => console.log("accepted files", files)}
+              onReject={(files) => console.log("rejected files", files)}
+              maxSize={5 * 1024 ** 2}
+              accept={["application/pdf"]}
+            >
+              <Group
+                justify="center"
+                gap="xl"
+                mih={220}
+                style={{ pointerEvents: "none" }}
+              >
+                <Dropzone.Accept>
+                  <IconUpload
+                    size={52}
+                    color="var(--mantine-color-blue-6)"
+                    stroke={1.5}
+                  />
+                </Dropzone.Accept>
+                <Dropzone.Reject>
+                  <IconX
+                    size={52}
+                    color="var(--mantine-color-red-6)"
+                    stroke={1.5}
+                  />
+                </Dropzone.Reject>
+                <Dropzone.Idle>
+                  <IconPhoto
+                    size={52}
+                    color="var(--mantine-color-dimmed)"
+                    stroke={1.5}
+                  />
+                </Dropzone.Idle>
+
+                <div>
+                  <Text size="xl" inline>
+                    Bỏ và thả ảnh minh hoạ tại đây
+                  </Text>
+                  <Text size="sm" c="dimmed" inline mt={7}>
+                    Đính kèm ảnh minh hoạ (tối đa 5MB)
+                  </Text>
+                </div>
+              </Group>
+            </Dropzone>
+          </Input.Wrapper>
 
           {imagePreview && (
             <Image

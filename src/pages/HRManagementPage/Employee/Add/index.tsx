@@ -130,11 +130,10 @@ const HRManagementEmployeeAddPage = () => {
 
                       <div>
                         <Text size="xl" inline>
-                          Drag images here or click to select files
+                          Bỏ và thả ảnh đại diện tại đây
                         </Text>
                         <Text size="sm" c="dimmed" inline mt={7}>
-                          Attach as many files as you like, each file should not
-                          exceed 5mb
+                          Đính kèm ảnh đại diện (tối đa 5MB)
                         </Text>
                       </div>
                     </Group>

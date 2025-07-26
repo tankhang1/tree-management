@@ -208,14 +208,6 @@ const PesticideManagementMainAddPage = () => {
             </Radio.Group>
 
             {form.getValues().fileType === "0" ? (
-              // <FileInput
-              //   label="Tài liệu kỹ thuật (PDF)"
-              //   placeholder="Chọn tài liệu"
-              //   accept="application/pdf"
-              //   leftSection={<IconFileTypePdf size={18} />}
-              //   radius={4}
-              //   {...form.getInputProps("technicalDoc")}
-              // />
               <Dropzone
                 onDrop={(files) => console.log("accepted files", files)}
                 onReject={(files) => console.log("rejected files", files)}

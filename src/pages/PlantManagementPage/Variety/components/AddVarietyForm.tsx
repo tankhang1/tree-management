@@ -156,18 +156,6 @@ const AddVarietyForm = () => {
           </Group>
         )}
 
-        {/* <FileInput
-          label="Tài liệu giống cây"
-          placeholder="Tài liệu PDF/DOC"
-          accept=".pdf,.doc,.docx"
-          radius={4}
-          leftSection={<IconFileText size={18} />}
-          onChange={(file) => {
-            if (file) {
-              form.setFieldValue("doc", file.name);
-            }
-          }}
-        /> */}
         <Radio.Group
           label="Tài liệu kỹ thuật"
           value={form.values.docType}

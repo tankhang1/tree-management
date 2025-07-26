@@ -10,14 +10,22 @@ import {
   Text,
   Radio,
   MultiSelect,
+  Input,
 } from "@mantine/core";
 import { DateTimePicker } from "@mantine/dates";
 import { useForm } from "@mantine/form";
-import { IconFilter, IconSearch } from "@tabler/icons-react";
+import {
+  IconFilter,
+  IconPhoto,
+  IconSearch,
+  IconUpload,
+  IconX,
+} from "@tabler/icons-react";
 import { DepartmentCardList } from "../../../HRManagementPage/Team/Add/components/DepartmentCardList";
 import { EmployeeCardList } from "../../../HRManagementPage/Team/Add/components/EmployeeCardList";
 import { useDisclosure } from "@mantine/hooks";
 import { useState } from "react";
+import { Dropzone } from "@mantine/dropzone";
 
 // Dummy data để hiển thị trong Select
 const pesticideOptions = [
@@ -140,7 +148,52 @@ const AddPesticideUsageForm = () => {
           minRows={3}
           {...form.getInputProps("description")}
         />
+        <Input.Wrapper label="Thông tin liên quan (hoá đơn/chứng từ)">
+          <Dropzone
+            onDrop={(files) => console.log("accepted files", files)}
+            onReject={(files) => console.log("rejected files", files)}
+            maxSize={5 * 1024 ** 2}
+            accept={["application/pdf"]}
+          >
+            <Group
+              justify="center"
+              gap="xl"
+              mih={220}
+              style={{ pointerEvents: "none" }}
+            >
+              <Dropzone.Accept>
+                <IconUpload
+                  size={52}
+                  color="var(--mantine-color-blue-6)"
+                  stroke={1.5}
+                />
+              </Dropzone.Accept>
+              <Dropzone.Reject>
+                <IconX
+                  size={52}
+                  color="var(--mantine-color-red-6)"
+                  stroke={1.5}
+                />
+              </Dropzone.Reject>
+              <Dropzone.Idle>
+                <IconPhoto
+                  size={52}
+                  color="var(--mantine-color-dimmed)"
+                  stroke={1.5}
+                />
+              </Dropzone.Idle>
 
+              <div>
+                <Text size="xl" inline>
+                  Bỏ và thả file tại đây
+                </Text>
+                <Text size="sm" c="dimmed" inline mt={7}>
+                  Đính kèm file (tối đa 5MB)
+                </Text>
+              </div>
+            </Group>
+          </Dropzone>
+        </Input.Wrapper>
         <Group justify="flex-end" mt="md">
           <Button radius={4}>Lưu</Button>
         </Group>

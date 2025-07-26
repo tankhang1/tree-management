@@ -3,7 +3,6 @@
 import {
   Button,
   Card,
-  FileInput,
   Group,
   NumberInput,
   Radio,
@@ -12,26 +11,27 @@ import {
   Stepper,
   Text,
   TextInput,
-  Textarea,
   Title,
   Divider,
   Paper,
-  Badge,
   Input,
 } from "@mantine/core";
 import { DatePickerInput } from "@mantine/dates";
 import {
   IconArrowLeft,
-  IconFileTypePdf,
+  IconPhoto,
   IconPlant2,
   IconSearch,
   IconSettings,
   IconSpray,
   IconTools,
+  IconUpload,
+  IconX,
 } from "@tabler/icons-react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { SelectableEnterpriseCards } from "../../StockManagementPage/Delivery/Add/components/SelectableEnterpriseCards";
+import { Dropzone } from "@mantine/dropzone";
 const itemTypes = [
   {
     label: "Máy móc thiết bị",
@@ -158,14 +158,50 @@ const ContractManagementAddPage = () => {
                   <Radio value="Phụ lục" label="Phụ lục hợp đồng" />
                 </Stack>
               </Radio.Group>
-              <FileInput
-                label="Tải tệp hợp đồng (PDF)"
-                accept=".pdf"
-                leftSection={<IconFileTypePdf />}
-                value={form.file}
-                onChange={(val) => val && setForm({ ...form, file: val })}
-                radius={4}
-              />
+              <Dropzone
+                onDrop={(files) => console.log("accepted files", files)}
+                onReject={(files) => console.log("rejected files", files)}
+                maxSize={5 * 1024 ** 2}
+                accept={["application/pdf"]}
+              >
+                <Group
+                  justify="center"
+                  gap="xl"
+                  mih={220}
+                  style={{ pointerEvents: "none" }}
+                >
+                  <Dropzone.Accept>
+                    <IconUpload
+                      size={52}
+                      color="var(--mantine-color-blue-6)"
+                      stroke={1.5}
+                    />
+                  </Dropzone.Accept>
+                  <Dropzone.Reject>
+                    <IconX
+                      size={52}
+                      color="var(--mantine-color-red-6)"
+                      stroke={1.5}
+                    />
+                  </Dropzone.Reject>
+                  <Dropzone.Idle>
+                    <IconPhoto
+                      size={52}
+                      color="var(--mantine-color-dimmed)"
+                      stroke={1.5}
+                    />
+                  </Dropzone.Idle>
+
+                  <div>
+                    <Text size="xl" inline>
+                      Bỏ và thả hợp đồng tại đây
+                    </Text>
+                    <Text size="sm" c="dimmed" inline mt={7}>
+                      Đính kèm hợp đồng (tối đa 5MB)
+                    </Text>
+                  </div>
+                </Group>
+              </Dropzone>
               <Radio.Group
                 label="Hình thức trình bày"
                 value={form.mode}
