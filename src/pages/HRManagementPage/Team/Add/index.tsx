@@ -28,10 +28,10 @@ const HRManagementTeamAddPage = () => {
 
   const form = useForm({
     initialValues: {
-      name: "",
-      description: "",
-      departments: [],
-      roles: [],
+      name: "Nhóm Giám Sát Sản Xuất",
+      description: "Phụ trách giám sát tiến độ và chất lượng vùng trồng A & B",
+      departments: ["Phòng Kỹ Thuật", "Phòng Vận Hành"],
+      roles: ["leader", "member"],
       members: [],
     },
   });
@@ -100,6 +100,33 @@ const HRManagementTeamAddPage = () => {
               <EmployeeCardList />
             </Stack>
           </Stepper.Step>
+          <Stepper.Step label="Bước 3" description="Xác nhận">
+            <Card withBorder shadow="sm" radius={4} p="md">
+              <Stack gap="sm">
+                <Title order={3}>Xác nhận thông tin nhóm</Title>
+
+                <Stack gap={4}>
+                  <Group>
+                    <b>Tên nhóm:</b>
+                    <span>{form.values.name || "(chưa nhập)"}</span>
+                  </Group>
+                  <Group>
+                    <b>Mô tả:</b>
+                    <span>{form.values.description || "(không có)"}</span>
+                  </Group>
+                </Stack>
+
+                <Title order={5} mt="md">
+                  Danh sách phòng ban
+                </Title>
+                <DepartmentCardList />
+                <Title order={5} mt="md">
+                  Danh sách nhân sự
+                </Title>
+                <EmployeeCardList />
+              </Stack>
+            </Card>
+          </Stepper.Step>
         </Stepper>
 
         <Group justify="space-between" mt="lg">
@@ -112,9 +139,9 @@ const HRManagementTeamAddPage = () => {
           </Button>
           <Button
             radius={4}
-            onClick={() => setActive((prev) => Math.min(prev + 1, 1))}
+            onClick={() => setActive((prev) => Math.min(prev + 1, 2))}
           >
-            {active === 1 ? "Tạo nhóm" : "Tiếp tục"}
+            {active === 2 ? "Tạo nhóm" : "Tiếp tục"}
           </Button>
         </Group>
       </Stack>

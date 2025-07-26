@@ -4,65 +4,65 @@ import {
   Stack,
   TextInput,
   Textarea,
+  NumberInput,
   Select,
-  Modal,
   Text,
+  Modal,
   Radio,
   MultiSelect,
 } from "@mantine/core";
 import { DateTimePicker } from "@mantine/dates";
 import { useForm } from "@mantine/form";
-import { useDisclosure } from "@mantine/hooks";
 import { IconFilter, IconSearch } from "@tabler/icons-react";
-import { useState } from "react";
 import { DepartmentCardList } from "../../../HRManagementPage/Team/Add/components/DepartmentCardList";
 import { EmployeeCardList } from "../../../HRManagementPage/Team/Add/components/EmployeeCardList";
+import { useState } from "react";
+import { useDisclosure } from "@mantine/hooks";
 
-// Dữ liệu mẫu (có thể thay bằng API hoặc Context)
-const materialOptions = [
-  { value: "MAT001", label: "Phân bón lá" },
-  { value: "MAT002", label: "Phân NPK" },
-  { value: "MAT003", label: "Thuốc bảo vệ thực vật" },
+// Dữ liệu mẫu (có thể lấy từ API thực tế)
+const pesticideOptions = [
+  { value: "PST001", label: "Thuốc trừ sâu Regent" },
+  { value: "PST002", label: "Thuốc trừ bệnh Anvil" },
+  { value: "PST003", label: "Thuốc vi sinh Bio-B" },
 ];
 
-type FormValues = {
-  id: string;
-  materialId: string;
-  startTime: Date;
-  endTime: Date;
-  usedBy: string;
-  purpose: string;
-  location: string;
-};
+const disposalReasons = [
+  { value: "expired", label: "Hết hạn sử dụng" },
+  { value: "damaged", label: "Hư hỏng, bao bì rách" },
+  { value: "recalled", label: "Thu hồi theo lô sản xuất" },
+  { value: "other", label: "Lý do khác" },
+];
 
-const AddMaterialUsageForm = () => {
+const AddDisposalForm = () => {
   const [
     openedFilterEmployee,
     { open: openFilterEmployee, close: closeFilterEmployee },
   ] = useDisclosure(false);
+
   const [mode, setMode] = useState<"group" | "dept">("group");
-  const form = useForm<FormValues>({
+
+  const form = useForm({
     initialValues: {
       id: "",
-      materialId: "",
-      startTime: new Date(),
-      endTime: new Date(),
-      usedBy: "",
-      purpose: "",
-      location: "",
+      pesticideId: "",
+      disposalDate: new Date(),
+      staffId: "",
+      reason: "",
+      quantity: 0,
+      notes: "",
     },
     validate: {
       id: (v) => (!v ? "Mã phiếu không được để trống" : null),
-      materialId: (v) => (!v ? "Vui lòng chọn vật tư" : null),
-      usedBy: (v) => (!v ? "Chọn người sử dụng" : null),
-      purpose: (v) => (!v ? "Nhập mục đích sử dụng" : null),
-      location: (v) => (!v ? "Nhập vị trí sử dụng" : null),
+      pesticideId: (v) => (!v ? "Chọn thuốc cần huỷ" : null),
+      staffId: (v) => (!v ? "Chọn người thực hiện" : null),
+      reason: (v) => (!v ? "Vui lòng chọn lý do" : null),
+      quantity: (v) => (v <= 0 ? "Số lượng phải lớn hơn 0" : null),
     },
   });
 
-  const handleSubmit = (values: FormValues) => {
-    console.log("Phiếu sử dụng vật tư:", values);
-    // TODO: gửi dữ liệu lên backend hoặc cập nhật store
+  const handleSubmit = (values: typeof form.values) => {
+    console.log("Phiếu huỷ thuốc:", values);
+    // TODO: Gửi đến backend hoặc cập nhật store
     form.reset();
   };
 
@@ -71,34 +71,30 @@ const AddMaterialUsageForm = () => {
       <Stack>
         <TextInput
           label="Mã phiếu"
-          placeholder="PU001"
+          placeholder="VD: PD004"
+          withAsterisk
           radius={4}
           {...form.getInputProps("id")}
         />
 
         <Select
-          label="Vật tư"
-          placeholder="Chọn loại vật tư"
-          data={materialOptions}
+          label="Thuốc cần huỷ"
+          placeholder="Chọn thuốc"
+          data={pesticideOptions}
+          withAsterisk
           radius={4}
-          {...form.getInputProps("materialId")}
+          {...form.getInputProps("pesticideId")}
         />
 
-        <Group grow>
-          <DateTimePicker
-            label="Thời gian bắt đầu"
-            radius={4}
-            {...form.getInputProps("startTime")}
-          />
-          <DateTimePicker
-            label="Thời gian kết thúc"
-            radius={4}
-            {...form.getInputProps("endTime")}
-          />
-        </Group>
+        <DateTimePicker
+          label="Ngày huỷ"
+          radius={4}
+          withAsterisk
+          {...form.getInputProps("disposalDate")}
+        />
 
         <Group>
-          <Text fw={"500"} fz={14}>
+          <Text fw={500} fz={14}>
             Nhân sự thực hiện
           </Text>
           <Button
@@ -110,46 +106,61 @@ const AddMaterialUsageForm = () => {
             Lọc nhân sự
           </Button>
         </Group>
-        <TextInput
-          label="Mục đích sử dụng"
+
+        <Select
+          label="Lý do huỷ thuốc"
+          placeholder="VD: Thuốc hết hạn, bao bì rách..."
+          data={disposalReasons}
+          withAsterisk
           radius={4}
-          placeholder="Ví dụ: Phun phân, rải phân, xử lý sâu bệnh..."
-          {...form.getInputProps("purpose")}
+          {...form.getInputProps("reason")}
+        />
+
+        <NumberInput
+          label="Số lượng huỷ"
+          placeholder="VD: 10"
+          radius={4}
+          min={1}
+          withAsterisk
+          {...form.getInputProps("quantity")}
         />
 
         <Textarea
-          label="Vị trí sử dụng"
+          label="Ghi chú"
+          placeholder="Thêm ghi chú nếu cần"
           radius={4}
-          placeholder="Ví dụ: Vùng trồng A1, Khu đất 3, Lô 2 hàng 5..."
           autosize
           minRows={2}
-          {...form.getInputProps("location")}
+          {...form.getInputProps("notes")}
         />
 
         <Group justify="flex-end" mt="md">
-          <Button radius={4}>Lưu</Button>
+          <Button type="submit" radius={4}>
+            Lưu phiếu
+          </Button>
         </Group>
       </Stack>
+
       <Modal
         opened={openedFilterEmployee}
         onClose={closeFilterEmployee}
-        title={<Text fw={"bold"}>Lọc nhân sự</Text>}
+        title={<Text fw={700}>Lọc nhân sự</Text>}
       >
-        <Stack gap={"xs"}>
+        <Stack gap="xs">
           <Radio.Group
             label="Phương thức lọc"
             value={mode}
             onChange={(val) => setMode(val as "group" | "dept")}
           >
-            <Radio value="group" mb={"xs"} label="Chọn theo đội nhóm" />
+            <Radio value="group" label="Chọn theo đội nhóm" />
             <Radio value="dept" label="Chọn theo phòng ban và vai trò" />
           </Radio.Group>
 
           {mode === "group" && (
             <MultiSelect
-              label="Chọn đội nhóm"
+              label="Đội nhóm"
               radius={4}
-              data={["Nhóm Canh tác", "Nhóm Vật tư"]}
+              data={["Nhóm canh tác", "Nhóm vật tư"]}
             />
           )}
 
@@ -157,28 +168,29 @@ const AddMaterialUsageForm = () => {
             <>
               <TextInput
                 label="Phòng ban"
-                placeholder="Tìm kiếm phòng ban liên quan"
+                placeholder="Tìm kiếm phòng ban"
                 leftSection={<IconSearch size={16} />}
                 radius={4}
               />
               <DepartmentCardList />
               <MultiSelect
-                label="Chọn vai trò"
+                label="Vai trò"
                 radius={4}
-                data={["Giám đốc", "Tổ trưởng", "Trưởng phòng"]}
+                data={["Tổ trưởng", "Trưởng phòng", "Giám sát"]}
               />
             </>
           )}
+
           <TextInput
             label="Tìm kiếm nhân viên"
-            placeholder="Chọn thành viên từ nhân sự"
+            placeholder="Chọn nhân sự"
             leftSection={<IconSearch size={16} />}
             radius={4}
           />
           <EmployeeCardList />
         </Stack>
 
-        <Group mt="md" justify="flex-end">
+        <Group justify="flex-end" mt="md">
           <Button
             radius={4}
             variant="outline"
@@ -194,4 +206,4 @@ const AddMaterialUsageForm = () => {
   );
 };
 
-export default AddMaterialUsageForm;
+export default AddDisposalForm;

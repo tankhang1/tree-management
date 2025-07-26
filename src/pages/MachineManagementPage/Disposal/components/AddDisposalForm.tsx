@@ -4,6 +4,7 @@ import {
   Stack,
   TextInput,
   Textarea,
+  NumberInput,
   Select,
   Text,
   Modal,
@@ -12,57 +13,53 @@ import {
 } from "@mantine/core";
 import { DateTimePicker } from "@mantine/dates";
 import { useForm } from "@mantine/form";
-import { useDisclosure } from "@mantine/hooks";
 import { IconFilter, IconSearch } from "@tabler/icons-react";
-import { useState } from "react";
 import { DepartmentCardList } from "../../../HRManagementPage/Team/Add/components/DepartmentCardList";
 import { EmployeeCardList } from "../../../HRManagementPage/Team/Add/components/EmployeeCardList";
+import { useState } from "react";
+import { useDisclosure } from "@mantine/hooks";
 
-// Dữ liệu mẫu – có thể thay bằng API hoặc context
-const fertilizerOptions = [
-  { value: "FER001", label: "Phân bón lá" },
-  { value: "FER002", label: "Phân NPK" },
-  { value: "FER003", label: "Phân hữu cơ vi sinh" },
+// Dữ liệu mẫu (tuỳ chỉnh hoặc fetch từ API)
+const machineOptions = [
+  { value: "MC001", label: "Máy cày Kubota MC001" },
+  { value: "MC002", label: "Máy gieo hạt MC002" },
+  { value: "MC003", label: "Máy phun thuốc MC003" },
 ];
 
-type FormValues = {
-  id: string;
-  fertilizerId: string;
-  startTime: Date;
-  endTime: Date;
-  usedBy: string;
-  purpose: string;
-  location: string;
-};
+const disposalReasons = [
+  { value: "broken", label: "Hỏng hoàn toàn, không thể sửa" },
+  { value: "upgrade", label: "Thanh lý để thay máy mới" },
+  { value: "expired", label: "Hết thời gian sử dụng" },
+  { value: "other", label: "Lý do khác" },
+];
 
-const AddFertilizerUsageForm = () => {
+const AddDisposalForm = () => {
   const [
     openedFilterEmployee,
     { open: openFilterEmployee, close: closeFilterEmployee },
   ] = useDisclosure(false);
   const [mode, setMode] = useState<"group" | "dept">("group");
-  const form = useForm<FormValues>({
+  const form = useForm({
     initialValues: {
       id: "",
-      fertilizerId: "",
-      startTime: new Date(),
-      endTime: new Date(),
-      usedBy: "",
-      purpose: "",
-      location: "",
+      machineId: "",
+      disposalDate: new Date(),
+      staffId: "",
+      reason: "",
+      valueRecovered: 0,
+      notes: "",
     },
     validate: {
       id: (v) => (!v ? "Mã phiếu không được để trống" : null),
-      fertilizerId: (v) => (!v ? "Vui lòng chọn phân bón" : null),
-      usedBy: (v) => (!v ? "Chọn người sử dụng" : null),
-      purpose: (v) => (!v ? "Nhập mục đích sử dụng" : null),
-      location: (v) => (!v ? "Nhập vị trí sử dụng" : null),
+      machineId: (v) => (!v ? "Chọn máy cần thanh lý" : null),
+      staffId: (v) => (!v ? "Chọn người thực hiện" : null),
+      reason: (v) => (!v ? "Vui lòng chọn lý do" : null),
     },
   });
 
-  const handleSubmit = (values: FormValues) => {
-    console.log("Phiếu sử dụng phân bón:", values);
-    // TODO: gửi dữ liệu lên backend hoặc cập nhật store
+  const handleSubmit = (values: typeof form.values) => {
+    console.log("Dữ liệu phiếu thanh lý:", values);
+    // TODO: Gửi dữ liệu đến backend hoặc cập nhật local state
     form.reset();
   };
 
@@ -71,31 +68,27 @@ const AddFertilizerUsageForm = () => {
       <Stack>
         <TextInput
           label="Mã phiếu"
-          placeholder="VD: FERUSE004"
-          {...form.getInputProps("id")}
+          placeholder="VD: DIS004"
+          withAsterisk
           radius={4}
+          {...form.getInputProps("id")}
         />
 
         <Select
-          label="Loại phân bón"
-          placeholder="Chọn phân bón"
-          data={fertilizerOptions}
+          label="Máy cần thanh lý"
+          placeholder="Chọn mã máy"
+          data={machineOptions}
           radius={4}
-          {...form.getInputProps("fertilizerId")}
+          withAsterisk
+          {...form.getInputProps("machineId")}
         />
 
-        <Group grow>
-          <DateTimePicker
-            label="Thời gian bắt đầu"
-            radius={4}
-            {...form.getInputProps("startTime")}
-          />
-          <DateTimePicker
-            label="Thời gian kết thúc"
-            {...form.getInputProps("endTime")}
-            radius={4}
-          />
-        </Group>
+        <DateTimePicker
+          label="Ngày thanh lý"
+          radius={4}
+          withAsterisk
+          {...form.getInputProps("disposalDate")}
+        />
 
         <Group>
           <Text fw={"500"} fz={14}>
@@ -111,24 +104,34 @@ const AddFertilizerUsageForm = () => {
           </Button>
         </Group>
 
-        <TextInput
-          label="Mục đích sử dụng"
-          placeholder="Ví dụ: Bón lót, bón thúc, bón phân vi sinh..."
-          {...form.getInputProps("purpose")}
+        <Select
+          label="Lý do thanh lý"
+          placeholder="VD: Máy hỏng, nâng cấp thiết bị"
+          data={disposalReasons}
           radius={4}
+          withAsterisk
+          {...form.getInputProps("reason")}
+        />
+
+        <NumberInput
+          radius={4}
+          label="Giá trị thu hồi (nếu có)"
+          placeholder="Nhập giá trị (VND)"
+          min={0}
+          {...form.getInputProps("valueRecovered")}
         />
 
         <Textarea
-          label="Vị trí sử dụng"
-          placeholder="Ví dụ: Vùng trồng B2, Lô 3 hàng 7, Khu đất 4..."
-          autosize
+          label="Ghi chú"
+          placeholder="Ghi chú thêm nếu có"
           minRows={2}
           radius={4}
-          {...form.getInputProps("location")}
+          autosize
+          {...form.getInputProps("notes")}
         />
 
         <Group justify="flex-end" mt="md">
-          <Button type="submit">Lưu</Button>
+          <Button radius={4}>Lưu phiếu</Button>
         </Group>
       </Stack>
       <Modal
@@ -195,4 +198,4 @@ const AddFertilizerUsageForm = () => {
   );
 };
 
-export default AddFertilizerUsageForm;
+export default AddDisposalForm;

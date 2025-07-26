@@ -166,6 +166,7 @@ export const NAV_BAR = [
       { label: "Máy móc", link: PATH.MACHINE_MAIN },
       { label: "Lịch sử sử dụng", link: PATH.MACHINE_USAGE_HISTORY },
       { label: "Lịch sử bảo trì", link: PATH.MACHINE_MAINTENANCE_HISTORY },
+      { label: "Lịch sử thanh lý", link: PATH.MACHINE_DISPOSAL_HISTORY },
     ],
   },
   {
@@ -176,6 +177,7 @@ export const NAV_BAR = [
       { label: "Danh mục thuốc", link: PATH.PESTICIDE_CATEGORY },
       { label: "Thuốc", link: PATH.PESTICIDE_MAIN },
       { label: "Lịch sử sử dụng", link: PATH.PESTICIDE_HISTORY },
+      { label: "Lịch sử huỷ", link: PATH.PESTICIDE_DISPOSAL_HISTORY },
     ],
   },
   {
@@ -186,6 +188,7 @@ export const NAV_BAR = [
       { label: "Danh mục vật tư", link: PATH.SUPPLY_TYPE },
       { label: "Vật tư", link: PATH.SUPPLY_MAIN },
       { label: "Lịch sử sử dụng", link: PATH.SUPPLY_HISTORY },
+      { label: "Lịch sử thanh lý", link: PATH.SUPPLY_DISPOSAL_HISTORY },
     ],
   },
   {
@@ -196,6 +199,7 @@ export const NAV_BAR = [
       { label: "Danh mục phân bón", link: PATH.FERTILIZER_TYPE },
       { label: "Phân bón", link: PATH.FERTILIZER_MAIN },
       { label: "Lịch sử sử dụng", link: PATH.FERTILIZER_HISTORY },
+      { label: "Lịch sử huỷ", link: PATH.FERTILIZER_DISPOSAL_HISTORY },
     ],
   },
   {

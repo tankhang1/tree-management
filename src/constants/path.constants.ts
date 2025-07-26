@@ -167,6 +167,7 @@ export const PATH = {
   MACHINE_ADD_MAIN: "/machine-management/main/add",
   MACHINE_USAGE_HISTORY: "/machine-management/usage-history",
   MACHINE_MAINTENANCE_HISTORY: "/machine-management/maintenance-history",
+  MACHINE_DISPOSAL_HISTORY: " /machine-management/disposal-history",
 
   // Pesticide Management
   PESTICIDE_MANAGEMENT: "/pesticide-management",
@@ -175,6 +176,7 @@ export const PATH = {
   PESTICIDE_ADD_MAIN: "/pesticide-management/main/add",
   PESTICIDE_MAIN_DETAIL: "/pesticide-management/main/detail",
   PESTICIDE_CATEGORY: "/pesticide-management/category",
+  PESTICIDE_DISPOSAL_HISTORY: "/pesticide-management/disposal-history",
 
   // Supply Management
   SUPPLY_MANAGEMENT: "/supply-management",
@@ -184,11 +186,13 @@ export const PATH = {
   SUPPLY_MAIN_DETAIL: "/supply-management/main/detail",
   SUPPLY_ADD_MAIN: "/supply-management/main/add",
   SUPPLY_HISTORY: "/supply-management/history",
+  SUPPLY_DISPOSAL_HISTORY: "/supply-management/disposal-history",
   //Fertilizer Management
   FERTILIZER_TYPE: "/fertilizer-management/type",
   FERTILIZER_MAIN: "/fertilizer-management/main",
   FERTILIZER_MAIN_ADD: "/fertilizer-management/main/add",
   FERTILIZER_HISTORY: "/fertilizer-management/history",
+  FERTILIZER_DISPOSAL_HISTORY: "/fertilizer-management/disposal-history",
   // Stock Management
   STOCK_AREA: "/stock-area",
   STOCK_ADD_AREA: "/stock-area/add",

@@ -166,6 +166,10 @@ import MachineManagementCategoryPage from "./pages/MachineManagementPage/Type/in
 import PesticideUsageHistoryPage from "./pages/PesticideManagementPage/MaintenanceHistory/index.tsx";
 import SupplyManagementUsageHistoryPage from "./pages/SupplyManagementPage/UsageHistory/index.tsx";
 import FertilizerManagementUsageHistoryPage from "./pages/FertilizerManagementPage/UsageHistory/index.tsx";
+import MachineManagementDisposalHistoryPage from "./pages/MachineManagementPage/Disposal/index.tsx";
+import PesticideManagementDisposalPage from "./pages/PesticideManagementPage/Disposal/index.tsx";
+import SupplyManagementDisposalPage from "./pages/SupplyManagementPage/Disposal/index.tsx";
+import FertilizerManagementDisposalPage from "./pages/FertilizerManagementPage/Disposal/index.tsx";
 const theme: MantineThemeOverride = {
   fontFamily: "MyFont, sans-serif",
   primaryColor: "brand",
@@ -531,7 +535,10 @@ const ROUTES = [
     path={PATH.MACHINE_MAINTENANCE_HISTORY}
     element={<MachineManagementMaintenanceHistoryPage />}
   />,
-
+  <Route
+    path={PATH.MACHINE_DISPOSAL_HISTORY}
+    element={<MachineManagementDisposalHistoryPage />}
+  />,
   <Route
     path={PATH.PESTICIDE_MANAGEMENT}
     element={<PesticideManagementPage />}
@@ -556,10 +563,18 @@ const ROUTES = [
     path={PATH.PESTICIDE_CATEGORY}
     element={<PesticideManagementCategoryPage />}
   />,
+  <Route
+    path={PATH.PESTICIDE_DISPOSAL_HISTORY}
+    element={<PesticideManagementDisposalPage />}
+  />,
 
   <Route path={PATH.SUPPLY_MAIN} element={<SupplyManagementPage />} />,
   <Route path={PATH.SUPPLY_ADD_MAIN} element={<SupplyManagementAddPage />} />,
   <Route path={PATH.SUPPLY_TYPE} element={<SupplyManagementCategoryPage />} />,
+  <Route
+    path={PATH.SUPPLY_DISPOSAL_HISTORY}
+    element={<SupplyManagementDisposalPage />}
+  />,
   <Route
     path={PATH.SUPPLY_HISTORY}
     element={<SupplyManagementUsageHistoryPage />}
@@ -605,6 +620,10 @@ const ROUTES = [
   <Route
     path={PATH.FERTILIZER_HISTORY}
     element={<FertilizerManagementUsageHistoryPage />}
+  />,
+  <Route
+    path={PATH.FERTILIZER_DISPOSAL_HISTORY}
+    element={<FertilizerManagementDisposalPage />}
   />,
   <Route
     path={PATH.STOCK_DELIVERY}

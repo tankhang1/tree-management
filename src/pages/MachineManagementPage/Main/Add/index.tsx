@@ -42,10 +42,8 @@ const s = {
 };
 const MachineManagementMainAddPage = () => {
   const navigate = useNavigate();
-  const [manualPreviewUrl, setManualPreviewUrl] = useState<string | null>(null);
-  const [inspectionPreviewUrl, setInspectionPreviewUrl] = useState<
-    string | null
-  >(null);
+  const [manualPreviewUrl] = useState<string | null>(null);
+  const [inspectionPreviewUrl] = useState<string | null>(null);
 
   const [active, setActive] = useState(0);
   const form = useForm({
@@ -108,7 +106,7 @@ const MachineManagementMainAddPage = () => {
                 radius={4}
               />
               <Select
-                label="Loại xe"
+                label="Danh mục máy móc/thiết bị"
                 data={["Xe tải", "Xe múc", "Máy móc khác", "Xe cày"]}
                 {...form.getInputProps("type")}
                 radius={4}
@@ -387,10 +385,13 @@ const MachineManagementMainAddPage = () => {
                 ? "Tải file PDF"
                 : "Nội dung trực tiếp"}
             </Text>
-            {form.values.fileType === "0" && form.values?.technicalDoc ? (
+            {form.values.fileType === "0" &&
+            //@ts-expect-error no check
+            form.values?.technicalDoc ? (
               <Stack gap={"xs"}>
                 <Text>📄 Tệp đã tải lên:</Text>
                 <iframe
+                  //@ts-expect-error no check
                   src={URL.createObjectURL(form.values?.technicalDoc || "")}
                   width="100%"
                   height="400px"

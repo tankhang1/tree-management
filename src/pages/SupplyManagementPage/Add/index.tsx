@@ -12,6 +12,8 @@ import {
   Image,
   MultiSelect,
   Input,
+  Select,
+  NumberInput,
 } from "@mantine/core";
 import { Dropzone, IMAGE_MIME_TYPE } from "@mantine/dropzone";
 import { IconArrowLeft, IconSearch } from "@tabler/icons-react";
@@ -76,6 +78,24 @@ export default function SupplyManagementPage() {
                 required
                 radius={4}
               />
+              <Select
+                label="Danh mục vật tư"
+                value={formData.name}
+                required
+                radius={4}
+                data={[
+                  { value: "fertilizer", label: "Phân bón" },
+                  { value: "pesticide", label: "Thuốc bảo vệ thực vật (BVTV)" },
+                  { value: "seed", label: "Hạt giống" },
+                  { value: "agri_tools", label: "Dụng cụ nông nghiệp" },
+                  { value: "plastic_tray", label: "Khay nhựa, khay gieo hạt" },
+                  { value: "irrigation", label: "Thiết bị tưới tiêu" },
+                  { value: "agri_machinery", label: "Máy móc nông nghiệp" },
+                  { value: "organic_material", label: "Vật tư hữu cơ vi sinh" },
+                  { value: "packaging", label: "Bao bì, vật liệu đóng gói" },
+                  { value: "protective", label: "Đồ bảo hộ lao động" },
+                ]}
+              />
 
               <Textarea
                 label="Ghi chú"
@@ -127,7 +147,46 @@ export default function SupplyManagementPage() {
             label="Danh sách nhà cung cấp (Chọn nhiều)"
             leftSection={<IconSearch size={18} />}
           />
-          <SelectableSupplierCards />
+          <SelectableSupplierCards isCheckbox={true} />
+          <NumberInput
+            label="Số lượng"
+            placeholder="Nhập số lượng"
+            min={1}
+            radius={4}
+          />
+          <Select
+            label="Đơn vị tính"
+            placeholder="VD: kg, lít, cái..."
+            radius={4}
+            data={[
+              { value: "kg", label: "kg" },
+              { value: "g", label: "g" },
+              { value: "l", label: "lít" },
+              { value: "ml", label: "ml" },
+              { value: "chai", label: "Chai" },
+              { value: "bao", label: "Bao" },
+              { value: "bình", label: "Bình" },
+              { value: "cái", label: "Cái" },
+              { value: "bộ", label: "Bộ" },
+              { value: "gói", label: "Gói" },
+              { value: "thùng", label: "Thùng" },
+              { value: "lọ", label: "Lọ" },
+            ]}
+          />
+
+          <Select
+            label="Quy cách"
+            radius={4}
+            data={[
+              { value: "25kg/bao", label: "25kg/bao" },
+              { value: "50kg/bao", label: "50kg/bao" },
+              { value: "1 lít/chai", label: "1 lít/chai" },
+              { value: "500ml/chai", label: "500ml/chai" },
+              { value: "100ml/lọ", label: "100ml/lọ" },
+              { value: "10 gói/thùng", label: "10 gói/thùng" },
+              { value: "1 bộ/đơn vị", label: "1 bộ/đơn vị" },
+            ]}
+          />
           <Group justify="space-between" mt="md">
             <Button radius={4} variant="default" onClick={prevStep}>
               Quay lại
@@ -155,21 +214,39 @@ export default function SupplyManagementPage() {
                   <strong>Tên vật tư:</strong> {formData.name}
                 </Text>
                 <Text>
+                  <strong>Danh mục vật tư:</strong> Thiết bị tưới tiêu
+                </Text>
+                <Text>
+                  <strong>Số lượng:</strong> 100
+                </Text>
+                <Text>
+                  <strong>Đơn vị tính:</strong> cái
+                </Text>
+                <Text>
+                  <strong>Quy cách:</strong> 1 bộ/đơn vị
+                </Text>
+                <Text>
                   <strong>Ghi chú:</strong> {formData.note}
                 </Text>
               </Stack>
             </Card>
-            <Stack flex={1} justify="center" align="center">
-              <Image
-                src={
-                  "https://goldmax.com.vn/wp-content/uploads/2022/04/may-cay-zetor-2160-5.jpg"
-                }
-                alt="Preview"
-                radius="md"
-                mt="sm"
-                w={400}
-              />
-            </Stack>
+            <Card withBorder flex={1} h={300}>
+              <Stack flex={1}>
+                <Title order={4}>Ảnh vật tư</Title>
+                <Stack justify="center" align="center">
+                  <Image
+                    src={
+                      "https://encrypted-tbn3.gstatic.com/shopping?q=tbn:ANd9GcQHUVFr-uUHq8EgkgEc-KvQnK1Sw1jvIVax8B4kebK98FtujU5D2n3_mZ8ib6LoLZPk9eGKlOr3ZVslkIrWYU6VjTByZJiIpTvMqGqiK1Ds8kWIra4f2kxZ4w&usqp=CAc"
+                    }
+                    alt="Preview"
+                    radius="md"
+                    mt="sm"
+                    h={200}
+                    fit="contain"
+                  />
+                </Stack>
+              </Stack>
+            </Card>
           </Group>
 
           <Divider label="🏪 Nhà cung cấp" labelPosition="center" />

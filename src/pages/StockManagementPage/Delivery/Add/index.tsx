@@ -164,7 +164,29 @@ const company = {
 export default function StockManagementAddDeliveryPage() {
   const navigate = useNavigate();
   const [active, setActive] = useState(0);
-  const [importedItems, setImportedItems] = useState<WarehouseItem[]>([]);
+  const [importedItems, setImportedItems] = useState<WarehouseItem[]>([
+    {
+      group: "Phân bón",
+      name: "Phân NPK 16-16-8",
+      quantity: 100,
+      unit: "bao",
+      packing: "25kg/bao",
+    },
+    {
+      group: "BVTV",
+      name: "Thuốc trừ sâu",
+      quantity: 30,
+      unit: "chai",
+      packing: "100ml",
+    },
+    {
+      group: "Máy móc",
+      name: "Máy xịt thuốc chạy điện",
+      quantity: 2,
+      unit: "cái",
+      packing: "1 bộ/đơn vị",
+    },
+  ]);
   const [inputMode, setInputMode] = useState<"upload" | "manual">("upload");
   const form = useForm<{
     warehouseName: string;
@@ -392,7 +414,7 @@ export default function StockManagementAddDeliveryPage() {
                   value={inputMode}
                   onChange={(val) => setInputMode(val as "upload" | "manual")}
                   data={[
-                    { label: "Tải file Excel", value: "upload" },
+                    { label: "Upload file Excel", value: "upload" },
                     { label: "Tạo mới thủ công", value: "manual" },
                   ]}
                 />
@@ -410,7 +432,7 @@ export default function StockManagementAddDeliveryPage() {
                             {...props}
                             leftSection={<IconDownload size={16} />}
                           >
-                            Tải file Excel
+                            Upload file Excel
                           </Button>
                         )}
                       </FileButton>

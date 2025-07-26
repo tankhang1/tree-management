@@ -31,13 +31,7 @@ import {
   IconUser,
 } from "@tabler/icons-react";
 import { useNavigate } from "react-router-dom";
-
-const banksData = [
-  { label: "Vietcombank (VCB)", value: "vcb" },
-  { label: "VietinBank (CTG)", value: "ctg" },
-  { label: "BIDV (BID)", value: "bid" },
-  { label: "Techcombank (TCB)", value: "tcb" },
-];
+import BankSelect from "../../../components/BankList";
 
 export function CompanyAddPage() {
   const navigate = useNavigate();
@@ -296,7 +290,7 @@ export function CompanyAddPage() {
                           })
                         }
                       />
-                      <Select
+                      {/* <Select
                         label="Phân loại"
                         radius={4}
                         data={["Khách hàng", "Nhà cung cấp", "Đối tác"]}
@@ -304,7 +298,7 @@ export function CompanyAddPage() {
                         onChange={(val) =>
                           setFormData({ ...formData, category: val! })
                         }
-                      />
+                      /> */}
                       <Textarea
                         label="Ghi chú"
                         radius={4}
@@ -361,7 +355,7 @@ export function CompanyAddPage() {
               <Card key={idx} withBorder>
                 <Grid>
                   <Grid.Col span={6}>
-                    <Select label="Ngân hàng" radius={4} data={banksData} />
+                    <BankSelect />
                   </Grid.Col>
                   <Grid.Col span={6}>
                     <TextInput label="Chủ tài khoản" radius={4} />

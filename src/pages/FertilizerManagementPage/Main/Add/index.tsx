@@ -28,25 +28,6 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { SelectableSupplierCards } from "../../../SupplyManagementPage/Add/components/SelectableSupplierCards";
 import { Dropzone, IMAGE_MIME_TYPE } from "@mantine/dropzone";
-const pesticideTypes = [
-  {
-    value: "Hữu cơ",
-    label: "Hữu cơ",
-    image:
-      "https://makagarden.vn/wp-content/uploads/2023/06/cac-loai-phan-bon-huu-co-duoc-su-dung-pho-bien-nhat-hien-nay.jpg",
-  },
-  {
-    value: "Vô cơ",
-    label: "Vô cơ",
-    image:
-      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTq_l-0ogNl_hTwySfEfMO8cFa0VtMETY6DYA&s",
-  },
-  {
-    value: "Vi sinh",
-    label: "Vi sinh",
-    image: "https://xuannong.vn/images/phan_bon_vi_sinh.png",
-  },
-];
 
 const units = ["kg", "bao", "gói", "lít"];
 
@@ -150,41 +131,24 @@ const FertilizerManagementMainAddPage = () => {
               radius={4}
               {...form.getInputProps("name")}
             />
-            <Input.Wrapper label="Loại phân bón">
-              <Group gap="sm">
-                {pesticideTypes.map((item) => (
-                  <Paper
-                    w={100}
-                    key={item.value}
-                    withBorder
-                    p="xs"
-                    radius="md"
-                    shadow={form.values.type === item.value ? "md" : "xs"}
-                    style={{
-                      cursor: "pointer",
-                      borderColor:
-                        form.values.type === item.value ? "green" : undefined,
-                    }}
-                    onClick={() => form.setFieldValue("type", item.value)}
-                  >
-                    <Stack align="center" gap={4}>
-                      <Image
-                        src={item.image}
-                        width={60}
-                        height={60}
-                        fit="contain"
-                      />
-                      <Text
-                        size="sm"
-                        fw={form.values.type === item.value ? 600 : 400}
-                      >
-                        {item.label}
-                      </Text>
-                    </Stack>
-                  </Paper>
-                ))}
-              </Group>
-            </Input.Wrapper>
+            <Select
+              label="Danh mục phân bón"
+              placeholder="Danh mục phân bón"
+              radius={4}
+              data={[
+                { value: "npk", label: "Phân NPK" },
+                { value: "ure", label: "Phân ure" },
+                { value: "kali", label: "Phân kali" },
+                { value: "dap", label: "Phân DAP" },
+                { value: "lan", label: "Phân lân" },
+                { value: "hữu cơ", label: "Phân hữu cơ" },
+                { value: "vi sinh", label: "Phân vi sinh" },
+                { value: "vi lượng", label: "Phân vi lượng" },
+                { value: "bón lá", label: "Phân bón lá" },
+                { value: "chậm tan", label: "Phân chậm tan" },
+                { value: "bón rễ", label: "Phân bón gốc / bón rễ" },
+              ]}
+            />
             <TextInput
               label="Hàm lượng dinh dưỡng"
               placeholder="VD: NPK 16-16-8, Đạm 46%"

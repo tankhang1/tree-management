@@ -106,7 +106,7 @@ const AddPesticideUsageForm = () => {
 
         <Group>
           <Text fw={"500"} fz={14}>
-            Chọn nhân sự thực hiện
+            Nhân sự thực hiện
           </Text>
           <Button
             variant="light"

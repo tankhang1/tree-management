@@ -26,12 +26,8 @@ import {
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { SelectableTeamCards } from "./components/SelectableTeamCards";
-const banksData = [
-  { label: "Vietcombank (VCB)", value: "vcb" },
-  { label: "VietinBank (CTG)", value: "ctg" },
-  { label: "BIDV (BID)", value: "bid" },
-  { label: "Techcombank (TCB)", value: "tcb" },
-];
+import BankSelect from "../../../../components/BankList";
+
 const HRManagementEmployeeAddPage = () => {
   const navigate = useNavigate();
   const [active, setActive] = useState(0);
@@ -185,7 +181,7 @@ const HRManagementEmployeeAddPage = () => {
                 <Card key={idx} withBorder>
                   <Grid>
                     <Grid.Col span={6}>
-                      <Select label="Ngân hàng" radius={4} data={banksData} />
+                      <BankSelect />
                     </Grid.Col>
                     <Grid.Col span={6}>
                       <TextInput label="Chủ tài khoản" radius={4} />

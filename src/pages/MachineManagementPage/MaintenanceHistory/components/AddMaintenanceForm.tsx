@@ -10,10 +10,11 @@ import {
   Modal,
   Radio,
   MultiSelect,
+  FileInput,
 } from "@mantine/core";
 import { DateTimePicker } from "@mantine/dates";
 import { useForm } from "@mantine/form";
-import { IconFilter, IconSearch } from "@tabler/icons-react";
+import { IconFilter, IconSearch, IconUpload } from "@tabler/icons-react";
 import { DepartmentCardList } from "../../../HRManagementPage/Team/Add/components/DepartmentCardList";
 import { EmployeeCardList } from "../../../HRManagementPage/Team/Add/components/EmployeeCardList";
 import { useDisclosure } from "@mantine/hooks";
@@ -60,10 +61,10 @@ const AddMaintenanceForm = () => {
     <form onSubmit={form.onSubmit(handleSubmit)}>
       <Stack gap="xs">
         <TextInput
-          label="Mã bảo trì"
+          label="Mã phiếu"
+          placeholder="PU001"
           radius={4}
           {...form.getInputProps("id")}
-          required
         />
 
         <Select
@@ -92,7 +93,7 @@ const AddMaintenanceForm = () => {
 
         <Group>
           <Text fw={"500"} fz={14}>
-            Chọn nhân sự thực hiện
+            Nhân sự thực hiện
           </Text>
           <Button
             variant="light"
@@ -103,11 +104,26 @@ const AddMaintenanceForm = () => {
             Lọc nhân sự
           </Button>
         </Group>
-        <TextInput
+        <Select
           label="Lý do bảo trì"
           placeholder="Ví dụ: Thay nhớt, kiểm tra động cơ"
           {...form.getInputProps("reason")}
           required
+          data={[
+            { value: "oil_change", label: "Thay nhớt định kỳ" },
+            { value: "engine_check", label: "Kiểm tra động cơ" },
+            { value: "transmission_service", label: "Bảo trì hộp số" },
+            { value: "filter_cleaning", label: "Vệ sinh lọc gió/lọc dầu" },
+            { value: "brake_adjustment", label: "Điều chỉnh phanh" },
+            { value: "tire_inspection", label: "Kiểm tra lốp/áp suất bánh xe" },
+            { value: "electrical_check", label: "Kiểm tra hệ thống điện" },
+            { value: "general_inspection", label: "Bảo trì tổng thể" },
+            {
+              value: "hydraulic_maintenance",
+              label: "Bảo trì hệ thống thuỷ lực",
+            },
+            { value: "cooling_system", label: "Vệ sinh hệ thống làm mát" },
+          ]}
           radius={4}
         />
 
@@ -127,7 +143,11 @@ const AddMaintenanceForm = () => {
           {...form.getInputProps("description")}
           radius={4}
         />
-
+        <FileInput
+          label="Thông tin liên quan (Hoá đơn/ Chứng từ)"
+          radius={4}
+          leftSection={<IconUpload size={18} />}
+        />
         <Group
           mt="md"
           justify="flex-end
