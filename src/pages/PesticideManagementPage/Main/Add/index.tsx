@@ -17,13 +17,11 @@ import {
   Image,
   Select,
   NumberInput,
-  FileInput,
   Radio,
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import {
   IconArrowLeft,
-  IconFileTypePdf,
   IconPhoto,
   IconPlus,
   IconUpload,
@@ -42,6 +40,19 @@ const pesticideTypes = [
   { value: "TYPE04", label: "Chất kích thích sinh trưởng" },
 ];
 
+const unitOptions = [
+  { value: "chai", label: "Chai" },
+  { value: "kg", label: "Kilogram" },
+  { value: "gói", label: "Gói" },
+  { value: "lít", label: "Lít" },
+];
+
+const packageOptions = [
+  { value: "100ml", label: "100ml" },
+  { value: "500ml", label: "500ml" },
+  { value: "1L", label: "1 Lít" },
+  { value: "thùng 12 chai", label: "Thùng 12 chai" },
+];
 const PesticideManagementMainAddPage = () => {
   const navigate = useNavigate();
   const [active, setActive] = useState(0);
@@ -49,12 +60,12 @@ const PesticideManagementMainAddPage = () => {
   const form = useForm({
     initialValues: {
       image: null,
-      id: "",
-      name: "",
-      typeIds: [],
-      ingredients: "",
-      usage: "",
-      note: "",
+      id: "TH001",
+      name: "Thuốc trừ sâu sinh học Bio-X",
+      typeIds: ["sinh-hoc", "hữu-cơ"], // phải khớp với pesticideTypes
+      ingredients: "Azadirachtin 0.15%",
+      usage: "Phòng và trị sâu cuốn lá, rệp sáp, bọ trĩ",
+      note: "Sử dụng vào sáng sớm hoặc chiều mát. Không trộn với thuốc có tính kiềm.",
       suppliers: [],
       units: [],
       packages: [],
@@ -67,7 +78,7 @@ const PesticideManagementMainAddPage = () => {
     },
   });
 
-  const nextStep = () => setActive((cur) => (cur < 2 ? cur + 1 : cur));
+  const nextStep = () => setActive((cur) => (cur < 3 ? cur + 1 : cur));
   const prevStep = () => setActive((cur) => (cur > 0 ? cur - 1 : cur));
 
   return (
@@ -129,7 +140,7 @@ const PesticideManagementMainAddPage = () => {
                   {...form.getInputProps("note")}
                 />
                 <MultiSelect
-                  label="Tài sản thuộc nhóm"
+                  label="Hashtag"
                   data={["Sử dụng thường xuyên", "Sử dụng mùa hè"]}
                   radius={4}
                 />
@@ -197,14 +208,58 @@ const PesticideManagementMainAddPage = () => {
             </Radio.Group>
 
             {form.getValues().fileType === "0" ? (
-              <FileInput
-                label="Tài liệu kỹ thuật (PDF)"
-                placeholder="Chọn tài liệu"
-                accept="application/pdf"
-                leftSection={<IconFileTypePdf size={18} />}
-                radius={4}
-                {...form.getInputProps("technicalDoc")}
-              />
+              // <FileInput
+              //   label="Tài liệu kỹ thuật (PDF)"
+              //   placeholder="Chọn tài liệu"
+              //   accept="application/pdf"
+              //   leftSection={<IconFileTypePdf size={18} />}
+              //   radius={4}
+              //   {...form.getInputProps("technicalDoc")}
+              // />
+              <Dropzone
+                onDrop={(files) => console.log("accepted files", files)}
+                onReject={(files) => console.log("rejected files", files)}
+                maxSize={5 * 1024 ** 2}
+                accept={["application/pdf"]}
+              >
+                <Group
+                  justify="center"
+                  gap="xl"
+                  mih={220}
+                  style={{ pointerEvents: "none" }}
+                >
+                  <Dropzone.Accept>
+                    <IconUpload
+                      size={52}
+                      color="var(--mantine-color-blue-6)"
+                      stroke={1.5}
+                    />
+                  </Dropzone.Accept>
+                  <Dropzone.Reject>
+                    <IconX
+                      size={52}
+                      color="var(--mantine-color-red-6)"
+                      stroke={1.5}
+                    />
+                  </Dropzone.Reject>
+                  <Dropzone.Idle>
+                    <IconPhoto
+                      size={52}
+                      color="var(--mantine-color-dimmed)"
+                      stroke={1.5}
+                    />
+                  </Dropzone.Idle>
+
+                  <div>
+                    <Text size="xl" inline>
+                      Bỏ và thả tài liệu kỹ thuật tại đây
+                    </Text>
+                    <Text size="sm" c="dimmed" inline mt={7}>
+                      Đính kèm tài liệu (tối đa 5MB)
+                    </Text>
+                  </div>
+                </Group>
+              </Dropzone>
             ) : (
               <Stack>
                 <Text style={{ fontSize: 14, fontWeight: 500 }}>
@@ -238,7 +293,17 @@ const PesticideManagementMainAddPage = () => {
                     placeholder="Số lượng"
                     radius={4}
                   />
-                  <Select label="Đơn vị" placeholder="Đơn vị" radius={4} />
+                  <Select
+                    label="Đơn vị"
+                    data={unitOptions}
+                    placeholder="Đơn vị"
+                    radius={4}
+                  />
+                  <MultiSelect
+                    label="Quy cách đóng gói"
+                    data={packageOptions}
+                    radius={4}
+                  />
                 </Group>
               </Stack>
             </Card>
@@ -322,12 +387,12 @@ const PesticideManagementMainAddPage = () => {
         >
           Quay lại
         </Button>
-        {active < 2 && (
+        {active < 3 && (
           <Button onClick={nextStep} radius={4}>
             Tiếp theo
           </Button>
         )}
-        {active === 2 && <Button radius={4}>Lưu</Button>}
+        {active === 3 && <Button radius={4}>Lưu</Button>}
       </Group>
     </Card>
   );

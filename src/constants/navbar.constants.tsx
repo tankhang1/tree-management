@@ -162,6 +162,7 @@ export const NAV_BAR = [
     icon: IconTractor,
     link: PATH.MACHINE_MANAGEMENT,
     children: [
+      { label: "Danh mục máy móc", link: PATH.MACHINE_TYPE },
       { label: "Máy móc", link: PATH.MACHINE_MAIN },
       { label: "Lịch sử sử dụng", link: PATH.MACHINE_USAGE_HISTORY },
       { label: "Lịch sử bảo trì", link: PATH.MACHINE_MAINTENANCE_HISTORY },
@@ -172,22 +173,29 @@ export const NAV_BAR = [
     icon: IconPackage,
     link: PATH.PESTICIDE_MANAGEMENT,
     children: [
-      { label: "Thuốc", link: PATH.PESTICIDE_MAIN },
       { label: "Danh mục thuốc", link: PATH.PESTICIDE_CATEGORY },
+      { label: "Thuốc", link: PATH.PESTICIDE_MAIN },
+      { label: "Lịch sử sử dụng", link: PATH.PESTICIDE_HISTORY },
     ],
   },
   {
     label: "Quản lý vật tư",
     icon: IconPackage,
     link: PATH.SUPPLY_MANAGEMENT,
+    children: [
+      { label: "Danh mục vật tư", link: PATH.SUPPLY_TYPE },
+      { label: "Vật tư", link: PATH.SUPPLY_MAIN },
+      { label: "Lịch sử sử dụng", link: PATH.SUPPLY_HISTORY },
+    ],
   },
   {
     label: "Quản lý phân bón",
     icon: IconBox,
     link: "12123",
     children: [
-      { label: "Loại phân bón", link: PATH.FERTILIZER_TYPE },
-      { label: "Thông tin phân bón", link: PATH.FERTILIZER_MAIN },
+      { label: "Danh mục phân bón", link: PATH.FERTILIZER_TYPE },
+      { label: "Phân bón", link: PATH.FERTILIZER_MAIN },
+      { label: "Lịch sử sử dụng", link: PATH.FERTILIZER_HISTORY },
     ],
   },
   {

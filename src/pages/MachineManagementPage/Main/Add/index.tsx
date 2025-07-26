@@ -5,7 +5,6 @@ import {
   TextInput,
   Select,
   NumberInput,
-  FileInput,
   Stack,
   Text,
   Card,
@@ -15,13 +14,11 @@ import {
   Image,
   MultiSelect,
   Divider,
-  Badge,
 } from "@mantine/core";
 import { Dropzone, IMAGE_MIME_TYPE } from "@mantine/dropzone";
 import { useForm } from "@mantine/form";
 import {
   IconArrowLeft,
-  IconFileTypePdf,
   IconPhoto,
   IconPlus,
   IconUpload,
@@ -119,7 +116,7 @@ const MachineManagementMainAddPage = () => {
               />
 
               <MultiSelect
-                label="Tài sản thuộc nhóm"
+                label="Hashtag"
                 data={["Sử dụng thường xuyên", "Sử dụng mùa hè"]}
                 radius={4}
               />
@@ -185,14 +182,50 @@ const MachineManagementMainAddPage = () => {
             </Radio.Group>
 
             {form.getValues().fileType === "0" ? (
-              <FileInput
-                label="Tài liệu kỹ thuật (PDF)"
-                placeholder="Chọn tài liệu"
-                accept="application/pdf"
-                leftSection={<IconFileTypePdf size={18} />}
-                radius={4}
-                {...form.getInputProps("technicalDoc")}
-              />
+              <Dropzone
+                onDrop={(files) => console.log("accepted files", files)}
+                onReject={(files) => console.log("rejected files", files)}
+                maxSize={5 * 1024 ** 2}
+                accept={["application/pdf"]}
+              >
+                <Group
+                  justify="center"
+                  gap="xl"
+                  mih={220}
+                  style={{ pointerEvents: "none" }}
+                >
+                  <Dropzone.Accept>
+                    <IconUpload
+                      size={52}
+                      color="var(--mantine-color-blue-6)"
+                      stroke={1.5}
+                    />
+                  </Dropzone.Accept>
+                  <Dropzone.Reject>
+                    <IconX
+                      size={52}
+                      color="var(--mantine-color-red-6)"
+                      stroke={1.5}
+                    />
+                  </Dropzone.Reject>
+                  <Dropzone.Idle>
+                    <IconPhoto
+                      size={52}
+                      color="var(--mantine-color-dimmed)"
+                      stroke={1.5}
+                    />
+                  </Dropzone.Idle>
+
+                  <div>
+                    <Text size="xl" inline>
+                      Bỏ và thả tài liệu kỹ thuật tại đây
+                    </Text>
+                    <Text size="sm" c="dimmed" inline mt={7}>
+                      Đính kèm tài liệu (tối đa 5MB)
+                    </Text>
+                  </div>
+                </Group>
+              </Dropzone>
             ) : (
               <Stack>
                 <Text style={{ fontSize: 14, fontWeight: 500 }}>
@@ -258,13 +291,16 @@ const MachineManagementMainAddPage = () => {
                   </Text>
                 </Stack>
               </Card>
-              <Stack>
-                <Image
-                  src="https://goldmax.com.vn/wp-content/uploads/2022/06/398-Cabin-3-600x400.jpg"
-                  h={300}
-                  fit="contain"
-                />
-              </Stack>
+              <Card h={300} withBorder radius={4} p="md" style={{ flex: 1 }}>
+                <Stack>
+                  <Title order={4}>Hình ảnh máy móc</Title>
+                  <Image
+                    src="https://goldmax.com.vn/wp-content/uploads/2022/06/398-Cabin-3-600x400.jpg"
+                    h={200}
+                    fit="contain"
+                  />
+                </Stack>
+              </Card>
             </Group>
             <Divider label="Nhà cung cấp" />
             <Group>

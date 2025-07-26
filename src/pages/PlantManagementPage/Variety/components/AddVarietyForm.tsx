@@ -5,7 +5,6 @@ import {
   Textarea,
   Select,
   Group,
-  FileInput,
   Image,
   ActionIcon,
   rem,
@@ -14,7 +13,7 @@ import {
   Input,
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
-import { IconUpload, IconX, IconFileTypePdf } from "@tabler/icons-react";
+import { IconUpload, IconX } from "@tabler/icons-react";
 import { useState } from "react";
 import SunEditor from "suneditor-react";
 import { IconPhoto } from "@tabler/icons-react";
@@ -181,14 +180,50 @@ const AddVarietyForm = () => {
         </Radio.Group>
 
         {form.values.docType === "file" ? (
-          <FileInput
-            label="Tài liệu kỹ thuật (PDF)"
-            placeholder="Chọn tài liệu"
-            accept="application/pdf"
-            leftSection={<IconFileTypePdf size={18} />}
-            radius={4}
-            {...form.getInputProps("technicalDoc")}
-          />
+          <Dropzone
+            onDrop={(files) => console.log("accepted files", files)}
+            onReject={(files) => console.log("rejected files", files)}
+            maxSize={5 * 1024 ** 2}
+            accept={["application/pdf"]}
+          >
+            <Group
+              justify="center"
+              gap="xl"
+              mih={220}
+              style={{ pointerEvents: "none" }}
+            >
+              <Dropzone.Accept>
+                <IconUpload
+                  size={52}
+                  color="var(--mantine-color-blue-6)"
+                  stroke={1.5}
+                />
+              </Dropzone.Accept>
+              <Dropzone.Reject>
+                <IconX
+                  size={52}
+                  color="var(--mantine-color-red-6)"
+                  stroke={1.5}
+                />
+              </Dropzone.Reject>
+              <Dropzone.Idle>
+                <IconPhoto
+                  size={52}
+                  color="var(--mantine-color-dimmed)"
+                  stroke={1.5}
+                />
+              </Dropzone.Idle>
+
+              <div>
+                <Text size="xl" inline>
+                  Bỏ và thả tài liệu kỹ thuật tại đây
+                </Text>
+                <Text size="sm" c="dimmed" inline mt={7}>
+                  Đính kèm tài liệu (tối đa 5MB)
+                </Text>
+              </div>
+            </Group>
+          </Dropzone>
         ) : (
           <Stack>
             <Text style={{ fontSize: 14, fontWeight: 500 }}>

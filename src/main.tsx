@@ -161,6 +161,11 @@ import HRManagementEmployeeDetailPage from "./pages/HRManagementPage/Employee/De
 import SupplyManagementAddPage from "./pages/SupplyManagementPage/Add/index.tsx";
 import FertilizerManagementMainAddPage from "./pages/FertilizerManagementPage/Main/Add/index.tsx";
 import StockManagementIOPage from "./pages/StockManagementPage/Supply/Add/index.tsx";
+import SupplyManagementCategoryPage from "./pages/SupplyManagementPage/Type/index.tsx";
+import MachineManagementCategoryPage from "./pages/MachineManagementPage/Type/index.tsx";
+import PesticideUsageHistoryPage from "./pages/PesticideManagementPage/MaintenanceHistory/index.tsx";
+import SupplyManagementUsageHistoryPage from "./pages/SupplyManagementPage/UsageHistory/index.tsx";
+import FertilizerManagementUsageHistoryPage from "./pages/FertilizerManagementPage/UsageHistory/index.tsx";
 const theme: MantineThemeOverride = {
   fontFamily: "MyFont, sans-serif",
   primaryColor: "brand",
@@ -515,6 +520,10 @@ const ROUTES = [
     element={<MachineManagementMainAddPage />}
   />,
   <Route
+    path={PATH.MACHINE_TYPE}
+    element={<MachineManagementCategoryPage />}
+  />,
+  <Route
     path={PATH.MACHINE_USAGE_HISTORY}
     element={<MachineManagementUsageHistoryPage />}
   />,
@@ -526,6 +535,10 @@ const ROUTES = [
   <Route
     path={PATH.PESTICIDE_MANAGEMENT}
     element={<PesticideManagementPage />}
+  />,
+  <Route
+    path={PATH.PESTICIDE_HISTORY}
+    element={<PesticideUsageHistoryPage />}
   />,
   <Route
     path={PATH.PESTICIDE_MAIN}
@@ -544,10 +557,12 @@ const ROUTES = [
     element={<PesticideManagementCategoryPage />}
   />,
 
-  <Route path={PATH.SUPPLY_MANAGEMENT} element={<SupplyManagementPage />} />,
+  <Route path={PATH.SUPPLY_MAIN} element={<SupplyManagementPage />} />,
+  <Route path={PATH.SUPPLY_ADD_MAIN} element={<SupplyManagementAddPage />} />,
+  <Route path={PATH.SUPPLY_TYPE} element={<SupplyManagementCategoryPage />} />,
   <Route
-    path={PATH.SUPPLY_MANAGEMENT_ADD}
-    element={<SupplyManagementAddPage />}
+    path={PATH.SUPPLY_HISTORY}
+    element={<SupplyManagementUsageHistoryPage />}
   />,
   <Route path={PATH.STOCK_AREA} element={<StockManagementAreaPage />} />,
   <Route path={PATH.STOCK_ADD_AREA} element={<StockManagementAddAreaPage />} />,
@@ -586,6 +601,10 @@ const ROUTES = [
   <Route
     path={PATH.FERTILIZER_MAIN_ADD}
     element={<FertilizerManagementMainAddPage />}
+  />,
+  <Route
+    path={PATH.FERTILIZER_HISTORY}
+    element={<FertilizerManagementUsageHistoryPage />}
   />,
   <Route
     path={PATH.STOCK_DELIVERY}

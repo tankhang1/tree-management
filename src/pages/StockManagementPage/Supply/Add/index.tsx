@@ -18,6 +18,8 @@ import {
   MultiSelect,
   Input,
   Badge,
+  Grid,
+  SegmentedControl,
 } from "@mantine/core";
 import { DatePickerInput } from "@mantine/dates";
 import { useForm } from "@mantine/form";
@@ -27,6 +29,7 @@ import {
   IconCancel,
   IconInputSpark,
   IconPlant2,
+  IconPlus,
   IconSearch,
   IconSpray,
   IconTools,
@@ -38,8 +41,66 @@ import { useState } from "react";
 import { DepartmentCardList } from "../../../HRManagementPage/Team/Add/components/DepartmentCardList";
 import { EmployeeCardList } from "../../../HRManagementPage/Team/Add/components/EmployeeCardList";
 import { SelectableSupplierCards } from "../../../SupplyManagementPage/Add/components/SelectableSupplierCards";
+import AreaCard from "../../Delivery/Add/components/AreaCard";
 
-const warehouses = ["Kho A", "Kho B"];
+const areaGroups = [
+  {
+    parentId: "KV001",
+    parentName: "Khu vực A",
+    latitude: 10.762622,
+    longitude: 106.660172,
+    areaSize: 1200,
+    note: "Khu vực gần hồ nước",
+    subAreaCount: 2,
+    children: [
+      {
+        id: "KV001-1",
+        name: "Khu phụ A1",
+        latitude: 10.763,
+        longitude: 106.661,
+        areaSize: 500,
+      },
+      {
+        id: "KV001-2",
+        name: "Khu phụ A2",
+        latitude: 10.764,
+        longitude: 106.662,
+        areaSize: 700,
+      },
+    ],
+  },
+  {
+    parentId: "KV002",
+    parentName: "Khu vực B",
+    latitude: 10.776889,
+    longitude: 106.700806,
+    areaSize: 900,
+    note: "Không phân chia",
+    subAreaCount: 0,
+    children: [],
+  },
+];
+export const warehouses = [
+  {
+    id: "KV001-1",
+    name: "Khu phụ A1",
+    latitude: 10.763,
+    longitude: 106.661,
+    areaSize: 500,
+    warehouseName: "Kho miền nam",
+    areaGroup: "Khu vực A",
+  },
+  {
+    id: "KV001-2",
+    name: "Khu phụ A2",
+    latitude: 10.764,
+    longitude: 106.662,
+    areaSize: 700,
+    warehouseName: "Kho miền nam",
+    areaGroup: "Khu vực A",
+  },
+];
+
 const contracts = ["HD-001 - Công ty A", "HD-002 - Công ty B"];
 const assetTypes = [
   {
@@ -69,6 +130,7 @@ const StockManagementIOPage = () => {
     { open: openFilterEmployee, close: closeFilterEmployee },
   ] = useDisclosure(false);
   const [mode, setMode] = useState("");
+  const [segment, setSegment] = useState("Kho");
   const [active, setActive] = useState(0);
   const form = useForm({
     initialValues: {
@@ -157,28 +219,73 @@ const StockManagementIOPage = () => {
               required
               radius={4}
             />
-            <Group grow>
-              <Select
-                label="Khu vực"
-                data={["KV1", "KV2"]}
-                {...form.getInputProps("area")}
-                required
-                radius={4}
-              />
-              <Select
-                label="Khu phụ"
-                data={["KV1-A", "KV2-B"]}
-                {...form.getInputProps("subArea")}
-                radius={4}
-              />
-              <Select
-                label="Kho"
-                data={warehouses}
-                {...form.getInputProps("warehouse")}
-                required
-                radius={4}
-              />
-            </Group>
+            <Text fw={500} fz={15}>
+              Chọn khu vực (chọn một)
+            </Text>
+            <Grid>
+              {areaGroups.map((group, index) => (
+                <Grid.Col span={{ base: 12, sm: 6 }} key={group.parentId}>
+                  <Card
+                    withBorder
+                    shadow="xs"
+                    radius="md"
+                    // onClick={() => handleAreaCardClick(group)}
+                    style={{
+                      cursor: "pointer",
+                      borderColor: index === 0 ? "green" : undefined,
+                    }}
+                  >
+                    <Group justify="apart">
+                      <Text fw={600}>{group.parentName}</Text>
+                      <Badge color="blue">{group.parentId}</Badge>
+                    </Group>
+                    <Text size="sm" mt={4}>
+                      📍 {group.latitude}, {group.longitude}
+                    </Text>
+                    <Text size="sm">📏 {group.areaSize} m²</Text>
+                    <Text size="sm">🔧 {group.subAreaCount} khu phụ</Text>
+                    <Text size="sm" color="dimmed">
+                      {group.note}
+                    </Text>
+                  </Card>
+                </Grid.Col>
+              ))}
+            </Grid>
+            <Stack gap={"xs"}>
+              <Text fw={500} fz={15}>
+                Khu vực phụ (chọn một)
+              </Text>
+              <Stack>
+                <Group>
+                  {[
+                    {
+                      id: "KV001-1",
+                      name: "Khu phụ A1",
+                      latitude: 10.763,
+                      longitude: 106.661,
+                      areaSize: 500,
+                    },
+                    {
+                      id: "KV001-2",
+                      name: "Khu phụ A2",
+                      latitude: 10.764,
+                      longitude: 106.662,
+                      areaSize: 700,
+                    },
+                  ].map((group, index) => (
+                    <AreaCard
+                      isCheckbox
+                      key={group.id}
+                      {...group}
+                      selected={index === 0}
+                      onToggle={() => {}}
+                      closable={false}
+                    />
+                  ))}
+                </Group>
+              </Stack>
+            </Stack>
+
             <Stack>
               <Group>
                 <Text fw={"500"} fz={15}>
@@ -213,20 +320,6 @@ const StockManagementIOPage = () => {
         {/* Step 2 */}
         <Stepper.Step label="Bước 2" description="Thông tin chi tiết">
           <Stack>
-            <Input.Wrapper label="Loại tài sản">
-              <Group gap="sm" wrap="wrap">
-                {assetTypes.map((type, index) => (
-                  <Button
-                    key={type.value}
-                    leftSection={type.icon}
-                    radius={4}
-                    variant={index === 0 ? "filled" : "outline"}
-                  >
-                    {type.label}
-                  </Button>
-                ))}
-              </Group>
-            </Input.Wrapper>
             <TextInput
               label="Số phiếu"
               {...form.getInputProps("receiptNumber")}
@@ -240,7 +333,60 @@ const StockManagementIOPage = () => {
                 radius={4}
               />
             )}
-            {form.values.type === "nhập" && (
+            <SegmentedControl
+              orientation="horizontal"
+              data={["Kho", "Mua bán"]}
+              radius={4}
+              onChange={setSegment}
+            />
+            {segment === "Kho" && (
+              <Stack gap={"xs"}>
+                <Text fw={500} fz={15}>
+                  Kho (chọn một)
+                </Text>
+                <Stack>
+                  <Group>
+                    {warehouses.map((group, index) => (
+                      <Card
+                        key={group.id}
+                        withBorder
+                        radius="md"
+                        shadow="sm"
+                        p="md"
+                        style={{
+                          borderColor: index === 0 ? "green" : undefined,
+                        }}
+                      >
+                        <Title order={5} mb="xs">
+                          🏬 Kho lưu trữ
+                        </Title>
+                        <Stack gap="xs">
+                          <Group justify="space-between">
+                            <Text size="sm" c="dimmed">
+                              Tên kho:
+                            </Text>
+                            <Text fw={500}>{group.warehouseName}</Text>
+                          </Group>
+                          <Group justify="space-between">
+                            <Text size="sm" c="dimmed">
+                              Khu vực đã chọn:
+                            </Text>
+                            <Text fw={500}>{group.areaGroup}</Text>
+                          </Group>
+                          <Group justify="space-between">
+                            <Text size="sm" c="dimmed">
+                              Mã khu phụ:
+                            </Text>
+                            <Text fw={500}>{group.name}</Text>
+                          </Group>
+                        </Stack>
+                      </Card>
+                    ))}
+                  </Group>
+                </Stack>
+              </Stack>
+            )}
+            {segment === "Mua bán" && (
               <Stack gap={"xs"}>
                 <TextInput
                   radius={4}
@@ -248,29 +394,51 @@ const StockManagementIOPage = () => {
                   label="Danh sách nhà cung cấp (Chọn nhiều)"
                   leftSection={<IconSearch size={18} />}
                 />
-                <SelectableSupplierCards />
+                <SelectableSupplierCards isCheckbox={true} />
               </Stack>
             )}
-            <Group grow>
-              <Select
-                label="Quy cách"
-                radius={4}
-                {...form.getInputProps("packaging")}
-              />
-              <Select
-                label="Đơn vị"
-                {...form.getInputProps("unit")}
-                radius={4}
-                required
-              />
-              <NumberInput
-                label="Số lượng"
-                min={1}
-                hideControls
-                {...form.getInputProps("quantity")}
-                radius={4}
-              />
-            </Group>
+            <Divider label="Danh sách tài sản" />
+            <Card radius={4} withBorder>
+              <Stack>
+                <Input.Wrapper label="Loại tài sản">
+                  <Group gap="sm" wrap="wrap">
+                    {assetTypes.map((type, index) => (
+                      <Button
+                        key={type.value}
+                        leftSection={type.icon}
+                        radius={4}
+                        variant={index === 0 ? "filled" : "outline"}
+                      >
+                        {type.label}
+                      </Button>
+                    ))}
+                  </Group>
+                </Input.Wrapper>
+                <Group grow>
+                  <Select
+                    label="Quy cách"
+                    radius={4}
+                    {...form.getInputProps("packaging")}
+                  />
+                  <Select
+                    label="Đơn vị"
+                    {...form.getInputProps("unit")}
+                    radius={4}
+                    required
+                  />
+                  <NumberInput
+                    label="Số lượng"
+                    min={1}
+                    hideControls
+                    {...form.getInputProps("quantity")}
+                    radius={4}
+                  />
+                </Group>
+              </Stack>
+            </Card>
+            <Button radius={4} variant="light" leftSection={<IconPlus />}>
+              Thêm mới
+            </Button>
           </Stack>
         </Stepper.Step>
 

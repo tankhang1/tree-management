@@ -1,4 +1,13 @@
-import { ActionIcon, Button, Group, Menu, Stack, Title } from "@mantine/core";
+import {
+  ActionIcon,
+  Button,
+  Group,
+  Menu,
+  Modal,
+  Stack,
+  Text,
+  Title,
+} from "@mantine/core";
 import {
   IconDotsVertical,
   IconEdit,
@@ -7,52 +16,48 @@ import {
   IconTrash,
 } from "@tabler/icons-react";
 import type { MRT_ColumnDef } from "mantine-react-table";
-import Table from "../../components/Table";
-import { useNavigate } from "react-router-dom";
-import { PATH } from "../../constants/path.constants";
-type SupplyType = {
-  id: string; // Mã vật tư
-  name: string; // Tên vật tư
-  supplier: string; // Nhà cung cấp
+import Table from "../../../components/Table";
+import { useDisclosure } from "@mantine/hooks";
+import AddMaterialCategoryForm from "./components/AddMaterialCategoryForm";
+
+type MaterialType = {
+  id: string; // Mã loại vật tư (mã hệ thống)
+  name: string; // Tên loại vật tư
 };
-export const supplyTypes: SupplyType[] = [
+
+export const materialTypes: MaterialType[] = [
   {
-    id: "VT001",
-    name: "Phân NPK 16-16-8",
-    supplier: "Công ty Phân bón Miền Nam",
+    id: "MAT01",
+    name: "Phân bón",
   },
   {
-    id: "VT002",
-    name: "Thuốc trừ sâu SuperKiller",
-    supplier: "Công ty Nông dược Việt Á",
+    id: "MAT02",
+    name: "Thuốc bảo vệ thực vật",
   },
   {
-    id: "VT003",
-    name: "Bạt phủ nilon đen",
-    supplier: "Cửa hàng Vật tư nông nghiệp Tân Phú",
+    id: "MAT03",
+    name: "Hạt giống",
   },
   {
-    id: "VT004",
-    name: "Chai nhựa 500ml",
-    supplier: "CTCP Bao bì An Phát",
+    id: "MAT04",
+    name: "Vật tư khác",
   },
 ];
 
-const SupplyManagementPage = () => {
-  const navigate = useNavigate();
+const SupplyManagementCategoryPage = () => {
+  const [
+    openedMaterialForm,
+    { open: openMaterialForm, close: closeMaterialForm },
+  ] = useDisclosure(false);
 
-  const supplyTypeColumns: MRT_ColumnDef<SupplyType>[] = [
+  const materialTypeColumns: MRT_ColumnDef<MaterialType>[] = [
     {
       accessorKey: "id",
-      header: "Mã vật tư",
+      header: "Mã loại vật tư",
     },
     {
       accessorKey: "name",
-      header: "Tên vật tư",
-    },
-    {
-      accessorKey: "supplier",
-      header: "Nhà cung cấp",
+      header: "Tên loại vật tư",
     },
     {
       accessorKey: "actions",
@@ -82,27 +87,33 @@ const SupplyManagementPage = () => {
       ),
     },
   ];
-  const onAddSupply = () => {
-    navigate(PATH.SUPPLY_ADD_MAIN);
-  };
+
   return (
     <Stack gap="lg">
       <Group justify="space-between">
         <Title flex={1} order={2}>
-          Quản lý vật tư
+          Quản lý danh mục vật tư
         </Title>
         <Group>
           <Button variant="outline" radius={4} leftSection={<IconFileExcel />}>
             Xuất File
           </Button>
-          <Button radius={4} onClick={onAddSupply}>
+          <Button radius={4} onClick={openMaterialForm}>
             Thêm mới
           </Button>
         </Group>
       </Group>
 
-      <Table columns={supplyTypeColumns} data={supplyTypes} />
+      <Table columns={materialTypeColumns} data={materialTypes} />
+      <Modal
+        opened={openedMaterialForm}
+        onClose={closeMaterialForm}
+        title={<Text fw={"bold"}>Thêm mới danh mục vật tư</Text>}
+      >
+        <AddMaterialCategoryForm />
+      </Modal>
     </Stack>
   );
 };
-export default SupplyManagementPage;
+
+export default SupplyManagementCategoryPage;

@@ -154,6 +154,7 @@ const FertilizerManagementMainAddPage = () => {
               <Group gap="sm">
                 {pesticideTypes.map((item) => (
                   <Paper
+                    w={100}
                     key={item.value}
                     withBorder
                     p="xs"
@@ -190,6 +191,12 @@ const FertilizerManagementMainAddPage = () => {
               radius={4}
               withAsterisk
               {...form.getInputProps("nutrientContent")}
+            />
+
+            <MultiSelect
+              label="Hashtag"
+              data={["Sử dụng thường xuyên", "Sử dụng mùa hè"]}
+              radius={4}
             />
           </Stack>
         </Stepper.Step>

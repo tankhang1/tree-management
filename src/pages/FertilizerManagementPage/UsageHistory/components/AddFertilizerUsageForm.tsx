@@ -5,7 +5,6 @@ import {
   TextInput,
   Textarea,
   Select,
-  NumberInput,
   Text,
   Modal,
   Radio,
@@ -13,79 +12,87 @@ import {
 } from "@mantine/core";
 import { DateTimePicker } from "@mantine/dates";
 import { useForm } from "@mantine/form";
+import { useDisclosure } from "@mantine/hooks";
 import { IconFilter, IconSearch } from "@tabler/icons-react";
+import { useState } from "react";
 import { DepartmentCardList } from "../../../HRManagementPage/Team/Add/components/DepartmentCardList";
 import { EmployeeCardList } from "../../../HRManagementPage/Team/Add/components/EmployeeCardList";
-import { useDisclosure } from "@mantine/hooks";
-import { useState } from "react";
 
-// Giả lập danh sách mã máy và nhân viên
-const machineOptions = [
-  { value: "MC001", label: "Xe tải Hino 5 tấn" },
-  { value: "MC002", label: "Máy cày Kubota" },
+// Dữ liệu mẫu – có thể thay bằng API hoặc context
+const fertilizerOptions = [
+  { value: "FER001", label: "Phân bón lá" },
+  { value: "FER002", label: "Phân NPK" },
+  { value: "FER003", label: "Phân hữu cơ vi sinh" },
 ];
 
-const AddMaintenanceForm = () => {
+type FormValues = {
+  id: string;
+  fertilizerId: string;
+  startTime: Date;
+  endTime: Date;
+  usedBy: string;
+  purpose: string;
+  location: string;
+};
+
+const AddFertilizerUsageForm = () => {
   const [
     openedFilterEmployee,
     { open: openFilterEmployee, close: closeFilterEmployee },
   ] = useDisclosure(false);
   const [mode, setMode] = useState<"group" | "dept">("group");
-  const form = useForm({
+  const form = useForm<FormValues>({
     initialValues: {
       id: "",
-      machineId: "",
+      fertilizerId: "",
       startTime: new Date(),
       endTime: new Date(),
-      staffId: "",
-      reason: "",
-      cost: 0,
-      description: "",
+      usedBy: "",
+      purpose: "",
+      location: "",
     },
-
     validate: {
-      id: (val) => (!val ? "Vui lòng nhập mã bảo trì" : null),
-      machineId: (val) => (!val ? "Vui lòng chọn máy" : null),
-      staffId: (val) => (!val ? "Chọn nhân viên thực hiện" : null),
-      reason: (val) => (!val ? "Vui lòng nhập lý do" : null),
-      cost: (val) => (val < 0 ? "Chi phí không hợp lệ" : null),
+      id: (v) => (!v ? "Mã phiếu không được để trống" : null),
+      fertilizerId: (v) => (!v ? "Vui lòng chọn phân bón" : null),
+      usedBy: (v) => (!v ? "Chọn người sử dụng" : null),
+      purpose: (v) => (!v ? "Nhập mục đích sử dụng" : null),
+      location: (v) => (!v ? "Nhập vị trí sử dụng" : null),
     },
   });
 
-  const handleSubmit = (values: typeof form.values) => {
-    console.log("📋 Thêm mới bảo trì:", values);
+  const handleSubmit = (values: FormValues) => {
+    console.log("Phiếu sử dụng phân bón:", values);
+    // TODO: gửi dữ liệu lên backend hoặc cập nhật store
+    form.reset();
   };
 
   return (
     <form onSubmit={form.onSubmit(handleSubmit)}>
-      <Stack gap="xs">
+      <Stack>
         <TextInput
-          label="Mã bảo trì"
-          radius={4}
+          label="Mã phiếu"
+          placeholder="VD: FERUSE004"
           {...form.getInputProps("id")}
-          required
+          radius={4}
         />
 
         <Select
-          label="Máy móc"
-          placeholder="Chọn máy"
-          data={machineOptions}
-          {...form.getInputProps("machineId")}
-          required
+          label="Loại phân bón"
+          placeholder="Chọn phân bón"
+          data={fertilizerOptions}
           radius={4}
+          {...form.getInputProps("fertilizerId")}
         />
 
         <Group grow>
           <DateTimePicker
             label="Thời gian bắt đầu"
-            {...form.getInputProps("startTime")}
-            locale="vi"
             radius={4}
+            {...form.getInputProps("startTime")}
           />
           <DateTimePicker
             label="Thời gian kết thúc"
             {...form.getInputProps("endTime")}
-            locale="vi"
             radius={4}
           />
         </Group>
@@ -103,39 +110,25 @@ const AddMaintenanceForm = () => {
             Lọc nhân sự
           </Button>
         </Group>
-        <TextInput
-          label="Lý do bảo trì"
-          placeholder="Ví dụ: Thay nhớt, kiểm tra động cơ"
-          {...form.getInputProps("reason")}
-          required
-          radius={4}
-        />
 
-        <NumberInput
-          label="Chi phí bảo trì (VND)"
-          min={0}
-          thousandSeparator
-          hideControls
-          {...form.getInputProps("cost")}
+        <TextInput
+          label="Mục đích sử dụng"
+          placeholder="Ví dụ: Bón lót, bón thúc, bón phân vi sinh..."
+          {...form.getInputProps("purpose")}
           radius={4}
         />
 
         <Textarea
-          label="Nội dung bảo trì"
+          label="Vị trí sử dụng"
+          placeholder="Ví dụ: Vùng trồng B2, Lô 3 hàng 7, Khu đất 4..."
           autosize
-          minRows={3}
-          {...form.getInputProps("description")}
+          minRows={2}
           radius={4}
+          {...form.getInputProps("location")}
         />
 
-        <Group
-          mt="md"
-          justify="flex-end
-        "
-        >
-          <Button type="submit" radius={4}>
-            Lưu
-          </Button>
+        <Group justify="flex-end" mt="md">
+          <Button type="submit">Lưu</Button>
         </Group>
       </Stack>
       <Modal
@@ -202,4 +195,4 @@ const AddMaintenanceForm = () => {
   );
 };
 
-export default AddMaintenanceForm;
+export default AddFertilizerUsageForm;

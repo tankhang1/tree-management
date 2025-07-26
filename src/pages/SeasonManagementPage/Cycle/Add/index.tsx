@@ -9,17 +9,22 @@ import {
   Paper,
   Card,
   Select,
-  FileInput,
   Radio,
   Text,
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
-import { IconArrowLeft, IconFileTypePdf } from "@tabler/icons-react";
+import {
+  IconArrowLeft,
+  IconPhoto,
+  IconUpload,
+  IconX,
+} from "@tabler/icons-react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import SunEditor from "suneditor-react";
 import ConfirmStep from "./components/ConfirmStep";
 import CatalogList from "../../../../components/CatalogList";
+import { Dropzone } from "@mantine/dropzone";
 const SeasonManagementCycleAddPage = () => {
   const navigate = useNavigate();
   const [active, setActive] = useState(0);
@@ -127,14 +132,52 @@ const SeasonManagementCycleAddPage = () => {
                     </Radio.Group>
 
                     {stage.documentType === "file" ? (
-                      <FileInput
-                        label="Tài liệu kỹ thuật (PDF)"
-                        placeholder="Chọn tài liệu"
-                        accept="application/pdf"
-                        leftSection={<IconFileTypePdf size={18} />}
-                        radius={4}
-                        {...form.getInputProps("technicalDoc")}
-                      />
+                      <Dropzone
+                        onDrop={(files) => console.log("accepted files", files)}
+                        onReject={(files) =>
+                          console.log("rejected files", files)
+                        }
+                        maxSize={5 * 1024 ** 2}
+                        accept={["application/pdf"]}
+                      >
+                        <Group
+                          justify="center"
+                          gap="xl"
+                          mih={220}
+                          style={{ pointerEvents: "none" }}
+                        >
+                          <Dropzone.Accept>
+                            <IconUpload
+                              size={52}
+                              color="var(--mantine-color-blue-6)"
+                              stroke={1.5}
+                            />
+                          </Dropzone.Accept>
+                          <Dropzone.Reject>
+                            <IconX
+                              size={52}
+                              color="var(--mantine-color-red-6)"
+                              stroke={1.5}
+                            />
+                          </Dropzone.Reject>
+                          <Dropzone.Idle>
+                            <IconPhoto
+                              size={52}
+                              color="var(--mantine-color-dimmed)"
+                              stroke={1.5}
+                            />
+                          </Dropzone.Idle>
+
+                          <div>
+                            <Text size="xl" inline>
+                              Bỏ và thả tài liệu kỹ thuật tại đây
+                            </Text>
+                            <Text size="sm" c="dimmed" inline mt={7}>
+                              Đính kèm tài liệu (tối đa 5MB)
+                            </Text>
+                          </div>
+                        </Group>
+                      </Dropzone>
                     ) : (
                       <Stack>
                         <Text style={{ fontSize: 14, fontWeight: 500 }}>

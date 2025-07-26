@@ -86,7 +86,7 @@ export default function SupplyManagementPage() {
                 radius={4}
               />
               <MultiSelect
-                label="Tài sản thuộc nhóm"
+                label="Hashtag"
                 data={["Sử dụng thường xuyên", "Sử dụng mùa hè"]}
                 radius={4}
               />
