@@ -55,7 +55,7 @@ export function VendorList() {
         <Group wrap="wrap" gap="md">
           {suppliers.map((sup, index) => (
             <Card
-              w={"100%"}
+              w={400}
               h={250}
               key={index}
               shadow="md"

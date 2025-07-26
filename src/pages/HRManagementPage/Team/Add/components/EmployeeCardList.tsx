@@ -6,7 +6,9 @@ import {
   Badge,
   Image,
   ScrollArea,
+  ActionIcon,
 } from "@mantine/core";
+import { IconTrash } from "@tabler/icons-react";
 
 const employees = [
   {
@@ -41,7 +43,10 @@ function getStatusColor(status: string) {
     : "gray";
 }
 
-export function EmployeeCardList() {
+type TEmployeeCard = {
+  isDelete?: boolean;
+};
+export function EmployeeCardList({ isDelete = false }: TEmployeeCard) {
   return (
     <ScrollArea>
       <Group>
@@ -105,6 +110,17 @@ export function EmployeeCardList() {
                 </Text>
               </Stack>
             </Group>
+            {isDelete && (
+              <ActionIcon
+                pos={"absolute"}
+                variant="light"
+                color={"red"}
+                right={16}
+                radius={4}
+              >
+                <IconTrash size={19} />
+              </ActionIcon>
+            )}
           </Card>
         ))}
       </Group>

@@ -78,84 +78,83 @@ const ConfirmStep = () => {
     <Stack>
       <Title order={3}>Xác nhận kế hoạch canh tác</Title>
 
-      <Card withBorder>
-        <Stack gap={4}>
-          <Group>
-            <Text fw={500}>Tên công việc:</Text>
-            <Text>{data.name}</Text>
-          </Group>
-          <Group>
-            <Text fw={500}>Mùa vụ:</Text>
-            <Text>{data.season}</Text>
-          </Group>
-          <Group>
-            <Text fw={500}>Kế hoạch:</Text>
-            <Text>{data.plan}</Text>
-          </Group>
-          <Group>
-            <Text fw={500}>Người quản lý:</Text>
-            <Text>{data.manager}</Text>
-          </Group>
-          <Group>
-            <Text fw={500}>Người kiểm định chất lượng:</Text>
-            <Text>{data.supervisor}</Text>
-          </Group>
-          <Group>
-            <Text fw={500}>Nhóm cây trồng:</Text>
-            <Text>{data.treeGroup}</Text>
-          </Group>
-          <Group>
-            <Text fw={500}>Danh mục cây trồng:</Text>
-            <Text>{data.treeCategory}</Text>
-          </Group>
-          <Group>
-            <Text fw={500}>Tên giống cây:</Text>
-            <Text>{data.crop}</Text>
-          </Group>
-          <Group>
-            <Text fw={500}>Thời gian chu kỳ:</Text>
-            <Text>{data.duration} ngày</Text>
-          </Group>
-        </Stack>
-      </Card>
+      <Group grow align="flex-start">
+        <Card withBorder h={300}>
+          <Stack gap={4}>
+            <Group>
+              <Text fw={500}>Tên công việc:</Text>
+              <Text>{data.name}</Text>
+            </Group>
+            <Group>
+              <Text fw={500}>Mùa vụ:</Text>
+              <Text>{data.season}</Text>
+            </Group>
+            <Group>
+              <Text fw={500}>Kế hoạch:</Text>
+              <Text>{data.plan}</Text>
+            </Group>
+            <Group>
+              <Text fw={500}>Người quản lý:</Text>
+              <Text>{data.manager}</Text>
+            </Group>
+            <Group>
+              <Text fw={500}>Người kiểm định chất lượng:</Text>
+              <Text>{data.supervisor}</Text>
+            </Group>
+            <Group>
+              <Text fw={500}>Nhóm cây trồng:</Text>
+              <Text>{data.treeGroup}</Text>
+            </Group>
+            <Group>
+              <Text fw={500}>Danh mục cây trồng:</Text>
+              <Text>{data.treeCategory}</Text>
+            </Group>
+            <Group>
+              <Text fw={500}>Tên giống cây:</Text>
+              <Text>{data.crop}</Text>
+            </Group>
+            <Group>
+              <Text fw={500}>Thời gian chu kỳ:</Text>
+              <Text>{data.duration} ngày</Text>
+            </Group>
+          </Stack>
+        </Card>
+        <Card withBorder>
+          <Group grow align="flex-start">
+            <Stack>
+              <Group>
+                <Text fw={500}>Mã cây:</Text>
+                <Text>{data.cropCode}</Text>
+              </Group>
+              <Group>
+                <Text fw={500}>Giống cây:</Text>
+                <Text>{data.cropVariety}</Text>
+              </Group>
+              <Group>
+                <Text fw={500}>Hạt giống:</Text>
+                <Text>{data.cropSeed}</Text>
+              </Group>
+              <Group>
+                <Text fw={500}>Đơn vị thu hoạch:</Text>
+                <Text>{data.harvestUnit}</Text>
+              </Group>
 
-      <Divider label="Thông tin cây trồng" labelPosition="center" my="md" />
-      <Card withBorder>
-        <Stack gap={4}>
-          <Group>
-            <Text fw={500}>Mã cây:</Text>
-            <Text>{data.cropCode}</Text>
-          </Group>
-          <Group>
-            <Text fw={500}>Giống cây:</Text>
-            <Text>{data.cropVariety}</Text>
-          </Group>
-          <Group>
-            <Text fw={500}>Hạt giống:</Text>
-            <Text>{data.cropSeed}</Text>
-          </Group>
-          <Group>
-            <Text fw={500}>Đơn vị thu hoạch:</Text>
-            <Text>{data.harvestUnit}</Text>
-          </Group>
-          <Group align="start">
-            <Text fw={500}>Ảnh minh họa:</Text>
+              <Group align="start">
+                <Text fw={500}>Mô tả:</Text>
+                <Text size="sm" maw={600}>
+                  {data.cropDescription}
+                </Text>
+              </Group>
+            </Stack>
             <Image
               src={data.cropImage}
-              width={120}
-              height={80}
+              flex={1}
               radius="md"
               alt="Ảnh cây trồng"
             />
           </Group>
-          <Group align="start">
-            <Text fw={500}>Mô tả:</Text>
-            <Text size="sm" maw={600}>
-              {data.cropDescription}
-            </Text>
-          </Group>
-        </Stack>
-      </Card>
+        </Card>
+      </Group>
 
       <Divider label="Vị trí canh tác" labelPosition="center" my="md" />
       <Card withBorder>

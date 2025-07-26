@@ -12,10 +12,9 @@ import {
   ScrollAreaAutosize,
   Accordion,
   Text,
-  ActionIcon,
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
-import { IconArrowLeft, IconSearch, IconTrash } from "@tabler/icons-react";
+import { IconArrowLeft, IconSearch } from "@tabler/icons-react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import SeedCard from "./components/SeedCard";
@@ -343,11 +342,11 @@ const SeasonManagementGrowthAddPage = () => {
                     return (
                       <Accordion.Item key={index} value={`cycle-${index}`}>
                         <Accordion.Control>
-                          <Group justify="space-between" w="100%">
+                          <Group justify="space-between" w="100%" pr={"lg"}>
                             <Text fw={500}>{cycleLabel}</Text>
-                            <ActionIcon color="red" variant="light" radius="xl">
-                              <IconTrash size={18} />
-                            </ActionIcon>
+                            <Button color="red" variant="light" radius={4}>
+                              Xoá
+                            </Button>
                           </Group>
                         </Accordion.Control>
                         <Accordion.Panel>
@@ -369,17 +368,15 @@ const SeasonManagementGrowthAddPage = () => {
         )}
         {activeStep === 2 && <ConfirmStep />}
         <Group justify="space-between" mt="md">
-          {activeStep > 0 && (
-            <Button
-              variant="default"
-              onClick={() => setActiveStep(0)}
-              radius={4}
-            >
-              Quay lại
-            </Button>
-          )}
-          <Button type="submit" radius={4}>
-            {activeStep === 1 ? "Tạo mới" : "Tiếp tục"}
+          <Button variant="default" onClick={() => setActiveStep(0)} radius={4}>
+            Quay lại
+          </Button>
+
+          <Button
+            onClick={() => activeStep < 2 && setActiveStep(activeStep + 1)}
+            radius={4}
+          >
+            {activeStep === 2 ? "Tạo mới" : "Tiếp tục"}
           </Button>
         </Group>
       </form>

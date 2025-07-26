@@ -176,28 +176,7 @@ const PlanManagementUnplannedAddPage = () => {
                   Chọn nhân sự
                 </Button>
               </Group>
-              <Group mt="md">
-                {employees.map((emp, idx) => (
-                  <Card key={idx} shadow="sm" radius="md" withBorder>
-                    <Group justify="space-between" align="flex-start">
-                      <Stack gap={2}>
-                        <Group>
-                          <Title order={5}>{emp.name}</Title>
-                          <ActionIcon variant="light" size={18} color={"red"}>
-                            <IconTrash size={14} />
-                          </ActionIcon>
-                        </Group>
-                        <Text size="sm" c="dimmed">
-                          Nhân viên
-                        </Text>
-                        <Text size="sm" c="dimmed">
-                          {emp.department}
-                        </Text>
-                      </Stack>
-                    </Group>
-                  </Card>
-                ))}
-              </Group>
+              <EmployeeCardList isDelete={true} />
             </Stack>
             <Stack gap={"xs"}>
               <Group>
@@ -213,28 +192,7 @@ const PlanManagementUnplannedAddPage = () => {
                   Chọn người kiểm định chất lượng
                 </Button>
               </Group>
-              <Group mt="md">
-                {employees.map((emp, idx) => (
-                  <Card key={idx} shadow="sm" radius="md" withBorder>
-                    <Group justify="space-between" align="flex-start">
-                      <Stack gap={2}>
-                        <Group>
-                          <Title order={5}>{emp.name}</Title>
-                          <ActionIcon variant="light" size={18} color={"red"}>
-                            <IconTrash size={14} />
-                          </ActionIcon>
-                        </Group>
-                        <Text size="sm" c="dimmed">
-                          {emp.role}
-                        </Text>
-                        <Text size="sm" c="dimmed">
-                          {emp.department}
-                        </Text>
-                      </Stack>
-                    </Group>
-                  </Card>
-                ))}
-              </Group>
+              <EmployeeCardList isDelete={true} />
             </Stack>
           </Stack>
         )}

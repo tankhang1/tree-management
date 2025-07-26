@@ -60,68 +60,68 @@ const ConfirmStep = () => {
     <Stack>
       <Title order={3}>Xác nhận kế hoạch canh tác</Title>
 
-      <Card withBorder>
-        <Stack gap={4}>
-          <Group>
-            <Text fw={500}>Mùa vụ:</Text>
-            <Text>{data.season}</Text>
-          </Group>
-          <Group>
-            <Text fw={500}>Nhóm cây trồng:</Text>
-            <Text>{data.treeGroup}</Text>
-          </Group>
-          <Group>
-            <Text fw={500}>Danh mục cây trồng:</Text>
-            <Text>{data.treeCategory}</Text>
-          </Group>
-          <Group>
-            <Text fw={500}>Cây trồng:</Text>
-            <Text>{data.crop}</Text>
-          </Group>
-          <Group>
-            <Text fw={500}>Thời gian chu kỳ:</Text>
-            <Text>{data.duration} ngày</Text>
-          </Group>
-        </Stack>
-      </Card>
-
-      <Divider label="Thông tin cây trồng" labelPosition="center" my="md" />
-      <Card withBorder>
-        <Stack gap={4}>
-          <Group>
-            <Text fw={500}>Mã cây:</Text>
-            <Text>{data.cropCode}</Text>
-          </Group>
-          <Group>
-            <Text fw={500}>Giống cây:</Text>
-            <Text>{data.cropVariety}</Text>
-          </Group>
-          <Group>
-            <Text fw={500}>Hạt giống:</Text>
-            <Text>{data.cropSeed}</Text>
-          </Group>
-          <Group>
-            <Text fw={500}>Đơn vị thu hoạch:</Text>
-            <Text>{data.harvestUnit}</Text>
-          </Group>
-          <Stack align="start">
-            <Text fw={500}>Ảnh minh họa:</Text>
-            <Image
-              src={data.cropImage}
-              w={200}
-              h={200}
-              radius="md"
-              alt="Ảnh cây trồng"
-            />
+      <Group align="flex-start" grow>
+        <Card withBorder>
+          <Stack gap={4}>
+            <Group>
+              <Text fw={500}>Mùa vụ:</Text>
+              <Text>{data.season}</Text>
+            </Group>
+            <Group>
+              <Text fw={500}>Nhóm cây trồng:</Text>
+              <Text>{data.treeGroup}</Text>
+            </Group>
+            <Group>
+              <Text fw={500}>Danh mục cây trồng:</Text>
+              <Text>{data.treeCategory}</Text>
+            </Group>
+            <Group>
+              <Text fw={500}>Cây trồng:</Text>
+              <Text>{data.crop}</Text>
+            </Group>
+            <Group>
+              <Text fw={500}>Thời gian chu kỳ:</Text>
+              <Text>{data.duration} ngày</Text>
+            </Group>
           </Stack>
-          <Group align="start">
-            <Text fw={500}>Mô tả:</Text>
-            <Text size="sm" maw={600}>
-              {data.cropDescription}
-            </Text>
+        </Card>
+        <Card withBorder>
+          <Group grow gap={4} align="flex-start">
+            <Stack align="start">
+              <Group>
+                <Text fw={500}>Mã cây:</Text>
+                <Text>{data.cropCode}</Text>
+              </Group>
+              <Group>
+                <Text fw={500}>Giống cây:</Text>
+                <Text>{data.cropVariety}</Text>
+              </Group>
+              <Group>
+                <Text fw={500}>Hạt giống:</Text>
+                <Text>{data.cropSeed}</Text>
+              </Group>
+              <Group>
+                <Text fw={500}>Đơn vị thu hoạch:</Text>
+                <Text>{data.harvestUnit}</Text>
+              </Group>
+              <Group align="start">
+                <Text fw={500}>Mô tả:</Text>
+                <Text size="sm" maw={600}>
+                  {data.cropDescription}
+                </Text>
+              </Group>
+            </Stack>
+            <Stack align="start">
+              <Image
+                src={data.cropImage}
+                flex={1}
+                radius="md"
+                alt="Ảnh cây trồng"
+              />
+            </Stack>
           </Group>
-        </Stack>
-      </Card>
+        </Card>
+      </Group>
 
       <Divider label="Vị trí canh tác" labelPosition="center" my="md" />
       <Card withBorder>

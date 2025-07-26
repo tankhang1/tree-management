@@ -15,8 +15,6 @@ import {
   Modal,
   Text,
   Radio,
-  ActionIcon,
-  ScrollArea,
 } from "@mantine/core";
 import { DateInput } from "@mantine/dates";
 import {
@@ -25,7 +23,6 @@ import {
   IconClipboardCheck,
   IconPlus,
   IconSearch,
-  IconTrash,
   IconUser,
 } from "@tabler/icons-react";
 import { useForm } from "@mantine/form";
@@ -39,18 +36,7 @@ import { DepartmentCardList } from "../../../HRManagementPage/Team/Add/component
 
 const CYCLES = ["Chu kỳ 1", "Chu kỳ 2"];
 const STAGES = ["Gieo trồng", "Ra hoa", "Kết trái"];
-const employees = [
-  {
-    name: "Nguyễn Văn A",
-    role: "Tổ trưởng",
-    department: "Ban kỹ thuật",
-  },
-  {
-    name: "Trần Thị B",
-    role: "Giám đốc",
-    department: "Ban tài chính",
-  },
-];
+
 const PlanManagementAssignAddPage = () => {
   const [
     openedFilterEmployee,
@@ -180,38 +166,7 @@ const PlanManagementAssignAddPage = () => {
                         Chọn quản lý
                       </Button>
                     </Group>
-                    <Group mt="md">
-                      {employees.map((emp, idx) => (
-                        <Card
-                          pos={"relative"}
-                          key={idx}
-                          shadow="sm"
-                          radius="md"
-                          withBorder
-                        >
-                          <Group justify="space-between" align="flex-start">
-                            <Stack gap={2}>
-                              <Group>
-                                <Title order={5}>{emp.name}</Title>
-                                <ActionIcon
-                                  variant="light"
-                                  size={18}
-                                  color={"red"}
-                                >
-                                  <IconTrash size={14} />
-                                </ActionIcon>
-                              </Group>
-                              <Text size="sm" c="dimmed">
-                                {emp.role}
-                              </Text>
-                              <Text size="sm" c="dimmed">
-                                {emp.department}
-                              </Text>
-                            </Stack>
-                          </Group>
-                        </Card>
-                      ))}
-                    </Group>
+                    <EmployeeCardList isDelete={true} />
                   </Stack>
                   <Stack gap={"xs"}>
                     <Group>
@@ -228,30 +183,7 @@ const PlanManagementAssignAddPage = () => {
                       </Button>
                     </Group>
                     <Group mt="md">
-                      {employees.map((emp, idx) => (
-                        <Card key={idx} shadow="sm" radius="md" withBorder>
-                          <Group justify="space-between" align="flex-start">
-                            <Stack gap={2}>
-                              <Group>
-                                <Title order={5}>{emp.name}</Title>
-                                <ActionIcon
-                                  variant="light"
-                                  size={18}
-                                  color={"red"}
-                                >
-                                  <IconTrash size={14} />
-                                </ActionIcon>
-                              </Group>
-                              <Text size="sm" c="dimmed">
-                                {emp.role}
-                              </Text>
-                              <Text size="sm" c="dimmed">
-                                {emp.department}
-                              </Text>
-                            </Stack>
-                          </Group>
-                        </Card>
-                      ))}
+                      <EmployeeCardList isDelete={true} />
                     </Group>
                   </Stack>
                 </Group>
@@ -286,32 +218,7 @@ const PlanManagementAssignAddPage = () => {
                             Chọn trưởng nhóm
                           </Button>
                         </Group>
-                        <Group mt="md">
-                          {employees.map((emp, idx) => (
-                            <Card key={idx} shadow="sm" radius="md" withBorder>
-                              <Group justify="space-between" align="flex-start">
-                                <Stack gap={2}>
-                                  <Group>
-                                    <Title order={5}>{emp.name}</Title>
-                                    <ActionIcon
-                                      variant="light"
-                                      size={18}
-                                      color={"red"}
-                                    >
-                                      <IconTrash size={14} />
-                                    </ActionIcon>
-                                  </Group>
-                                  <Text size="sm" c="dimmed">
-                                    Trưởng nhóm
-                                  </Text>
-                                  <Text size="sm" c="dimmed">
-                                    {emp.department}
-                                  </Text>
-                                </Stack>
-                              </Group>
-                            </Card>
-                          ))}
-                        </Group>
+                        <EmployeeCardList isDelete={true} />
                       </Stack>
                       <Stack gap={"xs"}>
                         <Group>
@@ -327,32 +234,7 @@ const PlanManagementAssignAddPage = () => {
                             Chọn nhân viên tham gia
                           </Button>
                         </Group>
-                        <Group mt="md">
-                          {employees.map((emp, idx) => (
-                            <Card key={idx} shadow="sm" radius="md" withBorder>
-                              <Group justify="space-between" align="flex-start">
-                                <Stack gap={2}>
-                                  <Group>
-                                    <Title order={5}>{emp.name}</Title>
-                                    <ActionIcon
-                                      variant="light"
-                                      size={18}
-                                      color={"red"}
-                                    >
-                                      <IconTrash size={14} />
-                                    </ActionIcon>
-                                  </Group>
-                                  <Text size="sm" c="dimmed">
-                                    Nhân viên
-                                  </Text>
-                                  <Text size="sm" c="dimmed">
-                                    {emp.department}
-                                  </Text>
-                                </Stack>
-                              </Group>
-                            </Card>
-                          ))}
-                        </Group>
+                        <EmployeeCardList isDelete={true} />
                       </Stack>
                     </Stack>
 

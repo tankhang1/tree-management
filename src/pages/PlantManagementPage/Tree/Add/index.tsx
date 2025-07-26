@@ -352,14 +352,7 @@ const PlantManagementTreeAddPage = () => {
           <Stack mt="md" gap="xs">
             {/**Drag and drop và theo thứ tự */}
             {form.values.growthCycles.map((cycle, index) => (
-              <Card
-                key={index}
-                withBorder
-                radius="md"
-                shadow="xs"
-                p="md"
-                style={{ borderColor: "black" }}
-              >
+              <Card key={index} withBorder radius="md" shadow="xs" p="md">
                 <Stack gap="xs">
                   <Select label={"Chu kì sinh trưởng"} radius={4} />
                   <MultiSelect
@@ -424,7 +417,7 @@ const PlantManagementTreeAddPage = () => {
           >
             Quay lại
           </Button>
-          {activeStep < 3 ? (
+          {activeStep < 4 ? (
             <Button onClick={() => setActiveStep((p) => p + 1)} radius={4}>
               Tiếp theo
             </Button>

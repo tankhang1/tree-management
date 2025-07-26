@@ -115,7 +115,7 @@ export const NAV_BAR = [
     children: [
       { label: "Sản phẩm", link: PATH.PRODUCT_ITEM },
       { label: "BOM", link: PATH.PRODUCT_BOM },
-      { label: "Nguyên vật liệu", link: PATH.PRODUCT_RAW_MATERIAL },
+      // { label: "Nguyên vật liệu", link: PATH.PRODUCT_RAW_MATERIAL },
     ],
   },
   {

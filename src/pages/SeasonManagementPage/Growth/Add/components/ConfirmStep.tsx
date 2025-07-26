@@ -52,57 +52,59 @@ const ConfirmStep = () => {
     <Stack gap="lg">
       <Title order={3}>📋 Xác nhận thông tin mùa vụ</Title>
 
-      <Card withBorder radius="md" shadow="sm">
-        <Stack gap="xs">
-          <Group>
-            <IconCalendar size={18} />
-            <Text fw={500}>Tên mùa vụ:</Text>
-            <Text>{data.name}</Text>
-          </Group>
-          <Group>
-            <IconClockHour4 size={18} />
-            <Text fw={500}>Thời gian dự kiến:</Text>
-            <Text>{data.duration} ngày</Text>
-          </Group>
-          <Group>
-            <IconLayersSubtract size={18} />
-            <Text fw={500}>Nhóm cây trồng:</Text>
-            <Text>{data.treeGroup}</Text>
-          </Group>
-          <Group>
-            <IconPlant size={18} />
-            <Text fw={500}>Danh mục cây:</Text>
-            <Text>{data.treeCategory}</Text>
-          </Group>
-          <Group>
-            <IconPlant size={18} />
-            <Text fw={500}>Giống cây:</Text>
-            <Text>{data.variety}</Text>
-          </Group>
-          <Group>
-            <IconSeedling size={18} />
-            <Text fw={500}>Hạt giống:</Text>
-            <Text>
-              {data.seedCode} - {data.seedName}
-            </Text>
-          </Group>
-        </Stack>
-      </Card>
-
-      <Card withBorder radius="md" shadow="xs">
-        <Group align="flex-start">
-          <Image src={data.seedImage} width={120} radius="md" />
-          <Stack gap={4}>
-            <Text fw={500}>{data.seedName}</Text>
-            <Text size="sm" c="dimmed">
-              {data.seedDesc}
-            </Text>
-            <Badge variant="outline" color="teal">
-              Đơn vị thu hoạch: {data.unit}
-            </Badge>
+      <Group align="flex-start" gap="md" grow>
+        <Card withBorder radius="md" shadow="sm">
+          <Stack gap="xs">
+            <Group>
+              <IconCalendar size={18} />
+              <Text fw={500}>Tên mùa vụ:</Text>
+              <Text>{data.name}</Text>
+            </Group>
+            <Group>
+              <IconClockHour4 size={18} />
+              <Text fw={500}>Thời gian dự kiến:</Text>
+              <Text>{data.duration} ngày</Text>
+            </Group>
+            <Group>
+              <IconLayersSubtract size={18} />
+              <Text fw={500}>Nhóm cây trồng:</Text>
+              <Text>{data.treeGroup}</Text>
+            </Group>
+            <Group>
+              <IconPlant size={18} />
+              <Text fw={500}>Danh mục cây:</Text>
+              <Text>{data.treeCategory}</Text>
+            </Group>
+            <Group>
+              <IconPlant size={18} />
+              <Text fw={500}>Giống cây:</Text>
+              <Text>{data.variety}</Text>
+            </Group>
+            <Group>
+              <IconSeedling size={18} />
+              <Text fw={500}>Hạt giống:</Text>
+              <Text>
+                {data.seedCode} - {data.seedName}
+              </Text>
+            </Group>
           </Stack>
-        </Group>
-      </Card>
+        </Card>
+
+        <Card withBorder radius="md" shadow="xs">
+          <Group align="flex-start">
+            <Image src={data.seedImage} width={200} h={200} fit="contain" />
+            <Stack gap={4}>
+              <Text fw={500}>{data.seedName}</Text>
+              <Text size="sm" c="dimmed">
+                {data.seedDesc}
+              </Text>
+              <Badge variant="outline" color="teal">
+                Đơn vị thu hoạch: {data.unit}
+              </Badge>
+            </Stack>
+          </Group>
+        </Card>
+      </Group>
 
       <Divider label="🌿 Chu kỳ sinh trưởng" labelPosition="center" />
 

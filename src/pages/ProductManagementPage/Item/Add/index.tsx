@@ -10,10 +10,16 @@ import {
   Stepper,
   Card,
   Title,
-  FileInput,
+  Input,
 } from "@mantine/core";
+import { Dropzone, IMAGE_MIME_TYPE } from "@mantine/dropzone";
 import { useDisclosure } from "@mantine/hooks";
-import { IconArrowLeft, IconImageInPicture } from "@tabler/icons-react";
+import {
+  IconArrowLeft,
+  IconPhoto,
+  IconUpload,
+  IconX,
+} from "@tabler/icons-react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -77,18 +83,52 @@ const ProductManagementItemAddPage = () => {
                 }
                 radius={4}
               />
-              <FileInput
-                label="Hình ảnh sản phẩm"
-                placeholder="Chọn ảnh từ máy tính"
-                accept="image/*"
-                radius={4}
-                value={form.imageFile}
-                leftSection={<IconImageInPicture />}
-                onChange={(file) =>
-                  //@ts-expect-error no check
-                  setForm({ ...form, imageFile: file || null })
-                }
-              />
+              <Input.Wrapper label="Ảnh phân bón">
+                <Dropzone
+                  onDrop={(files) => console.log("accepted files", files)}
+                  onReject={(files) => console.log("rejected files", files)}
+                  maxSize={5 * 1024 ** 2}
+                  accept={IMAGE_MIME_TYPE}
+                >
+                  <Group
+                    justify="center"
+                    gap="xl"
+                    mih={220}
+                    style={{ pointerEvents: "none" }}
+                  >
+                    <Dropzone.Accept>
+                      <IconUpload
+                        size={52}
+                        color="var(--mantine-color-blue-6)"
+                        stroke={1.5}
+                      />
+                    </Dropzone.Accept>
+                    <Dropzone.Reject>
+                      <IconX
+                        size={52}
+                        color="var(--mantine-color-red-6)"
+                        stroke={1.5}
+                      />
+                    </Dropzone.Reject>
+                    <Dropzone.Idle>
+                      <IconPhoto
+                        size={52}
+                        color="var(--mantine-color-dimmed)"
+                        stroke={1.5}
+                      />
+                    </Dropzone.Idle>
+
+                    <div>
+                      <Text size="xl" inline>
+                        Bỏ và thả ảnh sản phẩm tại đây
+                      </Text>
+                      <Text size="sm" c="dimmed" inline mt={7}>
+                        Đính kèm ảnh sản phẩm (tối đa 5MB)
+                      </Text>
+                    </div>
+                  </Group>
+                </Dropzone>
+              </Input.Wrapper>
               <Select
                 label="Cây"
                 placeholder="Chọn cây"
