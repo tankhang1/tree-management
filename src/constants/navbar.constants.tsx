@@ -16,6 +16,7 @@ import {
   IconMap2,
   IconBox,
   IconBuildings,
+  IconReceiptRupee,
 } from "@tabler/icons-react";
 import { PATH } from "./path.constants";
 
@@ -232,6 +233,21 @@ export const NAV_BAR = [
       {
         label: "Đặt hàng (đăng nhập)",
         link: PATH.ORDER_MANAGEMENT_LOGGED_IN,
+      },
+    ],
+  },
+  {
+    label: "Quản lý hoá đơn",
+    icon: IconReceiptRupee,
+    link: PATH.BILL_MANAGEMENT,
+    children: [
+      {
+        label: "Cá nhân",
+        link: PATH.BILL_MANAGEMENT_USER,
+      },
+      {
+        label: "Doanh nghiệp",
+        link: PATH.BILL_MANAGEMENT_COMPANY,
       },
     ],
   },

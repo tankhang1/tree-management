@@ -234,4 +234,10 @@ export const PATH = {
   ORDER_MANAGEMENT_QUICK: "/order-management/quick",
   ORDER_MANAGEMENT_LOGGED_IN: "/order-management/logged-in",
   ORDER_MANAGEMENT_ADDRESS: "/order-management/address",
+  //Bill Management
+  BILL_MANAGEMENT: "/bill-management",
+  BILL_MANAGEMENT_USER: "/bill-management/user",
+  BILL_MANAGEMENT_USER_DETAIL: "/bill-management/user/detail",
+  BILL_MANAGEMENT_COMPANY: "/bill-management/company",
+  BILL_MANAGEMENT_COMPANY_DETAIL: "/bill-management/company/detail",
 };

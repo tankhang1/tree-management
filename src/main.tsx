@@ -179,6 +179,10 @@ import PurchaseManagementProductAddPage from "./pages/PurchaseManagementPage/Pro
 import PurchaseManagementMaterialAddPage from "./pages/PurchaseManagementPage/Material/Add/index.tsx";
 import OrderManagememtQuickPage from "./pages/OrderManagementPage/Quick/index.tsx";
 import OrderManagementAddressPage from "./pages/OrderManagementPage/Address/index.tsx";
+import BillManagementUserPage from "./pages/BillManagementPage/User/index.tsx";
+import BillManagementUserDetailPage from "./pages/BillManagementPage/User/Detail/index.tsx";
+import BillManagementCompanyPage from "./pages/BillManagementPage/Company/index.tsx";
+import BillManagementCompanyDetailPage from "./pages/BillManagementPage/Company/Detail/index.tsx";
 const theme: MantineThemeOverride = {
   fontFamily: "MyFont, sans-serif",
   primaryColor: "brand",
@@ -685,6 +689,22 @@ const ROUTES = [
   <Route
     path={PATH.ORDER_MANAGEMENT_ADDRESS}
     element={<OrderManagementAddressPage />}
+  />,
+  <Route
+    path={PATH.BILL_MANAGEMENT_USER}
+    element={<BillManagementUserPage />}
+  />,
+  <Route
+    path={PATH.BILL_MANAGEMENT_USER_DETAIL}
+    element={<BillManagementUserDetailPage />}
+  />,
+  <Route
+    path={PATH.BILL_MANAGEMENT_COMPANY}
+    element={<BillManagementCompanyPage />}
+  />,
+  <Route
+    path={PATH.BILL_MANAGEMENT_COMPANY_DETAIL}
+    element={<BillManagementCompanyDetailPage />}
   />,
 ];
 
