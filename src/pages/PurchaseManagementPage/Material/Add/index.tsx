@@ -20,6 +20,8 @@ import {
   Badge,
   Grid,
   SegmentedControl,
+  Image,
+  ScrollArea,
 } from "@mantine/core";
 import { DatePickerInput } from "@mantine/dates";
 import { useForm } from "@mantine/form";
@@ -34,6 +36,7 @@ import {
   IconSpray,
   IconTools,
   IconTractor,
+  IconTruck,
   IconTruckDelivery,
   IconUser,
 } from "@tabler/icons-react";
@@ -104,6 +107,11 @@ export const warehouses = [
 const contracts = ["HD-001 - Công ty A", "HD-002 - Công ty B"];
 const assetTypes = [
   {
+    label: "Máy móc",
+    value: "Máy móc",
+    icon: <IconTractor size={18} />,
+  },
+  {
     label: "Thuốc BVTV",
     value: "Thuốc bảo vệ thực vật",
     icon: <IconSpray size={18} />,
@@ -118,10 +126,27 @@ const assetTypes = [
     value: "Phân bón",
     icon: <IconPlant2 size={18} />,
   },
+];
+const machineTypes = [
   {
-    label: "Máy móc",
-    value: "Máy móc",
-    icon: <IconTractor size={18} />,
+    id: "MCH01",
+    name: "Máy cày Kubota",
+    img: "https://kubotadailoi.com/uploads/images/P-1176_L3218_slide.jpg",
+  },
+  {
+    id: "MCH02",
+    name: "Máy phun thuốc Honda",
+    img: "https://www.ketnoitieudung.vn/data/bt6/may-phun-thuoc-honda-wjr2525t1-gcs-1604389460.jpg",
+  },
+  {
+    id: "MCH03",
+    name: "Máy gặt đập liên hợp Yanmar",
+    img: "https://dailoi.vn/uploads/images/2021/09/1631365221-single_product1-kubotadc70plusa.jpg",
+  },
+  {
+    id: "MCH04",
+    name: "Máy bay nông nghiệp DJI Agras",
+    img: "https://agridrone.vn/wp-content/uploads/2023/02/16887_T50_%E6%AD%A3%E4%BE%A7.jpg",
   },
 ];
 const PurchaseManagementMaterialAddPage = () => {
@@ -414,6 +439,69 @@ const PurchaseManagementMaterialAddPage = () => {
                     ))}
                   </Group>
                 </Input.Wrapper>
+                <Select
+                  radius={4}
+                  label="Danh mục máy móc thiết bị"
+                  placeholder="Tìm kiếm danh mục máy móc thiết bị"
+                  leftSection={<IconTruck size={18} />}
+                  data={[
+                    { value: "MCH01", label: "Máy cày Kubota" },
+                    { value: "MCH02", label: "Máy phun thuốc Honda" },
+                    {
+                      value: "MCH03",
+                      label: "Máy gặt đập liên hợp Yanmar",
+                    },
+                    {
+                      value: "MCH04",
+                      label: "Máy bay nông nghiệp DJI Agras",
+                    },
+                    {
+                      value: "MCH05",
+                      label: "Máy bơm nước Honda WB20XT",
+                    },
+                    { value: "MCH06", label: "Máy trộn bê tông 250L" },
+                  ]}
+                />
+                <TextInput
+                  label="Máy móc thiết bị"
+                  placeholder="Tìm kiếm máy móc thiết bị"
+                  radius={4}
+                  leftSection={<IconSearch size={18} />}
+                />
+                <ScrollArea>
+                  <Group gap="md" wrap="nowrap">
+                    {machineTypes.map((machine, index) => (
+                      <Card
+                        key={index}
+                        withBorder
+                        miw={300}
+                        shadow="sm"
+                        radius="md"
+                        p="md"
+                      >
+                        <Group grow>
+                          <Image
+                            src={
+                              machine.img || "https://via.placeholder.com/150" // Placeholder nếu không có hình ảnh
+                            }
+                            alt={machine.name}
+                            w={100}
+                            h={100}
+                            radius="md"
+                          />
+                          <Stack>
+                            <Text fw={500} size="lg">
+                              {machine.name}
+                            </Text>
+                            <Text size="sm" color="dimmed">
+                              Mã: {machine.id}
+                            </Text>
+                          </Stack>
+                        </Group>
+                      </Card>
+                    ))}
+                  </Group>
+                </ScrollArea>
                 <Group grow>
                   <Select
                     label="Quy cách"
