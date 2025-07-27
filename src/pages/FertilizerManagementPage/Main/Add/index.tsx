@@ -16,6 +16,7 @@ import {
   Image,
   Divider,
   MultiSelect,
+  NumberInput,
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import {
@@ -75,7 +76,78 @@ const FertilizerManagementMainAddPage = () => {
         allowNextStepsSelect={true}
       >
         <Stepper.Step label="Bước 1" description="Thông tin cơ bản">
-          <Stack gap={"xs"}>
+          <Group grow gap={"xs"} align="flex-start">
+            <Stack gap={"xs"}>
+              <TextInput
+                label="Tên phân bón"
+                placeholder="VD: Phân NPK, Phân Urê"
+                withAsterisk
+                radius={4}
+                {...form.getInputProps("name")}
+              />
+              <Select
+                label="Danh mục phân bón"
+                placeholder="Danh mục phân bón"
+                radius={4}
+                data={[
+                  { value: "npk", label: "Phân NPK" },
+                  { value: "ure", label: "Phân ure" },
+                  { value: "kali", label: "Phân kali" },
+                  { value: "dap", label: "Phân DAP" },
+                  { value: "lan", label: "Phân lân" },
+                  { value: "hữu cơ", label: "Phân hữu cơ" },
+                  { value: "vi sinh", label: "Phân vi sinh" },
+                  { value: "vi lượng", label: "Phân vi lượng" },
+                  { value: "bón lá", label: "Phân bón lá" },
+                  { value: "chậm tan", label: "Phân chậm tan" },
+                  { value: "bón rễ", label: "Phân bón gốc / bón rễ" },
+                ]}
+              />
+              <TextInput
+                label="Hàm lượng dinh dưỡng"
+                placeholder="VD: NPK 16-16-8, Đạm 46%"
+                radius={4}
+                withAsterisk
+                {...form.getInputProps("nutrientContent")}
+              />
+              <MultiSelect
+                label="Quy cách"
+                radius={4}
+                placeholder="Quy cách"
+                value={["PKG004", "PKG005"]}
+                data={[
+                  {
+                    value: "PKG001",
+                    label: "Hộp giấy nhỏ (50 cái)",
+                  },
+                  {
+                    value: "PKG002",
+                    label: "Túi nilon lớn (100 cái)",
+                  },
+                  {
+                    value: "PKG003",
+                    label: "Bao tải 25kg (25 cái)",
+                  },
+                  {
+                    value: "PKG004",
+                    label: "Bịch nhựa 1kg (10 cái)",
+                  },
+                  {
+                    value: "PKG005",
+                    label: "Thùng carton lớn (20 cái)",
+                  },
+                  {
+                    value: "PKG006",
+                    label: "Hộp nhựa 500ml (30 cái)",
+                  },
+                ]}
+              />
+              <MultiSelect
+                label="HashTag"
+                data={["Sử dụng thường xuyên", "Sử dụng mùa hè"]}
+                radius={4}
+              />
+            </Stack>
             <Input.Wrapper label="Ảnh phân bón">
               <Dropzone
                 onDrop={(files) => console.log("accepted files", files)}
@@ -122,87 +194,37 @@ const FertilizerManagementMainAddPage = () => {
                 </Group>
               </Dropzone>
             </Input.Wrapper>
-            <TextInput
-              label="Tên phân bón"
-              placeholder="VD: Phân NPK, Phân Urê"
-              withAsterisk
-              radius={4}
-              {...form.getInputProps("name")}
-            />
-            <Select
-              label="Danh mục phân bón"
-              placeholder="Danh mục phân bón"
-              radius={4}
-              data={[
-                { value: "npk", label: "Phân NPK" },
-                { value: "ure", label: "Phân ure" },
-                { value: "kali", label: "Phân kali" },
-                { value: "dap", label: "Phân DAP" },
-                { value: "lan", label: "Phân lân" },
-                { value: "hữu cơ", label: "Phân hữu cơ" },
-                { value: "vi sinh", label: "Phân vi sinh" },
-                { value: "vi lượng", label: "Phân vi lượng" },
-                { value: "bón lá", label: "Phân bón lá" },
-                { value: "chậm tan", label: "Phân chậm tan" },
-                { value: "bón rễ", label: "Phân bón gốc / bón rễ" },
-              ]}
-            />
-            <TextInput
-              label="Hàm lượng dinh dưỡng"
-              placeholder="VD: NPK 16-16-8, Đạm 46%"
-              radius={4}
-              withAsterisk
-              {...form.getInputProps("nutrientContent")}
-            />
-
-            <MultiSelect
-              label="HashTag"
-              data={["Sử dụng thường xuyên", "Sử dụng mùa hè"]}
-              radius={4}
-            />
-          </Stack>
+          </Group>
         </Stepper.Step>
 
         <Stepper.Step label="Bước 2" description="Đóng gói & sản xuất">
           <Stack gap={"xs"}>
-            <TextInput
-              label="Nhà cung cấp"
-              radius={4}
-              placeholder="Chọn nhà cung cấp"
-              {...form.getInputProps("suppliers")}
-            />
-            <SelectableSupplierCards isCheckbox={true} />
-            <MultiSelect
-              label="Quy cách"
-              radius={4}
-              placeholder="Quy cách"
-              data={[
-                {
-                  value: "PKG001",
-                  label: "Hộp giấy nhỏ (50 cái)",
-                },
-                {
-                  value: "PKG002",
-                  label: "Túi nilon lớn (100 cái)",
-                },
-                {
-                  value: "PKG003",
-                  label: "Bao tải 25kg (25 cái)",
-                },
-                {
-                  value: "PKG004",
-                  label: "Bịch nhựa 1kg (10 cái)",
-                },
-                {
-                  value: "PKG005",
-                  label: "Thùng carton lớn (20 cái)",
-                },
-                {
-                  value: "PKG006",
-                  label: "Hộp nhựa 500ml (30 cái)",
-                },
-              ]}
-            />
+            <Card withBorder shadow="sm" radius={4} p="lg">
+              <Stack gap={"xs"}>
+                <Title order={4}>Bịch nhựa 1kg (10 cái)</Title>
+                <TextInput
+                  label="Nhà cung cấp"
+                  radius={4}
+                  placeholder="Chọn nhà cung cấp"
+                  {...form.getInputProps("suppliers")}
+                />
+                <SelectableSupplierCards isCheckbox={true} />
+                <NumberInput label="Số lượng" radius={4} />
+              </Stack>
+            </Card>
+            <Card withBorder shadow="sm" radius={4} p="lg">
+              <Stack gap={"xs"}>
+                <Title order={4}>Thùng carton lớn (20 cái)</Title>
+                <TextInput
+                  label="Nhà cung cấp"
+                  radius={4}
+                  placeholder="Chọn nhà cung cấp"
+                  {...form.getInputProps("suppliers")}
+                />
+                <SelectableSupplierCards isCheckbox={true} />
+                <NumberInput label="Số lượng" radius={4} />
+              </Stack>
+            </Card>
             <Textarea
               label="Ghi chú"
               placeholder="Mô tả thêm (tuỳ chọn)"

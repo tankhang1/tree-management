@@ -88,7 +88,9 @@ const billDataset: Bill[] = [
 
 const BillManagementCompanyPage = () => {
   const navigate = useNavigate();
-
+  const onAddBill = () => {
+    navigate(PATH.BILL_MANAGEMENT_COMPANY_ADD);
+  };
   const billColumns: MRT_ColumnDef<Bill>[] = [
     { accessorKey: "billId", header: "Mã hóa đơn" },
     { accessorKey: "orderId", header: "Mã đơn hàng" },
@@ -174,6 +176,9 @@ const BillManagementCompanyPage = () => {
         <Group>
           <Button variant="outline" radius={4} leftSection={<IconFileExcel />}>
             Xuất File
+          </Button>
+          <Button radius={4} onClick={onAddBill}>
+            Thêm mới
           </Button>
         </Group>
       </Group>

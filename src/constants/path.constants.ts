@@ -240,6 +240,7 @@ export const PATH = {
   BILL_MANAGEMENT_USER_DETAIL: "/bill-management/user/detail",
   BILL_MANAGEMENT_COMPANY: "/bill-management/company",
   BILL_MANAGEMENT_COMPANY_DETAIL: "/bill-management/company/detail",
+  BILL_MANAGEMENT_COMPANY_ADD: "/bill-management/company/add",
   // Debt management
   DEBT_MANAGEMENT: "/debt-management",
   DEBT_RECEIVABLE: "/debt-management/receivable",

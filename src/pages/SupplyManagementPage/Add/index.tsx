@@ -16,7 +16,7 @@ import {
   NumberInput,
 } from "@mantine/core";
 import { Dropzone, IMAGE_MIME_TYPE } from "@mantine/dropzone";
-import { IconArrowLeft, IconSearch } from "@tabler/icons-react";
+import { IconArrowLeft, IconPlus, IconSearch } from "@tabler/icons-react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { SelectableSupplierCards } from "./components/SelectableSupplierCards";
@@ -96,7 +96,17 @@ export default function SupplyManagementPage() {
                   { value: "protective", label: "Đồ bảo hộ lao động" },
                 ]}
               />
-
+              <Select
+                label="Đơn vị"
+                radius={4}
+                placeholder="Chọn đơn vị"
+                data={[
+                  { value: "kg", label: "Kilogram (kg)" },
+                  { value: "litre", label: "Lít (l)" },
+                  { value: "piece", label: "Cái (cái)" },
+                  { value: "set", label: "Bộ (bộ)" },
+                ]}
+              />
               <Textarea
                 label="Ghi chú"
                 value={formData.note}
@@ -105,29 +115,32 @@ export default function SupplyManagementPage() {
                 }
                 radius={4}
               />
+            </Stack>
+            <Stack gap={"xs"}>
+              <Input.Wrapper label="Ảnh vật tư">
+                <Dropzone
+                  accept={IMAGE_MIME_TYPE}
+                  onDrop={(files) =>
+                    setFormData({
+                      ...formData,
+                      //@ts-expect-error no check
+                      image: files[0]!,
+                    })
+                  }
+                  maxSize={5 * 1024 ** 2}
+                >
+                  <Group justify="center" mih={150}>
+                    <Text>📷 Thêm ảnh vật tư (tối đa 5MB)</Text>
+                  </Group>
+                </Dropzone>
+              </Input.Wrapper>
+
               <MultiSelect
                 label="HashTag"
                 data={["Sử dụng thường xuyên", "Sử dụng mùa hè"]}
                 radius={4}
               />
             </Stack>
-            <Input.Wrapper label="Ảnh vật tư">
-              <Dropzone
-                accept={IMAGE_MIME_TYPE}
-                onDrop={(files) =>
-                  setFormData({
-                    ...formData,
-                    //@ts-expect-error no check
-                    image: files[0]!,
-                  })
-                }
-                maxSize={5 * 1024 ** 2}
-              >
-                <Group justify="center" mih={150}>
-                  <Text>📷 Thêm ảnh vật tư (tối đa 5MB)</Text>
-                </Group>
-              </Dropzone>
-            </Input.Wrapper>
           </Group>
           <Group justify="space-between" mt="md">
             <div />
@@ -141,51 +154,31 @@ export default function SupplyManagementPage() {
       {/* Bước 2 */}
       {active === 1 && (
         <Stack gap="sm">
-          <TextInput
+          <Card withBorder shadow="sm" radius={4} p="lg">
+            <Stack gap="xs">
+              <TextInput
+                radius={4}
+                placeholder="Chọn nhà cung cấp"
+                label="Danh sách nhà cung cấp (Chọn một)"
+                leftSection={<IconSearch size={18} />}
+              />
+              <SelectableSupplierCards isCheckbox={false} />
+              <NumberInput
+                label="Số lượng"
+                placeholder="Nhập số lượng"
+                min={1}
+                radius={4}
+              />
+            </Stack>
+          </Card>
+          <Button
+            variant="outline"
+            leftSection={<IconPlus size={18} />}
             radius={4}
-            placeholder="Chọn nhà cung cấp"
-            label="Danh sách nhà cung cấp (Chọn nhiều)"
-            leftSection={<IconSearch size={18} />}
-          />
-          <SelectableSupplierCards isCheckbox={true} />
-          <NumberInput
-            label="Số lượng"
-            placeholder="Nhập số lượng"
-            min={1}
-            radius={4}
-          />
+          >
+            Thêm mới
+          </Button>
 
-          <MultiSelect
-            label="Quy cách"
-            radius={4}
-            placeholder="Quy cách"
-            data={[
-              {
-                value: "PKG001",
-                label: "Hộp giấy nhỏ (50 cái)",
-              },
-              {
-                value: "PKG002",
-                label: "Túi nilon lớn (100 cái)",
-              },
-              {
-                value: "PKG003",
-                label: "Bao tải 25kg (25 cái)",
-              },
-              {
-                value: "PKG004",
-                label: "Bịch nhựa 1kg (10 cái)",
-              },
-              {
-                value: "PKG005",
-                label: "Thùng carton lớn (20 cái)",
-              },
-              {
-                value: "PKG006",
-                label: "Hộp nhựa 500ml (30 cái)",
-              },
-            ]}
-          />
           <Group justify="space-between" mt="md">
             <Button radius={4} variant="default" onClick={prevStep}>
               Quay lại

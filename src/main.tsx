@@ -190,6 +190,7 @@ import DebtManagementPayablePage from "./pages/DebtManagementPage/Payable/index.
 import DebtManagementPayableAddPage from "./pages/DebtManagementPage/Payable/Add/index.tsx";
 import DebtManagementPayableDetailPage from "./pages/DebtManagementPage/Payable/Detail/index.tsx";
 import PackagingSpecificationPage from "./pages/PackagingSpecificationPage/index.tsx";
+import BillManagementCompanyAddPage from "./pages/BillManagementPage/Company/Add/index.tsx";
 const theme: MantineThemeOverride = {
   fontFamily: "MyFont, sans-serif",
   primaryColor: "brand",
@@ -712,6 +713,10 @@ const ROUTES = [
   <Route
     path={PATH.BILL_MANAGEMENT_COMPANY_DETAIL}
     element={<BillManagementCompanyDetailPage />}
+  />,
+  <Route
+    path={PATH.BILL_MANAGEMENT_COMPANY_ADD}
+    element={<BillManagementCompanyAddPage />}
   />,
   <Route
     path={PATH.DEBT_RECEIVABLE}

@@ -22,7 +22,6 @@ import { useForm } from "@mantine/form";
 import {
   IconArrowLeft,
   IconPhoto,
-  IconPlus,
   IconUpload,
   IconX,
 } from "@tabler/icons-react";
@@ -110,6 +109,38 @@ const PesticideManagementMainAddPage = () => {
                   radius={4}
                   {...form.getInputProps("typeIds")}
                 />
+                <MultiSelect
+                  label="Quy cách"
+                  radius={4}
+                  placeholder="Quy cách"
+                  value={["PKG005", "PKG006"]}
+                  data={[
+                    {
+                      value: "PKG001",
+                      label: "Hộp giấy nhỏ (50 cái)",
+                    },
+                    {
+                      value: "PKG002",
+                      label: "Túi nilon lớn (100 cái)",
+                    },
+                    {
+                      value: "PKG003",
+                      label: "Bao tải 25kg (25 cái)",
+                    },
+                    {
+                      value: "PKG004",
+                      label: "Bịch nhựa 1kg (10 cái)",
+                    },
+                    {
+                      value: "PKG005",
+                      label: "Thùng carton lớn (20 cái)",
+                    },
+                    {
+                      value: "PKG006",
+                      label: "Hộp nhựa 500ml (30 cái)",
+                    },
+                  ]}
+                />
                 <Textarea
                   label="Công thức hoạt chất"
                   radius={4}
@@ -120,6 +151,54 @@ const PesticideManagementMainAddPage = () => {
                   radius={4}
                   {...form.getInputProps("usage")}
                 />
+              </Stack>
+              <Stack gap={"xs"}>
+                <Input.Wrapper label="Ảnh thuốc">
+                  <Dropzone
+                    onDrop={(files) => console.log("accepted files", files)}
+                    onReject={(files) => console.log("rejected files", files)}
+                    maxSize={5 * 1024 ** 2}
+                    accept={IMAGE_MIME_TYPE}
+                  >
+                    <Group
+                      justify="center"
+                      gap="xl"
+                      mih={220}
+                      style={{ pointerEvents: "none" }}
+                    >
+                      <Dropzone.Accept>
+                        <IconUpload
+                          size={52}
+                          color="var(--mantine-color-blue-6)"
+                          stroke={1.5}
+                        />
+                      </Dropzone.Accept>
+                      <Dropzone.Reject>
+                        <IconX
+                          size={52}
+                          color="var(--mantine-color-red-6)"
+                          stroke={1.5}
+                        />
+                      </Dropzone.Reject>
+                      <Dropzone.Idle>
+                        <IconPhoto
+                          size={52}
+                          color="var(--mantine-color-dimmed)"
+                          stroke={1.5}
+                        />
+                      </Dropzone.Idle>
+
+                      <div>
+                        <Text size="xl" inline>
+                          Bỏ và thả ảnh thuốc tại đây
+                        </Text>
+                        <Text size="sm" c="dimmed" inline mt={7}>
+                          Đính kèm ảnh thuốc (tối đa 5MB)
+                        </Text>
+                      </div>
+                    </Group>
+                  </Dropzone>
+                </Input.Wrapper>
                 <Textarea
                   label="Ghi chú"
                   radius={4}
@@ -131,52 +210,6 @@ const PesticideManagementMainAddPage = () => {
                   radius={4}
                 />
               </Stack>
-              <Input.Wrapper label="Ảnh thuốc">
-                <Dropzone
-                  onDrop={(files) => console.log("accepted files", files)}
-                  onReject={(files) => console.log("rejected files", files)}
-                  maxSize={5 * 1024 ** 2}
-                  accept={IMAGE_MIME_TYPE}
-                >
-                  <Group
-                    justify="center"
-                    gap="xl"
-                    mih={220}
-                    style={{ pointerEvents: "none" }}
-                  >
-                    <Dropzone.Accept>
-                      <IconUpload
-                        size={52}
-                        color="var(--mantine-color-blue-6)"
-                        stroke={1.5}
-                      />
-                    </Dropzone.Accept>
-                    <Dropzone.Reject>
-                      <IconX
-                        size={52}
-                        color="var(--mantine-color-red-6)"
-                        stroke={1.5}
-                      />
-                    </Dropzone.Reject>
-                    <Dropzone.Idle>
-                      <IconPhoto
-                        size={52}
-                        color="var(--mantine-color-dimmed)"
-                        stroke={1.5}
-                      />
-                    </Dropzone.Idle>
-
-                    <div>
-                      <Text size="xl" inline>
-                        Bỏ và thả ảnh thuốc tại đây
-                      </Text>
-                      <Text size="sm" c="dimmed" inline mt={7}>
-                        Đính kèm ảnh thuốc (tối đa 5MB)
-                      </Text>
-                    </div>
-                  </Group>
-                </Dropzone>
-              </Input.Wrapper>
             </Group>
           </Stack>
         </Stepper.Step>
@@ -253,65 +286,38 @@ const PesticideManagementMainAddPage = () => {
           <Stack gap={"xs"}>
             <Card withBorder radius={4} p="md">
               <Stack gap={"xs"}>
+                <Title order={4}>Thùng carton lớn (20 cái)</Title>
                 <TextInput
                   label="Nhà cung cấp"
                   radius={4}
                   placeholder="Chọn nhà cung cấp"
                   {...form.getInputProps("suppliers")}
                 />
-                <SelectableSupplierCards isCheckbox={false} />
-                <Group grow>
-                  <NumberInput
-                    label="Đơn giá"
-                    placeholder="Giá tiền"
-                    radius={4}
-                  />
-                  <NumberInput
-                    label="Số lượng"
-                    placeholder="Số lượng"
-                    radius={4}
-                  />
-                  <MultiSelect
-                    label="Quy cách"
-                    radius={4}
-                    placeholder="Quy cách"
-                    data={[
-                      {
-                        value: "PKG001",
-                        label: "Hộp giấy nhỏ (50 cái)",
-                      },
-                      {
-                        value: "PKG002",
-                        label: "Túi nilon lớn (100 cái)",
-                      },
-                      {
-                        value: "PKG003",
-                        label: "Bao tải 25kg (25 cái)",
-                      },
-                      {
-                        value: "PKG004",
-                        label: "Bịch nhựa 1kg (10 cái)",
-                      },
-                      {
-                        value: "PKG005",
-                        label: "Thùng carton lớn (20 cái)",
-                      },
-                      {
-                        value: "PKG006",
-                        label: "Hộp nhựa 500ml (30 cái)",
-                      },
-                    ]}
-                  />
-                </Group>
+                <SelectableSupplierCards isCheckbox={true} />
+                <NumberInput
+                  label="Số lượng"
+                  placeholder="Số lượng"
+                  radius={4}
+                />
               </Stack>
             </Card>
-            <Button
-              radius={4}
-              variant="outline"
-              leftSection={<IconPlus size={18} />}
-            >
-              Thêm mới
-            </Button>
+            <Card withBorder radius={4} p="md">
+              <Stack gap={"xs"}>
+                <Title order={4}>Hộp nhựa 500 ml (30 cái)</Title>
+                <TextInput
+                  label="Nhà cung cấp"
+                  radius={4}
+                  placeholder="Chọn nhà cung cấp"
+                  {...form.getInputProps("suppliers")}
+                />
+                <SelectableSupplierCards isCheckbox={true} />
+                <NumberInput
+                  label="Số lượng"
+                  placeholder="Số lượng"
+                  radius={4}
+                />
+              </Stack>
+            </Card>
           </Stack>
         </Stepper.Step>
 

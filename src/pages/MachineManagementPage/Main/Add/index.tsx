@@ -112,7 +112,7 @@ const MachineManagementMainAddPage = () => {
                 radius={4}
                 required
               />
-
+              <Select label="Đơn vị" data={["Chiếc", "Cái", "Bộ"]} radius={4} />
               <MultiSelect
                 label="HashTag"
                 data={["Sử dụng thường xuyên", "Sử dụng mùa hè"]}
@@ -240,55 +240,17 @@ const MachineManagementMainAddPage = () => {
             <Card withBorder radius={4} p="md">
               <Stack gap={"xs"}>
                 <TextInput
-                  label="Nhà cung cấp"
+                  label="Nhà cung cấp (chọn một)"
                   radius={4}
                   placeholder="Chọn nhà cung cấp"
                   {...form.getInputProps("suppliers")}
                 />
                 <SelectableSupplierCards isCheckbox={false} />
-                <Group grow>
-                  <NumberInput
-                    label="Đơn giá"
-                    placeholder="Giá tiền"
-                    radius={4}
-                  />
-                  <NumberInput
-                    label="Số lượng"
-                    placeholder="Số lượng"
-                    radius={4}
-                  />
-                  <MultiSelect
-                    label="Quy cách"
-                    radius={4}
-                    placeholder="Quy cách"
-                    data={[
-                      {
-                        value: "PKG001",
-                        label: "Hộp giấy nhỏ (50 cái)",
-                      },
-                      {
-                        value: "PKG002",
-                        label: "Túi nilon lớn (100 cái)",
-                      },
-                      {
-                        value: "PKG003",
-                        label: "Bao tải 25kg (25 cái)",
-                      },
-                      {
-                        value: "PKG004",
-                        label: "Bịch nhựa 1kg (10 cái)",
-                      },
-                      {
-                        value: "PKG005",
-                        label: "Thùng carton lớn (20 cái)",
-                      },
-                      {
-                        value: "PKG006",
-                        label: "Hộp nhựa 500ml (30 cái)",
-                      },
-                    ]}
-                  />
-                </Group>
+                <NumberInput
+                  label="Số lượng"
+                  placeholder="Số lượng"
+                  radius={4}
+                />
               </Stack>
             </Card>
             <Button
