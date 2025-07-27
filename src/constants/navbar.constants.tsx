@@ -17,6 +17,8 @@ import {
   IconBox,
   IconBuildings,
   IconReceiptRupee,
+  IconCreditCard,
+  IconCash,
 } from "@tabler/icons-react";
 import { PATH } from "./path.constants";
 
@@ -251,6 +253,25 @@ export const NAV_BAR = [
       },
     ],
   },
+
+  {
+    label: "Quản lý công nợ",
+    icon: IconReportMoney,
+    link: PATH.DEBT_MANAGEMENT,
+    children: [
+      {
+        label: "Công nợ phải thu",
+        icon: IconCash,
+        link: PATH.DEBT_RECEIVABLE,
+      },
+      {
+        label: "Công nợ phải trả",
+        icon: IconCreditCard,
+        link: PATH.DEBT_PAYABLE,
+      },
+    ],
+  },
+
   {
     label: "Quản lý kho",
     icon: IconCoin,

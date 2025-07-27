@@ -183,6 +183,12 @@ import BillManagementUserPage from "./pages/BillManagementPage/User/index.tsx";
 import BillManagementUserDetailPage from "./pages/BillManagementPage/User/Detail/index.tsx";
 import BillManagementCompanyPage from "./pages/BillManagementPage/Company/index.tsx";
 import BillManagementCompanyDetailPage from "./pages/BillManagementPage/Company/Detail/index.tsx";
+import DebtManagementReceivablePage from "./pages/DebtManagementPage/Receivable/index.tsx";
+import DebtManagementReceivableAddPage from "./pages/DebtManagementPage/Receivable/Add/index.tsx";
+import DebtManagementReceivableDetailPage from "./pages/DebtManagementPage/Receivable/Detail/index.tsx";
+import DebtManagementPayablePage from "./pages/DebtManagementPage/Payable/index.tsx";
+import DebtManagementPayableAddPage from "./pages/DebtManagementPage/Payable/Add/index.tsx";
+import DebtManagementPayableDetailPage from "./pages/DebtManagementPage/Payable/Detail/index.tsx";
 const theme: MantineThemeOverride = {
   fontFamily: "MyFont, sans-serif",
   primaryColor: "brand",
@@ -705,6 +711,28 @@ const ROUTES = [
   <Route
     path={PATH.BILL_MANAGEMENT_COMPANY_DETAIL}
     element={<BillManagementCompanyDetailPage />}
+  />,
+  <Route
+    path={PATH.DEBT_RECEIVABLE}
+    element={<DebtManagementReceivablePage />}
+  />,
+  <Route
+    path={PATH.DEBT_RECEIVABLE_ADD}
+    element={<DebtManagementReceivableAddPage />}
+  />,
+  <Route
+    path={PATH.DEBT_RECEIVABLE_DETAIL}
+    element={<DebtManagementReceivableDetailPage />}
+  />,
+
+  <Route path={PATH.DEBT_PAYABLE} element={<DebtManagementPayablePage />} />,
+  <Route
+    path={PATH.DEBT_PAYABLE_ADD}
+    element={<DebtManagementPayableAddPage />}
+  />,
+  <Route
+    path={PATH.DEBT_PAYABLE_DETAIL}
+    element={<DebtManagementPayableDetailPage />}
   />,
 ];
 
