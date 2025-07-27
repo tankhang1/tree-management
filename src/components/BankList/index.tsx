@@ -49,11 +49,14 @@ const renderSelectOption = ({
 );
 
 // 3. Main Select component
-const BankSelect = () => {
+type TBankSelect = {
+  label?: string;
+};
+const BankSelect = ({ label = "Ngân hàng" }: TBankSelect) => {
   return (
     <Select
       searchable
-      label="Ngân hàng"
+      label={label}
       placeholder="Tìm theo tên hoặc mã"
       radius={4}
       data={bankOptions}

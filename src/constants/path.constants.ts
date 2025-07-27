@@ -231,6 +231,7 @@ export const PATH = {
   PURCHASE_MANAGEMENT_RAW_MATERIAL: "/purchase-management/raw-material",
   PURCHASE_MANAGEMENT_RAW_MATERIAL_ADD: "/purchase-management/raw-material/add",
   ORDER_MANAGEMENT: "/order-management",
+  ORDER_MANAGEMENT_CREATE: "/order-management/create",
   ORDER_MANAGEMENT_QUICK: "/order-management/quick",
   ORDER_MANAGEMENT_LOGGED_IN: "/order-management/logged-in",
   ORDER_MANAGEMENT_ADDRESS: "/order-management/address",

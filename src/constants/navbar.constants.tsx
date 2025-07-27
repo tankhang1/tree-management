@@ -220,7 +220,7 @@ export const NAV_BAR = [
     ],
   },
   {
-    label: "Quản lý đặt hàng",
+    label: "Quản lý đơn hàng",
     icon: IconShoppingCart,
     link: PATH.ORDER_MANAGEMENT,
     children: [
@@ -236,6 +236,10 @@ export const NAV_BAR = [
       {
         label: "Đặt hàng (đăng nhập)",
         link: PATH.ORDER_MANAGEMENT_LOGGED_IN,
+      },
+      {
+        label: "Tạo đơn hàng",
+        link: PATH.ORDER_MANAGEMENT_CREATE,
       },
     ],
   },
