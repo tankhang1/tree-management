@@ -221,9 +221,14 @@ export const NAV_BAR = [
     link: PATH.ORDER_MANAGEMENT,
     children: [
       {
+        label: "Địa chia giao hàng",
+        link: PATH.ORDER_MANAGEMENT_ADDRESS,
+      },
+      {
         label: "Đặt hàng nhanh",
         link: PATH.ORDER_MANAGEMENT_QUICK,
       },
+
       {
         label: "Đặt hàng (đăng nhập)",
         link: PATH.ORDER_MANAGEMENT_LOGGED_IN,

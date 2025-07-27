@@ -178,6 +178,7 @@ import PurchaseManagementMaterialPage from "./pages/PurchaseManagementPage/Mater
 import PurchaseManagementProductAddPage from "./pages/PurchaseManagementPage/Product/Add/index.tsx";
 import PurchaseManagementMaterialAddPage from "./pages/PurchaseManagementPage/Material/Add/index.tsx";
 import OrderManagememtQuickPage from "./pages/OrderManagementPage/Quick/index.tsx";
+import OrderManagementAddressPage from "./pages/OrderManagementPage/Address/index.tsx";
 const theme: MantineThemeOverride = {
   fontFamily: "MyFont, sans-serif",
   primaryColor: "brand",
@@ -680,6 +681,10 @@ const ROUTES = [
   <Route
     path={PATH.ORDER_MANAGEMENT_QUICK}
     element={<OrderManagememtQuickPage />}
+  />,
+  <Route
+    path={PATH.ORDER_MANAGEMENT_ADDRESS}
+    element={<OrderManagementAddressPage />}
   />,
 ];
 
