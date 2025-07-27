@@ -133,9 +133,19 @@ const AddMaintenanceForm = () => {
           ]}
           radius={4}
         />
+        <Group grow>
+          <NumberInput
+            label="Số lượng"
+            radius={4}
+            placeholder="Nhập số lượng"
+            min={1}
+            {...form.getInputProps("amount")}
+          />
 
+          <Select label="Đơn vị" radius={4} placeholder="Đơn vị" />
+        </Group>
         <NumberInput
-          label="Chi phí bảo trì (VND)"
+          label="Chi phí bảo trì"
           min={0}
           thousandSeparator
           hideControls
@@ -150,7 +160,7 @@ const AddMaintenanceForm = () => {
           {...form.getInputProps("description")}
           radius={4}
         />
-        <Input.Wrapper label="Thông tin liên quan (hoá đơn/chứng từ)">
+        <Input.Wrapper label="Chứng từ liên quan">
           <Dropzone
             onDrop={(files) => console.log("accepted files", files)}
             onReject={(files) => console.log("rejected files", files)}

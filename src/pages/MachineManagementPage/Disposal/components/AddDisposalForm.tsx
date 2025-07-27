@@ -120,7 +120,17 @@ const AddDisposalForm = () => {
           withAsterisk
           {...form.getInputProps("reason")}
         />
+        <Group grow>
+          <NumberInput
+            label="Số lượng"
+            radius={4}
+            placeholder="Nhập số lượng"
+            min={1}
+            {...form.getInputProps("amount")}
+          />
 
+          <Select label="Đơn vị" radius={4} placeholder="Đơn vị" />
+        </Group>
         <NumberInput
           radius={4}
           label="Giá trị thu hồi (nếu có)"
@@ -137,7 +147,7 @@ const AddDisposalForm = () => {
           autosize
           {...form.getInputProps("notes")}
         />
-        <Input.Wrapper label="Thông tin liên quan (hoá đơn/chứng từ)">
+        <Input.Wrapper label="Chứng từ liên quan">
           <Dropzone
             onDrop={(files) => console.log("accepted files", files)}
             onReject={(files) => console.log("rejected files", files)}

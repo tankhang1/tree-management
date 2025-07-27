@@ -2,46 +2,124 @@ import {
   Group,
   Stack,
   Text,
-  Select,
-  Modal,
   Button,
   TextInput,
-  Textarea,
   Stepper,
   Card,
   Title,
   Input,
+  Image,
+  MultiSelect,
+  Select,
+  Textarea,
+  NumberInput,
+  Divider,
+  ScrollArea,
 } from "@mantine/core";
 import { Dropzone, IMAGE_MIME_TYPE } from "@mantine/dropzone";
-import { useDisclosure } from "@mantine/hooks";
 import {
   IconArrowLeft,
+  IconBox,
   IconPhoto,
+  IconPlus,
+  IconSearch,
+  IconTools,
   IconUpload,
   IconX,
 } from "@tabler/icons-react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { types } from "../../Type";
+import SunEditor from "suneditor-react";
+const bomList = [
+  {
+    group: "Nguyên vật liệu",
+    name: "Phân NPK",
+    quantity: 50,
+    unit: "Kg",
+    note: "Nguyên liệu chính để sản xuất sản phẩm.",
+    img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR13HYMgDcPhnAzZ6lY8iTNwApj5XWCanAClQ&s",
+  },
 
+  {
+    group: "Sản phẩm",
+    name: "Mứt sầu riêng Ri6",
+    quantity: 100,
+    unit: "Hộp",
+    note: "Sản phẩm đóng gói hoàn chỉnh.",
+    img: "https://mutngon.com/upload/images/sau-rieng-monthong-nguyen-mui-say-thang-hoa-gion-don-mut-ngon-nafarm.jpg",
+  },
+];
+const productList = [
+  {
+    productCode: "SP001",
+    productName: "Mứt sầu riêng Ri6",
+    tree: "Sầu riêng",
+    category: "Thực phẩm chế biến",
+    description: "Sản phẩm được làm từ sầu riêng Ri6, đóng gói 250g.",
+    img: "https://mutngon.com/upload/images/sau-rieng-monthong-nguyen-mui-say-thang-hoa-gion-don-mut-ngon-nafarm.jpg",
+  },
+  {
+    productCode: "SP002",
+    productName: "Cafe hạt nguyên chất",
+    tree: "Cà phê",
+    category: "Đồ uống",
+    description: "Cafe Arabica thu hoạch tại Đắk Lắk, rang mộc.",
+    img: "https://caphenguyenchat.net/wp-content/uploads/2021/06/ca-phe-nguyen-chat-co-tac-dung-gi-01.jpg",
+  },
+  {
+    productCode: "SP003",
+    productName: "Chuối sấy dẻo",
+    tree: "Chuối",
+    category: "Thực phẩm sấy",
+    description: "Chuối sấy dẻo đóng gói 100g, không chất bảo quản.",
+    img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQwfg09hQiiHhgWNJZx_wrQAu-SWPqTz0yfAw&s",
+  },
+];
+const materialList = [
+  {
+    materialCode: "MAT001",
+    materialName: "Phân NPK",
+    description: "Phân NPK 16-16-8, dùng để bón cây trồng.",
+    img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR13HYMgDcPhnAzZ6lY8iTNwApj5XWCanAClQ&s",
+  },
+  {
+    materialCode: "MAT002",
+    materialName: "Phân hữu cơ",
+    description: "Phân hữu cơ vi sinh, cải tạo đất.",
+
+    img: "https://glawvn.com/wp-content/uploads/2023/04/phan-huu-co-la-gi-cac-loai-phan-huu-co-hien-hanh.jpeg",
+  },
+  {
+    materialCode: "MAT003",
+    materialName: "Hạt giống lúa",
+    description: "Hạt giống lúa chất lượng cao, năng suất tốt.",
+    img: "https://dantocmiennui-media.baotintuc.vn/images/c9bca312d68a4cb9c6013396197925b3d1b8e36a1725d1ac6318a949e7a3f3e724dfb1e5a06e02d6e56da454907910f8c375e3c3907454255baf9e67f8135c667a2f0b35f3ac576d14e6307ca755e480/cach-de-hat-lua-gong-nay-mam-deu-500x375-1.jpg.webp",
+  },
+];
 const ProductManagementItemAddPage = () => {
   const navigate = useNavigate();
   const [active, setActive] = useState(0);
-  const [
-    openedProductType,
-    { open: openProductType, close: closeProductType },
-  ] = useDisclosure(false);
-  const [form, setForm] = useState({
-    productCode: "",
-    productName: "",
-    tree: "",
-    category: "",
-    newCategory: "",
-    content: "",
-    imageFile: null,
-  });
 
-  const trees = ["Sầu riêng", "Xoài", "Chuối"];
-  const categories = ["Trái cây tươi", "Đóng hộp", "Chế biến"];
+  const [form, setForm] = useState({
+    productCode: "SP001",
+    productName: "Sầu riêng Ri6",
+    tree: "Sầu riêng",
+    category: "Trái cây",
+    newCategory: "",
+    content:
+      "Sầu riêng Ri6 là loại trái cây đặc sản của Việt Nam, nổi tiếng với hương vị thơm ngon.",
+    filterGroup: "Tất cả",
+    selectedGroup: "Trái cây",
+    quantity: 100,
+    unit: "Kg",
+    note: "Sản phẩm được thu hoạch từ vườn đạt chuẩn VietGAP.",
+    importPrice: 50000, // Giá nhập (VNĐ)
+    salePrice: 80000, // Giá bán (VNĐ)
+    discount: 10, // Chiết khấu (%)
+    imageFile: null,
+    bomType: "Nguyên Vật Liệu",
+  });
 
   return (
     <Card withBorder shadow="md" radius={4} p="xl">
@@ -63,114 +141,460 @@ const ProductManagementItemAddPage = () => {
           onStepClick={setActive}
           allowNextStepsSelect={false}
         >
-          <Stepper.Step label="Bước 1" description="Thông tin sản phẩm">
-            <Stack gap={"xs"}>
-              <TextInput
-                label="Mã sản phẩm"
-                placeholder="VD: SP001"
-                value={form.productCode}
-                onChange={(e) =>
-                  setForm({ ...form, productCode: e.currentTarget.value })
-                }
-                radius={4}
-              />
-              <TextInput
-                label="Tên sản phẩm"
-                placeholder="VD: Sầu riêng Ri6"
-                value={form.productName}
-                onChange={(e) =>
-                  setForm({ ...form, productName: e.currentTarget.value })
-                }
-                radius={4}
-              />
-              <Input.Wrapper label="Ảnh phân bón">
-                <Dropzone
-                  onDrop={(files) => console.log("accepted files", files)}
-                  onReject={(files) => console.log("rejected files", files)}
-                  maxSize={5 * 1024 ** 2}
-                  accept={IMAGE_MIME_TYPE}
-                >
-                  <Group
-                    justify="center"
-                    gap="xl"
-                    mih={220}
-                    style={{ pointerEvents: "none" }}
-                  >
-                    <Dropzone.Accept>
-                      <IconUpload
-                        size={52}
-                        color="var(--mantine-color-blue-6)"
-                        stroke={1.5}
-                      />
-                    </Dropzone.Accept>
-                    <Dropzone.Reject>
-                      <IconX
-                        size={52}
-                        color="var(--mantine-color-red-6)"
-                        stroke={1.5}
-                      />
-                    </Dropzone.Reject>
-                    <Dropzone.Idle>
-                      <IconPhoto
-                        size={52}
-                        color="var(--mantine-color-dimmed)"
-                        stroke={1.5}
-                      />
-                    </Dropzone.Idle>
-
-                    <div>
-                      <Text size="xl" inline>
-                        Bỏ và thả ảnh sản phẩm tại đây
-                      </Text>
-                      <Text size="sm" c="dimmed" inline mt={7}>
-                        Đính kèm ảnh sản phẩm (tối đa 5MB)
-                      </Text>
-                    </div>
-                  </Group>
-                </Dropzone>
-              </Input.Wrapper>
-              <Select
-                label="Cây"
-                placeholder="Chọn cây"
-                data={trees}
-                value={form.tree}
-                onChange={(val) => setForm({ ...form, tree: val || "" })}
-                radius={4}
-              />
-              <Group align="flex-end">
-                <Select
-                  label="Danh mục sản phẩm"
-                  placeholder="Chọn danh mục hoặc tự nhập"
-                  data={categories}
-                  searchable
-                  value={form.category}
-                  onChange={(val) => setForm({ ...form, category: val || "" })}
+          <Stepper.Step label="Bước 1" description="Thông tin cơ bản">
+            <Group grow gap={"xs"} align="flex-start">
+              <Stack gap={"xs"}>
+                <TextInput
+                  label="Mã sản phẩm"
+                  placeholder="VD: SP001"
+                  value={form.productCode}
+                  onChange={(e) =>
+                    setForm({ ...form, productCode: e.currentTarget.value })
+                  }
                   radius={4}
-                  flex={1}
                 />
-                <Button radius={4} onClick={openProductType}>
+                <TextInput
+                  label="Tên sản phẩm"
+                  placeholder="VD: Sầu riêng Ri6"
+                  value={form.productName}
+                  onChange={(e) =>
+                    setForm({ ...form, productName: e.currentTarget.value })
+                  }
+                  radius={4}
+                />
+                <TextInput
+                  placeholder="Danh mục sản phẩm"
+                  label="Danh mục sản phẩm"
+                  leftSection={<IconSearch size={18} />}
+                  radius={4}
+                />
+
+                <Group gap="md" wrap="wrap">
+                  {types.map((category, index) => (
+                    <Card
+                      h={200}
+                      key={index}
+                      withBorder
+                      shadow="sm"
+                      radius="md"
+                      style={{
+                        width: "150px",
+                        cursor: "pointer",
+                        borderColor:
+                          form.category === category.name ? "green" : "#d9d9d9",
+                      }}
+                      onClick={() =>
+                        setForm({ ...form, category: category.name })
+                      }
+                    >
+                      <Stack align="center" justify="center" gap="xs">
+                        <Image src={category.img} h={100} />
+                        <Text ta="center" fw={500}>
+                          {category.name}
+                        </Text>
+                      </Stack>
+                    </Card>
+                  ))}
+                </Group>
+
+                <Input.Wrapper label="Mô tả sản phẩm">
+                  <SunEditor />
+                </Input.Wrapper>
+              </Stack>
+              <Stack gap={"xs"}>
+                <Input.Wrapper label="Ảnh sản phẩm">
+                  <Dropzone
+                    onDrop={(files) => console.log("accepted files", files)}
+                    onReject={(files) => console.log("rejected files", files)}
+                    maxSize={5 * 1024 ** 2}
+                    accept={IMAGE_MIME_TYPE}
+                  >
+                    <Group
+                      justify="center"
+                      gap="xl"
+                      mih={220}
+                      style={{ pointerEvents: "none" }}
+                    >
+                      <Dropzone.Accept>
+                        <IconUpload
+                          size={52}
+                          color="var(--mantine-color-blue-6)"
+                          stroke={1.5}
+                        />
+                      </Dropzone.Accept>
+                      <Dropzone.Reject>
+                        <IconX
+                          size={52}
+                          color="var(--mantine-color-red-6)"
+                          stroke={1.5}
+                        />
+                      </Dropzone.Reject>
+                      <Dropzone.Idle>
+                        <IconPhoto
+                          size={52}
+                          color="var(--mantine-color-dimmed)"
+                          stroke={1.5}
+                        />
+                      </Dropzone.Idle>
+
+                      <div>
+                        <Text size="xl" inline>
+                          Bỏ và thả ảnh sản phẩm tại đây
+                        </Text>
+                        <Text size="sm" c="dimmed" inline mt={7}>
+                          Đính kèm ảnh sản phẩm (tối đa 5MB)
+                        </Text>
+                      </div>
+                    </Group>
+                  </Dropzone>
+                </Input.Wrapper>
+                <Group grow>
+                  <NumberInput label="Trọng lượng" radius={4} />
+                  <Select label="Đơn vị tính" radius={4} />
+                </Group>
+                <MultiSelect
+                  label="HashTag"
+                  data={[
+                    "Hữu cơ",
+                    "Vô cơ",
+                    "Năng suất cao",
+                    "Chất lượng cao",
+                    "Thân thiện môi trường",
+                    "Dễ sử dụng",
+                    "Phổ biến",
+                    "Xuất khẩu",
+                    "Đặc sản",
+                    "Giống mới",
+                  ]}
+                  radius={4}
+                />
+              </Stack>
+            </Group>
+          </Stepper.Step>
+          <Stepper.Step label="Bước 2" description="Thông tin BOM (nếu có)">
+            <Stack>
+              <Card withBorder shadow="sm" radius="md" p="md">
+                <Stack>
+                  <Group>
+                    {["Sản phẩm", "Nguyên Vật Liệu"].map((group) => (
+                      <Button
+                        key={group}
+                        variant={form.bomType === group ? "filled" : "light"}
+                        radius={4}
+                        onClick={() => setForm({ ...form, bomType: group })}
+                        leftSection={
+                          group === "Sản phẩm" ? (
+                            <IconBox size={18} />
+                          ) : (
+                            <IconTools size={18} />
+                          )
+                        }
+                      >
+                        {group}
+                      </Button>
+                    ))}
+                  </Group>
+                  <TextInput
+                    placeholder="Danh mục sản phẩm"
+                    label="Danh mục sản phẩm"
+                    leftSection={<IconSearch size={18} />}
+                    radius={4}
+                  />
+
+                  <Group gap="md" wrap="wrap">
+                    {types.map((category, index) => (
+                      <Card
+                        h={200}
+                        key={index}
+                        withBorder
+                        shadow="sm"
+                        radius="md"
+                        style={{
+                          width: "150px",
+                          cursor: "pointer",
+                          borderColor:
+                            form.category === category.name
+                              ? "green"
+                              : "#d9d9d9",
+                        }}
+                        onClick={() =>
+                          setForm({ ...form, category: category.name })
+                        }
+                      >
+                        <Stack align="center" justify="center" gap="xs">
+                          <Image src={category.img} h={100} />
+                          <Text ta="center" fw={500}>
+                            {category.name}
+                          </Text>
+                        </Stack>
+                      </Card>
+                    ))}
+                  </Group>
+                  {form.bomType === "Sản phẩm" && (
+                    <Stack gap={"xs"}>
+                      <TextInput
+                        placeholder="Sản phẩm"
+                        label="Sản phẩm"
+                        leftSection={<IconSearch size={18} />}
+                        radius={4}
+                      />
+                      <Group gap="md">
+                        {productList.map((product, index) => (
+                          <Card
+                            key={index}
+                            withBorder
+                            shadow="sm"
+                            radius="md"
+                            p="md"
+                          >
+                            <Stack>
+                              <Image
+                                src={product.img}
+                                alt={product.productName}
+                                height={150}
+                                radius="md"
+                              />
+                              <Text>
+                                <b>Mã sản phẩm:</b> {product.productCode}
+                              </Text>
+                              <Text>
+                                <b>Tên sản phẩm:</b> {product.productName}
+                              </Text>
+
+                              <Text>
+                                <b>Danh mục:</b> {product.category}
+                              </Text>
+                            </Stack>
+                          </Card>
+                        ))}
+                      </Group>
+                    </Stack>
+                  )}
+                  {form.bomType === "Nguyên Vật Liệu" && (
+                    <Stack gap={"xs"}>
+                      <TextInput
+                        placeholder="Nguyên vật liệu"
+                        label="Nguyên vật liệu"
+                        leftSection={<IconSearch size={18} />}
+                        radius={4}
+                      />
+                      <Group gap="md">
+                        {materialList.map((material, index) => (
+                          <Card
+                            key={index}
+                            withBorder
+                            shadow="sm"
+                            radius="md"
+                            p="md"
+                          >
+                            <Stack>
+                              <Image
+                                src={material.img}
+                                alt={material.materialName}
+                                height={150}
+                                radius="md"
+                              />
+                              <Text>
+                                <b>Mã nguyên vật liệu:</b>{" "}
+                                {material.materialCode}
+                              </Text>
+                              <Text>
+                                <b>Tên nguyên vật liệu:</b>{" "}
+                                {material.materialName}
+                              </Text>
+
+                              <Text>
+                                <b>Mô tả:</b> {material.description}
+                              </Text>
+                            </Stack>
+                          </Card>
+                        ))}
+                      </Group>
+                    </Stack>
+                  )}
+                  {form.selectedGroup && (
+                    <Stack mt="md">
+                      <Group grow>
+                        <NumberInput
+                          label="Số lượng"
+                          placeholder="Nhập số lượng"
+                          value={form.quantity}
+                          onChange={(e) =>
+                            setForm({
+                              ...form,
+                              quantity: +e!,
+                            })
+                          }
+                          radius={4}
+                        />
+                        <Select
+                          label="Đơn vị"
+                          placeholder="Chọn đơn vị"
+                          data={["Kg", "Cái", "Lít", "Bao"]}
+                          value={form.unit}
+                          onChange={(value) =>
+                            setForm({ ...form, unit: value! })
+                          }
+                          radius={4}
+                        />
+                      </Group>
+                      <Textarea
+                        label="Ghi chú"
+                        placeholder="Nhập ghi chú (nếu có)"
+                        value={form.note}
+                        onChange={(e) =>
+                          setForm({ ...form, note: e.currentTarget.value })
+                        }
+                        radius={4}
+                        minRows={3}
+                      />
+                    </Stack>
+                  )}
+                </Stack>
+              </Card>
+              {form.selectedGroup && (
+                <Button
+                  radius={4}
+                  variant="light"
+                  leftSection={<IconPlus size={18} />}
+                >
                   Thêm mới
                 </Button>
-              </Group>
+              )}
             </Stack>
           </Stepper.Step>
-
-          <Stepper.Step label="Bước 2" description="Nội dung mô tả">
-            <Textarea
-              label="Mô tả chi tiết"
-              placeholder="Nhập nội dung mô tả sản phẩm..."
-              value={form.content}
-              onChange={(e) =>
-                setForm({ ...form, content: e.currentTarget.value })
-              }
-              minRows={5}
-              radius={4}
-            />
+          <Stepper.Step label="Bước 3" description="Thông tin giá">
+            <Stack>
+              <NumberInput
+                label="Giá nhập"
+                placeholder="Nhập giá nhập (VNĐ)"
+                value={form.importPrice}
+                onChange={(value) =>
+                  setForm({ ...form, importPrice: +value || 0 })
+                }
+                radius={4}
+                min={0}
+                step={1000}
+                thousandSeparator=","
+              />
+              <NumberInput
+                label="Giá bán"
+                placeholder="Nhập giá bán (VNĐ)"
+                value={form.salePrice}
+                onChange={(value) =>
+                  setForm({ ...form, salePrice: +value || 0 })
+                }
+                radius={4}
+                min={0}
+                step={1000}
+                thousandSeparator=","
+              />
+              <NumberInput
+                label="Chiết khấu (%)"
+                placeholder="Nhập chiết khấu (%)"
+                value={form.discount}
+                onChange={(value) =>
+                  setForm({ ...form, discount: +value || 0 })
+                }
+                radius={4}
+                min={0}
+                max={100}
+                step={1}
+              />
+            </Stack>
           </Stepper.Step>
+          <Stepper.Step label="Bước 4" description="Xem lại thông tin">
+            <Stack>
+              {/* Thông tin cơ bản */}
+              <Group grow align="flex-start">
+                <Card h={300} withBorder shadow="sm" radius="md" p="md">
+                  <Stack>
+                    <Title order={5}>Thông tin cơ bản</Title>
+                    <Text>
+                      <b>Mã sản phẩm:</b> {form.productCode}
+                    </Text>
+                    <Text>
+                      <b>Tên sản phẩm:</b> {form.productName}
+                    </Text>
+                    <Text>
+                      <b>Danh mục:</b> {form.category}
+                    </Text>
+                    <Text>
+                      <b>Mô tả:</b> {form.content || "Không có"}
+                    </Text>
+                  </Stack>
+                </Card>
 
-          <Stepper.Completed>
-            <Text>Sản phẩm đã được tạo thành công!</Text>
-          </Stepper.Completed>
+                <Card h={300} withBorder radius="md">
+                  <Stack gap={"xs"}>
+                    <Title order={5}>Ảnh sản phẩm</Title>
+                    <Image
+                      src={
+                        "https://images.baodantoc.vn/uploads/2021/Tháng_10/Ngafy%202/Anh/untitled%20folder/giai-phap-cho-nong-nghiep-ben-vung.jpg"
+                      }
+                      h={220}
+                      radius={4}
+                    />
+                  </Stack>
+                </Card>
+              </Group>
+              <Divider label="Thông tin BOM" />
+              {["Nguyên vật liệu", "Sản phẩm"].map((group) => (
+                <Card withBorder shadow="sm" radius="md" p="md" key={group}>
+                  <ScrollArea>
+                    <Stack>
+                      <Title order={4}>{group}</Title>
+                      <Group align="flex-start" wrap="nowrap">
+                        {bomList
+                          .filter((item) => item.group === group)
+                          .map((item, index) => (
+                            <Card
+                              withBorder
+                              key={index}
+                              shadow="sm"
+                              radius="md"
+                              p="md"
+                            >
+                              <Group align="flex-start">
+                                <Image src={item.img} w={100} />
+                                <Stack gap={"xs"}>
+                                  <Text>
+                                    <b>Tên:</b> {item.name}
+                                  </Text>
+                                  <Text>
+                                    <b>Danh mục:</b> {item.name}
+                                  </Text>
+                                  <Text>
+                                    <b>Số lượng:</b> {item.quantity} {item.unit}
+                                  </Text>
+                                </Stack>
+                              </Group>
+                            </Card>
+                          ))}
+                      </Group>
+                    </Stack>
+                  </ScrollArea>
+                </Card>
+              ))}
+
+              <Divider label="Thông tin giá" />
+              {/* Thông tin giá */}
+              <Card withBorder shadow="sm" radius="md" p="md">
+                <Stack>
+                  <Title order={5}>Thông tin giá</Title>
+                  <Text>
+                    <b>Giá nhập:</b> {form.importPrice.toLocaleString()} VNĐ
+                  </Text>
+                  <Text>
+                    <b>Giá bán:</b> {form.salePrice.toLocaleString()} VNĐ
+                  </Text>
+                  <Text>
+                    <b>Chiết khấu:</b> {form.discount}%
+                  </Text>
+                </Stack>
+              </Card>
+            </Stack>
+          </Stepper.Step>
         </Stepper>
 
         <Group justify="space-between" mt="md">
@@ -181,33 +605,15 @@ const ProductManagementItemAddPage = () => {
           >
             Quay lại
           </Button>
-          {active < 2 ? (
+          {active < 3 ? (
             <Button onClick={() => setActive((a) => a + 1)} radius={4}>
               Tiếp theo
             </Button>
           ) : (
-            <Button radius={4}>Đóng</Button>
+            <Button radius={4}>Tạo mới</Button>
           )}
         </Group>
       </Stack>
-      <Modal
-        opened={openedProductType}
-        onClose={closeProductType}
-        title={<Text fw={"bold"}>Thêm mới danh mục sản phẩm</Text>}
-      >
-        <Stack>
-          <TextInput
-            placeholder="Danh mục sản phẩm"
-            label="Danh mục sản phẩm"
-            radius={4}
-          />
-          <Group justify="flex-end">
-            <Button onClick={closeProductType} radius={4}>
-              Lưu
-            </Button>
-          </Group>
-        </Stack>
-      </Modal>
     </Card>
   );
 };

@@ -140,7 +140,7 @@ const AddDisposalForm = () => {
           radius={4}
           {...form.getInputProps("notes")}
         />
-        <Input.Wrapper label="Thông tin liên quan (hoá đơn/chứng từ)">
+        <Input.Wrapper label="Chứng từ liên quan">
           <Dropzone
             onDrop={(files) => console.log("accepted files", files)}
             onReject={(files) => console.log("rejected files", files)}

@@ -97,7 +97,7 @@ const FertilizerManagementUsageHistoryPage = () => {
     },
     {
       accessorKey: "purpose",
-      header: "Mục đích sử dụng",
+      header: "Lí do sử dụng",
     },
     {
       accessorKey: "actions",

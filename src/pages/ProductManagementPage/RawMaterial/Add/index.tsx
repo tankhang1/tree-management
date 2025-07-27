@@ -21,7 +21,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { SelectableSupplierCards } from "./components/SelectableSupplierCards";
 
-export default function SupplyManagementPage() {
+export default function ProductManagementRawMaterialAddPage() {
   const navigate = useNavigate();
   const [active, setActive] = useState(0);
 
@@ -46,7 +46,7 @@ export default function SupplyManagementPage() {
         >
           Quay lại
         </Button>
-        <Title order={3}>Thêm mới vật tư</Title>
+        <Title order={3}>Thêm mới nguyên vật liệu</Title>
       </Group>
       <Stepper active={active} onStepClick={setActive} mb="lg">
         <Stepper.Step label="Bước 1" description="Thông tin cơ bản" />
@@ -60,7 +60,7 @@ export default function SupplyManagementPage() {
           <Group grow align="flex-start">
             <Stack gap={"xs"}>
               <TextInput
-                label="Mã vật tư"
+                label="Mã nguyên vật liệu"
                 value={formData.code}
                 onChange={(e) =>
                   setFormData({ ...formData, code: e.target.value })
@@ -70,7 +70,7 @@ export default function SupplyManagementPage() {
               />
 
               <TextInput
-                label="Tên vật tư"
+                label="Tên nguyên vật liệu"
                 value={formData.name}
                 onChange={(e) =>
                   setFormData({ ...formData, name: e.target.value })
@@ -79,7 +79,7 @@ export default function SupplyManagementPage() {
                 radius={4}
               />
               <Select
-                label="Danh mục vật tư"
+                label="Danh mục nguyên vật liệu"
                 value={formData.name}
                 required
                 radius={4}
@@ -91,7 +91,10 @@ export default function SupplyManagementPage() {
                   { value: "plastic_tray", label: "Khay nhựa, khay gieo hạt" },
                   { value: "irrigation", label: "Thiết bị tưới tiêu" },
                   { value: "agri_machinery", label: "Máy móc nông nghiệp" },
-                  { value: "organic_material", label: "Vật tư hữu cơ vi sinh" },
+                  {
+                    value: "organic_material",
+                    label: "nguyên vật liệu hữu cơ vi sinh",
+                  },
                   { value: "packaging", label: "Bao bì, vật liệu đóng gói" },
                   { value: "protective", label: "Đồ bảo hộ lao động" },
                 ]}
@@ -111,7 +114,7 @@ export default function SupplyManagementPage() {
                 radius={4}
               />
             </Stack>
-            <Input.Wrapper label="Ảnh vật tư">
+            <Input.Wrapper label="Ảnh nguyên vật liệu">
               <Dropzone
                 accept={IMAGE_MIME_TYPE}
                 onDrop={(files) =>
@@ -124,7 +127,7 @@ export default function SupplyManagementPage() {
                 maxSize={5 * 1024 ** 2}
               >
                 <Group justify="center" mih={150}>
-                  <Text>📷 Thêm ảnh vật tư (tối đa 5MB)</Text>
+                  <Text>📷 Thêm ảnh nguyên vật liệu (tối đa 5MB)</Text>
                 </Group>
               </Dropzone>
             </Input.Wrapper>
@@ -174,19 +177,6 @@ export default function SupplyManagementPage() {
             ]}
           />
 
-          <Select
-            label="Quy cách"
-            radius={4}
-            data={[
-              { value: "25kg/bao", label: "25kg/bao" },
-              { value: "50kg/bao", label: "50kg/bao" },
-              { value: "1 lít/chai", label: "1 lít/chai" },
-              { value: "500ml/chai", label: "500ml/chai" },
-              { value: "100ml/lọ", label: "100ml/lọ" },
-              { value: "10 gói/thùng", label: "10 gói/thùng" },
-              { value: "1 bộ/đơn vị", label: "1 bộ/đơn vị" },
-            ]}
-          />
           <Group justify="space-between" mt="md">
             <Button radius={4} variant="default" onClick={prevStep}>
               Quay lại
@@ -206,15 +196,15 @@ export default function SupplyManagementPage() {
           <Group align="flex-start">
             <Card withBorder flex={1} h={300}>
               <Stack>
-                <Title order={4}>Thông tin vật tư</Title>
+                <Title order={4}>Thông tin nguyên vật liệu</Title>
                 <Text>
-                  <strong>Mã vật tư:</strong> {formData.code}
+                  <strong>Mã nguyên vật liệu:</strong> {formData.code}
                 </Text>
                 <Text>
-                  <strong>Tên vật tư:</strong> {formData.name}
+                  <strong>Tên nguyên vật liệu:</strong> {formData.name}
                 </Text>
                 <Text>
-                  <strong>Danh mục vật tư:</strong> Thiết bị tưới tiêu
+                  <strong>Danh mục nguyên vật liệu:</strong> Thiết bị tưới tiêu
                 </Text>
                 <Text>
                   <strong>Số lượng:</strong> 100
@@ -222,9 +212,7 @@ export default function SupplyManagementPage() {
                 <Text>
                   <strong>Đơn vị tính:</strong> cái
                 </Text>
-                <Text>
-                  <strong>Quy cách:</strong> 1 bộ/đơn vị
-                </Text>
+
                 <Text>
                   <strong>Ghi chú:</strong> {formData.note}
                 </Text>
@@ -232,7 +220,7 @@ export default function SupplyManagementPage() {
             </Card>
             <Card withBorder flex={1} h={300}>
               <Stack flex={1}>
-                <Title order={4}>Ảnh vật tư</Title>
+                <Title order={4}>Ảnh nguyên vật liệu</Title>
                 <Stack justify="center" align="center">
                   <Image
                     src={
@@ -259,7 +247,7 @@ export default function SupplyManagementPage() {
             <Button
               radius={4}
               color="teal"
-              onClick={() => alert("✅ Đã thêm vật tư!")}
+              onClick={() => alert("✅ Đã thêm nguyên vật liệu!")}
             >
               Xác nhận & Lưu
             </Button>

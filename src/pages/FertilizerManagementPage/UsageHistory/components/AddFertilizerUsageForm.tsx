@@ -10,6 +10,7 @@ import {
   Radio,
   MultiSelect,
   Input,
+  NumberInput,
 } from "@mantine/core";
 import { DateTimePicker } from "@mantine/dates";
 import { useForm } from "@mantine/form";
@@ -63,7 +64,7 @@ const AddFertilizerUsageForm = () => {
       id: (v) => (!v ? "Mã phiếu không được để trống" : null),
       fertilizerId: (v) => (!v ? "Vui lòng chọn phân bón" : null),
       usedBy: (v) => (!v ? "Chọn người sử dụng" : null),
-      purpose: (v) => (!v ? "Nhập mục đích sử dụng" : null),
+      purpose: (v) => (!v ? "Nhập Lí do sử dụng" : null),
       location: (v) => (!v ? "Nhập vị trí sử dụng" : null),
     },
   });
@@ -118,23 +119,33 @@ const AddFertilizerUsageForm = () => {
             Lọc nhân sự
           </Button>
         </Group>
+        <Group grow>
+          <NumberInput
+            label="Số lượng"
+            radius={4}
+            placeholder="Nhập số lượng"
+            min={1}
+            {...form.getInputProps("amount")}
+          />
 
-        <TextInput
-          label="Mục đích sử dụng"
+          <Select label="Đơn vị" radius={4} placeholder="Đơn vị" />
+          <Select label="Quy cách" radius={4} placeholder="Quy cách" />
+        </Group>
+        <Select
+          label="Lí do sử dụng"
           placeholder="Ví dụ: Bón lót, bón thúc, bón phân vi sinh..."
-          {...form.getInputProps("purpose")}
           radius={4}
         />
 
         <Textarea
-          label="Vị trí sử dụng"
+          label="Mô tả chi tiết"
           placeholder="Ví dụ: Vùng trồng B2, Lô 3 hàng 7, Khu đất 4..."
           autosize
           minRows={2}
           radius={4}
           {...form.getInputProps("location")}
         />
-        <Input.Wrapper label="Thông tin liên quan (hoá đơn/chứng từ)">
+        <Input.Wrapper label="Chứng từ liên quan">
           <Dropzone
             onDrop={(files) => console.log("accepted files", files)}
             onReject={(files) => console.log("rejected files", files)}

@@ -1,17 +1,4 @@
-import {
-  ActionIcon,
-  Button,
-  Group,
-  Menu,
-  Modal,
-  NumberInput,
-  Select,
-  Stack,
-  Text,
-  Textarea,
-  TextInput,
-  Title,
-} from "@mantine/core";
+import { ActionIcon, Button, Group, Menu, Stack, Title } from "@mantine/core";
 import {
   IconDotsVertical,
   IconEdit,
@@ -21,7 +8,8 @@ import {
 } from "@tabler/icons-react";
 import type { MRT_ColumnDef } from "mantine-react-table";
 import Table from "../../../components/Table";
-import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { PATH } from "../../../constants/path.constants";
 
 type Material = {
   id: string;
@@ -60,9 +48,8 @@ const materialsData: Material[] = [
     stock: 2000,
   },
 ];
-const units = ["Kg", "Lít", "Cái", "Thùng"];
 const ProductManagementRawMaterialPage = () => {
-  const [opened, setOpened] = useState(false);
+  const navigate = useNavigate();
   const materialColumns: MRT_ColumnDef<Material>[] = [
     { accessorKey: "code", header: "Mã vật liệu" },
     { accessorKey: "name", header: "Tên vật liệu" },
@@ -70,7 +57,7 @@ const ProductManagementRawMaterialPage = () => {
     { accessorKey: "supplier", header: "Nhà cung cấp" },
     {
       accessorKey: "stock",
-      header: "Tồn kho",
+      header: "Số lượng",
       Cell: ({ row }) => row.original.stock.toLocaleString(),
     },
     { accessorKey: "description", header: "Mô tả" },
@@ -102,7 +89,9 @@ const ProductManagementRawMaterialPage = () => {
       ),
     },
   ];
-
+  const onAddRawMaterial = () => {
+    navigate(PATH.PRODUCT_RAW_MATERIAL_ADD);
+  };
   return (
     <Stack gap="lg">
       <Group justify="space-between">
@@ -113,55 +102,13 @@ const ProductManagementRawMaterialPage = () => {
           <Button variant="outline" radius={4} leftSection={<IconFileExcel />}>
             Xuất File
           </Button>
-          <Button radius={4} onClick={() => setOpened(true)}>
+          <Button radius={4} onClick={onAddRawMaterial}>
             Thêm mới
           </Button>
         </Group>
       </Group>
 
       <Table columns={materialColumns} data={materialsData} />
-      <Modal
-        title={<Text fw={500}>Tạo mới nguyên vật liệu</Text>}
-        opened={opened}
-        onClose={() => setOpened(false)}
-        radius={4}
-      >
-        <Stack>
-          <TextInput
-            label="Mã nguyên vật liệu"
-            placeholder="VD: NL001"
-            radius={4}
-          />
-          <TextInput
-            label="Tên nguyên vật liệu"
-            placeholder="VD: Sầu riêng Ri6"
-            radius={4}
-          />
-          <Group grow>
-            <Select
-              label="Đơn vị tính"
-              placeholder="Chọn đơn vị"
-              data={units}
-              radius={4}
-            />
-            <Select
-              label="Nhà cung cấp"
-              placeholder="VD: Cty Nông sản A"
-              radius={4}
-            />
-          </Group>
-          <NumberInput label="Số lượng tồn kho" min={0} radius={4} />
-          <Textarea
-            label="Mô tả"
-            placeholder="Thông tin thêm về nguyên vật liệu"
-            radius={4}
-          />
-        </Stack>
-
-        <Group justify="flex-end" mt="md">
-          <Button radius={4}>Lưu</Button>
-        </Group>
-      </Modal>
     </Stack>
   );
 };

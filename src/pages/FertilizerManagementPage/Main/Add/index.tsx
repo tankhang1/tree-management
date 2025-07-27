@@ -158,7 +158,7 @@ const FertilizerManagementMainAddPage = () => {
             />
 
             <MultiSelect
-              label="Hashtag"
+              label="HashTag"
               data={["Sử dụng thường xuyên", "Sử dụng mùa hè"]}
               radius={4}
             />

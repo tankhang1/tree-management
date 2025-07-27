@@ -10,6 +10,7 @@ import {
   Radio,
   MultiSelect,
   Input,
+  NumberInput,
 } from "@mantine/core";
 import { DateTimePicker } from "@mantine/dates";
 import { useForm } from "@mantine/form";
@@ -102,22 +103,32 @@ const AddEquipmentUsageForm = () => {
             Lọc nhân sự
           </Button>
         </Group>
-        <TextInput
-          label="Vị trí sử dụng"
-          placeholder="Vị trí thực tế"
-          radius={4}
-          {...form.getInputProps("location")}
-        />
+        <Group grow>
+          <NumberInput
+            label="Số lượng"
+            radius={4}
+            placeholder="Nhập số lượng"
+            min={1}
+            {...form.getInputProps("amount")}
+          />
 
-        <Textarea
-          label="Mục đích sử dụng"
-          autosize
+          <Select label="Đơn vị" radius={4} placeholder="Đơn vị" />
+        </Group>
+        <Select
+          label="Lí do sử dụng"
           radius={4}
-          minRows={3}
           {...form.getInputProps("purpose")}
           required
         />
-        <Input.Wrapper label="Thông tin liên quan (hoá đơn/chứng từ)">
+        <Textarea
+          label="Mô tả chi tiết"
+          placeholder="Mô tả chi tiết"
+          radius={4}
+          minRows={3}
+          {...form.getInputProps("location")}
+        />
+
+        <Input.Wrapper label="Chứng từ liên quan">
           <Dropzone
             onDrop={(files) => console.log("accepted files", files)}
             onReject={(files) => console.log("rejected files", files)}

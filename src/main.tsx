@@ -170,6 +170,13 @@ import MachineManagementDisposalHistoryPage from "./pages/MachineManagementPage/
 import PesticideManagementDisposalPage from "./pages/PesticideManagementPage/Disposal/index.tsx";
 import SupplyManagementDisposalPage from "./pages/SupplyManagementPage/Disposal/index.tsx";
 import FertilizerManagementDisposalPage from "./pages/FertilizerManagementPage/Disposal/index.tsx";
+import ProductManagementTypePage from "./pages/ProductManagementPage/Type/index.tsx";
+import ProductManagementRawMaterialTypePage from "./pages/ProductManagementPage/RawMaterial/Type/index.tsx";
+import ProductManagementRawMaterialAddPage from "./pages/ProductManagementPage/RawMaterial/Add/index.tsx";
+import PurchaseManagementProductPage from "./pages/PurchaseManagementPage/Product/index.tsx";
+import PurchaseManagementMaterialPage from "./pages/PurchaseManagementPage/Material/index.tsx";
+import PurchaseManagementProductAddPage from "./pages/PurchaseManagementPage/Product/Add/index.tsx";
+import PurchaseManagementMaterialAddPage from "./pages/PurchaseManagementPage/Material/Add/index.tsx";
 const theme: MantineThemeOverride = {
   fontFamily: "MyFont, sans-serif",
   primaryColor: "brand",
@@ -446,6 +453,15 @@ const ROUTES = [
     path={PATH.PRODUCT_RAW_MATERIAL}
     element={<ProductManagementRawMaterialPage />}
   />,
+  <Route
+    path={PATH.PRODUCT_RAW_MATERIAL_ADD}
+    element={<ProductManagementRawMaterialAddPage />}
+  />,
+  <Route
+    path={PATH.PRODUCT_RAW_MATERIAL_TYPE}
+    element={<ProductManagementRawMaterialTypePage />}
+  />,
+  <Route path={PATH.PRODUCT_TYPE} element={<ProductManagementTypePage />} />,
 
   <Route
     path={PATH.CONTRACT_MANAGEMENT}
@@ -644,6 +660,22 @@ const ROUTES = [
   <Route path={PATH.COMPANY_DETAIL} element={<CompanyDetailPage />} />,
   <Route path={PATH.COMPANY_ADD} element={<CompanyAddPage />} />,
   <Route path={PATH.VENDOR} element={<VendorPage />} />,
+  <Route
+    path={PATH.PURCHASE_MANAGEMENT_PRODUCT}
+    element={<PurchaseManagementProductPage />}
+  />,
+  <Route
+    path={PATH.PURCHASE_MANAGEMENT_PRODUCT_ADD}
+    element={<PurchaseManagementProductAddPage />}
+  />,
+  <Route
+    path={PATH.PURCHASE_MANAGEMENT_RAW_MATERIAL}
+    element={<PurchaseManagementMaterialPage />}
+  />,
+  <Route
+    path={PATH.PURCHASE_MANAGEMENT_RAW_MATERIAL_ADD}
+    element={<PurchaseManagementMaterialAddPage />}
+  />,
 ];
 
 createRoot(document.getElementById("root")!).render(

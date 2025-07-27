@@ -125,19 +125,22 @@ const AddPesticideUsageForm = () => {
             Lọc nhân sự
           </Button>
         </Group>
-        <TextInput
+        <Group grow>
+          <NumberInput
+            label="Số lượng"
+            radius={4}
+            placeholder="Nhập số lượng"
+            min={1}
+            {...form.getInputProps("amount")}
+          />
+
+          <Select label="Đơn vị" radius={4} placeholder="Đơn vị" />
+          <Select label="Quy cách" radius={4} placeholder="Quy cách" />
+        </Group>
+        <Select
           label="Lý do sử dụng"
           radius={4}
           placeholder="Ví dụ: Phòng trừ sâu cuốn lá"
-          {...form.getInputProps("reason")}
-        />
-
-        <NumberInput
-          label="Số lượng (ml)"
-          radius={4}
-          placeholder="Nhập số lượng"
-          min={1}
-          {...form.getInputProps("amount")}
         />
 
         <Textarea
@@ -148,7 +151,7 @@ const AddPesticideUsageForm = () => {
           minRows={3}
           {...form.getInputProps("description")}
         />
-        <Input.Wrapper label="Thông tin liên quan (hoá đơn/chứng từ)">
+        <Input.Wrapper label="Chứng từ liên quan">
           <Dropzone
             onDrop={(files) => console.log("accepted files", files)}
             onReject={(files) => console.log("rejected files", files)}

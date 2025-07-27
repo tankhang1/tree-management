@@ -114,7 +114,18 @@ const AddDisposalForm = () => {
             Lọc nhân sự
           </Button>
         </Group>
+        <Group grow>
+          <NumberInput
+            label="Số lượng"
+            radius={4}
+            placeholder="Nhập số lượng"
+            min={1}
+            {...form.getInputProps("amount")}
+          />
 
+          <Select label="Đơn vị" radius={4} placeholder="Đơn vị" />
+          <Select label="Quy cách" radius={4} placeholder="Quy cách" />
+        </Group>
         <Select
           label="Lý do huỷ thuốc"
           placeholder="VD: Thuốc hết hạn, bao bì rách..."
@@ -124,24 +135,15 @@ const AddDisposalForm = () => {
           {...form.getInputProps("reason")}
         />
 
-        <NumberInput
-          label="Số lượng huỷ"
-          placeholder="VD: 10"
-          radius={4}
-          min={1}
-          withAsterisk
-          {...form.getInputProps("quantity")}
-        />
-
         <Textarea
-          label="Ghi chú"
-          placeholder="Thêm ghi chú nếu cần"
+          label="Mô tả chi tiết"
+          placeholder="Mô tả chi tiết"
           radius={4}
           autosize
           minRows={2}
           {...form.getInputProps("notes")}
         />
-        <Input.Wrapper label="Thông tin liên quan (hoá đơn/chứng từ)">
+        <Input.Wrapper label="Chứng từ liên quan">
           <Dropzone
             onDrop={(files) => console.log("accepted files", files)}
             onReject={(files) => console.log("rejected files", files)}

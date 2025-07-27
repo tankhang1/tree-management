@@ -63,7 +63,7 @@ const AddMaterialUsageForm = () => {
       id: (v) => (!v ? "Mã phiếu không được để trống" : null),
       materialId: (v) => (!v ? "Vui lòng chọn vật tư" : null),
       usedBy: (v) => (!v ? "Chọn người sử dụng" : null),
-      purpose: (v) => (!v ? "Nhập mục đích sử dụng" : null),
+      purpose: (v) => (!v ? "Nhập Lí do sử dụng" : null),
       location: (v) => (!v ? "Nhập vị trí sử dụng" : null),
     },
   });
@@ -119,7 +119,7 @@ const AddMaterialUsageForm = () => {
           </Button>
         </Group>
         <TextInput
-          label="Mục đích sử dụng"
+          label="Lí do sử dụng"
           radius={4}
           placeholder="Ví dụ: Phun phân, rải phân, xử lý sâu bệnh..."
           {...form.getInputProps("purpose")}
@@ -133,7 +133,7 @@ const AddMaterialUsageForm = () => {
           minRows={2}
           {...form.getInputProps("location")}
         />
-        <Input.Wrapper label="Thông tin liên quan (hoá đơn/chứng từ)">
+        <Input.Wrapper label="Chứng từ liên quan">
           <Dropzone
             onDrop={(files) => console.log("accepted files", files)}
             onReject={(files) => console.log("rejected files", files)}

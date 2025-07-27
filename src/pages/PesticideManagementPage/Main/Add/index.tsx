@@ -140,7 +140,7 @@ const PesticideManagementMainAddPage = () => {
                   {...form.getInputProps("note")}
                 />
                 <MultiSelect
-                  label="Hashtag"
+                  label="HashTag"
                   data={["Sử dụng thường xuyên", "Sử dụng mùa hè"]}
                   radius={4}
                 />

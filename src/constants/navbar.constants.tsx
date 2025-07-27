@@ -113,9 +113,13 @@ export const NAV_BAR = [
     icon: IconPackage,
     link: PATH.PRODUCT_MANAGEMENT,
     children: [
+      { label: "Danh mục sản phẩm", link: PATH.PRODUCT_TYPE },
       { label: "Sản phẩm", link: PATH.PRODUCT_ITEM },
-      { label: "BOM", link: PATH.PRODUCT_BOM },
-      // { label: "Nguyên vật liệu", link: PATH.PRODUCT_RAW_MATERIAL },
+      {
+        label: "Danh mục nguyên vật liệu",
+        link: PATH.PRODUCT_RAW_MATERIAL_TYPE,
+      },
+      { label: "Nguyên vật liệu", link: PATH.PRODUCT_RAW_MATERIAL },
     ],
   },
   {
@@ -200,6 +204,15 @@ export const NAV_BAR = [
       { label: "Phân bón", link: PATH.FERTILIZER_MAIN },
       { label: "Lịch sử sử dụng", link: PATH.FERTILIZER_HISTORY },
       { label: "Lịch sử huỷ", link: PATH.FERTILIZER_DISPOSAL_HISTORY },
+    ],
+  },
+  {
+    label: "Quản lý thu mua",
+    icon: IconBuildingStore,
+    link: PATH.PURCHASE_MANAGEMENT,
+    children: [
+      { label: "Sản phẩm", link: PATH.PURCHASE_MANAGEMENT_PRODUCT },
+      { label: "Nguyên vật liệu", link: PATH.PURCHASE_MANAGEMENT_RAW_MATERIAL },
     ],
   },
   {

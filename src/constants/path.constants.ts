@@ -119,9 +119,12 @@ export const PATH = {
   // Product Management
   PRODUCT_MANAGEMENT: "/product-management",
   PRODUCT_ITEM: "/product-management/item",
+  PRODUCT_TYPE: "/product-management/type",
   PRODUCT_ADD_ITEM: "/product-management/item/add",
   PRODUCT_BOM: "/product-management/bom",
   PRODUCT_RAW_MATERIAL: "/product-management/raw-material",
+  PRODUCT_RAW_MATERIAL_ADD: "/product-management/raw-material/add",
+  PRODUCT_RAW_MATERIAL_TYPE: "/product-management/raw-material-type",
 
   // Contract Management
   CONTRACT_MANAGEMENT: "/contract-management",
@@ -220,4 +223,11 @@ export const PATH = {
 
   // Finance
   FINANCE_ACCOUNT: "/finance-account",
+
+  //Purchase
+  PURCHASE_MANAGEMENT: "/purchase-management",
+  PURCHASE_MANAGEMENT_PRODUCT: "/purchase-management/product",
+  PURCHASE_MANAGEMENT_PRODUCT_ADD: "/purchase-management/product/add",
+  PURCHASE_MANAGEMENT_RAW_MATERIAL: "/purchase-management/raw-material",
+  PURCHASE_MANAGEMENT_RAW_MATERIAL_ADD: "/purchase-management/raw-material/add",
 };
