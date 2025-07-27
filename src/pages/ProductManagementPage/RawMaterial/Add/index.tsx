@@ -13,10 +13,9 @@ import {
   MultiSelect,
   Input,
   Select,
-  NumberInput,
 } from "@mantine/core";
 import { Dropzone, IMAGE_MIME_TYPE } from "@mantine/dropzone";
-import { IconArrowLeft, IconSearch } from "@tabler/icons-react";
+import { IconArrowLeft, IconPlus, IconSearch } from "@tabler/icons-react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { SelectableSupplierCards } from "./components/SelectableSupplierCards";
@@ -108,29 +107,31 @@ export default function ProductManagementRawMaterialAddPage() {
                 }
                 radius={4}
               />
+            </Stack>
+            <Stack>
+              <Input.Wrapper label="Ảnh nguyên vật liệu">
+                <Dropzone
+                  accept={IMAGE_MIME_TYPE}
+                  onDrop={(files) =>
+                    setFormData({
+                      ...formData,
+                      //@ts-expect-error no check
+                      image: files[0]!,
+                    })
+                  }
+                  maxSize={5 * 1024 ** 2}
+                >
+                  <Group justify="center" mih={150}>
+                    <Text>📷 Thêm ảnh nguyên vật liệu (tối đa 5MB)</Text>
+                  </Group>
+                </Dropzone>
+              </Input.Wrapper>
               <MultiSelect
                 label="HashTag"
                 data={["Sử dụng thường xuyên", "Sử dụng mùa hè"]}
                 radius={4}
               />
             </Stack>
-            <Input.Wrapper label="Ảnh nguyên vật liệu">
-              <Dropzone
-                accept={IMAGE_MIME_TYPE}
-                onDrop={(files) =>
-                  setFormData({
-                    ...formData,
-                    //@ts-expect-error no check
-                    image: files[0]!,
-                  })
-                }
-                maxSize={5 * 1024 ** 2}
-              >
-                <Group justify="center" mih={150}>
-                  <Text>📷 Thêm ảnh nguyên vật liệu (tối đa 5MB)</Text>
-                </Group>
-              </Dropzone>
-            </Input.Wrapper>
           </Group>
           <Group justify="space-between" mt="md">
             <div />
@@ -151,32 +152,28 @@ export default function ProductManagementRawMaterialAddPage() {
             leftSection={<IconSearch size={18} />}
           />
           <SelectableSupplierCards isCheckbox={true} />
-          <NumberInput
-            label="Số lượng"
-            placeholder="Nhập số lượng"
-            min={1}
-            radius={4}
-          />
+
+          <Title order={4} mt="md">
+            Danh sách quy cách đóng gói
+          </Title>
           <Select
-            label="Đơn vị tính"
-            placeholder="VD: kg, lít, cái..."
+            label="Quy cách đóng gói"
             radius={4}
             data={[
-              { value: "kg", label: "kg" },
-              { value: "g", label: "g" },
-              { value: "l", label: "lít" },
-              { value: "ml", label: "ml" },
-              { value: "chai", label: "Chai" },
-              { value: "bao", label: "Bao" },
-              { value: "bình", label: "Bình" },
-              { value: "cái", label: "Cái" },
-              { value: "bộ", label: "Bộ" },
-              { value: "gói", label: "Gói" },
-              { value: "thùng", label: "Thùng" },
-              { value: "lọ", label: "Lọ" },
+              { value: "bag_5kg", label: "Bao 5kg" },
+              { value: "bag_10kg", label: "Bao 10kg" },
+              { value: "box_20kg", label: "Thùng 20kg" },
+              { value: "box_50kg", label: "Thùng 50kg" },
+              { value: "pallet", label: "Pallet" },
             ]}
           />
-
+          <Button
+            variant="light"
+            leftSection={<IconPlus size={18} />}
+            radius={4}
+          >
+            Thêm mới quy cách đóng gói
+          </Button>
           <Group justify="space-between" mt="md">
             <Button radius={4} variant="default" onClick={prevStep}>
               Quay lại
@@ -207,10 +204,7 @@ export default function ProductManagementRawMaterialAddPage() {
                   <strong>Danh mục nguyên vật liệu:</strong> Thiết bị tưới tiêu
                 </Text>
                 <Text>
-                  <strong>Số lượng:</strong> 100
-                </Text>
-                <Text>
-                  <strong>Đơn vị tính:</strong> cái
+                  <strong>Quy cách đóng gói:</strong> Bao 5kg, Thùng 20kg
                 </Text>
 
                 <Text>

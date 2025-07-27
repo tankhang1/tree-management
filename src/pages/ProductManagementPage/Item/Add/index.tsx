@@ -294,42 +294,59 @@ const ProductManagementItemAddPage = () => {
                       </Button>
                     ))}
                   </Group>
-                  <TextInput
-                    placeholder="Danh mục sản phẩm"
-                    label="Danh mục sản phẩm"
-                    leftSection={<IconSearch size={18} />}
-                    radius={4}
-                  />
+                  {form.bomType === "Sản phẩm" ? (
+                    <Stack gap={"xs"}>
+                      <TextInput
+                        placeholder="Danh mục sản phẩm"
+                        label="Danh mục sản phẩm"
+                        leftSection={<IconSearch size={18} />}
+                        radius={4}
+                      />
+                      <Group gap="md" wrap="wrap">
+                        {types.map((category, index) => (
+                          <Card
+                            h={200}
+                            key={index}
+                            withBorder
+                            shadow="sm"
+                            radius="md"
+                            style={{
+                              width: "150px",
+                              cursor: "pointer",
+                              borderColor:
+                                form.category === category.name
+                                  ? "green"
+                                  : "#d9d9d9",
+                            }}
+                            onClick={() =>
+                              setForm({ ...form, category: category.name })
+                            }
+                          >
+                            <Stack align="center" justify="center" gap="xs">
+                              <Image src={category.img} h={100} />
+                              <Text ta="center" fw={500}>
+                                {category.name}
+                              </Text>
+                            </Stack>
+                          </Card>
+                        ))}
+                      </Group>
+                    </Stack>
+                  ) : (
+                    <Select
+                      label="Danh mục nguyên vật liệu"
+                      placeholder="Danh mục nguyên vật liệu"
+                      radius={4}
+                      data={[
+                        { value: "fertilizer", label: "Phân bón" },
+                        { value: "seeds", label: "Hạt giống" },
+                        { value: "tools", label: "Dụng cụ nông nghiệp" },
+                        { value: "organic", label: "Phân hữu cơ" },
+                        { value: "chemicals", label: "Hóa chất nông nghiệp" },
+                      ]}
+                    />
+                  )}
 
-                  <Group gap="md" wrap="wrap">
-                    {types.map((category, index) => (
-                      <Card
-                        h={200}
-                        key={index}
-                        withBorder
-                        shadow="sm"
-                        radius="md"
-                        style={{
-                          width: "150px",
-                          cursor: "pointer",
-                          borderColor:
-                            form.category === category.name
-                              ? "green"
-                              : "#d9d9d9",
-                        }}
-                        onClick={() =>
-                          setForm({ ...form, category: category.name })
-                        }
-                      >
-                        <Stack align="center" justify="center" gap="xs">
-                          <Image src={category.img} h={100} />
-                          <Text ta="center" fw={500}>
-                            {category.name}
-                          </Text>
-                        </Stack>
-                      </Card>
-                    ))}
-                  </Group>
                   {form.bomType === "Sản phẩm" && (
                     <Stack gap={"xs"}>
                       <TextInput
@@ -341,6 +358,8 @@ const ProductManagementItemAddPage = () => {
                       <Group gap="md">
                         {productList.map((product, index) => (
                           <Card
+                            w={300}
+                            h={350}
                             key={index}
                             withBorder
                             shadow="sm"
@@ -378,9 +397,11 @@ const ProductManagementItemAddPage = () => {
                         leftSection={<IconSearch size={18} />}
                         radius={4}
                       />
-                      <Group gap="md">
+                      <Group gap="md" wrap="nowrap">
                         {materialList.map((material, index) => (
                           <Card
+                            w={300}
+                            h={350}
                             key={index}
                             withBorder
                             shadow="sm"
@@ -391,7 +412,7 @@ const ProductManagementItemAddPage = () => {
                               <Image
                                 src={material.img}
                                 alt={material.materialName}
-                                height={150}
+                                h={150}
                                 radius="md"
                               />
                               <Text>
