@@ -13,12 +13,14 @@ import {
   TextInput,
   Badge,
   ScrollArea,
+  Modal,
 } from "@mantine/core";
 import {
   IconCircleCheckFilled,
   IconMinus,
   IconPhone,
   IconPlus,
+  IconSearch,
   IconTrash,
 } from "@tabler/icons-react";
 import { useState } from "react";
@@ -86,6 +88,7 @@ const products = [
 ];
 const OrderManagementQuickPage = () => {
   const [activeStep, setActiveStep] = useState(0);
+  const [opened, setOpened] = useState(false);
   const [selectedDeliveryOption, setSelectedDeliveryOption] =
     useState("standard");
 
@@ -204,6 +207,12 @@ const OrderManagementQuickPage = () => {
                     </Card>
                   </Group>
                 </ScrollArea>
+                <TextInput
+                  leftSection={<IconSearch size={18} />}
+                  placeholder="Tìm kiếm sản phẩm"
+                  label="Tìm kiếm sản phẩm"
+                  radius={4}
+                />
               </Stack>
               <Divider />
               {products.map((product) => (
@@ -270,7 +279,7 @@ const OrderManagementQuickPage = () => {
                   </Button>
                 </Stack>
               </Card>
-              <Card withBorder radius={4} shadow="sm">
+              {/* <Card withBorder radius={4} shadow="sm">
                 <Stack gap="xs">
                   <Group justify="space-between">
                     <Text fw={500}>Vận chuyển</Text>
@@ -282,7 +291,7 @@ const OrderManagementQuickPage = () => {
                     Giao hàng tiêu chuẩn
                   </Button>
                 </Stack>
-              </Card>
+              </Card> */}
               <Card withBorder radius={4} shadow="sm">
                 <Stack gap="xs">
                   <Group justify="space-between">
@@ -735,7 +744,7 @@ const OrderManagementQuickPage = () => {
                       {totalPrice.toLocaleString()} VNĐ
                     </Text>
                   </Group>
-                  <Button radius={4} fullWidth onClick={() => setActiveStep(3)}>
+                  <Button radius={4} fullWidth onClick={() => setOpened(true)}>
                     Xác nhận đơn hàng
                   </Button>
                 </Stack>
@@ -752,7 +761,7 @@ const OrderManagementQuickPage = () => {
               {/* Thông tin đơn hàng */}
               <Card withBorder radius={4} shadow="sm">
                 <Stack gap="xs">
-                  <Title order={4}>Chi tiết đơn hàng</Title>
+                  <Title order={4}>Chi tiết đơn hàng (#515582734723982)</Title>
                   <Group justify="space-between" align="center">
                     <Group align="center" gap="xs">
                       <Image
@@ -934,6 +943,25 @@ const OrderManagementQuickPage = () => {
           </Group>
         </Stepper.Step>
       </Stepper>
+      <Modal
+        opened={opened}
+        onClose={() => setOpened(false)}
+        title={<Text fw={500}>Hướng dẫn thanh toán</Text>}
+      >
+        <Stack>
+          <Image src={"https://zozo.vn//upload/public/support/Momo/99.png"} />
+          <Button
+            onClick={() => {
+              setOpened(false);
+              setActiveStep(3);
+            }}
+            radius={4}
+            variant="light"
+          >
+            Hướng dẫn thanh toán qua MoMo
+          </Button>
+        </Stack>
+      </Modal>
     </Stack>
   );
 };
