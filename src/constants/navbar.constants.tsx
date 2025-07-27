@@ -216,6 +216,21 @@ export const NAV_BAR = [
     ],
   },
   {
+    label: "Quản lý đặt hàng",
+    icon: IconShoppingCart,
+    link: PATH.ORDER_MANAGEMENT,
+    children: [
+      {
+        label: "Đặt hàng nhanh",
+        link: PATH.ORDER_MANAGEMENT_QUICK,
+      },
+      {
+        label: "Đặt hàng (đăng nhập)",
+        link: PATH.ORDER_MANAGEMENT_LOGGED_IN,
+      },
+    ],
+  },
+  {
     label: "Quản lý kho",
     icon: IconCoin,
     link: PATH.STOCK_MANAGEMENT,
