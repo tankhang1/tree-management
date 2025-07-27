@@ -503,23 +503,43 @@ const StockManagementIOPage = () => {
                   </Group>
                 </ScrollArea>
                 <Group grow>
-                  <Select
-                    label="Quy cách"
-                    radius={4}
-                    {...form.getInputProps("packaging")}
-                  />
-                  <Select
-                    label="Đơn vị"
-                    {...form.getInputProps("unit")}
-                    radius={4}
-                    required
-                  />
                   <NumberInput
                     label="Số lượng"
                     min={1}
                     hideControls
                     {...form.getInputProps("quantity")}
                     radius={4}
+                  />
+                  <MultiSelect
+                    label="Quy cách"
+                    radius={4}
+                    placeholder="Quy cách"
+                    data={[
+                      {
+                        value: "PKG001",
+                        label: "Hộp giấy nhỏ (50 cái)",
+                      },
+                      {
+                        value: "PKG002",
+                        label: "Túi nilon lớn (100 cái)",
+                      },
+                      {
+                        value: "PKG003",
+                        label: "Bao tải 25kg (25 cái)",
+                      },
+                      {
+                        value: "PKG004",
+                        label: "Bịch nhựa 1kg (10 cái)",
+                      },
+                      {
+                        value: "PKG005",
+                        label: "Thùng carton lớn (20 cái)",
+                      },
+                      {
+                        value: "PKG006",
+                        label: "Hộp nhựa 500ml (30 cái)",
+                      },
+                    ]}
                   />
                 </Group>
               </Stack>
@@ -688,9 +708,7 @@ const StockManagementIOPage = () => {
                   <Text size="sm">
                     <b>Số lượng:</b> {form.values.quantity}
                   </Text>
-                  <Text size="sm">
-                    <b>Đơn vị:</b> {form.values.unit}
-                  </Text>
+
                   {form.values.packaging && (
                     <Text size="sm">
                       <b>Quy cách:</b> {form.values.packaging}

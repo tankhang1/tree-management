@@ -29,8 +29,6 @@ import { useNavigate } from "react-router-dom";
 import { SelectableSupplierCards } from "../../../SupplyManagementPage/Add/components/SelectableSupplierCards";
 import { Dropzone, IMAGE_MIME_TYPE } from "@mantine/dropzone";
 
-const units = ["kg", "bao", "gói", "lít"];
-
 const FertilizerManagementMainAddPage = () => {
   const navigate = useNavigate();
   const [active, setActive] = useState(0);
@@ -174,20 +172,36 @@ const FertilizerManagementMainAddPage = () => {
               {...form.getInputProps("suppliers")}
             />
             <SelectableSupplierCards isCheckbox={true} />
-            <Select
-              label="Đơn vị"
-              placeholder="Chọn đơn vị tính"
-              data={units}
-              withAsterisk
-              radius={4}
-              {...form.getInputProps("unit")}
-            />
             <MultiSelect
-              label="Quy cách đóng gói"
-              placeholder="Chọn quy cách đóng gói"
-              data={["Bao 50kg", "Gói 1kg", "Thùng 10kg"]}
-              withAsterisk
+              label="Quy cách"
               radius={4}
+              placeholder="Quy cách"
+              data={[
+                {
+                  value: "PKG001",
+                  label: "Hộp giấy nhỏ (50 cái)",
+                },
+                {
+                  value: "PKG002",
+                  label: "Túi nilon lớn (100 cái)",
+                },
+                {
+                  value: "PKG003",
+                  label: "Bao tải 25kg (25 cái)",
+                },
+                {
+                  value: "PKG004",
+                  label: "Bịch nhựa 1kg (10 cái)",
+                },
+                {
+                  value: "PKG005",
+                  label: "Thùng carton lớn (20 cái)",
+                },
+                {
+                  value: "PKG006",
+                  label: "Hộp nhựa 500ml (30 cái)",
+                },
+              ]}
             />
             <Textarea
               label="Ghi chú"
@@ -216,7 +230,7 @@ const FertilizerManagementMainAddPage = () => {
                     <b>Hàm lượng:</b> {form.values.nutrientContent}
                   </Text>
                   <Text>
-                    <b>Đơn vị:</b> {form.values.unit}
+                    <b>Quy cách:</b> Bao 50kg
                   </Text>
                   <Text>
                     <b>Ghi chú:</b> {form.values.description || "(Không có)"}

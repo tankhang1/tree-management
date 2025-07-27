@@ -14,7 +14,6 @@ import {
   Text,
   Modal,
   Radio,
-  Autocomplete,
 } from "@mantine/core";
 import { DateInput } from "@mantine/dates";
 import { useForm } from "@mantine/form";
@@ -22,7 +21,6 @@ import {
   IconArrowLeft,
   IconPlus,
   IconSearch,
-  IconTrash,
   IconUser,
 } from "@tabler/icons-react";
 import { useState } from "react";
@@ -31,18 +29,7 @@ import ConfirmStep from "./components/ConfirmStep";
 import { useDisclosure } from "@mantine/hooks";
 import { EmployeeCardList } from "../../../HRManagementPage/Team/Add/components/EmployeeCardList";
 import { DepartmentCardList } from "../../../HRManagementPage/Team/Add/components/DepartmentCardList";
-const employees = [
-  {
-    name: "Nguyễn Văn A",
-    role: "Tổ trưởng",
-    department: "Ban kỹ thuật",
-  },
-  {
-    name: "Trần Thị B",
-    role: "Giám đốc",
-    department: "Ban tài chính",
-  },
-];
+
 const PlanManagementUnplannedAddPage = () => {
   const navigate = useNavigate();
   const [active, setActive] = useState(0);
@@ -73,10 +60,7 @@ const PlanManagementUnplannedAddPage = () => {
     quantity: 1,
     unit: "",
   });
-  const options = employees.map((e) => ({
-    value: e.name,
-    label: `${e.name} - [${e.role}] - [${e.department}, Ban kinh doanh]`,
-  }));
+
   const handleAddResource = () => {
     if (!newResource.name || newResource.quantity <= 0) return;
     //@ts-expect-error no check
@@ -239,18 +223,36 @@ const PlanManagementUnplannedAddPage = () => {
                   setNewResource({ ...newResource, quantity: +value || 1 })
                 }
               />
-              <TextInput
-                label="Đơn vị tính"
-                placeholder="Ví dụ: Lít, Kg"
+              <MultiSelect
+                label="Quy cách"
                 radius={4}
-                value={newResource.unit}
-                onChange={(e) =>
-                  setNewResource({
-                    ...newResource,
-                    unit: e.currentTarget.value,
-                  })
-                }
-                flex={1}
+                placeholder="Quy cách"
+                data={[
+                  {
+                    value: "PKG001",
+                    label: "Hộp giấy nhỏ (50 cái)",
+                  },
+                  {
+                    value: "PKG002",
+                    label: "Túi nilon lớn (100 cái)",
+                  },
+                  {
+                    value: "PKG003",
+                    label: "Bao tải 25kg (25 cái)",
+                  },
+                  {
+                    value: "PKG004",
+                    label: "Bịch nhựa 1kg (10 cái)",
+                  },
+                  {
+                    value: "PKG005",
+                    label: "Thùng carton lớn (20 cái)",
+                  },
+                  {
+                    value: "PKG006",
+                    label: "Hộp nhựa 500ml (30 cái)",
+                  },
+                ]}
               />
               <ActionIcon radius={4} w={30} h={30} onClick={handleAddResource}>
                 <IconPlus />

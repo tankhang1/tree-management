@@ -19,6 +19,7 @@ import {
   IconReceiptRupee,
   IconCreditCard,
   IconCash,
+  IconLayersIntersect,
 } from "@tabler/icons-react";
 import { PATH } from "./path.constants";
 
@@ -304,6 +305,11 @@ export const NAV_BAR = [
         link: PATH.COMPANY_PARTNER,
       },
     ],
+  },
+  {
+    label: "Quy cách",
+    icon: IconLayersIntersect,
+    link: PATH.PACKAGING_SPECIFICATION,
   },
   // {
   //   label: "Quản lý nhà cung cấp",

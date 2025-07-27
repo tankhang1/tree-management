@@ -18,6 +18,7 @@ import {
   Flex,
   Input,
   Center,
+  MultiSelect,
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { useState } from "react";
@@ -474,17 +475,36 @@ export default function StockManagementAddDeliveryPage() {
                       required
                     />
 
-                    <Select
+                    <MultiSelect
+                      label="Quy cách"
                       radius={4}
-                      label="Đơn vị"
-                      data={["lít", "ml", "g", "kg"]}
-                      required
-                    />
-
-                    <Select
-                      radius={4}
-                      label="Quy cách đóng gói"
-                      data={["Hộp", "Chai", "Lọ", "Gói"]}
+                      placeholder="Quy cách"
+                      data={[
+                        {
+                          value: "PKG001",
+                          label: "Hộp giấy nhỏ (50 cái)",
+                        },
+                        {
+                          value: "PKG002",
+                          label: "Túi nilon lớn (100 cái)",
+                        },
+                        {
+                          value: "PKG003",
+                          label: "Bao tải 25kg (25 cái)",
+                        },
+                        {
+                          value: "PKG004",
+                          label: "Bịch nhựa 1kg (10 cái)",
+                        },
+                        {
+                          value: "PKG005",
+                          label: "Thùng carton lớn (20 cái)",
+                        },
+                        {
+                          value: "PKG006",
+                          label: "Hộp nhựa 500ml (30 cái)",
+                        },
+                      ]}
                     />
 
                     <Button
@@ -527,7 +547,6 @@ export default function StockManagementAddDeliveryPage() {
                             </Badge>
                           </Group>
                           <Text size="sm">Số lượng: {item.quantity}</Text>
-                          <Text size="sm">Đơn vị: {item.unit}</Text>
                           <Text size="sm">Quy cách: {item.packing}</Text>
                         </Stack>
                       </Card>
@@ -643,14 +662,7 @@ export default function StockManagementAddDeliveryPage() {
                           {item.quantity}
                         </Text>
                       </Group>
-                      <Group justify="space-between">
-                        <Text size="sm" c="dimmed">
-                          Đơn vị:
-                        </Text>
-                        <Text size="sm" fw={500}>
-                          {item.unit}
-                        </Text>
-                      </Group>
+
                       <Group justify="space-between">
                         <Text size="sm" c="dimmed">
                           Quy cách:

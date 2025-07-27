@@ -248,4 +248,6 @@ export const PATH = {
   DEBT_PAYABLE: "/debt-management/payable",
   DEBT_PAYABLE_ADD: "/debt-management/payable/add",
   DEBT_PAYABLE_DETAIL: "/debt-management/payable/detail",
+  // packaging specific paths
+  PACKAGING_SPECIFICATION: "/packaging/specification",
 };

@@ -15,7 +15,6 @@ import {
   Paper,
   Divider,
   Image,
-  Select,
   NumberInput,
   Radio,
 } from "@mantine/core";
@@ -40,19 +39,6 @@ const pesticideTypes = [
   { value: "TYPE04", label: "Chất kích thích sinh trưởng" },
 ];
 
-const unitOptions = [
-  { value: "chai", label: "Chai" },
-  { value: "kg", label: "Kilogram" },
-  { value: "gói", label: "Gói" },
-  { value: "lít", label: "Lít" },
-];
-
-const packageOptions = [
-  { value: "100ml", label: "100ml" },
-  { value: "500ml", label: "500ml" },
-  { value: "1L", label: "1 Lít" },
-  { value: "thùng 12 chai", label: "Thùng 12 chai" },
-];
 const PesticideManagementMainAddPage = () => {
   const navigate = useNavigate();
   const [active, setActive] = useState(0);
@@ -285,16 +271,36 @@ const PesticideManagementMainAddPage = () => {
                     placeholder="Số lượng"
                     radius={4}
                   />
-                  <Select
-                    label="Đơn vị"
-                    data={unitOptions}
-                    placeholder="Đơn vị"
-                    radius={4}
-                  />
                   <MultiSelect
-                    label="Quy cách đóng gói"
-                    data={packageOptions}
+                    label="Quy cách"
                     radius={4}
+                    placeholder="Quy cách"
+                    data={[
+                      {
+                        value: "PKG001",
+                        label: "Hộp giấy nhỏ (50 cái)",
+                      },
+                      {
+                        value: "PKG002",
+                        label: "Túi nilon lớn (100 cái)",
+                      },
+                      {
+                        value: "PKG003",
+                        label: "Bao tải 25kg (25 cái)",
+                      },
+                      {
+                        value: "PKG004",
+                        label: "Bịch nhựa 1kg (10 cái)",
+                      },
+                      {
+                        value: "PKG005",
+                        label: "Thùng carton lớn (20 cái)",
+                      },
+                      {
+                        value: "PKG006",
+                        label: "Hộp nhựa 500ml (30 cái)",
+                      },
+                    ]}
                   />
                 </Group>
               </Stack>

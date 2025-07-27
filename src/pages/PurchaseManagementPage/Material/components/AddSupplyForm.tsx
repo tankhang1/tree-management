@@ -7,6 +7,7 @@ import {
   NumberInput,
   Textarea,
   Text,
+  MultiSelect,
 } from "@mantine/core";
 import { DatePickerInput } from "@mantine/dates";
 import { useForm } from "@mantine/form";
@@ -104,16 +105,37 @@ const AddSupplyForm = ({ onFilter }: TAddSupplyForm) => {
             required
             {...form.getInputProps("quantity")}
           />
-          <Select
-            label="Đơn vị tính"
+
+          <MultiSelect
+            label="Quy cách"
             radius={4}
-            required
-            {...form.getInputProps("unit")}
-          />
-          <Select
-            radius={4}
-            label="Quy cách đóng gói"
-            data={["Hộp", "Chai", "Lọ", "Gói"]}
+            placeholder="Quy cách"
+            data={[
+              {
+                value: "PKG001",
+                label: "Hộp giấy nhỏ (50 cái)",
+              },
+              {
+                value: "PKG002",
+                label: "Túi nilon lớn (100 cái)",
+              },
+              {
+                value: "PKG003",
+                label: "Bao tải 25kg (25 cái)",
+              },
+              {
+                value: "PKG004",
+                label: "Bịch nhựa 1kg (10 cái)",
+              },
+              {
+                value: "PKG005",
+                label: "Thùng carton lớn (20 cái)",
+              },
+              {
+                value: "PKG006",
+                label: "Hộp nhựa 500ml (30 cái)",
+              },
+            ]}
           />
         </Group>
         {form.getValues().type === "huỷ" && (

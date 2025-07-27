@@ -15,7 +15,7 @@ import {
   Select,
 } from "@mantine/core";
 import { Dropzone, IMAGE_MIME_TYPE } from "@mantine/dropzone";
-import { IconArrowLeft, IconPlus, IconSearch } from "@tabler/icons-react";
+import { IconArrowLeft, IconSearch } from "@tabler/icons-react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { SelectableSupplierCards } from "./components/SelectableSupplierCards";
@@ -153,27 +153,38 @@ export default function ProductManagementRawMaterialAddPage() {
           />
           <SelectableSupplierCards isCheckbox={true} />
 
-          <Title order={4} mt="md">
-            Danh sách quy cách đóng gói
-          </Title>
-          <Select
-            label="Quy cách đóng gói"
+          <MultiSelect
+            label="Quy cách"
             radius={4}
+            placeholder="Quy cách"
             data={[
-              { value: "bag_5kg", label: "Bao 5kg" },
-              { value: "bag_10kg", label: "Bao 10kg" },
-              { value: "box_20kg", label: "Thùng 20kg" },
-              { value: "box_50kg", label: "Thùng 50kg" },
-              { value: "pallet", label: "Pallet" },
+              {
+                value: "PKG001",
+                label: "Hộp giấy nhỏ (50 cái)",
+              },
+              {
+                value: "PKG002",
+                label: "Túi nilon lớn (100 cái)",
+              },
+              {
+                value: "PKG003",
+                label: "Bao tải 25kg (25 cái)",
+              },
+              {
+                value: "PKG004",
+                label: "Bịch nhựa 1kg (10 cái)",
+              },
+              {
+                value: "PKG005",
+                label: "Thùng carton lớn (20 cái)",
+              },
+              {
+                value: "PKG006",
+                label: "Hộp nhựa 500ml (30 cái)",
+              },
             ]}
           />
-          <Button
-            variant="light"
-            leftSection={<IconPlus size={18} />}
-            radius={4}
-          >
-            Thêm mới quy cách đóng gói
-          </Button>
+
           <Group justify="space-between" mt="md">
             <Button radius={4} variant="default" onClick={prevStep}>
               Quay lại
@@ -204,7 +215,7 @@ export default function ProductManagementRawMaterialAddPage() {
                   <strong>Danh mục nguyên vật liệu:</strong> Thiết bị tưới tiêu
                 </Text>
                 <Text>
-                  <strong>Quy cách đóng gói:</strong> Bao 5kg, Thùng 20kg
+                  <strong>Quy cách:</strong> Bao 5kg, Thùng 20kg
                 </Text>
 
                 <Text>

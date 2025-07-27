@@ -84,7 +84,7 @@ export default function StockManagementDeliveryDetailPage() {
             </Text>
           </Text>
           <Text size="sm" fw={500}>
-            Quy cách đóng gói:{" "}
+            Quy cách:{" "}
             <Text span fw={400}>
               25kg/bao
             </Text>

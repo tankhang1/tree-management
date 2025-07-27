@@ -26,7 +26,7 @@ type WarehouseStockItem = {
   itemName: string; // Tên vật tư / phân bón / thiết bị
   quantity: number;
   unit: string; // Đơn vị: kg, bao, gói, cái, lít...
-  packing: string; // Quy cách đóng gói
+  packing: string; // Quy cách
   createdAt: string; // Ngày tạo / nhập kho
 };
 const warehouseStockDataset: WarehouseStockItem[] = [

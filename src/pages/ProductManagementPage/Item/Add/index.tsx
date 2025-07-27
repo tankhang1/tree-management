@@ -250,7 +250,37 @@ const ProductManagementItemAddPage = () => {
                 </Input.Wrapper>
                 <Group grow>
                   <NumberInput label="Trọng lượng" radius={4} />
-                  <Select label="Đơn vị tính" radius={4} />
+                  <MultiSelect
+                    label="Quy cách"
+                    radius={4}
+                    placeholder="Quy cách"
+                    data={[
+                      {
+                        value: "PKG001",
+                        label: "Hộp giấy nhỏ (50 cái)",
+                      },
+                      {
+                        value: "PKG002",
+                        label: "Túi nilon lớn (100 cái)",
+                      },
+                      {
+                        value: "PKG003",
+                        label: "Bao tải 25kg (25 cái)",
+                      },
+                      {
+                        value: "PKG004",
+                        label: "Bịch nhựa 1kg (10 cái)",
+                      },
+                      {
+                        value: "PKG005",
+                        label: "Thùng carton lớn (20 cái)",
+                      },
+                      {
+                        value: "PKG006",
+                        label: "Hộp nhựa 500ml (30 cái)",
+                      },
+                    ]}
+                  />
                 </Group>
                 <MultiSelect
                   label="HashTag"
@@ -448,15 +478,36 @@ const ProductManagementItemAddPage = () => {
                           }
                           radius={4}
                         />
-                        <Select
-                          label="Đơn vị"
-                          placeholder="Chọn đơn vị"
-                          data={["Kg", "Cái", "Lít", "Bao"]}
-                          value={form.unit}
-                          onChange={(value) =>
-                            setForm({ ...form, unit: value! })
-                          }
+                        <MultiSelect
+                          label="Quy cách"
                           radius={4}
+                          placeholder="Quy cách"
+                          data={[
+                            {
+                              value: "PKG001",
+                              label: "Hộp giấy nhỏ (50 cái)",
+                            },
+                            {
+                              value: "PKG002",
+                              label: "Túi nilon lớn (100 cái)",
+                            },
+                            {
+                              value: "PKG003",
+                              label: "Bao tải 25kg (25 cái)",
+                            },
+                            {
+                              value: "PKG004",
+                              label: "Bịch nhựa 1kg (10 cái)",
+                            },
+                            {
+                              value: "PKG005",
+                              label: "Thùng carton lớn (20 cái)",
+                            },
+                            {
+                              value: "PKG006",
+                              label: "Hộp nhựa 500ml (30 cái)",
+                            },
+                          ]}
                         />
                       </Group>
                       <Textarea

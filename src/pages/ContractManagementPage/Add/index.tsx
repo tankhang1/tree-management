@@ -19,6 +19,7 @@ import {
   ScrollArea,
   Image,
   Badge,
+  MultiSelect,
 } from "@mantine/core";
 import { DatePickerInput } from "@mantine/dates";
 import {
@@ -62,7 +63,6 @@ const contractTypes = [
   "Hợp đồng ủy quyền",
   "Hợp đồng hợp tác",
 ];
-const units = ["Kg", "Lít", "Cái", "Tấn"];
 const machineTypes = [
   {
     id: "MCH01",
@@ -578,16 +578,42 @@ const ContractManagementAddPage = () => {
                             value={item.quantity}
                             radius={4}
                           />
-                          <Select
+                          {/* <Select
                             label="Đơn vị"
                             data={units}
                             value={item.unit}
                             radius={4}
-                          />
-                          <Select
+                          /> */}
+                          <MultiSelect
                             label="Quy cách"
-                            value={item.spec}
                             radius={4}
+                            placeholder="Quy cách"
+                            data={[
+                              {
+                                value: "PKG001",
+                                label: "Hộp giấy nhỏ (50 cái)",
+                              },
+                              {
+                                value: "PKG002",
+                                label: "Túi nilon lớn (100 cái)",
+                              },
+                              {
+                                value: "PKG003",
+                                label: "Bao tải 25kg (25 cái)",
+                              },
+                              {
+                                value: "PKG004",
+                                label: "Bịch nhựa 1kg (10 cái)",
+                              },
+                              {
+                                value: "PKG005",
+                                label: "Thùng carton lớn (20 cái)",
+                              },
+                              {
+                                value: "PKG006",
+                                label: "Hộp nhựa 500ml (30 cái)",
+                              },
+                            ]}
                           />
                         </Group>
                       </Stack>
@@ -686,19 +712,37 @@ const ContractManagementAddPage = () => {
                             ))}
                           </Group>
                         </ScrollArea>
-                        <Group grow key={index} align="flex-end">
-                          <Select
-                            label="Đơn vị"
-                            data={units}
-                            value={item.unit}
-                            radius={4}
-                          />
-                          <Select
-                            label="Quy cách"
-                            value={item.spec}
-                            radius={4}
-                          />
-                        </Group>
+                        <MultiSelect
+                          label="Quy cách"
+                          radius={4}
+                          placeholder="Quy cách"
+                          data={[
+                            {
+                              value: "PKG001",
+                              label: "Hộp giấy nhỏ (50 cái)",
+                            },
+                            {
+                              value: "PKG002",
+                              label: "Túi nilon lớn (100 cái)",
+                            },
+                            {
+                              value: "PKG003",
+                              label: "Bao tải 25kg (25 cái)",
+                            },
+                            {
+                              value: "PKG004",
+                              label: "Bịch nhựa 1kg (10 cái)",
+                            },
+                            {
+                              value: "PKG005",
+                              label: "Thùng carton lớn (20 cái)",
+                            },
+                            {
+                              value: "PKG006",
+                              label: "Hộp nhựa 500ml (30 cái)",
+                            },
+                          ]}
+                        />
                       </Stack>
                     </Card>
                   ))}
@@ -777,6 +821,7 @@ const ContractManagementAddPage = () => {
                       <Group wrap="nowrap">
                         {form.items.map((item, i) => (
                           <Card
+                            h={140}
                             miw={300}
                             key={i}
                             withBorder
@@ -784,9 +829,15 @@ const ContractManagementAddPage = () => {
                             shadow="xs"
                             p="md"
                           >
-                            <Group>
-                              <Image src={item.img} w={100} h={100} />
-                              <Stack gap={4}>
+                            <Group grow wrap="nowrap">
+                              <Image
+                                src={item.img}
+                                w={100}
+                                h={100}
+                                fit="cover"
+                              />
+
+                              <Stack gap={4} flex={1}>
                                 <Title order={4}>{item.name}</Title>
                                 <Text size="sm">
                                   <b>Loại:</b> {item.category}
@@ -815,14 +866,14 @@ const ContractManagementAddPage = () => {
                       <Group wrap="nowrap">
                         {form.items_vehicle.map((item, i) => (
                           <Card
-                            miw={300}
+                            h={150}
                             key={i}
                             withBorder
                             radius="md"
                             shadow="xs"
                             p="md"
                           >
-                            <Group>
+                            <Group wrap="nowrap">
                               <Image src={item.img} w={100} h={100} />
                               <Stack gap={4}>
                                 <Title order={4}>{item.name}</Title>

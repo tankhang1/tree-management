@@ -128,8 +128,38 @@ const AddFertilizerUsageForm = () => {
             {...form.getInputProps("amount")}
           />
 
-          <Select label="Đơn vị" radius={4} placeholder="Đơn vị" />
-          <Select label="Quy cách" radius={4} placeholder="Quy cách" />
+          {/* <Select label="Đơn vị" radius={4} placeholder="Đơn vị" /> */}
+          <MultiSelect
+            label="Quy cách"
+            radius={4}
+            placeholder="Quy cách"
+            data={[
+              {
+                value: "PKG001",
+                label: "Hộp giấy nhỏ (50 cái)",
+              },
+              {
+                value: "PKG002",
+                label: "Túi nilon lớn (100 cái)",
+              },
+              {
+                value: "PKG003",
+                label: "Bao tải 25kg (25 cái)",
+              },
+              {
+                value: "PKG004",
+                label: "Bịch nhựa 1kg (10 cái)",
+              },
+              {
+                value: "PKG005",
+                label: "Thùng carton lớn (20 cái)",
+              },
+              {
+                value: "PKG006",
+                label: "Hộp nhựa 500ml (30 cái)",
+              },
+            ]}
+          />
         </Group>
         <Select
           label="Lí do sử dụng"
