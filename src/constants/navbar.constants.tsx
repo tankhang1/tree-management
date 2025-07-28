@@ -20,6 +20,7 @@ import {
   IconCreditCard,
   IconCash,
   IconLayersIntersect,
+  IconCashBanknote,
 } from "@tabler/icons-react";
 import { PATH } from "./path.constants";
 
@@ -297,6 +298,10 @@ export const NAV_BAR = [
     link: PATH.COMPANY,
     children: [
       {
+        label: "Địa chỉ",
+        link: PATH.COMPANY_ADDRESS,
+      },
+      {
         label: "Nhà cung cấp",
         link: PATH.COMPANY,
       },
@@ -314,6 +319,11 @@ export const NAV_BAR = [
     label: "Quy cách",
     icon: IconLayersIntersect,
     link: PATH.PACKAGING_SPECIFICATION,
+  },
+  {
+    label: "Ngân hàng",
+    icon: IconCashBanknote,
+    link: PATH.BANK_MANAGEMENT,
   },
   // {
   //   label: "Quản lý nhà cung cấp",

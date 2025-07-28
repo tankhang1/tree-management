@@ -212,6 +212,8 @@ export const PATH = {
   STOCK_SEED: "/stock-management/seed",
   // Company & Stack Holder
   COMPANY: "/company",
+  COMPANY_ADDRESS: "/company/address",
+  COMPANY_ADDRESS_ADD: "/company/address/add",
   COMPANY_CUSTOMER: "/company/customers",
   COMPANY_PARTNER: "/company/partners",
   COMPANY_DETAIL: "/company/detail",
@@ -252,4 +254,6 @@ export const PATH = {
   DEBT_PAYABLE_DETAIL: "/debt-management/payable/detail",
   // packaging specific paths
   PACKAGING_SPECIFICATION: "/packaging/specification",
+  // Bank Management
+  BANK_MANAGEMENT: "/bank-management",
 };

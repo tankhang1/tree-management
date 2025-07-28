@@ -192,6 +192,9 @@ import DebtManagementPayableDetailPage from "./pages/DebtManagementPage/Payable/
 import PackagingSpecificationPage from "./pages/PackagingSpecificationPage/index.tsx";
 import BillManagementCompanyAddPage from "./pages/BillManagementPage/Company/Add/index.tsx";
 import OrderManagementCreatePage from "./pages/OrderManagementPage/Create/index.tsx";
+import CompanyAddressPage from "./pages/CompanyPage/Address/index.tsx";
+import CompanyAddressAddPage from "./pages/CompanyPage/Address/Add/index.tsx";
+import BankManagementPage from "./pages/BankManagementPage/index.tsx";
 const theme: MantineThemeOverride = {
   fontFamily: "MyFont, sans-serif",
   primaryColor: "brand",
@@ -669,6 +672,8 @@ const ROUTES = [
     element={<StockManagementDeliveryDetailPage />}
   />,
   <Route path={PATH.COMPANY} element={<CompanyPage />} />,
+  <Route path={PATH.COMPANY_ADDRESS} element={<CompanyAddressPage />} />,
+  <Route path={PATH.COMPANY_ADDRESS_ADD} element={<CompanyAddressAddPage />} />,
   <Route path={PATH.COMPANY_CUSTOMER} element={<CompanyPage />} />,
   <Route path={PATH.COMPANY_PARTNER} element={<CompanyPage />} />,
 
@@ -749,6 +754,7 @@ const ROUTES = [
     path={PATH.PACKAGING_SPECIFICATION}
     element={<PackagingSpecificationPage />}
   />,
+  <Route path={PATH.BANK_MANAGEMENT} element={<BankManagementPage />} />,
 ];
 
 createRoot(document.getElementById("root")!).render(

@@ -4,7 +4,6 @@ import {
   Group,
   TextInput,
   Textarea,
-  Select,
   Grid,
   Card,
   Stack,
@@ -13,12 +12,18 @@ import {
   Paper,
   SimpleGrid,
   MultiSelect,
+  ScrollArea,
+  Input,
+  Modal,
+  Select,
 } from "@mantine/core";
 import { useState } from "react";
 import {
   IconArrowLeft,
   IconBuilding,
+  IconBuildingBank,
   IconBuildingFactory,
+  IconHeartHandshake,
   IconHome,
   IconId,
   IconMail,
@@ -27,14 +32,21 @@ import {
   IconNote,
   IconPhone,
   IconPlus,
+  IconTruck,
   IconTypeface,
   IconUser,
 } from "@tabler/icons-react";
 import { useNavigate } from "react-router-dom";
 import BankSelect from "../../../components/BankList";
+import { addressList } from "../../OrderManagementPage/Create";
 
 export function CompanyAddPage() {
+  const [openedAddressForm, setOpenedAddressForm] = useState(false);
   const navigate = useNavigate();
+  const [selectedCategory, setSelectedCategory] = useState<
+    "customer" | "partner" | "supplier" | "bank"
+  >("customer");
+  const [selectedAddress, setSelectedAddress] = useState<string | null>(null);
   const [active, setActive] = useState(0);
   const [formData, setFormData] = useState({
     type: "Doanh nghiệp",
@@ -185,23 +197,100 @@ export function CompanyAddPage() {
                     setFormData({ ...formData, email: e.target.value })
                   }
                 />
-                <TextInput
-                  label="Địa chỉ"
-                  value={formData.address}
-                  radius={4}
-                  onChange={(e) =>
-                    setFormData({ ...formData, address: e.target.value })
-                  }
-                />
-                <Select
-                  label="Phân loại"
-                  radius={4}
-                  data={["Khách hàng", "Nhà cung cấp", "Đối tác"]}
-                  value={formData.category}
-                  onChange={(val) =>
-                    setFormData({ ...formData, category: val! })
-                  }
-                />
+                <Group align="flex-end">
+                  <TextInput
+                    label="Địa chỉ"
+                    placeholder={"Tìm kiếm địa chỉ"}
+                    radius={4}
+                    flex={1}
+                    onChange={(e) =>
+                      setFormData({ ...formData, address: e.target.value })
+                    }
+                  />
+                  <Button onClick={() => setOpenedAddressForm(true)} radius={4}>
+                    Thêm mới
+                  </Button>
+                </Group>
+                <ScrollArea>
+                  <Group wrap="nowrap" align="flex-start" gap="md">
+                    {addressList.map((address) => (
+                      <Card
+                        key={address.id}
+                        miw={300}
+                        withBorder
+                        shadow="sm"
+                        radius="md"
+                        p="lg"
+                        style={{
+                          cursor: "pointer",
+                          borderColor:
+                            selectedAddress === address.id
+                              ? "green"
+                              : undefined,
+                        }}
+                        onClick={() => setSelectedAddress(address.id)}
+                      >
+                        <Stack gap="xs">
+                          <Group justify="space-between">
+                            <Title order={4} fw={500}>
+                              {address.recipientName}
+                            </Title>
+                          </Group>
+                          <Text size="sm">
+                            <b>Số điện thoại:</b> {address.phoneNumber}
+                          </Text>
+                          <Text size="sm">
+                            <b>Địa chỉ:</b> {address.address}
+                          </Text>
+                        </Stack>
+                      </Card>
+                    ))}
+                  </Group>
+                </ScrollArea>
+                <Input.Wrapper label="Phân loại">
+                  <Group gap="md">
+                    <Button
+                      variant={
+                        selectedCategory === "customer" ? "filled" : "outline"
+                      }
+                      leftSection={<IconUser size={18} />}
+                      onClick={() => setSelectedCategory("customer")}
+                      radius={4}
+                    >
+                      Khách hàng
+                    </Button>
+                    <Button
+                      variant={
+                        selectedCategory === "partner" ? "filled" : "outline"
+                      }
+                      leftSection={<IconHeartHandshake size={18} />}
+                      onClick={() => setSelectedCategory("partner")}
+                      radius={4}
+                    >
+                      Đối tác
+                    </Button>
+                    <Button
+                      variant={
+                        selectedCategory === "supplier" ? "filled" : "outline"
+                      }
+                      leftSection={<IconTruck size={18} />}
+                      onClick={() => setSelectedCategory("supplier")}
+                      radius={4}
+                    >
+                      Nhà cung cấp
+                    </Button>
+                    <Button
+                      variant={
+                        selectedCategory === "bank" ? "filled" : "outline"
+                      }
+                      leftSection={<IconBuildingBank size={18} />}
+                      onClick={() => setSelectedCategory("bank")}
+                      radius={4}
+                    >
+                      Ngân hàng
+                    </Button>
+                  </Group>
+                </Input.Wrapper>
               </Stack>
             </Card>
             <Stack>
@@ -266,7 +355,62 @@ export function CompanyAddPage() {
                       <TextInput label="Tên chi nhánh" radius={4} />
                       <TextInput label="Số điện thoại" radius={4} />
                       <TextInput label="Email" radius={4} />
-                      <TextInput label="Địa chỉ" radius={4} />
+                      <Group align="flex-end">
+                        <TextInput
+                          label="Địa chỉ"
+                          placeholder={"Tìm kiếm địa chỉ"}
+                          radius={4}
+                          flex={1}
+                          onChange={(e) =>
+                            setFormData({
+                              ...formData,
+                              address: e.target.value,
+                            })
+                          }
+                        />
+                        <Button
+                          onClick={() => setOpenedAddressForm(true)}
+                          radius={4}
+                        >
+                          Thêm mới
+                        </Button>
+                      </Group>
+                      <ScrollArea>
+                        <Group wrap="nowrap" align="flex-start" gap="md">
+                          {addressList.map((address) => (
+                            <Card
+                              key={address.id}
+                              miw={300}
+                              withBorder
+                              shadow="sm"
+                              radius="md"
+                              p="lg"
+                              style={{
+                                cursor: "pointer",
+                                borderColor:
+                                  selectedAddress === address.id
+                                    ? "green"
+                                    : undefined,
+                              }}
+                              onClick={() => setSelectedAddress(address.id)}
+                            >
+                              <Stack gap="xs">
+                                <Group justify="space-between">
+                                  <Title order={4} fw={500}>
+                                    {address.recipientName}
+                                  </Title>
+                                </Group>
+                                <Text size="sm">
+                                  <b>Số điện thoại:</b> {address.phoneNumber}
+                                </Text>
+                                <Text size="sm">
+                                  <b>Địa chỉ:</b> {address.address}
+                                </Text>
+                              </Stack>
+                            </Card>
+                          ))}
+                        </Group>
+                      </ScrollArea>
                     </Stack>
 
                     <Stack gap={"xs"}>
@@ -364,7 +508,16 @@ export function CompanyAddPage() {
                     <TextInput label="Số tài khoản" radius={4} />
                   </Grid.Col>
                   <Grid.Col span={6}>
-                    <TextInput label="Chi nhánh (nếu có)" radius={4} />
+                    <Select
+                      label="Chi nhánh (nếu có)"
+                      radius={4}
+                      data={[
+                        { value: "hanoi", label: "Chi nhánh Hà Nội" },
+                        { value: "saigon", label: "Chi nhánh Sài Gòn" },
+                        { value: "danang", label: "Chi nhánh Đà Nẵng" },
+                        { value: "cantho", label: "Chi nhánh Cần Thơ" },
+                      ]}
+                    />
                   </Grid.Col>
                   <Grid.Col span={12}>
                     <Textarea label="Ghi chú" minRows={2} radius={4} />
@@ -561,6 +714,51 @@ export function CompanyAddPage() {
           {active === 4 ? "Hoàn tất" : "Tiếp theo"}
         </Button>
       </Group>
+      <Modal
+        opened={openedAddressForm}
+        onClose={() => setOpenedAddressForm(false)}
+        title={<Text fw={500}>Thêm địa chỉ mới</Text>}
+      >
+        <Stack gap="xs">
+          <TextInput
+            label="Tên người nhận"
+            placeholder="Nhập tên người nhận"
+            radius={4}
+            withAsterisk
+          />
+          <TextInput
+            label="Số điện thoại"
+            placeholder="Nhập số điện thoại"
+            radius={4}
+            withAsterisk
+          />
+          <TextInput label="Email" placeholder="Nhập email" radius={4} />
+          <TextInput
+            label="Địa chỉ"
+            placeholder="Nhập địa chỉ"
+            radius={4}
+            withAsterisk
+          />
+          <Textarea
+            label="Ghi chú"
+            placeholder="Nhập ghi chú (nếu có)"
+            radius={4}
+            minRows={3}
+          />
+          <Group justify="flex-end">
+            <Button
+              variant="outline"
+              radius={4}
+              onClick={() => setOpenedAddressForm(false)}
+            >
+              Hủy
+            </Button>
+            <Button radius={4} onClick={() => setOpenedAddressForm(false)}>
+              Lưu
+            </Button>
+          </Group>
+        </Stack>
+      </Modal>
     </Paper>
   );
 }

@@ -110,7 +110,7 @@ const s = {
   sectors: ["Phân bón", "Thuốc BVTV"],
   note: "Đối tác lâu năm",
 };
-const addressList = [
+export const addressList = [
   {
     id: "ADDR001",
     recipientName: "Nguyễn Văn A",
@@ -703,24 +703,26 @@ const OrderManagementCreatePage = () => {
                 </Input.Wrapper>
               )}
               <Input.Wrapper label="Địa chỉ nhận hàng (chọn một)">
-                <Group>
+                <Group align="flex-start" gap="md">
                   {addressList.map((address) => (
                     <Card
                       key={address.id}
+                      w={300}
                       withBorder
                       shadow="sm"
                       radius="md"
                       p="lg"
-                      style={{ cursor: "pointer" }}
                     >
                       <Stack gap="xs">
-                        <Title order={3} fw={500}>
-                          {address.recipientName}
-                        </Title>
-                        <Text>
+                        <Group justify="space-between">
+                          <Title order={4} fw={500}>
+                            {address.recipientName}
+                          </Title>
+                        </Group>
+                        <Text size="sm">
                           <b>Số điện thoại:</b> {address.phoneNumber}
                         </Text>
-                        <Text>
+                        <Text size="sm">
                           <b>Địa chỉ:</b> {address.address}
                         </Text>
                       </Stack>
