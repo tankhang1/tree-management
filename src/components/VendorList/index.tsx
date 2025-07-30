@@ -38,6 +38,15 @@ const suppliers = [
     email: "",
     address: "Ấp 3, Xã Tân Phú, Huyện Châu Thành, Long An",
   },
+  {
+    code: "SUP002",
+    name: "Trần Thị B",
+    type: "Cá nhân",
+    representative: "Trần Thị B",
+    phone: "0987654321",
+    email: "",
+    address: "Ấp 3, Xã Tân Phú, Huyện Châu Thành, Long An",
+  },
 ];
 
 export function VendorList() {
@@ -52,10 +61,10 @@ export function VendorList() {
         radius={4}
       />
       <ScrollArea pb={"lg"} offsetScrollbars>
-        <Group wrap="wrap" gap="md">
+        <Group wrap="nowrap" gap="md">
           {suppliers.map((sup, index) => (
             <Card
-              w={400}
+              miw={400}
               h={250}
               key={index}
               shadow="md"

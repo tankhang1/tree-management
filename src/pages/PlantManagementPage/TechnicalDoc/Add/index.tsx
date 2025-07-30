@@ -1,13 +1,13 @@
 import {
   Button,
   Group,
-  Image,
   Stack,
   Title,
   Text,
   Card,
   Select,
   Input,
+  Radio,
 } from "@mantine/core";
 import { Dropzone } from "@mantine/dropzone";
 import { useForm } from "@mantine/form";
@@ -17,7 +17,6 @@ import {
   IconUpload,
   IconX,
 } from "@tabler/icons-react";
-import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import SunEditor from "suneditor-react";
 
@@ -30,21 +29,11 @@ const PlantManagementTechnicalDocAddPage = () => {
       cultivationTechniques: "",
       standards: "",
       pestSolutions: "",
+      techinicalDocType: "file", // or "editor"
+      standardDocType: "file", // or "editor"
+      pestDocType: "file", // or "editor"
     },
   });
-
-  const [imagePreview, setImagePreview] = useState<string | null>(null);
-
-  const handleImageChange = (file: File | null) => {
-    if (file) {
-      const url = URL.createObjectURL(file);
-      setImagePreview(url);
-      form.setFieldValue("image", file);
-    } else {
-      setImagePreview(null);
-      form.setFieldValue("image", null);
-    }
-  };
 
   const handleSubmit = (values: typeof form.values) => {
     console.log("📝 Dữ liệu kỹ thuật:", values);
@@ -119,50 +108,282 @@ const PlantManagementTechnicalDocAddPage = () => {
             </Dropzone>
           </Input.Wrapper>
 
-          {imagePreview && (
-            <Image
-              src={imagePreview}
-              alt="Preview"
-              width={180}
-              height={120}
-              fit="cover"
-              radius="md"
-              style={{ border: "1px solid #ddd" }}
-            />
-          )}
+          <Radio.Group
+            label="Kỹ thuật canh tác"
+            value={form.getValues().techinicalDocType}
+            onChange={(val) => form.setFieldValue("techinicalDocType", val)}
+          >
+            <Group mt="xs">
+              <Radio value="file" label="Tải file PDF" />
+              <Radio value="editor" label="Kỹ thuật canh tác" />
+            </Group>
+          </Radio.Group>
 
-          <Stack>
-            <Text fz={14} fw={"500"}>
-              Kỹ thuật canh tác
-            </Text>
-            <SunEditor
-              setContents={form.values.cultivationTechniques}
-              onChange={(val) =>
-                form.setFieldValue("cultivationTechniques", val)
-              }
-              setOptions={{ height: "200px" }}
-            />
-          </Stack>
-          <Stack>
-            <Text fz={14} fw={"500"}>
-              Tiêu chuẩn chất lượng
-            </Text>
-            <SunEditor
-              setContents={form.values.cultivationTechniques}
-              onChange={(val) => form.setFieldValue("standards", val)}
-              setOptions={{ height: "200px" }}
-            />
-          </Stack>
-          <Stack>
-            <Text fz={14} fw={"500"}>
-              Sâu bệnh & Giải pháp
-            </Text>
-            <SunEditor
-              setContents={form.values.cultivationTechniques}
-              onChange={(val) => form.setFieldValue("pestSolutions", val)}
-              setOptions={{ height: "200px" }}
-            />
-          </Stack>
+          {form.getValues().techinicalDocType === "file" ? (
+            <Dropzone
+              onDrop={(files) => console.log("accepted files", files)}
+              onReject={(files) => console.log("rejected files", files)}
+              maxSize={5 * 1024 ** 2}
+              accept={["application/pdf"]}
+            >
+              <Group
+                justify="center"
+                gap="xl"
+                mih={220}
+                style={{ pointerEvents: "none" }}
+              >
+                <Dropzone.Accept>
+                  <IconUpload
+                    size={52}
+                    color="var(--mantine-color-blue-6)"
+                    stroke={1.5}
+                  />
+                </Dropzone.Accept>
+                <Dropzone.Reject>
+                  <IconX
+                    size={52}
+                    color="var(--mantine-color-red-6)"
+                    stroke={1.5}
+                  />
+                </Dropzone.Reject>
+                <Dropzone.Idle>
+                  <IconPhoto
+                    size={52}
+                    color="var(--mantine-color-dimmed)"
+                    stroke={1.5}
+                  />
+                </Dropzone.Idle>
+
+                <div>
+                  <Text size="xl" inline>
+                    Bỏ và thả nội dung kỹ thuật canh tác
+                  </Text>
+                  <Text size="sm" c="dimmed" inline mt={7}>
+                    Đính kèm nội dung kỹ thuật canh tác (tối đa 5MB)
+                  </Text>
+                </div>
+              </Group>
+            </Dropzone>
+          ) : (
+            <div>
+              <label style={{ fontSize: 14, fontWeight: 500 }}>
+                Kỹ thuật canh tác
+              </label>
+              <SunEditor
+                setOptions={{
+                  height: "200px",
+                  buttonList: [
+                    ["undo", "redo"],
+                    ["font", "fontSize", "formatBlock"],
+                    ["paragraphStyle", "blockquote"],
+                    [
+                      "bold",
+                      "underline",
+                      "italic",
+                      "strike",
+                      "subscript",
+                      "superscript",
+                    ],
+                    ["fontColor", "hiliteColor", "textStyle"],
+                    ["removeFormat"],
+                    "/", // Line break
+                    ["outdent", "indent"],
+                    ["align", "horizontalRule", "list", "lineHeight"],
+                    ["table", "link", "image", "video", "audio" /** ,'math' */], // You must add the 'katex' library at options to use the 'math' plugin.
+                    /** ['imageGallery'] */ // You must add the "imageGalleryUrl".
+                    ["fullScreen", "showBlocks", "codeView"],
+                    ["preview", "print"],
+                    ["save", "template"],
+                    /** ['dir', 'dir_ltr', 'dir_rtl'] */ // "dir": Toggle text direction, "dir_ltr": Right to Left, "dir_rtl": Left to Right
+                  ],
+                }}
+              />
+            </div>
+          )}
+          <Radio.Group
+            label="Tiêu chuẩn chất lượng"
+            value={form.getValues().standardDocType}
+            onChange={(val) => form.setFieldValue("standardDocType", val)}
+          >
+            <Group mt="xs">
+              <Radio value="file" label="Tải file PDF" />
+              <Radio value="editor" label="Tiêu chuẩn chất lượng" />
+            </Group>
+          </Radio.Group>
+
+          {form.getValues().standardDocType === "file" ? (
+            <Dropzone
+              onDrop={(files) => console.log("accepted files", files)}
+              onReject={(files) => console.log("rejected files", files)}
+              maxSize={5 * 1024 ** 2}
+              accept={["application/pdf"]}
+            >
+              <Group
+                justify="center"
+                gap="xl"
+                mih={220}
+                style={{ pointerEvents: "none" }}
+              >
+                <Dropzone.Accept>
+                  <IconUpload
+                    size={52}
+                    color="var(--mantine-color-blue-6)"
+                    stroke={1.5}
+                  />
+                </Dropzone.Accept>
+                <Dropzone.Reject>
+                  <IconX
+                    size={52}
+                    color="var(--mantine-color-red-6)"
+                    stroke={1.5}
+                  />
+                </Dropzone.Reject>
+                <Dropzone.Idle>
+                  <IconPhoto
+                    size={52}
+                    color="var(--mantine-color-dimmed)"
+                    stroke={1.5}
+                  />
+                </Dropzone.Idle>
+
+                <div>
+                  <Text size="xl" inline>
+                    Bỏ và thả nội dung tiêu chuẩn chất lượng
+                  </Text>
+                  <Text size="sm" c="dimmed" inline mt={7}>
+                    Đính kèm nội dung tiêu chuẩn chất lượng (tối đa 5MB)
+                  </Text>
+                </div>
+              </Group>
+            </Dropzone>
+          ) : (
+            <div>
+              <label style={{ fontSize: 14, fontWeight: 500 }}>
+                Tiêu chuẩn chất lượng
+              </label>
+              <SunEditor
+                setOptions={{
+                  height: "200px",
+                  buttonList: [
+                    ["undo", "redo"],
+                    ["font", "fontSize", "formatBlock"],
+                    ["paragraphStyle", "blockquote"],
+                    [
+                      "bold",
+                      "underline",
+                      "italic",
+                      "strike",
+                      "subscript",
+                      "superscript",
+                    ],
+                    ["fontColor", "hiliteColor", "textStyle"],
+                    ["removeFormat"],
+                    "/", // Line break
+                    ["outdent", "indent"],
+                    ["align", "horizontalRule", "list", "lineHeight"],
+                    ["table", "link", "image", "video", "audio" /** ,'math' */], // You must add the 'katex' library at options to use the 'math' plugin.
+                    /** ['imageGallery'] */ // You must add the "imageGalleryUrl".
+                    ["fullScreen", "showBlocks", "codeView"],
+                    ["preview", "print"],
+                    ["save", "template"],
+                    /** ['dir', 'dir_ltr', 'dir_rtl'] */ // "dir": Toggle text direction, "dir_ltr": Right to Left, "dir_rtl": Left to Right
+                  ],
+                }}
+              />
+            </div>
+          )}
+          <Radio.Group
+            label="Giải pháp phòng trừ sâu bệnh"
+            value={form.getValues().pestDocType}
+            onChange={(val) => form.setFieldValue("pestDocType", val)}
+          >
+            <Group mt="xs">
+              <Radio value="file" label="Tải file PDF" />
+              <Radio value="editor" label="Giải pháp phòng trừ sâu bệnh" />
+            </Group>
+          </Radio.Group>
+
+          {form.getValues().pestDocType === "file" ? (
+            <Dropzone
+              onDrop={(files) => console.log("accepted files", files)}
+              onReject={(files) => console.log("rejected files", files)}
+              maxSize={5 * 1024 ** 2}
+              accept={["application/pdf"]}
+            >
+              <Group
+                justify="center"
+                gap="xl"
+                mih={220}
+                style={{ pointerEvents: "none" }}
+              >
+                <Dropzone.Accept>
+                  <IconUpload
+                    size={52}
+                    color="var(--mantine-color-blue-6)"
+                    stroke={1.5}
+                  />
+                </Dropzone.Accept>
+                <Dropzone.Reject>
+                  <IconX
+                    size={52}
+                    color="var(--mantine-color-red-6)"
+                    stroke={1.5}
+                  />
+                </Dropzone.Reject>
+                <Dropzone.Idle>
+                  <IconPhoto
+                    size={52}
+                    color="var(--mantine-color-dimmed)"
+                    stroke={1.5}
+                  />
+                </Dropzone.Idle>
+
+                <div>
+                  <Text size="xl" inline>
+                    Bỏ và thả nội dung giải pháp phòng trừ sâu bệnh
+                  </Text>
+                  <Text size="sm" c="dimmed" inline mt={7}>
+                    Đính kèm nội dung giải pháp phòng trừ sâu bệnh (tối đa 5MB)
+                  </Text>
+                </div>
+              </Group>
+            </Dropzone>
+          ) : (
+            <div>
+              <label style={{ fontSize: 14, fontWeight: 500 }}>
+                Giải pháp phòng trừ sâu bệnh
+              </label>
+              <SunEditor
+                setOptions={{
+                  height: "200px",
+                  buttonList: [
+                    ["undo", "redo"],
+                    ["font", "fontSize", "formatBlock"],
+                    ["paragraphStyle", "blockquote"],
+                    [
+                      "bold",
+                      "underline",
+                      "italic",
+                      "strike",
+                      "subscript",
+                      "superscript",
+                    ],
+                    ["fontColor", "hiliteColor", "textStyle"],
+                    ["removeFormat"],
+                    "/", // Line break
+                    ["outdent", "indent"],
+                    ["align", "horizontalRule", "list", "lineHeight"],
+                    ["table", "link", "image", "video", "audio" /** ,'math' */], // You must add the 'katex' library at options to use the 'math' plugin.
+                    /** ['imageGallery'] */ // You must add the "imageGalleryUrl".
+                    ["fullScreen", "showBlocks", "codeView"],
+                    ["preview", "print"],
+                    ["save", "template"],
+                    /** ['dir', 'dir_ltr', 'dir_rtl'] */ // "dir": Toggle text direction, "dir_ltr": Right to Left, "dir_rtl": Left to Right
+                  ],
+                }}
+              />
+            </div>
+          )}
 
           <Group justify="flex-end" mt="md">
             <Button type="submit" radius={4}>

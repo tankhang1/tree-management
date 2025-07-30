@@ -61,30 +61,48 @@ const ConfirmStep = () => {
       <Title order={3}>Xác nhận kế hoạch canh tác</Title>
 
       <Group align="flex-start" grow>
-        <Card withBorder>
-          <Stack gap={4}>
-            <Group>
-              <Text fw={500}>Mùa vụ:</Text>
-              <Text>{data.season}</Text>
-            </Group>
-            <Group>
-              <Text fw={500}>Nhóm cây trồng:</Text>
-              <Text>{data.treeGroup}</Text>
-            </Group>
-            <Group>
-              <Text fw={500}>Danh mục cây trồng:</Text>
-              <Text>{data.treeCategory}</Text>
-            </Group>
-            <Group>
-              <Text fw={500}>Cây trồng:</Text>
-              <Text>{data.crop}</Text>
-            </Group>
-            <Group>
-              <Text fw={500}>Thời gian chu kỳ:</Text>
-              <Text>{data.duration} ngày</Text>
-            </Group>
-          </Stack>
-        </Card>
+        <Stack>
+          <Card withBorder>
+            <Stack gap={4}>
+              <Group>
+                <Text fw={500}>Mùa vụ:</Text>
+                <Text>{data.season}</Text>
+              </Group>
+              <Group>
+                <Text fw={500}>Nhóm cây trồng:</Text>
+                <Text>{data.treeGroup}</Text>
+              </Group>
+              <Group>
+                <Text fw={500}>Danh mục cây trồng:</Text>
+                <Text>{data.treeCategory}</Text>
+              </Group>
+              <Group>
+                <Text fw={500}>Cây trồng:</Text>
+                <Text>{data.crop}</Text>
+              </Group>
+              <Group>
+                <Text fw={500}>Thời gian chu kỳ:</Text>
+                <Text>{data.duration} ngày</Text>
+              </Group>
+            </Stack>
+          </Card>
+          <Card withBorder>
+            <Stack gap={4}>
+              <Group>
+                <IconMapPin size={16} />
+                <Text>{data.zone}</Text>
+              </Group>
+              <Group>
+                <IconLayersSubtract size={16} />
+                <Text>{data.area}</Text>
+              </Group>
+              <Group>
+                <IconClipboardText size={16} />
+                <Text>{data.plot}</Text>
+              </Group>
+            </Stack>
+          </Card>
+        </Stack>
         <Card withBorder>
           <Group grow gap={4} align="flex-start">
             <Stack align="start">
@@ -122,24 +140,6 @@ const ConfirmStep = () => {
           </Group>
         </Card>
       </Group>
-
-      <Divider label="Vị trí canh tác" labelPosition="center" my="md" />
-      <Card withBorder>
-        <Stack gap={4}>
-          <Group>
-            <IconMapPin size={16} />
-            <Text>{data.zone}</Text>
-          </Group>
-          <Group>
-            <IconLayersSubtract size={16} />
-            <Text>{data.area}</Text>
-          </Group>
-          <Group>
-            <IconClipboardText size={16} />
-            <Text>{data.plot}</Text>
-          </Group>
-        </Stack>
-      </Card>
 
       <Divider label="Danh sách giai đoạn" labelPosition="center" my="md" />
 

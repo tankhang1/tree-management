@@ -140,7 +140,7 @@ const ConfirmStep = () => {
 
       <Divider label="Chu kỳ sinh trưởng" labelPosition="center" my="md" />
 
-      <Stack>
+      <Group wrap="nowrap" gap="md">
         {data.growthCycles.map((cycle, idx) => (
           <Card withBorder key={idx} shadow="xs">
             <Stack>
@@ -159,7 +159,7 @@ const ConfirmStep = () => {
             </Stack>
           </Card>
         ))}
-      </Stack>
+      </Group>
 
       <Divider label="Danh sách hàng" labelPosition="center" my="md" />
 

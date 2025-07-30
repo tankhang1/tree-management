@@ -51,71 +51,72 @@ const ConfirmStep = ({
       <Stack gap="xl" mt={"md"}>
         <Title order={3}>Xác nhận thông tin trồng cây</Title>
         <Card withBorder radius="md" shadow="xs" p="md">
-          <Group align="flex-start" justify="space-between">
-            <Stack gap="xs" flex={1}>
-              <Group justify="apart">
-                <Text fw={500}>Vùng trồng:</Text>
-                <Badge>{area}</Badge>
-              </Group>
-              <Group justify="apart">
-                <Text fw={500}>Khu vực:</Text>
-                <Badge>{zone}</Badge>
-              </Group>
-              <Group justify="apart">
-                <Text fw={500}>Lô:</Text>
-                <Badge>{block}</Badge>
-              </Group>
-              {row && (
+          <Group grow align="flex-start" justify="space-between">
+            <Group align="flex-start" grow>
+              <Stack gap="xs" flex={1}>
                 <Group justify="apart">
-                  <Text fw={500}>Hàng:</Text>
-                  <Badge>{row}</Badge>
+                  <Text fw={500}>Vùng trồng:</Text>
+                  <Badge>{area}</Badge>
                 </Group>
-              )}
-              {plantingDate && (
                 <Group justify="apart">
-                  <Text fw={500}>Ngày trồng:</Text>
-                  <Text>{plantingDate}</Text>
+                  <Text fw={500}>Khu vực:</Text>
+                  <Badge>{zone}</Badge>
                 </Group>
-              )}
-              <Group justify="apart">
-                <Text fw={500}>Phương pháp canh tác:</Text>
-                <Text>{farmingMethod}</Text>
-              </Group>
-              <Group justify="apart">
-                <Text fw={500}>Phương pháp tưới tiêu:</Text>
-                <Text>{irrigation}</Text>
-              </Group>
+                <Group justify="apart">
+                  <Text fw={500}>Lô:</Text>
+                  <Badge>{block}</Badge>
+                </Group>
+                {row && (
+                  <Group justify="apart">
+                    <Text fw={500}>Hàng:</Text>
+                    <Badge>{row}</Badge>
+                  </Group>
+                )}
+                {plantingDate && (
+                  <Group justify="apart">
+                    <Text fw={500}>Ngày trồng:</Text>
+                    <Text>{plantingDate}</Text>
+                  </Group>
+                )}
+                <Group justify="apart">
+                  <Text fw={500}>Phương pháp canh tác:</Text>
+                  <Text>{farmingMethod}</Text>
+                </Group>
+                <Group justify="apart">
+                  <Text fw={500}>Phương pháp tưới tiêu:</Text>
+                  <Text>{irrigation}</Text>
+                </Group>
+              </Stack>
+              <Stack gap="xs">
+                <Group justify="apart">
+                  <Text fw={500}>Loại cây trồng:</Text>
+                  <Text>{tree.type}</Text>
+                </Group>
+                <Group justify="apart">
+                  <Text fw={500}>Giống cây:</Text>
+                  <Text>{tree.variety}</Text>
+                </Group>
+                <Group justify="apart">
+                  <Text fw={500}>Hạt giống:</Text>
+                  <Text>{tree.seed}</Text>
+                </Group>
+                <Group justify="apart">
+                  <Text fw={500}>Số lượng cây:</Text>
+                  <Text>{locations.length}</Text>
+                </Group>
+              </Stack>
+            </Group>
+            <Stack justify="center" align="center" flex={1}>
+              <Image
+                flex={1}
+                src={imageUrls[0]}
+                w={300}
+                h={300}
+                fit="cover"
+                radius="md"
+              />
             </Stack>
-            <Image
-              flex={1}
-              src={imageUrls[0]}
-              w={300}
-              h={300}
-              fit="cover"
-              radius="md"
-            />
           </Group>
-        </Card>
-        <Divider label="Thông tin cây trồng" labelPosition="center" />
-        <Card withBorder radius="md" shadow="xs" p="md">
-          <Stack gap="xs">
-            <Group justify="apart">
-              <Text fw={500}>Loại cây trồng:</Text>
-              <Text>{tree.type}</Text>
-            </Group>
-            <Group justify="apart">
-              <Text fw={500}>Giống cây:</Text>
-              <Text>{tree.variety}</Text>
-            </Group>
-            <Group justify="apart">
-              <Text fw={500}>Hạt giống:</Text>
-              <Text>{tree.seed}</Text>
-            </Group>
-            <Group justify="apart">
-              <Text fw={500}>Số lượng cây:</Text>
-              <Text>{locations.length}</Text>
-            </Group>
-          </Stack>
         </Card>
         <Divider label="Vị trí GPS từng cây" labelPosition="center" />
         {locations.length > 0 && (

@@ -661,37 +661,39 @@ const AreaManagementAddRegionPage = () => {
 
         {active === 2 && (
           <Stack mt="md" gap="lg">
-            <Card withBorder radius="md" shadow="xs" p="md">
-              <Title order={5} mb="xs">
-                📌 Thông tin vùng trồng
-              </Title>
-              <Text size="sm">
-                <strong>Nhân viên quản lý:</strong>{" "}
-                {form.values.region.employee}
-              </Text>
-              <Text size="sm">
-                <strong>Mã vùng:</strong> {form.values.region.codeSystem}
-              </Text>
-            </Card>
+            <Group grow align="flex-start">
+              <Card withBorder radius="md" shadow="xs" p="md">
+                <Title order={5} mb="xs">
+                  📌 Thông tin vùng trồng
+                </Title>
+                <Text size="sm">
+                  <strong>Nhân viên quản lý:</strong>{" "}
+                  {form.values.region.employee}
+                </Text>
+                <Text size="sm">
+                  <strong>Mã vùng:</strong> {form.values.region.codeSystem}
+                </Text>
+              </Card>
 
-            <Card withBorder radius="md" shadow="xs" p="md">
-              <Title order={5} mb="xs">
-                📍 Khu vực đã chọn
-              </Title>
-              {form.values.areas.map((area) => (
-                <Box key={area.code} mb="sm">
-                  <Text size="sm">
-                    <strong>{area.name}</strong> (Mã: {area.code})
-                  </Text>
-                </Box>
-              ))}
-            </Card>
+              <Card withBorder radius="md" shadow="xs" p="md">
+                <Title order={5} mb="xs">
+                  📍 Khu vực đã chọn
+                </Title>
+                {form.values.areas.map((area) => (
+                  <Box key={area.code} mb="sm">
+                    <Text size="sm">
+                      <strong>{area.name}</strong> (Mã: {area.code})
+                    </Text>
+                  </Box>
+                ))}
+              </Card>
+            </Group>
 
             <Card withBorder radius="md" shadow="xs" p="md">
               <Title order={5} mb="xs">
                 🌱 Thông tin các lô cây trồng
               </Title>
-              <Stack gap="sm">
+              <Group gap="sm">
                 {form.values.plots.map((plot) => (
                   <Card key={plot.id} withBorder radius="sm" p="sm">
                     <Group justify="space-between" mb="xs">
@@ -724,7 +726,7 @@ const AreaManagementAddRegionPage = () => {
                     ))}
                   </Card>
                 ))}
-              </Stack>
+              </Group>
             </Card>
           </Stack>
         )}

@@ -108,154 +108,158 @@ const PlantManagementTreeAddPage = () => {
 
       <form onSubmit={form.onSubmit(handleSubmit)}>
         {activeStep === 0 && (
-          <Stack mt="md" gap="xs">
-            <Select
-              label="Nhóm cây trồng"
-              placeholder="Chọn nhóm cây trồng"
-              radius={4}
-            />
-            <Text fw={500} fz={15}>
-              Danh mục cây trồng (chọn một)
-            </Text>
-            <TextInput
-              placeholder="Tìm kiếm danh mục cây"
-              radius={4}
-              leftSection={<IconSearch size={18} />}
-            />
-            <CropCards selected="" plants={cropOptions} onSelect={() => {}} />
-            <Text fw={500} fz={15}>
-              Giống cây trồng (chọn một)
-            </Text>
-            <TextInput
-              leftSection={<IconSearch size={18} />}
-              radius={4}
-              placeholder="Tìm kiếm giống cây trồng"
-            />
-            <SeedCards selected="" seeds={seedOptions} onSelect={() => {}} />
-            <TextInput
-              label="Mã cây"
-              placeholder="Mã cây"
-              required
-              {...form.getInputProps("id")}
-              radius={4}
-            />
-            <Stack>
+          <Group grow align="flex-start" mt="md" gap="xs">
+            <Stack gap={"xs"}>
               <Select
-                label="Hạt giống cây (chọn một)"
-                placeholder="Chọn giống cây"
+                label="Nhóm cây trồng"
+                placeholder="Chọn nhóm cây trồng"
                 radius={4}
               />
-              <ScrollAreaAutosize>
-                <Group wrap="nowrap">
-                  <SeedCard
-                    backgroundImage="https://food-map.s3.ap-southeast-1.amazonaws.com/news/2021/03/sau-rieng-ri6-3.jpg"
-                    seedCode="SR-RI6"
-                    name="Hạt giống RI6"
-                    provider="Công ty giống cây trồng"
-                    origin="Việt Nam"
-                    germinationRate={85}
-                    yield={25}
-                    description="Giống RI6 cho năng suất cao, cơm vàng đậm, vị ngọt thơm"
-                  />
-                  <SeedCard
-                    backgroundImage="https://food-map.s3.ap-southeast-1.amazonaws.com/news/2021/03/sau-rieng-ri6-3.jpg"
-                    seedCode="SR-RI4"
-                    name="Hạt giống RI4"
-                    provider="Công ty giống cây trồng"
-                    origin="Việt Nam"
-                    germinationRate={85}
-                    yield={25}
-                    description="Giống RI6 cho năng suất cao, cơm vàng đậm, vị ngọt thơm"
-                  />
+              <Text fw={500} fz={15}>
+                Danh mục cây trồng (chọn một)
+              </Text>
+              <TextInput
+                placeholder="Tìm kiếm danh mục cây"
+                radius={4}
+                leftSection={<IconSearch size={18} />}
+              />
+              <CropCards selected="" plants={cropOptions} onSelect={() => {}} />
+              <Text fw={500} fz={15}>
+                Giống cây trồng (chọn một)
+              </Text>
+              <TextInput
+                leftSection={<IconSearch size={18} />}
+                radius={4}
+                placeholder="Tìm kiếm giống cây trồng"
+              />
+              <SeedCards selected="" seeds={seedOptions} onSelect={() => {}} />
+              <TextInput
+                label="Mã cây"
+                placeholder="Mã cây"
+                required
+                {...form.getInputProps("id")}
+                radius={4}
+              />
+              <Stack>
+                <Select
+                  label="Hạt giống cây (chọn một)"
+                  placeholder="Chọn giống cây"
+                  radius={4}
+                />
+                <ScrollAreaAutosize>
+                  <Group wrap="nowrap">
+                    <SeedCard
+                      backgroundImage="https://food-map.s3.ap-southeast-1.amazonaws.com/news/2021/03/sau-rieng-ri6-3.jpg"
+                      seedCode="SR-RI6"
+                      name="Hạt giống RI6"
+                      provider="Công ty giống cây trồng"
+                      origin="Việt Nam"
+                      germinationRate={85}
+                      yield={25}
+                      description="Giống RI6 cho năng suất cao, cơm vàng đậm, vị ngọt thơm"
+                    />
+                    <SeedCard
+                      backgroundImage="https://food-map.s3.ap-southeast-1.amazonaws.com/news/2021/03/sau-rieng-ri6-3.jpg"
+                      seedCode="SR-RI4"
+                      name="Hạt giống RI4"
+                      provider="Công ty giống cây trồng"
+                      origin="Việt Nam"
+                      germinationRate={85}
+                      yield={25}
+                      description="Giống RI6 cho năng suất cao, cơm vàng đậm, vị ngọt thơm"
+                    />
 
-                  <SeedCard
-                    backgroundImage="https://food-map.s3.ap-southeast-1.amazonaws.com/news/2021/03/sau-rieng-ri6-3.jpg"
-                    seedCode="SR-RI3"
-                    name="Hạt giống RI3"
-                    provider="Công ty giống cây trồng"
-                    origin="Việt Nam"
-                    germinationRate={85}
-                    yield={25}
-                    description="Giống RI6 cho năng suất cao, cơm vàng đậm, vị ngọt thơm"
-                  />
-                  <SeedCard
-                    backgroundImage="https://food-map.s3.ap-southeast-1.amazonaws.com/news/2021/03/sau-rieng-ri6-3.jpg"
-                    seedCode="SR-RI3"
-                    name="Hạt giống RI3"
-                    provider="Công ty giống cây trồng"
-                    origin="Việt Nam"
-                    germinationRate={85}
-                    yield={25}
-                    description="Giống RI6 cho năng suất cao, cơm vàng đậm, vị ngọt thơm"
-                  />
-                  <SeedCard
-                    backgroundImage="https://food-map.s3.ap-southeast-1.amazonaws.com/news/2021/03/sau-rieng-ri6-3.jpg"
-                    seedCode="SR-RI3"
-                    name="Hạt giống RI3"
-                    provider="Công ty giống cây trồng"
-                    origin="Việt Nam"
-                    germinationRate={85}
-                    yield={25}
-                    description="Giống RI6 cho năng suất cao, cơm vàng đậm, vị ngọt thơm"
-                  />
-                </Group>
-              </ScrollAreaAutosize>
+                    <SeedCard
+                      backgroundImage="https://food-map.s3.ap-southeast-1.amazonaws.com/news/2021/03/sau-rieng-ri6-3.jpg"
+                      seedCode="SR-RI3"
+                      name="Hạt giống RI3"
+                      provider="Công ty giống cây trồng"
+                      origin="Việt Nam"
+                      germinationRate={85}
+                      yield={25}
+                      description="Giống RI6 cho năng suất cao, cơm vàng đậm, vị ngọt thơm"
+                    />
+                    <SeedCard
+                      backgroundImage="https://food-map.s3.ap-southeast-1.amazonaws.com/news/2021/03/sau-rieng-ri6-3.jpg"
+                      seedCode="SR-RI3"
+                      name="Hạt giống RI3"
+                      provider="Công ty giống cây trồng"
+                      origin="Việt Nam"
+                      germinationRate={85}
+                      yield={25}
+                      description="Giống RI6 cho năng suất cao, cơm vàng đậm, vị ngọt thơm"
+                    />
+                    <SeedCard
+                      backgroundImage="https://food-map.s3.ap-southeast-1.amazonaws.com/news/2021/03/sau-rieng-ri6-3.jpg"
+                      seedCode="SR-RI3"
+                      name="Hạt giống RI3"
+                      provider="Công ty giống cây trồng"
+                      origin="Việt Nam"
+                      germinationRate={85}
+                      yield={25}
+                      description="Giống RI6 cho năng suất cao, cơm vàng đậm, vị ngọt thơm"
+                    />
+                  </Group>
+                </ScrollAreaAutosize>
+              </Stack>
             </Stack>
 
-            <Input.Wrapper label="Ảnh cây trồng">
-              <Dropzone
-                onDrop={(files) => console.log("accepted files", files)}
-                onReject={(files) => console.log("rejected files", files)}
-                maxSize={5 * 1024 ** 2}
-                accept={IMAGE_MIME_TYPE}
-                onChange={() => setPlantImagePreview("")}
-              >
-                <Group
-                  justify="center"
-                  gap="xl"
-                  mih={220}
-                  style={{ pointerEvents: "none" }}
+            <Stack gap={"xs"}>
+              <Input.Wrapper label="Ảnh cây trồng">
+                <Dropzone
+                  onDrop={(files) => console.log("accepted files", files)}
+                  onReject={(files) => console.log("rejected files", files)}
+                  maxSize={5 * 1024 ** 2}
+                  accept={IMAGE_MIME_TYPE}
+                  onChange={() => setPlantImagePreview("")}
                 >
-                  <Dropzone.Accept>
-                    <IconUpload
-                      size={52}
-                      color="var(--mantine-color-blue-6)"
-                      stroke={1.5}
-                    />
-                  </Dropzone.Accept>
-                  <Dropzone.Reject>
-                    <IconX
-                      size={52}
-                      color="var(--mantine-color-red-6)"
-                      stroke={1.5}
-                    />
-                  </Dropzone.Reject>
-                  <Dropzone.Idle>
-                    <IconPhoto
-                      size={52}
-                      color="var(--mantine-color-dimmed)"
-                      stroke={1.5}
-                    />
-                  </Dropzone.Idle>
+                  <Group
+                    justify="center"
+                    gap="xl"
+                    mih={220}
+                    style={{ pointerEvents: "none" }}
+                  >
+                    <Dropzone.Accept>
+                      <IconUpload
+                        size={52}
+                        color="var(--mantine-color-blue-6)"
+                        stroke={1.5}
+                      />
+                    </Dropzone.Accept>
+                    <Dropzone.Reject>
+                      <IconX
+                        size={52}
+                        color="var(--mantine-color-red-6)"
+                        stroke={1.5}
+                      />
+                    </Dropzone.Reject>
+                    <Dropzone.Idle>
+                      <IconPhoto
+                        size={52}
+                        color="var(--mantine-color-dimmed)"
+                        stroke={1.5}
+                      />
+                    </Dropzone.Idle>
 
-                  <div>
-                    <Text size="xl" inline>
-                      Kéo hoặc chọn để tải ảnh lên
-                    </Text>
-                    <Text size="sm" c="dimmed" inline mt={7}>
-                      Giới hạn kích thước ảnh khoản 5MB
-                    </Text>
-                  </div>
-                </Group>
-              </Dropzone>
-            </Input.Wrapper>
+                    <div>
+                      <Text size="xl" inline>
+                        Kéo hoặc chọn để tải ảnh lên
+                      </Text>
+                      <Text size="sm" c="dimmed" inline mt={7}>
+                        Giới hạn kích thước ảnh khoản 5MB
+                      </Text>
+                    </div>
+                  </Group>
+                </Dropzone>
+              </Input.Wrapper>
 
-            <Textarea
-              label="Mô tả"
-              {...form.getInputProps("note")}
-              radius={4}
-            />
-          </Stack>
+              <Textarea
+                label="Mô tả"
+                {...form.getInputProps("note")}
+                radius={4}
+              />
+            </Stack>
+          </Group>
         )}
 
         {activeStep === 1 && (

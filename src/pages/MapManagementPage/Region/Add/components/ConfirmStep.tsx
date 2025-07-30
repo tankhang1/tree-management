@@ -123,7 +123,7 @@ export function ConfirmStep({
 
       <Divider label="📦 Danh sách khu vực" labelPosition="center" />
 
-      <Stack>
+      <Group align="flex-start">
         {zones.map((z, idx) => (
           <Card key={idx} withBorder radius="md" shadow="xs" p="md">
             <Stack gap="xs">
@@ -148,7 +148,7 @@ export function ConfirmStep({
             </Stack>
           </Card>
         ))}
-      </Stack>
+      </Group>
     </Stack>
   );
 }

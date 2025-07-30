@@ -4,6 +4,7 @@ import {
   Card,
   Divider,
   Group,
+  Radio,
   ScrollAreaAutosize,
   Select,
   Stack,
@@ -13,10 +14,17 @@ import {
 } from "@mantine/core";
 import SunEditor from "suneditor-react";
 import { useForm } from "@mantine/form";
-import { IconArrowLeft, IconSearch } from "@tabler/icons-react";
+import {
+  IconArrowLeft,
+  IconPhoto,
+  IconSearch,
+  IconUpload,
+  IconX,
+} from "@tabler/icons-react";
 import { useNavigate } from "react-router-dom";
 import PlantCategoryCard from "./components/PlantCategoryCard";
 import { useState } from "react";
+import { Dropzone } from "@mantine/dropzone";
 type TPlant = {
   code: string;
   scientificName: string;
@@ -58,6 +66,7 @@ const AreaManagementCultivationMethodAddPage = () => {
     initialValues: {
       name: "",
       description: "",
+      docType: "file",
     },
   });
 
@@ -84,39 +93,98 @@ const AreaManagementCultivationMethodAddPage = () => {
         />
 
         <Stack gap={"xs"}>
-          <Text fz={"sm"} fw={500}>
-            Nội dung chi tiết
-          </Text>
-          <SunEditor
-            setOptions={{
-              height: "200px",
-              buttonList: [
-                ["undo", "redo"],
-                ["font", "fontSize", "formatBlock"],
-                ["paragraphStyle", "blockquote"],
-                [
-                  "bold",
-                  "underline",
-                  "italic",
-                  "strike",
-                  "subscript",
-                  "superscript",
-                ],
-                ["fontColor", "hiliteColor", "textStyle"],
-                ["removeFormat"],
-                "/", // Line break
-                ["outdent", "indent"],
-                ["align", "horizontalRule", "list", "lineHeight"],
-                ["table", "link", "image", "video", "audio" /** ,'math' */], // You must add the 'katex' library at options to use the 'math' plugin.
-                /** ['imageGallery'] */ // You must add the "imageGalleryUrl".
-                ["fullScreen", "showBlocks", "codeView"],
-                ["preview", "print"],
-                ["save", "template"],
-                /** ['dir', 'dir_ltr', 'dir_rtl'] */ // "dir": Toggle text direction, "dir_ltr": Right to Left, "dir_rtl": Left to Right
-              ],
-            }}
-            onChange={(content) => form.setFieldValue("description", content)}
-          />
+          <Radio.Group
+            label="Nội dung chi tiết"
+            value={form.getValues().docType}
+            onChange={(val) => form.setFieldValue("docType", val)}
+          >
+            <Group mt="xs">
+              <Radio value="file" label="Tải file PDF" />
+              <Radio value="editor" label="Nội dung chi tiết" />
+            </Group>
+          </Radio.Group>
+
+          {form.getValues().docType === "file" ? (
+            <Dropzone
+              onDrop={(files) => console.log("accepted files", files)}
+              onReject={(files) => console.log("rejected files", files)}
+              maxSize={5 * 1024 ** 2}
+              accept={["application/pdf"]}
+            >
+              <Group
+                justify="center"
+                gap="xl"
+                mih={220}
+                style={{ pointerEvents: "none" }}
+              >
+                <Dropzone.Accept>
+                  <IconUpload
+                    size={52}
+                    color="var(--mantine-color-blue-6)"
+                    stroke={1.5}
+                  />
+                </Dropzone.Accept>
+                <Dropzone.Reject>
+                  <IconX
+                    size={52}
+                    color="var(--mantine-color-red-6)"
+                    stroke={1.5}
+                  />
+                </Dropzone.Reject>
+                <Dropzone.Idle>
+                  <IconPhoto
+                    size={52}
+                    color="var(--mantine-color-dimmed)"
+                    stroke={1.5}
+                  />
+                </Dropzone.Idle>
+
+                <div>
+                  <Text size="xl" inline>
+                    Bỏ và thả nội dung chi tiết vào đây
+                  </Text>
+                  <Text size="sm" c="dimmed" inline mt={7}>
+                    Đính kèm nội dung chi tiết (tối đa 5MB)
+                  </Text>
+                </div>
+              </Group>
+            </Dropzone>
+          ) : (
+            <div>
+              <label style={{ fontSize: 14, fontWeight: 500 }}>
+                Nội dung chi tiết
+              </label>
+              <SunEditor
+                setOptions={{
+                  height: "200px",
+                  buttonList: [
+                    ["undo", "redo"],
+                    ["font", "fontSize", "formatBlock"],
+                    ["paragraphStyle", "blockquote"],
+                    [
+                      "bold",
+                      "underline",
+                      "italic",
+                      "strike",
+                      "subscript",
+                      "superscript",
+                    ],
+                    ["fontColor", "hiliteColor", "textStyle"],
+                    ["removeFormat"],
+                    "/", // Line break
+                    ["outdent", "indent"],
+                    ["align", "horizontalRule", "list", "lineHeight"],
+                    ["table", "link", "image", "video", "audio" /** ,'math' */], // You must add the 'katex' library at options to use the 'math' plugin.
+                    /** ['imageGallery'] */ // You must add the "imageGalleryUrl".
+                    ["fullScreen", "showBlocks", "codeView"],
+                    ["preview", "print"],
+                    ["save", "template"],
+                    /** ['dir', 'dir_ltr', 'dir_rtl'] */ // "dir": Toggle text direction, "dir_ltr": Right to Left, "dir_rtl": Left to Right
+                  ],
+                }}
+              />
+            </div>
+          )}
           <Divider label="Danh mục cây trồng áp dụng" />
           <Group align="flex-start">
             <Stack flex={2}>

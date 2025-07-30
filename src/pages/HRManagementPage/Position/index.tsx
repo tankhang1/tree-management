@@ -134,14 +134,12 @@ const HRManagementPositionPage = () => {
             label="Tên vị trí"
             placeholder="Tên vị trí"
             withAsterisk
-            mt="md"
             {...form.getInputProps("name")}
             radius={4}
           />
           <Textarea
             label="Mô tả"
             placeholder="Mô tả chức năng, nhiệm vụ..."
-            mt="md"
             {...form.getInputProps("description")}
             radius={4}
           />
