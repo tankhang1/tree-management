@@ -234,10 +234,10 @@ export const NAV_BAR = [
         link: PATH.ORDER_MANAGEMENT_QUICK,
       },
 
-      {
-        label: "Đặt hàng (đăng nhập)",
-        link: PATH.ORDER_MANAGEMENT_LOGGED_IN,
-      },
+      // {
+      //   label: "Đặt hàng (đăng nhập)",
+      //   link: PATH.ORDER_MANAGEMENT_LOGGED_IN,
+      // },
       {
         label: "Tạo đơn hàng",
         link: PATH.ORDER_MANAGEMENT_CREATE,

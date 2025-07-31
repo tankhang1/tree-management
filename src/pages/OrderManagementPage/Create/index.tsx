@@ -619,6 +619,88 @@ const OrderManagementCreatePage = () => {
           {/* Step 3: Thông tin hóa đơn */}
           <Stepper.Step label="Bước 3" description="Nhập thông tin thanh toán">
             <Stack gap="md">
+              <Stack>
+                <Select
+                  label="Hợp đồng liên quan (chọn một)"
+                  searchable
+                  placeholder="(Tuỳ chọn)"
+                  radius={4}
+                />
+                <Group>
+                  <Card shadow="sm" padding="md" radius="md" withBorder>
+                    <Group justify="apart" mb="xs">
+                      <Title order={5}>
+                        HĐMB-001 - Hợp đồng mua bán thiết bị tưới
+                      </Title>
+                      <Badge color="blue">Hợp đồng mua bán</Badge>
+                    </Group>
+
+                    <Text size="sm">
+                      <b>Ngày ký:</b> 20/06/2025
+                    </Text>
+                    <Text size="sm">
+                      <b>Bên A:</b> CTY TNHH Thiết bị Nông nghiệp
+                    </Text>
+                    <Text size="sm">
+                      <b>Bên B:</b> Hợp tác xã Rau Sạch Lâm Đồng
+                    </Text>
+                    <Text size="sm">
+                      <b>Loại hợp đồng:</b> Mới
+                    </Text>
+
+                    <Divider my="xs" />
+                    <Text size="sm" lineClamp={2}>
+                      <b>Nội dung:</b> Cung cấp hệ thống tưới tự động và thiết
+                      bị điều khiển trung tâm...
+                    </Text>
+
+                    <Group mt="md" justify="apart">
+                      <Button size="xs" variant="light">
+                        Xem chi tiết
+                      </Button>
+                      <Button size="xs" variant="subtle" color="red">
+                        Huỷ
+                      </Button>
+                    </Group>
+                  </Card>
+                  <Card shadow="sm" padding="md" radius="md" withBorder>
+                    <Group justify="apart" mb="xs">
+                      <Title order={5}>
+                        HĐMB-001 - Hợp đồng mua bán thiết bị tưới
+                      </Title>
+                      <Badge color="blue">Hợp đồng mua bán</Badge>
+                    </Group>
+
+                    <Text size="sm">
+                      <b>Ngày ký:</b> 20/06/2025
+                    </Text>
+                    <Text size="sm">
+                      <b>Bên A:</b> CTY TNHH Thiết bị Nông nghiệp
+                    </Text>
+                    <Text size="sm">
+                      <b>Bên B:</b> Hợp tác xã Rau Sạch Lâm Đồng
+                    </Text>
+                    <Text size="sm">
+                      <b>Loại hợp đồng:</b> Mới
+                    </Text>
+
+                    <Divider my="xs" />
+                    <Text size="sm" lineClamp={2}>
+                      <b>Nội dung:</b> Cung cấp hệ thống tưới tự động và thiết
+                      bị điều khiển trung tâm...
+                    </Text>
+
+                    <Group mt="md" justify="apart">
+                      <Button size="xs" variant="light">
+                        Xem chi tiết
+                      </Button>
+                      <Button size="xs" variant="subtle" color="red">
+                        Huỷ
+                      </Button>
+                    </Group>
+                  </Card>
+                </Group>
+              </Stack>
               <TextInput
                 label="Mã hóa đơn"
                 placeholder="Nhập mã hóa đơn"
@@ -859,6 +941,42 @@ const OrderManagementCreatePage = () => {
                   </Card>
                 </Stack>
                 <Stack gap={"xs"}>
+                  <Card shadow="sm" padding="md" radius="md" withBorder>
+                    <Group justify="apart" mb="xs">
+                      <Title order={5}>
+                        HĐMB-001 - Hợp đồng mua bán thiết bị tưới
+                      </Title>
+                      <Badge color="blue">Hợp đồng mua bán</Badge>
+                    </Group>
+
+                    <Text size="sm">
+                      <b>Ngày ký:</b> 20/06/2025
+                    </Text>
+                    <Text size="sm">
+                      <b>Bên A:</b> CTY TNHH Thiết bị Nông nghiệp
+                    </Text>
+                    <Text size="sm">
+                      <b>Bên B:</b> Hợp tác xã Rau Sạch Lâm Đồng
+                    </Text>
+                    <Text size="sm">
+                      <b>Loại hợp đồng:</b> Mới
+                    </Text>
+
+                    <Divider my="xs" />
+                    <Text size="sm" lineClamp={2}>
+                      <b>Nội dung:</b> Cung cấp hệ thống tưới tự động và thiết
+                      bị điều khiển trung tâm...
+                    </Text>
+
+                    <Group mt="md" justify="apart">
+                      <Button size="xs" variant="light">
+                        Xem chi tiết
+                      </Button>
+                      <Button size="xs" variant="subtle" color="red">
+                        Huỷ
+                      </Button>
+                    </Group>
+                  </Card>
                   {/* Thông tin đơn hàng */}
                   <Card withBorder shadow="sm" radius={4} p="lg">
                     <Title order={5} fw={500} mb="sm">
