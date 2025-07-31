@@ -225,10 +225,10 @@ export const NAV_BAR = [
     icon: IconShoppingCart,
     link: PATH.ORDER_MANAGEMENT,
     children: [
-      {
-        label: "Địa chỉ giao hàng",
-        link: PATH.ORDER_MANAGEMENT_ADDRESS,
-      },
+      // {
+      //   label: "Địa chỉ giao hàng",
+      //   link: PATH.ORDER_MANAGEMENT_ADDRESS,
+      // },
       {
         label: "Đặt hàng nhanh",
         link: PATH.ORDER_MANAGEMENT_QUICK,
