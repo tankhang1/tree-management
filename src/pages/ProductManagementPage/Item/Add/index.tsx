@@ -117,6 +117,8 @@ const ProductManagementItemAddPage = () => {
     importPrice: 50000, // Giá nhập (VNĐ)
     salePrice: 80000, // Giá bán (VNĐ)
     discount: 10, // Chiết khấu (%)
+    weight: 30,
+    packaging: "Bịch 30 kg", // Quy cách
     imageFile: null,
     bomType: "Nguyên Vật Liệu",
   });
@@ -248,40 +250,7 @@ const ProductManagementItemAddPage = () => {
                     </Group>
                   </Dropzone>
                 </Input.Wrapper>
-                <Group grow>
-                  <NumberInput label="Trọng lượng" radius={4} />
-                  <MultiSelect
-                    label="Quy cách"
-                    radius={4}
-                    placeholder="Quy cách"
-                    data={[
-                      {
-                        value: "PKG001",
-                        label: "Hộp giấy nhỏ (50 cái)",
-                      },
-                      {
-                        value: "PKG002",
-                        label: "Túi nilon lớn (100 cái)",
-                      },
-                      {
-                        value: "PKG003",
-                        label: "Bao tải 25kg (25 cái)",
-                      },
-                      {
-                        value: "PKG004",
-                        label: "Bịch nhựa 1kg (10 cái)",
-                      },
-                      {
-                        value: "PKG005",
-                        label: "Thùng carton lớn (20 cái)",
-                      },
-                      {
-                        value: "PKG006",
-                        label: "Hộp nhựa 500ml (30 cái)",
-                      },
-                    ]}
-                  />
-                </Group>
+
                 <MultiSelect
                   label="HashTag"
                   data={[
@@ -537,42 +506,94 @@ const ProductManagementItemAddPage = () => {
           </Stepper.Step>
           <Stepper.Step label="Bước 3" description="Thông tin giá">
             <Stack>
-              <NumberInput
-                label="Giá nhập"
-                placeholder="Nhập giá nhập (VNĐ)"
-                value={form.importPrice}
-                onChange={(value) =>
-                  setForm({ ...form, importPrice: +value || 0 })
-                }
+              <Card withBorder shadow="sm" radius={4} p="md">
+                <Stack gap={"xs"}>
+                  <Group grow>
+                    <NumberInput label="Trọng lượng" radius={4} />
+                    <MultiSelect
+                      label="Quy cách"
+                      radius={4}
+                      placeholder="Quy cách"
+                      data={[
+                        {
+                          value: "PKG001",
+                          label: "Hộp giấy nhỏ (50 cái)",
+                        },
+                        {
+                          value: "PKG002",
+                          label: "Túi nilon lớn (100 cái)",
+                        },
+                        {
+                          value: "PKG003",
+                          label: "Bao tải 25kg (25 cái)",
+                        },
+                        {
+                          value: "PKG004",
+                          label: "Bịch nhựa 1kg (10 cái)",
+                        },
+                        {
+                          value: "PKG005",
+                          label: "Thùng carton lớn (20 cái)",
+                        },
+                        {
+                          value: "PKG006",
+                          label: "Hộp nhựa 500ml (30 cái)",
+                        },
+                      ]}
+                    />
+                  </Group>
+                  <Group grow gap={"xs"} align="flex-start">
+                    <NumberInput
+                      label="Giá nhập"
+                      placeholder="Nhập giá nhập (VNĐ)"
+                      value={form.importPrice}
+                      onChange={(value) =>
+                        setForm({ ...form, importPrice: +value || 0 })
+                      }
+                      radius={4}
+                      min={0}
+                      step={1000}
+                      thousandSeparator=","
+                    />
+                    <NumberInput
+                      label="Giá bán"
+                      placeholder="Nhập giá bán (VNĐ)"
+                      value={form.salePrice}
+                      onChange={(value) =>
+                        setForm({ ...form, salePrice: +value || 0 })
+                      }
+                      radius={4}
+                      min={0}
+                      step={1000}
+                      thousandSeparator=","
+                    />
+                    <NumberInput
+                      label="Chiết khấu (%)"
+                      placeholder="Nhập chiết khấu (%)"
+                      value={form.discount}
+                      onChange={(value) =>
+                        setForm({ ...form, discount: +value || 0 })
+                      }
+                      radius={4}
+                      min={0}
+                      max={100}
+                      step={1}
+                    />
+                  </Group>
+                  <Group justify="flex-end">
+                    <Button radius={4} variant="light" color="red">
+                      Xoá
+                    </Button>
+                  </Group>
+                </Stack>
+              </Card>
+              <Button
                 radius={4}
-                min={0}
-                step={1000}
-                thousandSeparator=","
-              />
-              <NumberInput
-                label="Giá bán"
-                placeholder="Nhập giá bán (VNĐ)"
-                value={form.salePrice}
-                onChange={(value) =>
-                  setForm({ ...form, salePrice: +value || 0 })
-                }
-                radius={4}
-                min={0}
-                step={1000}
-                thousandSeparator=","
-              />
-              <NumberInput
-                label="Chiết khấu (%)"
-                placeholder="Nhập chiết khấu (%)"
-                value={form.discount}
-                onChange={(value) =>
-                  setForm({ ...form, discount: +value || 0 })
-                }
-                radius={4}
-                min={0}
-                max={100}
-                step={1}
-              />
+                variant="light"
+                leftSection={<IconPlus size={18} />}
+              >
+                Thêm mới
+              </Button>
             </Stack>
           </Stepper.Step>
           <Stepper.Step label="Bước 4" description="Xem lại thông tin">
@@ -651,20 +672,95 @@ const ProductManagementItemAddPage = () => {
 
               <Divider label="Thông tin giá" />
               {/* Thông tin giá */}
-              <Card withBorder shadow="sm" radius="md" p="md">
-                <Stack>
-                  <Title order={5}>Thông tin giá</Title>
-                  <Text>
-                    <b>Giá nhập:</b> {form.importPrice.toLocaleString()} VNĐ
-                  </Text>
-                  <Text>
-                    <b>Giá bán:</b> {form.salePrice.toLocaleString()} VNĐ
-                  </Text>
-                  <Text>
-                    <b>Chiết khấu:</b> {form.discount}%
-                  </Text>
-                </Stack>
-              </Card>
+              <Group align="center">
+                <Card
+                  withBorder
+                  shadow="lg"
+                  radius={4}
+                  p="lg"
+                  style={{ maxWidth: 400 }}
+                >
+                  <Stack gap="sm">
+                    <Title order={4} ta="center" c="teal">
+                      Thông tin giá
+                    </Title>
+                    <Divider />
+                    <Text size="sm">
+                      <b>Giá nhập:</b> {form.importPrice.toLocaleString()} VNĐ
+                    </Text>
+                    <Text size="sm">
+                      <b>Giá bán:</b> {form.salePrice.toLocaleString()} VNĐ
+                    </Text>
+                    <Text size="sm">
+                      <b>Chiết khấu:</b> {form.discount}%
+                    </Text>
+                    <Text size="sm">
+                      <b>Trọng lượng:</b> {form.weight || "Chưa nhập"} kg
+                    </Text>
+                    <Text size="sm">
+                      <b>Quy cách:</b> {form.packaging || "Chưa nhập"}
+                    </Text>
+                  </Stack>
+                </Card>
+                <Card
+                  withBorder
+                  shadow="lg"
+                  radius={4}
+                  p="lg"
+                  style={{ maxWidth: 400 }}
+                >
+                  <Stack gap="sm">
+                    <Title order={4} ta="center" c="teal">
+                      Thông tin giá
+                    </Title>
+                    <Divider />
+                    <Text size="sm">
+                      <b>Giá nhập:</b> {form.importPrice.toLocaleString()} VNĐ
+                    </Text>
+                    <Text size="sm">
+                      <b>Giá bán:</b> {form.salePrice.toLocaleString()} VNĐ
+                    </Text>
+                    <Text size="sm">
+                      <b>Chiết khấu:</b> {form.discount}%
+                    </Text>
+                    <Text size="sm">
+                      <b>Trọng lượng:</b> {form.weight || "Chưa nhập"} kg
+                    </Text>
+                    <Text size="sm">
+                      <b>Quy cách:</b> {form.packaging || "Chưa nhập"}
+                    </Text>
+                  </Stack>
+                </Card>
+                <Card
+                  withBorder
+                  shadow="lg"
+                  radius={4}
+                  p="lg"
+                  style={{ maxWidth: 400 }}
+                >
+                  <Stack gap="sm">
+                    <Title order={4} ta="center" c="teal">
+                      Thông tin giá
+                    </Title>
+                    <Divider />
+                    <Text size="sm">
+                      <b>Giá nhập:</b> {form.importPrice.toLocaleString()} VNĐ
+                    </Text>
+                    <Text size="sm">
+                      <b>Giá bán:</b> {form.salePrice.toLocaleString()} VNĐ
+                    </Text>
+                    <Text size="sm">
+                      <b>Chiết khấu:</b> {form.discount}%
+                    </Text>
+                    <Text size="sm">
+                      <b>Trọng lượng:</b> {form.weight || "Chưa nhập"} kg
+                    </Text>
+                    <Text size="sm">
+                      <b>Quy cách:</b> {form.packaging || "Chưa nhập"}
+                    </Text>
+                  </Stack>
+                </Card>
+              </Group>
             </Stack>
           </Stepper.Step>
         </Stepper>

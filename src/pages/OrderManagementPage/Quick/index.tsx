@@ -16,6 +16,7 @@ import {
   Modal,
   ScrollAreaAutosize,
   Textarea,
+  Select,
 } from "@mantine/core";
 import {
   IconCircleCheckFilled,
@@ -56,6 +57,7 @@ const products = [
     sold: 0,
     price: 125000,
     unit: "100 ml",
+    specifications: ["Chai 50ml", "Chai 100ml", "Chai 200ml"],
     note: "ORDER CÓ HÀNG SAU 2-3 NGÀY",
   },
   {
@@ -66,6 +68,7 @@ const products = [
     sold: 0,
     price: 25000,
     unit: "hũ 10 gr",
+    specifications: ["Hũ 10 gr, 28 hũ/1 thùng"],
     note: "ORDER CÓ HÀNG SAU 2-3 NGÀY",
   },
   {
@@ -76,6 +79,7 @@ const products = [
     sold: 0,
     price: 160000,
     unit: "1 kg",
+    specifications: ["1kg", "2kg", "3kg"],
     note: "ORDER CÓ HÀNG SAU 2-3 NGÀY",
   },
   {
@@ -86,6 +90,8 @@ const products = [
     sold: 0,
     price: 240000,
     unit: "1 kg",
+    specifications: ["1kg", "2kg", "3kg"],
+
     note: "ORDER CÓ HÀNG SAU 2-3 NGÀY",
   },
 ];
@@ -124,6 +130,7 @@ const OrderManagementQuickPage = () => {
       img: "https://mutngon.com/upload/images/sau-rieng-monthong-nguyen-mui-say-thang-hoa-gion-don-mut-ngon-nafarm.jpg",
       quantity: 2,
       price: 150000,
+      unit: "trái",
       description: "Mứt sầu riêng Ri6 thơm ngon, đóng gói 250g.",
     },
     {
@@ -131,6 +138,8 @@ const OrderManagementQuickPage = () => {
       name: "Cafe hạt nguyên chất",
       img: "https://caphenguyenchat.net/wp-content/uploads/2021/06/ca-phe-nguyen-chat-co-tac-dung-gi-01.jpg",
       quantity: 1,
+      unit: "kg",
+
       price: 120000,
       description: "Cafe Arabica nguyên chất, rang mộc, đóng gói 500g.",
     },
@@ -147,6 +156,19 @@ const OrderManagementQuickPage = () => {
     (acc, item) => acc + item.price * item.quantity,
     0
   );
+  const onNextStep = () => {
+    if (activeStep < 3) {
+      setActiveStep((prev) => prev + 1);
+    } else {
+      // Handle form submission or final action here
+      console.log("Đặt hàng thành công!");
+    }
+  };
+  const onPreviousStep = () => {
+    if (activeStep > 0) {
+      setActiveStep((prev) => prev - 1);
+    }
+  };
 
   return (
     <Stack gap="lg">
@@ -304,6 +326,15 @@ const OrderManagementQuickPage = () => {
                             </Stack>
                           </Group>
                         </Stack>
+                        <ActionIcon
+                          pos={"absolute"}
+                          variant="light"
+                          right={4}
+                          bottom={4}
+                          radius={4}
+                        >
+                          <IconPlus size={18} />
+                        </ActionIcon>
                       </Card>
                     ))}
                   </Group>
@@ -333,27 +364,40 @@ const OrderManagementQuickPage = () => {
                     </Stack>
                   </Group>
                   <Group align="center" gap="xs">
-                    <Text fw={500}>
-                      {product.price.toLocaleString()} VNĐ/{product.unit}
-                    </Text>
-                    <Group gap={4}>
-                      <ActionIcon color={"gray"} radius={4} disabled>
-                        <IconMinus size={16} />
-                      </ActionIcon>
-                      <Stack
-                        justify="center"
-                        align="center"
-                        bg={"gray.3"}
-                        w={30}
-                        h={30}
-                        style={{ borderRadius: 4 }}
-                      >
-                        <Text>0</Text>
-                      </Stack>
-                      <ActionIcon color={"gray"} radius={4}>
-                        <IconPlus size={16} />
-                      </ActionIcon>
-                    </Group>
+                    <Stack gap={"xs"} align="flex-end">
+                      <Text fw={500}>
+                        {product.price.toLocaleString()} VNĐ/{product.unit}
+                      </Text>
+                      <Select
+                        w={120}
+                        radius={4}
+                        placeholder="Quy cách"
+                        data={product.specifications}
+                      />
+                    </Stack>
+                    <Stack gap={"xs"}>
+                      <Button variant="outline" radius={4}>
+                        Xóa
+                      </Button>
+                      <Group gap={4}>
+                        <ActionIcon color={"gray"} radius={4} disabled>
+                          <IconMinus size={16} />
+                        </ActionIcon>
+                        <Stack
+                          justify="center"
+                          align="center"
+                          bg={"gray.3"}
+                          w={30}
+                          h={30}
+                          style={{ borderRadius: 4 }}
+                        >
+                          <Text>0</Text>
+                        </Stack>
+                        <ActionIcon color={"gray"} radius={4}>
+                          <IconPlus size={16} />
+                        </ActionIcon>
+                      </Group>
+                    </Stack>
                   </Group>
                 </Group>
               ))}
@@ -374,27 +418,7 @@ const OrderManagementQuickPage = () => {
                   </Group>
                 </Stack>
               </Card>
-              <Card withBorder radius={4} shadow="sm">
-                <Stack gap="xs">
-                  <Group justify="space-between">
-                    <Text fw={500}>Địa chỉ nhận hàng</Text>
-                    <Button
-                      variant="transparent"
-                      radius={4}
-                      onClick={() => setOpenedSelectedAddress(true)}
-                    >
-                      Thay đổi
-                    </Button>
-                  </Group>
-                  <Button
-                    variant="light"
-                    radius={4}
-                    onClick={() => setOpenedAddAddressForm(true)}
-                  >
-                    + Tạo địa chỉ
-                  </Button>
-                </Stack>
-              </Card>
+
               {/* <Card withBorder radius={4} shadow="sm">
                 <Stack gap="xs">
                   <Group justify="space-between">
@@ -616,6 +640,27 @@ const OrderManagementQuickPage = () => {
             <Stack flex={1}>
               <Card withBorder radius={4} shadow="sm">
                 <Stack gap="xs">
+                  <Group justify="space-between">
+                    <Text fw={500}>Địa chỉ nhận hàng</Text>
+                    <Button
+                      variant="transparent"
+                      radius={4}
+                      onClick={() => setOpenedSelectedAddress(true)}
+                    >
+                      Thay đổi
+                    </Button>
+                  </Group>
+                  <Button
+                    variant="light"
+                    radius={4}
+                    onClick={() => setOpenedAddAddressForm(true)}
+                  >
+                    + Tạo địa chỉ
+                  </Button>
+                </Stack>
+              </Card>
+              <Card withBorder radius={4} shadow="sm">
+                <Stack gap="xs">
                   <Title order={4}>Thông tin giao hàng</Title>
                   <Group justify="space-between">
                     <Text>
@@ -827,7 +872,7 @@ const OrderManagementQuickPage = () => {
                             Giá: {item.price.toLocaleString()} VNĐ
                           </Text>
                           <Text size="sm" c="dimmed">
-                            Số lượng: {item.quantity}
+                            Số lượng: {item.quantity} ( {item.unit} )
                           </Text>
                         </Stack>
                       </Group>
@@ -940,7 +985,7 @@ const OrderManagementQuickPage = () => {
                             Giá: {item.price.toLocaleString()} VNĐ
                           </Text>
                           <Text size="sm" c="dimmed">
-                            Số lượng: {item.quantity}
+                            Số lượng: {item.quantity} ( {item.unit} )
                           </Text>
                         </Stack>
                       </Group>
@@ -1059,6 +1104,20 @@ const OrderManagementQuickPage = () => {
           </Group>
         </Stepper.Step>
       </Stepper>
+      <Group mt="xl" justify="space-between">
+        <Button
+          radius={4}
+          onClick={onPreviousStep}
+          disabled={activeStep === 0}
+          variant="default"
+        >
+          Quay lại
+        </Button>
+
+        <Button radius={4} onClick={onNextStep}>
+          Tiếp theo
+        </Button>
+      </Group>
       <Modal
         opened={opened}
         onClose={() => setOpened(false)}
