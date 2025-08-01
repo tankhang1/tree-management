@@ -51,19 +51,9 @@ const AreaManagementMapPage = () => {
             radius={4}
             clearable
           />
-          <Select
-            label="Chọn khu vực"
-            placeholder="Chọn khu vực"
-            radius={4}
-            clearable
-          />
-          <Select label="Chọn lô" placeholder="Chọn lô" radius={4} clearable />
-          <Select
-            label="Chọn hàng"
-            placeholder="Chọn hàng"
-            radius={4}
-            clearable
-          />
+          <Select label="Khu vực" placeholder="Khu vực" radius={4} clearable />
+          <Select label="Lô" placeholder="Lô" radius={4} clearable />
+          <Select label="Hàng" placeholder="Hàng" radius={4} clearable />
           <Select
             label="Chọn cây"
             placeholder="Chọn cây"

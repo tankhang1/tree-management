@@ -7,8 +7,10 @@ import {
   Image,
   ScrollArea,
   ActionIcon,
+  Divider,
+  Tooltip,
 } from "@mantine/core";
-import { IconTrash } from "@tabler/icons-react";
+import { IconTrash, IconUser } from "@tabler/icons-react";
 
 const employees = [
   {
@@ -22,17 +24,6 @@ const employees = [
     status: "Đang hoạt động",
     manager: "Lê Thị B",
   },
-  //   {
-  //     id: "EMP002",
-  //     username: "phamthib",
-  //     fullName: "Phạm Thị B",
-  //     dob: "1995-11-20",
-  //     role: "Giám sát hiện trường",
-  //     level: "Nhân viên",
-  //     department: "Phòng Kỹ Thuật",
-  //     status: "Thử việc",
-  //     manager: "Nguyễn Văn A",
-  //   },
 ];
 
 function getStatusColor(status: string) {
@@ -46,80 +37,82 @@ function getStatusColor(status: string) {
 type TEmployeeCard = {
   isDelete?: boolean;
 };
+
 export function EmployeeCardList({ isDelete = false }: TEmployeeCard) {
   return (
     <ScrollArea>
-      <Group>
+      <Group gap="lg" align="flex-start" wrap="wrap" p="xs">
         {employees.map((emp) => (
-          <Card w={300} key={emp.id} withBorder radius="md" shadow="xs" p="md">
+          <Card
+            key={emp.id}
+            withBorder
+            radius="md"
+            shadow="sm"
+            p="md"
+            style={{
+              width: 320,
+              position: "relative",
+              transition: "transform 0.2s ease",
+            }}
+            onMouseEnter={(e) =>
+              (e.currentTarget.style.transform = "scale(1.02)")
+            }
+            onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
+          >
             <Group align="flex-start" gap="md">
               <Image
                 src={
                   "https://cdn.prod.website-files.com/5fbb9b89508062592a9731b1/6448c1ce35d6ffe59e4d6f46_GettyImages-1399565382.jpg"
                 }
-                w={60}
-                height={60}
-                radius={100}
+                w={70}
+                h={70}
+                radius={4}
+                alt="Employee Avatar"
               />
               <Stack gap={4} style={{ flex: 1 }}>
                 <Group justify="space-between">
-                  <Text fw={600}>{emp.fullName}</Text>
+                  <Text fw={600} size="lg">
+                    {emp.fullName}
+                  </Text>
                   <Badge color={getStatusColor(emp.status)}>{emp.status}</Badge>
                 </Group>
+                <Divider my="xs" />
                 <Text size="sm" c="dimmed">
-                  Mã nhân sự:{" "}
-                  <Text span fw={500}>
-                    {emp.id}
-                  </Text>
+                  <b>Mã nhân sự:</b> {emp.id}
                 </Text>
                 <Text size="sm" c="dimmed">
-                  Tài khoản:{" "}
-                  <Text span fw={500}>
-                    {emp.username}
-                  </Text>
+                  <b>Tài khoản:</b> {emp.username}
                 </Text>
                 <Text size="sm" c="dimmed">
-                  Ngày sinh:{" "}
-                  <Text span fw={500}>
-                    {emp.dob}
-                  </Text>
+                  <b>Ngày sinh:</b> {emp.dob}
                 </Text>
                 <Text size="sm" c="dimmed">
-                  Vai trò:{" "}
-                  <Text span fw={500}>
-                    {emp.role}
-                  </Text>
+                  <b>Vai trò:</b> {emp.role}
                 </Text>
                 <Text size="sm" c="dimmed">
-                  Cấp bậc:{" "}
-                  <Text span fw={500}>
-                    {emp.level}
-                  </Text>
+                  <b>Cấp bậc:</b> {emp.level}
                 </Text>
                 <Text size="sm" c="dimmed">
-                  Phòng ban:{" "}
-                  <Text span fw={500}>
-                    {emp.department}
-                  </Text>
+                  <b>Phòng ban:</b> {emp.department}
                 </Text>
                 <Text size="sm" c="dimmed">
-                  Người quản lý:{" "}
-                  <Text span fw={500}>
-                    {emp.manager}
-                  </Text>
+                  <b>Người quản lý:</b> {emp.manager}
                 </Text>
               </Stack>
             </Group>
             {isDelete && (
-              <ActionIcon
-                pos={"absolute"}
-                variant="light"
-                color={"red"}
-                right={16}
-                radius={4}
-              >
-                <IconTrash size={19} />
-              </ActionIcon>
+              <Tooltip label="Xóa nhân sự" position="top" withArrow>
+                <ActionIcon
+                  pos="absolute"
+                  variant="light"
+                  color="red"
+                  right={16}
+                  top={16}
+                  radius={4}
+                >
+                  <IconTrash size={19} />
+                </ActionIcon>
+              </Tooltip>
             )}
           </Card>
         ))}

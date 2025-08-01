@@ -117,7 +117,7 @@ const PurchaseManagementProductAddPage = () => {
     validate: {
       type: (v) => (!v ? "Chọn loại phiếu" : null),
       createdDate: (v) => (!v ? "Chọn ngày thực hiện" : null),
-      area: (v) => (!v ? "Chọn khu vực" : null),
+      area: (v) => (!v ? "Khu vực" : null),
       warehouse: (v) => (!v ? "Chọn kho" : null),
       materialCategory: (v) => (!v ? "Chọn phân loại" : null),
       receiptNumber: (v) => (!v ? "Nhập số phiếu" : null),

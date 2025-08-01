@@ -1,10 +1,10 @@
 import {
   ActionIcon,
-  Autocomplete,
   Button,
   Group,
   Image,
   Menu,
+  Select,
   Stack,
   Text,
   Title,
@@ -49,7 +49,7 @@ const treeCropData: TreeCrop[] = [
     seedType: "Ghép cành",
     harvestMethod: "Thu hoạch bằng sào",
     growthCycle: "Chu kỳ trung bình (3-5 năm)",
-    note: "",
+    note: "Phù hợp với khí hậu nhiệt đới, dễ chăm sóc.",
     imgUrl:
       "https://inkythuatso.com/uploads/thumbnails/800/2023/03/3-hinh-anh-cay-xoai-sai-qua-inkythuatso-16-08-27-30.jpg",
   },
@@ -59,7 +59,28 @@ const treeCropData: TreeCrop[] = [
     seedType: "Chồi cây",
     harvestMethod: "Thu hoạch cuống",
     growthCycle: "Chu kỳ ngắn (9-12 tháng)",
+    note: "Thích hợp với đất phù sa, năng suất cao.",
     imgUrl: "https://providenceportieux.com/images/cay_chuoi.jpg",
+  },
+  {
+    id: "TREE004",
+    name: "Cà phê",
+    seedType: "Hạt giống Robusta",
+    harvestMethod: "Thu hoạch bằng tay",
+    growthCycle: "Chu kỳ dài (4-5 năm)",
+    note: "Yêu cầu đất đỏ bazan, khí hậu mát mẻ.",
+    imgUrl:
+      "https://centurycoffee.vn/uploads/details/2020/07/images/robusta%20sẻ.jpg",
+  },
+  {
+    id: "TREE005",
+    name: "Mít",
+    seedType: "Hạt giống Thái",
+    harvestMethod: "Thu hoạch thủ công",
+    growthCycle: "Chu kỳ trung bình (3-4 năm)",
+    note: "Cần đất thoát nước tốt, chống chịu sâu bệnh.",
+    imgUrl:
+      "https://sasaki.com.vn/wp-content/uploads/2024/05/cach-trong-mit-bang-hat-1.jpg",
   },
 ];
 
@@ -154,23 +175,43 @@ const PlantManagementTreePage = () => {
         </Group>
       </Group>
       <Group>
-        <Autocomplete
+        <Select
+          searchable
           radius={4}
           leftSection={<IconSeedling size={18} />}
           placeholder="Hạt giống"
-          data={["Thu hoạch thủ công"]}
+          data={[
+            "Hạt lai F1",
+            "Ghép cành",
+            "Chồi cây",
+            "Hạt giống Robusta",
+            "Hạt giống Thái",
+          ]}
         />
-        <Autocomplete
+        <Select
+          searchable
           radius={4}
           leftSection={<IconTractor size={18} />}
           placeholder="Hình thức thu hoạch"
-          data={["	Thu hoạch thủ công"]}
+          data={[
+            "Thu hoạch thủ công",
+            "Thu hoạch bằng sào",
+            "Thu hoạch cuống",
+            "Thu hoạch bằng tay",
+          ]}
         />
-        <Autocomplete
+        <Select
+          searchable
           radius={4}
           leftSection={<IconGrowth size={18} />}
           placeholder="Chu kì sinh trưởng"
-          data={["	Thu hoạch thủ công"]}
+          data={[
+            "Chu kỳ dài (5-7 năm)",
+            "Chu kỳ trung bình (3-5 năm)",
+            "Chu kỳ ngắn (9-12 tháng)",
+            "Chu kỳ dài (4-5 năm)",
+            "Chu kỳ trung bình (3-4 năm)",
+          ]}
         />
       </Group>
       <Table columns={treeCropColumns} data={treeCropData} />

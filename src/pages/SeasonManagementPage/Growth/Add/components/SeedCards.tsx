@@ -32,7 +32,13 @@ const SeedCards: React.FC<SeedCardSelectorProps> = ({
             borderColor: selected === seed.code ? "teal" : undefined,
             cursor: "pointer",
             width: 320,
+            position: "relative",
+            transition: "transform 0.2s ease",
           }}
+          onMouseEnter={(e) =>
+            (e.currentTarget.style.transform = "scale(1.02)")
+          }
+          onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
           onClick={() => onSelect(seed.code)}
         >
           <Stack gap="xs">

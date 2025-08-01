@@ -13,7 +13,7 @@ const PlotCards: React.FC<LotCardSelectorProps> = ({
   onSelect,
 }) => {
   return (
-    <Group gap="md" wrap="wrap">
+    <Group gap="md" wrap="wrap" p={"xs"}>
       {lots.map((lot) => (
         <Card
           key={lot.code}
@@ -24,7 +24,13 @@ const PlotCards: React.FC<LotCardSelectorProps> = ({
             borderColor: selected === lot.code ? "teal" : undefined,
             cursor: "pointer",
             minWidth: 280,
+            position: "relative",
+            transition: "transform 0.2s ease",
           }}
+          onMouseEnter={(e) =>
+            (e.currentTarget.style.transform = "scale(1.02)")
+          }
+          onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
           onClick={() => onSelect(lot.code)}
         >
           <Stack gap={4}>

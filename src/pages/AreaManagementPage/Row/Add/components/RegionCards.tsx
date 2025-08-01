@@ -24,7 +24,13 @@ const RegionCardSelector: React.FC<RegionCardSelectorProps> = ({
             borderColor: selected === r.code ? "teal" : undefined,
             cursor: "pointer",
             minWidth: 260,
+            position: "relative",
+            transition: "transform 0.2s ease",
           }}
+          onMouseEnter={(e) =>
+            (e.currentTarget.style.transform = "scale(1.02)")
+          }
+          onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
           onClick={() => onSelect(r.code)}
         >
           <Stack gap={4}>

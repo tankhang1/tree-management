@@ -269,8 +269,8 @@ const AreaManagementAddRegionPage = () => {
   }>({
     initialValues: {
       region: {
-        codeSystem: "",
-        employee: "",
+        codeSystem: "VT-001", // Mã vùng trồng (ví dụ: Vùng Trồng Tây Nguyên)
+        employee: "Nguyễn Văn A", // Tên nhân viên quản lý
       },
       farming: "",
       areas: areaOptions,
@@ -398,6 +398,7 @@ const AreaManagementAddRegionPage = () => {
                 Chọn nhân viên quản lý
               </Button>
             </Group>
+            <EmployeeCardList />
             <Stack gap={"xs"}>
               <Text fw={500} fz={15}>
                 Chọn phân bổ vùng trồng (chọn một)
@@ -484,7 +485,12 @@ const AreaManagementAddRegionPage = () => {
                         />
                         <Select
                           label="Nhóm cây trồng"
-                          data={["Cây ăn trái", "Cây lương thực"]}
+                          data={[
+                            "Cây ăn trái",
+                            "Cây lương thực",
+                            "Cây công nghiệp",
+                            "Cây thuốc",
+                          ]}
                           radius={4}
                         />
                         <Text fw={500} fz={15}>
@@ -740,13 +746,13 @@ const AreaManagementAddRegionPage = () => {
           >
             Quay lại
           </Button>
-          {active < 3 ? (
+          {active < 2 ? (
             <Button radius={4} onClick={nextStep}>
               Tiếp theo
             </Button>
           ) : (
             <Button radius={4} type="submit" color="green">
-              Lưu toàn bộ
+              Lưu
             </Button>
           )}
         </Group>

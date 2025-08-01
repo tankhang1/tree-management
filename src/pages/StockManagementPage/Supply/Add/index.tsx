@@ -179,7 +179,7 @@ const StockManagementIOPage = () => {
     validate: {
       type: (v) => (!v ? "Chọn loại phiếu" : null),
       createdDate: (v) => (!v ? "Chọn ngày thực hiện" : null),
-      area: (v) => (!v ? "Chọn khu vực" : null),
+      area: (v) => (!v ? "Khu vực" : null),
       warehouse: (v) => (!v ? "Chọn kho" : null),
       materialCategory: (v) => (!v ? "Chọn phân loại" : null),
       receiptNumber: (v) => (!v ? "Nhập số phiếu" : null),
@@ -245,7 +245,7 @@ const StockManagementIOPage = () => {
               radius={4}
             />
             <Text fw={500} fz={15}>
-              Chọn khu vực (chọn một)
+              Khu vực (chọn một)
             </Text>
             <Grid>
               {areaGroups.map((group, index) => (

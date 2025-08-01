@@ -38,7 +38,13 @@ const LotCard = ({
       padding="md"
       bg={selected ? "green.0" : "white"}
       onClick={onToggle}
-      style={{ cursor: "pointer" }}
+      style={{
+        cursor: "pointer",
+        position: "relative",
+        transition: "transform 0.2s ease",
+      }}
+      onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.02)")}
+      onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
     >
       <Stack gap={4}>
         <Group justify="space-between">

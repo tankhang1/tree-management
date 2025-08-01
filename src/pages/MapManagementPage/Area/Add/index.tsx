@@ -112,7 +112,7 @@ const MapManagementAddAreaPage = () => {
           <Stack gap="xs" mt="md">
             <Stack gap={"xs"}>
               <Text fw={500} fz={15}>
-                Chọn vùng trồng (chọn một)
+                Vùng Trồng (chọn một)
               </Text>
               <TextInput
                 placeholder="Tìm kiếm vùng trồng"

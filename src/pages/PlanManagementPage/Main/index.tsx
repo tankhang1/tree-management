@@ -193,7 +193,7 @@ const PlanManagementMainPage = () => {
         <Autocomplete
           radius={4}
           leftSection={<IconChartArea />}
-          placeholder="Chọn vùng trồng"
+          placeholder="Vùng Trồng"
           data={["Mùa vụ A"]}
         />
       </Group>

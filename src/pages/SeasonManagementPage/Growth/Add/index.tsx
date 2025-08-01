@@ -235,7 +235,7 @@ const SeasonManagementGrowthAddPage = () => {
               radius={4}
             />
             <ScrollAreaAutosize>
-              <Group wrap="nowrap">
+              <Group wrap="nowrap" p={"xs"}>
                 <SeedCard
                   backgroundImage="https://food-map.s3.ap-southeast-1.amazonaws.com/news/2021/03/sau-rieng-ri6-3.jpg"
                   seedCode="SR-RI6"

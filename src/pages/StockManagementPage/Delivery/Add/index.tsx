@@ -256,7 +256,7 @@ export default function StockManagementAddDeliveryPage() {
               />
               <SelectableEnterpriseCards isCheckbox={false} isMulti={false} />
               <Text fw={500} fz={15}>
-                Chọn khu vực (chọn một)
+                Khu vực (chọn một)
               </Text>
               <Grid>
                 {areaGroups.map((group, index) => (

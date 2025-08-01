@@ -24,7 +24,13 @@ const AreaCards: React.FC<AreaCardSelectorProps> = ({
             borderColor: selected === area.code ? "teal" : undefined,
             cursor: "pointer",
             minWidth: 280,
+            position: "relative",
+            transition: "transform 0.2s ease",
           }}
+          onMouseEnter={(e) =>
+            (e.currentTarget.style.transform = "scale(1.02)")
+          }
+          onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
           onClick={() => onSelect(area.code)}
         >
           <Stack gap={4}>

@@ -173,7 +173,7 @@ const AreaManagementAddZonePage = () => {
             />
             <Stack gap={"xs"}>
               <Text fw={500} fz={15}>
-                Chọn vùng trồng
+                Vùng Trồng
               </Text>
               <RegionCardSelector
                 regions={regionOptions}
@@ -183,7 +183,7 @@ const AreaManagementAddZonePage = () => {
             </Stack>
             <Stack gap={"xs"}>
               <Text fw={500} fz={15}>
-                Chọn khu vực
+                Khu vực
               </Text>
               <AreaCards
                 areas={areaOptions}

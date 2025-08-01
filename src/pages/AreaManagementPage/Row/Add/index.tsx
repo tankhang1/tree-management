@@ -376,7 +376,7 @@ const AreaManagementRowAddPage = () => {
           <Stack mt="md">
             <Stack gap={"xs"}>
               <Text fw={500} fz={15}>
-                Chọn vùng trồng
+                Vùng Trồng
               </Text>
               <TextInput
                 placeholder="Tìm kiếm vùng trồng"
@@ -391,7 +391,7 @@ const AreaManagementRowAddPage = () => {
             </Stack>
             <Stack gap={"xs"}>
               <Text fw={500} fz={15}>
-                Chọn khu vực
+                Khu vực
               </Text>
               <TextInput
                 placeholder="Tìm kiếm khu vực"
@@ -406,7 +406,7 @@ const AreaManagementRowAddPage = () => {
             </Stack>
             <Stack gap={"xs"}>
               <Text fw={500} fz={15}>
-                Chọn lô
+                Lô
               </Text>
               <TextInput
                 placeholder="Tìm kiếm lô"

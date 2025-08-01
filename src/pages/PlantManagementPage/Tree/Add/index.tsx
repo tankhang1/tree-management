@@ -114,6 +114,16 @@ const PlantManagementTreeAddPage = () => {
                 label="Nhóm cây trồng"
                 placeholder="Chọn nhóm cây trồng"
                 radius={4}
+                data={[
+                  "Cây ăn trái",
+                  "Cây công nghiệp",
+                  "Cây lương thực",
+                  "Cây thuốc",
+                  "Cây cảnh",
+                  "Cây lấy gỗ",
+                  "Cây lấy dầu",
+                  "Cây lấy sợi",
+                ]}
               />
               <Text fw={500} fz={15}>
                 Danh mục cây trồng (chọn một)
@@ -147,7 +157,7 @@ const PlantManagementTreeAddPage = () => {
                   radius={4}
                 />
                 <ScrollAreaAutosize>
-                  <Group wrap="nowrap">
+                  <Group wrap="nowrap" p={"xs"}>
                     <SeedCard
                       backgroundImage="https://food-map.s3.ap-southeast-1.amazonaws.com/news/2021/03/sau-rieng-ri6-3.jpg"
                       seedCode="SR-RI6"

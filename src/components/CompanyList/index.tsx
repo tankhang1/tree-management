@@ -43,7 +43,7 @@ export function CompanyList() {
   return (
     <Stack gap={"xs"}>
       <Text fw={500} fz={15}>
-        Chọn doanh nghiệp/ hộ nông dân (chọn một)
+        Doanh nghiệp/ hộ nông dân (chọn một)
       </Text>
       <Autocomplete
         placeholder="Tìm doanh nghiệp/ hộ nông dân"
@@ -52,7 +52,18 @@ export function CompanyList() {
       />
       <Group gap="md">
         {data.map((item, index) => (
-          <Card key={index} shadow="md" padding="lg" radius="md" withBorder>
+          <Card
+            key={index}
+            shadow="md"
+            padding="lg"
+            radius="md"
+            withBorder
+            style={{ position: "relative", transition: "transform 0.2s ease" }}
+            onMouseEnter={(e) =>
+              (e.currentTarget.style.transform = "scale(1.02)")
+            }
+            onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
+          >
             <Group justify="space-between">
               <Group>
                 <IconBuilding size={32} />

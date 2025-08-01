@@ -1,10 +1,10 @@
 import {
   ActionIcon,
-  Autocomplete,
   Badge,
   Button,
   Group,
   Menu,
+  Select,
   Stack,
   Text,
   Title,
@@ -42,12 +42,12 @@ const areaZoneData: AreaZone[] = [
     code: "V-A1",
     name: "Khu vực A1",
     regionName: "Vùng Trồng A",
-    employee: "Nhân viên B",
+    employee: "Nguyễn Văn A",
     area: 10000,
     soilType: "Đất thịt",
     terrain: ["Cao", "Dốc"],
     mainCrop: "Sầu riêng",
-    gps: "x1,y1 x2,y2 x3,y3 x4,y4",
+    gps: "12.3456,78.9101 12.3457,78.9102 12.3458,78.9103 12.3459,78.9104",
     numberOfLots: 5,
   },
   {
@@ -55,12 +55,12 @@ const areaZoneData: AreaZone[] = [
     code: "V-B2",
     name: "Khu vực B2",
     regionName: "Vùng Trồng B",
-    employee: "Nhân viên C",
+    employee: "Trần Thị B",
     area: 8500,
     soilType: "Đất phù sa",
     terrain: ["Thấp", "Trũng"],
     mainCrop: "Xoài",
-    gps: "x1,y1 x2,y2 x3,y3 x4,y4",
+    gps: "13.1234,79.5678 13.1235,79.5679 13.1236,79.5680 13.1237,79.5681",
     numberOfLots: 3,
   },
   {
@@ -68,15 +68,89 @@ const areaZoneData: AreaZone[] = [
     code: "V-C1",
     name: "Khu vực C1",
     regionName: "Vùng Trồng C",
-    employee: "Nhân viên F",
+    employee: "Lê Văn C",
     area: 6000,
     soilType: "Đất cát",
     terrain: ["Bằng phẳng"],
     mainCrop: "Chuối",
-    gps: "x1,y1 x2,y2 x3,y3 x4,y4",
+    gps: "14.5678,80.1234 14.5679,80.1235 14.5680,80.1236 14.5681,80.1237",
+    numberOfLots: 4,
+  },
+  {
+    id: "V004",
+    code: "V-D3",
+    name: "Khu vực D3",
+    regionName: "Vùng Trồng D",
+    employee: "Phạm Thị D",
+    area: 12000,
+    soilType: "Đất đỏ bazan",
+    terrain: ["Cao", "Bằng phẳng"],
+    mainCrop: "Cà phê",
+    gps: "15.6789,81.2345 15.6790,81.2346 15.6791,81.2347 15.6792,81.2348",
+    numberOfLots: 6,
+  },
+  {
+    id: "V005",
+    code: "V-E4",
+    name: "Khu vực E4",
+    regionName: "Vùng Trồng E",
+    employee: "Nguyễn Văn E",
+    area: 9500,
+    soilType: "Đất sét",
+    terrain: ["Dốc", "Thấp"],
+    mainCrop: "Mít",
+    gps: "16.7890,82.3456 16.7891,82.3457 16.7892,82.3458 16.7893,82.3459",
+    numberOfLots: 4,
+  },
+  {
+    id: "V006",
+    code: "V-F5",
+    name: "Khu vực F5",
+    regionName: "Vùng Trồng F",
+    employee: "Hoàng Thị F",
+    area: 7000,
+    soilType: "Đất phù sa",
+    terrain: ["Trũng"],
+    mainCrop: "Bưởi",
+    gps: "17.8901,83.4567 17.8902,83.4568 17.8903,83.4569 17.8904,83.4570",
+    numberOfLots: 3,
+  },
+  {
+    id: "V007",
+    code: "V-G6",
+    name: "Khu vực G6",
+    regionName: "Vùng Trồng G",
+    employee: "Vũ Văn G",
+    area: 11000,
+    soilType: "Đất thịt",
+    terrain: ["Cao", "Dốc"],
+    mainCrop: "Cam",
+    gps: "18.9012,84.5678 18.9013,84.5679 18.9014,84.5680 18.9015,84.5681",
+    numberOfLots: 5,
+  },
+  {
+    id: "V008",
+    code: "V-H7",
+    name: "Khu vực H7",
+    regionName: "Vùng Trồng H",
+    employee: "Trần Văn H",
+    area: 8000,
+    soilType: "Đất đỏ bazan",
+    terrain: ["Bằng phẳng"],
+    mainCrop: "Dừa",
+    gps: "19.0123,85.6789 19.0124,85.6790 19.0125,85.6791 19.0126,85.6792",
     numberOfLots: 4,
   },
 ];
+const mainCrops = ["Sầu riêng", "Xoài", "Chuối", "Cà phê", "Mít", "Bưởi"];
+const soilTypes = [
+  "Đất thịt",
+  "Đất phù sa",
+  "Đất cát",
+  "Đất sét",
+  "Đất đỏ bazan",
+];
+const terrains = ["Cao", "Thấp", "Dốc", "Bằng phẳng", "Trũng"];
 const AreaManagementRegionPage = () => {
   const navigate = useNavigate();
   const onRegionDetail = () => {
@@ -177,25 +251,28 @@ const AreaManagementRegionPage = () => {
         </Group>
       </Group>
       <Group>
-        <Autocomplete
+        <Select
+          searchable
           radius={4}
           leftSection={<IconTree size={18} />}
           placeholder="Chọn cây trồng chính"
-          data={["Sầu riêng"]}
+          data={mainCrops}
         />
-        <Autocomplete
+        <Select
+          searchable
           radius={4}
           leftSection={<IconSandbox size={18} />}
           placeholder="Chọn loại đất"
           multiple
-          data={["Đất thịt"]}
+          data={soilTypes}
         />
-        <Autocomplete
+        <Select
+          searchable
           radius={4}
           multiple
           leftSection={<IconBrandMetabrainz size={18} />}
           placeholder="Chọn địa hình"
-          data={["Cao"]}
+          data={terrains}
         />
       </Group>
       <Table columns={areaZoneColumns} data={areaZoneData} />

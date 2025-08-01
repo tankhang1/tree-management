@@ -32,7 +32,19 @@ const SeedDetailCard = ({
   yieldPerHectare,
 }: SeedDetailCardProps) => {
   return (
-    <Card shadow="md" radius="md" withBorder padding="md" w={300}>
+    <Card
+      shadow="md"
+      radius="md"
+      withBorder
+      padding="md"
+      w={300}
+      style={{
+        position: "relative",
+        transition: "transform 0.2s ease",
+      }}
+      onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.02)")}
+      onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
+    >
       <Card.Section>
         <Image src={imageUrl} height={160} alt={seedName} />
       </Card.Section>

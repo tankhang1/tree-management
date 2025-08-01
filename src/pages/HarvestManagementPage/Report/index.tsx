@@ -111,18 +111,9 @@ const HarvestManagementReportPage = () => {
             locale="vi"
             w={300}
           />
-          <Select
-            label="Chọn vùng trồng"
-            placeholder="Chọn vùng trồng"
-            radius={4}
-          />
-          <Select
-            label="Chọn khu vực"
-            placeholder="Chọn khu vực"
-            radius={4}
-            clearable
-          />
-          <Select label="Chọn lô" placeholder="Chọn lô" radius={4} clearable />
+          <Select label="Vùng Trồng" placeholder="Vùng Trồng" radius={4} />
+          <Select label="Khu vực" placeholder="Khu vực" radius={4} clearable />
+          <Select label="Lô" placeholder="Lô" radius={4} clearable />
           <Button leftSection={<IconFileExcel size={18} />} radius={4}>
             Xuất File
           </Button>

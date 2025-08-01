@@ -206,7 +206,7 @@ const PlanManagementMainAddPage = () => {
       </Group>
       <Stepper active={active} onStepClick={setActive} mb="lg">
         <Stepper.Step label="Bước 1" description="Thông tin mùa vụ" />
-        <Stepper.Step label="Bước 2" description="Chọn vùng trồng" />
+        <Stepper.Step label="Bước 2" description="Vùng Trồng" />
         <Stepper.Step label="Bước 3" description="Thông tin cây trồng" />
         <Stepper.Step label="Bước 4" description="Phân bổ giai đoạn & vật tư" />
         <Stepper.Step label="Bước 5" description="Xác nhận" />

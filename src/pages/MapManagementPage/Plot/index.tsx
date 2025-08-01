@@ -12,7 +12,7 @@ import { useNavigate } from "react-router-dom";
 import { PATH } from "../../../constants/path.constants";
 type TPlot = {
   id: string;
-  areaId: string; // Chọn khu vực
+  areaId: string; // Khu vực
   code: string;
   name: string;
   area: number;
@@ -41,6 +41,66 @@ const areaBlockList: TPlot[] = [
     contour: "Địa hình dốc nhẹ, từ 48m đến 56m",
     gps: "10.779,106.695 10.780,106.696 10.781,106.694",
     numberOfRows: 12,
+  },
+  {
+    id: "L003",
+    areaId: "KV003",
+    code: "LO-C1",
+    name: "Lô C1",
+    area: 1800,
+    contour: "Địa hình bằng phẳng, cao độ 50m",
+    gps: "10.782,106.693 10.783,106.692 10.784,106.694",
+    numberOfRows: 10,
+  },
+  {
+    id: "L004",
+    areaId: "KV004",
+    code: "LO-D1",
+    name: "Lô D1",
+    area: 2500,
+    contour: "Địa hình dốc mạnh, từ 60m đến 70m",
+    gps: "10.785,106.691 10.786,106.690 10.787,106.692",
+    numberOfRows: 15,
+  },
+  {
+    id: "L005",
+    areaId: "KV005",
+    code: "LO-E1",
+    name: "Lô E1",
+    area: 3000,
+    contour: "Địa hình trũng, từ 40m đến 45m",
+    gps: "10.788,106.689 10.789,106.688 10.790,106.690",
+    numberOfRows: 20,
+  },
+  {
+    id: "L006",
+    areaId: "KV006",
+    code: "LO-F1",
+    name: "Lô F1",
+    area: 2200,
+    contour: "Địa hình đồi núi, từ 55m đến 65m",
+    gps: "10.791,106.687 10.792,106.686 10.793,106.688",
+    numberOfRows: 18,
+  },
+  {
+    id: "L007",
+    areaId: "KV007",
+    code: "LO-G1",
+    name: "Lô G1",
+    area: 1700,
+    contour: "Địa hình bằng phẳng, cao độ 52m",
+    gps: "10.794,106.685 10.795,106.684 10.796,106.686",
+    numberOfRows: 9,
+  },
+  {
+    id: "L008",
+    areaId: "KV008",
+    code: "LO-H1",
+    name: "Lô H1",
+    area: 2800,
+    contour: "Địa hình dốc nhẹ, từ 50m đến 58m",
+    gps: "10.797,106.683 10.798,106.682 10.799,106.684",
+    numberOfRows: 14,
   },
 ];
 

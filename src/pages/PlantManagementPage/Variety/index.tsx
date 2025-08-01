@@ -191,7 +191,23 @@ const PlantManagementVarietyPage = () => {
           radius={4}
           leftSection={<IconTree size={18} />}
           placeholder="Cây trồng"
-          data={["Sầu riêng"]}
+          data={[
+            "Sầu riêng",
+            "Xoài",
+            "Chuối",
+            "Cà phê",
+            "Mít",
+            "Bưởi",
+            "Dừa",
+            "Cam",
+            "Chanh",
+            "Ổi",
+            "Táo",
+            "Lê",
+            "Mận",
+            "Vải",
+            "Nhãn",
+          ]}
         />
       </Group>
       <Table columns={cropVarietyColumns} data={cropVarieties} />

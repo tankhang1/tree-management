@@ -112,12 +112,12 @@ const AreaManagementTreeAddPage = () => {
           onStepClick={setActive}
           allowNextStepsSelect={false}
         >
-          {/* STEP 1: CHỌN LÔ / HÀNG */}
+          {/* STEP 1: Lô / HÀNG */}
           <Stepper.Step label="Bước 1" description="Vị trí trồng">
             <Stack>
               <Stack gap={"xs"}>
                 <Text fw={500} fz={15}>
-                  Chọn vùng trồng (chọn một)
+                  Vùng trồng (chọn một)
                 </Text>
                 <TextInput
                   placeholder="Tìm kiếm vùng trồng"
@@ -132,7 +132,7 @@ const AreaManagementTreeAddPage = () => {
               </Stack>
               <Stack gap={"xs"}>
                 <Text fw={500} fz={15}>
-                  Chọn khu vực (chọn một)
+                  Khu vực (chọn một)
                 </Text>
                 <TextInput
                   placeholder="Tìm kiếm khu vực"
@@ -149,7 +149,7 @@ const AreaManagementTreeAddPage = () => {
               <Stack gap={"xs"}>
                 {/**Chỉ 1 lô */}
                 <Text fw={500} fz={15}>
-                  Chọn lô (chọn một)
+                  Lô (chọn một)
                 </Text>
                 <TextInput
                   placeholder="Tìm kiếm lô"
@@ -165,7 +165,7 @@ const AreaManagementTreeAddPage = () => {
 
               {/* <Select
                 label="Hàng"
-                placeholder="Chọn hàng"
+                placeholder="Hàng"
                 radius={4}
                 data={rowOptions}
                 {...form.getInputProps("row")}

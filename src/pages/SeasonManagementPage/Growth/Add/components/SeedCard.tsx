@@ -37,7 +37,16 @@ const SeedCard = ({
   backgroundImage,
 }: SeedCardProps) => {
   return (
-    <Card shadow="sm" radius="md" withBorder padding="md" w={300}>
+    <Card
+      shadow="sm"
+      radius="md"
+      withBorder
+      padding="md"
+      w={300}
+      style={{ position: "relative", transition: "transform 0.2s ease" }}
+      onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.02)")}
+      onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
+    >
       {backgroundImage && (
         <Card.Section>
           <Image src={backgroundImage} height={160} alt={name} fit="cover" />

@@ -25,7 +25,7 @@ import { useNavigate } from "react-router-dom";
 import { PATH } from "../../../constants/path.constants";
 type TPlot = {
   id: string;
-  areaId: string; // Chọn khu vực
+  areaId: string; // Khu vực
   code: string;
   name: string;
   area: number;

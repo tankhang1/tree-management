@@ -25,7 +25,13 @@ const CropCards: React.FC<PlantCardSelectorProps> = ({
             borderColor: selected === plant.code ? "teal" : undefined,
             cursor: "pointer",
             width: 300,
+            position: "relative",
+            transition: "transform 0.2s ease",
           }}
+          onMouseEnter={(e) =>
+            (e.currentTarget.style.transform = "scale(1.02)")
+          }
+          onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
           onClick={() => onSelect(plant.code)}
         >
           <Stack gap="xs">
