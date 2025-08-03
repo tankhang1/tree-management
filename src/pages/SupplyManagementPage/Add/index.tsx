@@ -32,7 +32,7 @@ export default function SupplyManagementPage() {
     image: null,
   });
 
-  const nextStep = () => setActive((prev) => Math.min(prev + 1, 2));
+  const nextStep = () => setActive((prev) => Math.min(prev + 1, 3));
   const prevStep = () => setActive((prev) => Math.max(prev - 1, 0));
 
   return (
@@ -52,6 +52,28 @@ export default function SupplyManagementPage() {
         <Stepper.Step label="Bước 1" description="Thông tin cơ bản" />
         <Stepper.Step label="Bước 2" description="Nhà cung cấp" />
         <Stepper.Step label="Bước 3" description="Xác nhận" />
+        <Stepper.Completed>
+          <Stack align="center" justify="center" mt="xl">
+            <Image
+              src={
+                "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQjPNbBpZeXnXfTuA6AWek-Kj8NYEVbYdG6ayi5bIWarDuryXDrILdKMTd597quLD0PBKM&usqp=CAU"
+              }
+              w={200}
+              fit="cover"
+            />
+            <Text fz={"h2"} ta="center">
+              Thêm mới vật tư thành công!
+            </Text>
+            <Text fz={"md"} ta="center" c="dimmed">
+              Vật tư mới đã được thêm thành công. Bạn có thể xem lại thông tin
+              chi tiết trong danh sách vật tư.
+            </Text>
+
+            <Button size="md" mt="md" radius={4} onClick={() => navigate(-1)}>
+              Xác nhận
+            </Button>
+          </Stack>
+        </Stepper.Completed>
       </Stepper>
 
       {/* Bước 1 */}
@@ -248,12 +270,8 @@ export default function SupplyManagementPage() {
             <Button radius={4} variant="default" onClick={prevStep}>
               Quay lại
             </Button>
-            <Button
-              radius={4}
-              color="teal"
-              onClick={() => alert("✅ Đã thêm vật tư!")}
-            >
-              Xác nhận & Lưu
+            <Button radius={4} onClick={nextStep}>
+              Hoàn thành
             </Button>
           </Group>
         </Stack>

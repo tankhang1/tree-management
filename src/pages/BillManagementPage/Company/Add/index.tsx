@@ -9,6 +9,7 @@ import {
   Title,
   Divider,
   Text,
+  Image,
 } from "@mantine/core";
 import { DatePickerInput } from "@mantine/dates";
 import { IconArrowLeft } from "@tabler/icons-react";
@@ -34,16 +35,11 @@ const BillManagementCompanyAddPage = () => {
   });
 
   const handleNextStep = () => {
-    if (activeStep < 3) setActiveStep((prev) => prev + 1);
+    if (activeStep < 4) setActiveStep((prev) => prev + 1);
   };
 
   const handlePrevStep = () => {
     if (activeStep > 0) setActiveStep((prev) => prev - 1);
-  };
-
-  const handleSubmit = () => {
-    console.log("Hóa đơn mới:", formData);
-    // Thực hiện logic lưu hóa đơn
   };
 
   return (
@@ -307,25 +303,47 @@ const BillManagementCompanyAddPage = () => {
               </Group>
             </Stack>
           </Stepper.Step>
+          <Stepper.Completed>
+            <Stack align="center" justify="center" mt="xl">
+              <Image
+                src={
+                  "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQjPNbBpZeXnXfTuA6AWek-Kj8NYEVbYdG6ayi5bIWarDuryXDrILdKMTd597quLD0PBKM&usqp=CAU"
+                }
+                w={200}
+                fit="cover"
+              />
+              <Text fz={"h2"} ta="center">
+                Thêm mới hoá đơn thành công!
+              </Text>
+              <Text fz={"md"} ta="center" c="dimmed">
+                Bạn đã hoàn thành việc tạo hoá đơn mới. Bạn có thể xem lại thông
+                tin chi tiết trong danh sách hoá đơn.
+              </Text>
+
+              <Button size="md" mt="md" radius={4} onClick={() => navigate(-1)}>
+                Xác nhận
+              </Button>
+            </Stack>
+          </Stepper.Completed>
         </Stepper>
 
         {/* Nút điều hướng */}
-        <Group justify="space-between">
-          {activeStep > 0 && (
+        {activeStep < 4 && (
+          <Group justify="space-between">
             <Button radius={4} variant="outline" onClick={handlePrevStep}>
               Quay lại
             </Button>
-          )}
-          {activeStep < 3 ? (
-            <Button radius={4} onClick={handleNextStep}>
-              Tiếp theo
-            </Button>
-          ) : (
-            <Button radius={4} onClick={handleSubmit}>
-              Hoàn tất
-            </Button>
-          )}
-        </Group>
+            {activeStep < 3 ? (
+              <Button radius={4} onClick={handleNextStep}>
+                Tiếp theo
+              </Button>
+            ) : (
+              <Button radius={4} onClick={handleNextStep}>
+                Hoàn thành
+              </Button>
+            )}
+          </Group>
+        )}
       </Stack>
     </Card>
   );

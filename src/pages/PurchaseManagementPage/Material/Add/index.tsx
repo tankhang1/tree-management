@@ -45,6 +45,7 @@ import { DepartmentCardList } from "../../../HRManagementPage/Team/Add/component
 import { EmployeeCardList } from "../../../HRManagementPage/Team/Add/components/EmployeeCardList";
 import { SelectableSupplierCards } from "../../../SupplyManagementPage/Add/components/SelectableSupplierCards";
 import AreaCard from "../../../StockManagementPage/Delivery/Add/components/AreaCard";
+import { useNavigate } from "react-router-dom";
 
 const areaGroups = [
   {
@@ -150,6 +151,7 @@ const machineTypes = [
   },
 ];
 const PurchaseManagementMaterialAddPage = () => {
+  const navigate = useNavigate();
   const [
     openedFilterEmployee,
     { open: openFilterEmployee, close: closeFilterEmployee },
@@ -187,7 +189,7 @@ const PurchaseManagementMaterialAddPage = () => {
     },
   });
 
-  const nextStep = () => setActive((cur) => (cur < 3 ? cur + 1 : cur));
+  const nextStep = () => setActive((cur) => (cur < 4 ? cur + 1 : cur));
   const prevStep = () => setActive((cur) => (cur > 0 ? cur - 1 : cur));
 
   return (
@@ -733,28 +735,52 @@ const PurchaseManagementMaterialAddPage = () => {
             </Stack>
           </Paper>
         </Stepper.Step>
+        <Stepper.Completed>
+          <Stack align="center" justify="center" mt="xl">
+            <Image
+              src={
+                "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQjPNbBpZeXnXfTuA6AWek-Kj8NYEVbYdG6ayi5bIWarDuryXDrILdKMTd597quLD0PBKM&usqp=CAU"
+              }
+              w={200}
+              fit="cover"
+            />
+            <Text fz={"h2"} ta="center">
+              Thêm mới phiếu xuất nhập thành công!
+            </Text>
+            <Text fz={"md"} ta="center" c="dimmed">
+              Bạn đã hoàn thành việc tạo phiếu xuất nhập mới. Bạn có thể xem lại
+              thông tin chi tiết trong danh sách phiếu xuất nhập.
+            </Text>
+
+            <Button size="md" mt="md" radius={4} onClick={() => navigate(-1)}>
+              Xác nhận
+            </Button>
+          </Stack>
+        </Stepper.Completed>
       </Stepper>
 
-      <Group mt="xl" justify="space-between">
-        <Button
-          radius={4}
-          variant="default"
-          onClick={prevStep}
-          disabled={active === 0}
-        >
-          Quay lại
-        </Button>
-        {active < 3 && (
-          <Button radius={4} onClick={nextStep}>
-            Tiếp theo
+      {active < 4 && (
+        <Group mt="xl" justify="space-between">
+          <Button
+            radius={4}
+            variant="default"
+            onClick={prevStep}
+            disabled={active === 0}
+          >
+            Quay lại
           </Button>
-        )}
-        {active === 3 && (
-          <Button radius={4} color="green">
-            Tạo phiếu
-          </Button>
-        )}
-      </Group>
+          {active < 3 && (
+            <Button radius={4} onClick={nextStep}>
+              Tiếp theo
+            </Button>
+          )}
+          {active === 3 && (
+            <Button radius={4} onClick={nextStep}>
+              Hoàn thành
+            </Button>
+          )}
+        </Group>
+      )}
       <Modal
         opened={openedFilterEmployee}
         onClose={closeFilterEmployee}

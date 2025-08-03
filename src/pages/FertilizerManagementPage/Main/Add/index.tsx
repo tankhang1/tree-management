@@ -281,24 +281,51 @@ const FertilizerManagementMainAddPage = () => {
             <SelectableSupplierCards isCheckbox={false} />
           </Stack>
         </Stepper.Step>
-      </Stepper>
+        <Stepper.Completed>
+          <Stack align="center" justify="center" mt="xl">
+            <Image
+              src={
+                "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQjPNbBpZeXnXfTuA6AWek-Kj8NYEVbYdG6ayi5bIWarDuryXDrILdKMTd597quLD0PBKM&usqp=CAU"
+              }
+              w={200}
+              fit="cover"
+            />
+            <Text fz={"h2"} ta="center">
+              Thêm mới phân bón thành công!
+            </Text>
+            <Text fz={"md"} ta="center" c="dimmed">
+              Phân bón mới đã được thêm thành công. Bạn có thể xem lại thông tin
+              chi tiết trong danh sách phân bón.
+            </Text>
 
-      <Group mt="xl" justify="space-between">
-        <Button
-          variant="default"
-          radius={4}
-          onClick={prevStep}
-          disabled={active === 0}
-        >
-          Quay lại
-        </Button>
-        {active < 2 && (
-          <Button onClick={nextStep} radius={4}>
-            Tiếp theo
+            <Button size="md" mt="md" radius={4} onClick={() => navigate(-1)}>
+              Xác nhận
+            </Button>
+          </Stack>
+        </Stepper.Completed>
+      </Stepper>
+      {active < 3 && (
+        <Group mt="xl" justify="space-between">
+          <Button
+            variant="default"
+            radius={4}
+            onClick={prevStep}
+            disabled={active === 0}
+          >
+            Quay lại
           </Button>
-        )}
-        {active === 2 && <Button radius={4}>Lưu</Button>}
-      </Group>
+          {active < 2 && (
+            <Button onClick={nextStep} radius={4}>
+              Tiếp theo
+            </Button>
+          )}
+          {active === 2 && (
+            <Button onClick={nextStep} radius={4}>
+              Hoàn thành
+            </Button>
+          )}
+        </Group>
+      )}
     </Card>
   );
 };

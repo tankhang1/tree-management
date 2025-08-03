@@ -11,6 +11,7 @@ import {
   Divider,
   Select,
   NumberInput,
+  Image,
 } from "@mantine/core";
 import { Dropzone } from "@mantine/dropzone";
 import {
@@ -34,7 +35,7 @@ const DebtManagementReceivableAddPage = () => {
     "invoice" | "batch"
   >("invoice");
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
-  const nextStep = () => setActiveStep((current) => Math.min(current + 1, 2));
+  const nextStep = () => setActiveStep((current) => Math.min(current + 1, 3));
   const prevStep = () => setActiveStep((current) => Math.max(current - 1, 0));
 
   return (
@@ -332,27 +333,51 @@ const DebtManagementReceivableAddPage = () => {
               </Stack>
             </Card>
           </Stepper.Step>
+          <Stepper.Completed>
+            <Stack align="center" justify="center" mt="xl">
+              <Image
+                src={
+                  "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQjPNbBpZeXnXfTuA6AWek-Kj8NYEVbYdG6ayi5bIWarDuryXDrILdKMTd597quLD0PBKM&usqp=CAU"
+                }
+                w={200}
+                fit="cover"
+              />
+              <Text fz={"h2"} ta="center">
+                Thêm mới công nợ phải thu thành công!
+              </Text>
+              <Text fz={"md"} ta="center" c="dimmed">
+                Công nợ mới đã được thêm thành công. Bạn có thể xem lại thông
+                tin chi tiết trong danh sách công nợ.
+              </Text>
+
+              <Button size="md" mt="md" radius={4} onClick={() => navigate(-1)}>
+                Xác nhận
+              </Button>
+            </Stack>
+          </Stepper.Completed>
         </Stepper>
 
-        <Group justify="space-between">
-          <Button
-            variant="outline"
-            radius={4}
-            onClick={prevStep}
-            disabled={activeStep === 0}
-          >
-            Quay lại
-          </Button>
-          {activeStep === 2 ? (
-            <Button radius={4} color="green">
-              Hoàn tất
+        {activeStep < 3 && (
+          <Group justify="space-between">
+            <Button
+              variant="outline"
+              radius={4}
+              onClick={prevStep}
+              disabled={activeStep === 0}
+            >
+              Quay lại
             </Button>
-          ) : (
-            <Button radius={4} onClick={nextStep}>
-              Tiếp theo
-            </Button>
-          )}
-        </Group>
+            {activeStep === 2 ? (
+              <Button onClick={nextStep} radius={4}>
+                Hoàn thành
+              </Button>
+            ) : (
+              <Button radius={4} onClick={nextStep}>
+                Tiếp theo
+              </Button>
+            )}
+          </Group>
+        )}
       </Stack>
     </Card>
   );

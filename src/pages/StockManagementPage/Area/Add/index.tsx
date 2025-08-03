@@ -10,6 +10,8 @@ import {
   Card,
   Title,
   Divider,
+  Image,
+  Text,
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { useEffect, useState } from "react";
@@ -90,7 +92,7 @@ export default function StockManagementAddAreaPage() {
     if (active === 1) {
       form.setFieldValue("subAreas", hasSubArea ? subAreas : []);
     }
-    setActive((prev) => (prev < 2 ? prev + 1 : prev));
+    setActive((prev) => (prev < 3 ? prev + 1 : prev));
   };
 
   const prevStep = () => setActive((prev) => (prev > 0 ? prev - 1 : prev));
@@ -115,11 +117,6 @@ export default function StockManagementAddAreaPage() {
     setSubAreas(updated);
   };
 
-  const handleSubmit = () => {
-    console.log("Submitted:", form.values);
-    alert("\u0110\u00e3 t\u1ea1o khu v\u1ef1c!");
-  };
-
   return (
     <Card withBorder shadow="sm" radius={4} p="lg">
       <Group mb={"md"}>
@@ -137,6 +134,28 @@ export default function StockManagementAddAreaPage() {
         <Stepper.Step label="Bước 1" description="Thông tin chính" />
         <Stepper.Step label="Bước 2" description="Phân chia khu vực phụ" />
         <Stepper.Step label="Bước 3" description="Xác nhận" />
+        <Stepper.Completed>
+          <Stack align="center" justify="center" mt="xl">
+            <Image
+              src={
+                "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQjPNbBpZeXnXfTuA6AWek-Kj8NYEVbYdG6ayi5bIWarDuryXDrILdKMTd597quLD0PBKM&usqp=CAU"
+              }
+              w={200}
+              fit="cover"
+            />
+            <Text fz={"h2"} ta="center">
+              Thêm mới khu vực quản lý thành công!
+            </Text>
+            <Text fz={"md"} ta="center" c="dimmed">
+              Khu vực mới đã được thêm thành công. Bạn có thể xem lại thông tin
+              chi tiết trong danh sách khu vực.
+            </Text>
+
+            <Button size="md" mt="md" radius={4} onClick={() => navigate(-1)}>
+              Xác nhận
+            </Button>
+          </Stack>
+        </Stepper.Completed>
       </Stepper>
 
       {active === 0 && (
@@ -388,25 +407,27 @@ export default function StockManagementAddAreaPage() {
         </Stack>
       )}
 
-      <Group justify="space-between" mt="xl">
-        <Button
-          radius={4}
-          variant="default"
-          onClick={prevStep}
-          disabled={active === 0}
-        >
-          Quay lại
-        </Button>
-        {active < 2 ? (
-          <Button radius={4} onClick={nextStep}>
-            Tiếp tục
+      {active < 3 && (
+        <Group justify="space-between" mt="xl">
+          <Button
+            radius={4}
+            variant="default"
+            onClick={prevStep}
+            disabled={active === 0}
+          >
+            Quay lại
           </Button>
-        ) : (
-          <Button radius={4} color="green" onClick={handleSubmit}>
-            Xác nhận & Tạo khu vực
-          </Button>
-        )}
-      </Group>
+          {active < 2 ? (
+            <Button radius={4} onClick={nextStep}>
+              Tiếp tục
+            </Button>
+          ) : (
+            <Button radius={4} color="green" onClick={nextStep}>
+              Hoàn thành
+            </Button>
+          )}
+        </Group>
+      )}
     </Card>
   );
 }

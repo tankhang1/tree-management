@@ -28,6 +28,7 @@ import {
   IconUser,
 } from "@tabler/icons-react";
 import { SelectableSupplierCards } from "../../SupplyManagementPage/Add/components/SelectableSupplierCards";
+import { useNavigate } from "react-router-dom";
 const bankList = [
   {
     id: "VCB",
@@ -147,6 +148,7 @@ const types = [
 ];
 
 const OrderManagementCreatePage = () => {
+  const navigate = useNavigate();
   const [activeStep, setActiveStep] = useState(0);
   const [formData, setFormData] = useState({
     orderId: "ORD001",
@@ -165,15 +167,11 @@ const OrderManagementCreatePage = () => {
   });
 
   const handleNextStep = () => {
-    if (activeStep < 3) setActiveStep((prev) => prev + 1);
+    if (activeStep < 4) setActiveStep((prev) => prev + 1);
   };
 
   const handlePrevStep = () => {
     if (activeStep > 0) setActiveStep((prev) => prev - 1);
-  };
-
-  const handleSubmit = () => {
-    console.log("Đơn hàng mới:", formData);
   };
 
   return (
@@ -1047,23 +1045,47 @@ const OrderManagementCreatePage = () => {
               </Group>
             </Stack>
           </Stepper.Step>
+          <Stepper.Completed>
+            <Stack align="center" justify="center" mt="xl">
+              <Image
+                src={
+                  "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQjPNbBpZeXnXfTuA6AWek-Kj8NYEVbYdG6ayi5bIWarDuryXDrILdKMTd597quLD0PBKM&usqp=CAU"
+                }
+                w={200}
+                fit="cover"
+              />
+              <Text fz={"h2"} ta="center">
+                Tạo mới đơn hàng thành công!
+              </Text>
+              <Text fz={"md"} ta="center" c="dimmed">
+                Bạn đã hoàn thành việc tạo đơn hàng mới. Bạn có thể xem lại
+                thôngtins chi tiết trong danh sách đơn hàng.
+              </Text>
+
+              <Button size="md" mt="md" radius={4} onClick={() => navigate(-1)}>
+                Xác nhận
+              </Button>
+            </Stack>
+          </Stepper.Completed>
         </Stepper>
 
-        <Group justify="space-between" mt="lg">
-          <Button radius={4} variant="outline" onClick={handlePrevStep}>
-            Quay lại
-          </Button>
+        {activeStep < 4 && (
+          <Group justify="space-between" mt="lg">
+            <Button radius={4} variant="outline" onClick={handlePrevStep}>
+              Quay lại
+            </Button>
 
-          {activeStep < 3 ? (
-            <Button radius={4} onClick={handleNextStep}>
-              Tiếp theo
-            </Button>
-          ) : (
-            <Button radius={4} onClick={handleSubmit}>
-              Hoàn tất
-            </Button>
-          )}
-        </Group>
+            {activeStep < 3 ? (
+              <Button radius={4} onClick={handleNextStep}>
+                Tiếp theo
+              </Button>
+            ) : (
+              <Button radius={4} onClick={handleNextStep}>
+                Hoàn tất
+              </Button>
+            )}
+          </Group>
+        )}
       </Stack>
     </Card>
   );

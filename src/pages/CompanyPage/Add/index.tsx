@@ -16,6 +16,7 @@ import {
   Input,
   Modal,
   Select,
+  Image,
 } from "@mantine/core";
 import { useState } from "react";
 import {
@@ -697,23 +698,44 @@ export function CompanyAddPage() {
         </Stepper.Step>
 
         <Stepper.Completed>
-          <Title order={4}>Xác nhận tạo mới thông tin thành công!</Title>
+          <Stack align="center" justify="center" mt="xl">
+            <Image
+              src={
+                "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQjPNbBpZeXnXfTuA6AWek-Kj8NYEVbYdG6ayi5bIWarDuryXDrILdKMTd597quLD0PBKM&usqp=CAU"
+              }
+              w={200}
+              fit="cover"
+            />
+            <Text fz={"h2"} ta="center">
+              Tạo mới doanh nghiệp / nông hộ thành công!
+            </Text>
+            <Text fz={"md"} ta="center" c="dimmed">
+              Doanh nghiệp / nông hộ mới đã được thêm thành công. Bạn có thể
+            </Text>
+
+            <Button size="md" mt="md" radius={4} onClick={() => navigate(-1)}>
+              Xác nhận
+            </Button>
+          </Stack>
         </Stepper.Completed>
       </Stepper>
 
-      <Group justify="space-between" mt="xl">
-        <Button
-          variant="default"
-          radius={4}
-          onClick={prevStep}
-          disabled={active === 0}
-        >
-          Quay lại
-        </Button>
-        <Button radius={4} onClick={nextStep}>
-          {active === 4 ? "Hoàn tất" : "Tiếp theo"}
-        </Button>
-      </Group>
+      {active < 4 && (
+        <Group justify="space-between" mt="xl">
+          <Button
+            variant="default"
+            radius={4}
+            onClick={prevStep}
+            disabled={active === 0}
+          >
+            Quay lại
+          </Button>
+          <Button radius={4} onClick={nextStep}>
+            {active === 3 ? "Hoàn thành" : "Tiếp theo"}
+          </Button>
+        </Group>
+      )}
+
       <Modal
         opened={openedAddressForm}
         onClose={() => setOpenedAddressForm(false)}
