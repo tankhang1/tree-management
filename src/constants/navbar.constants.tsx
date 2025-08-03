@@ -57,7 +57,7 @@ export const NAV_BAR = [
       // { label: "Khu vực", link: PATH.AREA_ZONE },
       // { label: "Lô canh tác", link: PATH.AREA_BLOCK },
       // { label: "Hàng", link: PATH.AREA_ROW },
-      { label: "Khai báo canh tác", link: PATH.AREA_TREE },
+      { label: "Danh sách canh tác", link: PATH.AREA_TREE },
 
       { label: "Lịch sử", link: PATH.AREA_HISTORY },
     ],
@@ -88,7 +88,7 @@ export const NAV_BAR = [
     icon: IconBook2,
     link: PATH.TASK_MANAGEMENT,
     children: [
-      { label: "Công việc phát sinh", link: PATH.TASK_MAIN },
+      { label: "Phân bổ công việc phát sinh", link: PATH.TASK_MAIN },
       { label: "Công việc BATMAN", link: PATH.TASK_BATMAN },
       { label: "Lịch sử", link: PATH.TASK_HISTORY },
     ],
@@ -98,8 +98,8 @@ export const NAV_BAR = [
     icon: IconPackage,
     link: PATH.SUPPLY_MANAGEMENT,
     children: [
-      { label: "Danh mục vật tư", link: PATH.SUPPLY_TYPE },
-      { label: "Vật tư", link: PATH.SUPPLY_MAIN },
+      { label: "Danh sách vật tư", link: PATH.SUPPLY_MAIN },
+      { label: "Loại vật tư", link: PATH.SUPPLY_TYPE },
       { label: "Lịch sử sử dụng", link: PATH.SUPPLY_HISTORY },
       { label: "Lịch sử thanh lý", link: PATH.SUPPLY_DISPOSAL_HISTORY },
     ],
@@ -110,8 +110,8 @@ export const NAV_BAR = [
     icon: IconTractor,
     link: PATH.MACHINE_MANAGEMENT,
     children: [
-      { label: "Danh mục máy móc", link: PATH.MACHINE_TYPE },
-      { label: "Máy móc", link: PATH.MACHINE_MAIN },
+      { label: "Danh sách máy móc", link: PATH.MACHINE_MAIN },
+      { label: "Loại máy móc", link: PATH.MACHINE_TYPE },
       { label: "Lịch sử sử dụng", link: PATH.MACHINE_USAGE_HISTORY },
       { label: "Lịch sử bảo trì", link: PATH.MACHINE_MAINTENANCE_HISTORY },
       { label: "Lịch sử thanh lý", link: PATH.MACHINE_DISPOSAL_HISTORY },
@@ -122,8 +122,8 @@ export const NAV_BAR = [
     icon: IconPackage,
     link: PATH.PESTICIDE_MANAGEMENT,
     children: [
-      { label: "Danh mục thuốc", link: PATH.PESTICIDE_CATEGORY },
-      { label: "Thuốc", link: PATH.PESTICIDE_MAIN },
+      { label: "Danh sách thuốc", link: PATH.PESTICIDE_MAIN },
+      { label: "Loại thuốc", link: PATH.PESTICIDE_CATEGORY },
       { label: "Lịch sử sử dụng", link: PATH.PESTICIDE_HISTORY },
       { label: "Lịch sử huỷ", link: PATH.PESTICIDE_DISPOSAL_HISTORY },
     ],
@@ -134,8 +134,8 @@ export const NAV_BAR = [
     icon: IconBox,
     link: PATH.FERTILIZER_MAIN,
     children: [
-      { label: "Danh mục phân bón", link: PATH.FERTILIZER_TYPE },
-      { label: "Phân bón", link: PATH.FERTILIZER_MAIN },
+      { label: "Loại phân bón", link: PATH.FERTILIZER_TYPE },
+      { label: "Danh sách phân bón", link: PATH.FERTILIZER_MAIN },
       { label: "Lịch sử sử dụng", link: PATH.FERTILIZER_HISTORY },
       { label: "Lịch sử huỷ", link: PATH.FERTILIZER_DISPOSAL_HISTORY },
     ],
@@ -145,11 +145,10 @@ export const NAV_BAR = [
     icon: IconTrees,
     link: PATH.PLANT_MANAGEMENT,
     children: [
+      { label: "Danh sách cây trồng", link: PATH.PLANT_TREE },
       { label: "Nhóm cây trồng", link: PATH.PLANT_GROUP },
-      { label: "Danh mục cây trồng", link: PATH.PLANT_CATALOG },
       { label: "Giống cây", link: PATH.PLANT_VARIETY },
       { label: "Hạt giống", link: PATH.PLANT_SEED },
-      { label: "Cây trồng", link: PATH.PLANT_TREE },
       { label: "Tài liệu kỹ thuật", link: PATH.PLANT_TECHNICAL_DOC },
     ],
   },
@@ -160,8 +159,8 @@ export const NAV_BAR = [
     link: PATH.HARVEST_MANAGEMENT,
     children: [
       // Thêm báo cáo thu hoạch vào đây nếu cần
-      { label: "Báo cáo thu hoạch", link: PATH.HARVEST_REPORT },
-      { label: "Truy vấn cây theo bản đồ", link: PATH.HARVEST_QUERY },
+      { label: "Thống kê báo cáo", link: PATH.HARVEST_REPORT },
+      { label: "Thống kê hiện tại", link: PATH.HARVEST_QUERY },
     ],
   },
   {
@@ -169,13 +168,13 @@ export const NAV_BAR = [
     icon: IconPackage,
     link: PATH.PRODUCT_MANAGEMENT,
     children: [
-      { label: "Danh mục sản phẩm", link: PATH.PRODUCT_TYPE },
-      { label: "Sản phẩm", link: PATH.PRODUCT_ITEM },
+      { label: "Danh sách sản phẩm", link: PATH.PRODUCT_ITEM },
+      { label: "Loại sản phẩm", link: PATH.PRODUCT_TYPE },
+      { label: "Danh sách nguyên vật liệu", link: PATH.PRODUCT_RAW_MATERIAL },
       {
-        label: "Danh mục nguyên vật liệu",
+        label: "Loại nguyên vật liệu",
         link: PATH.PRODUCT_RAW_MATERIAL_TYPE,
       },
-      { label: "Nguyên vật liệu", link: PATH.PRODUCT_RAW_MATERIAL },
       { label: "Lịch sử", link: PATH.PRODUCT_HISTORY },
     ],
   },
@@ -195,10 +194,10 @@ export const NAV_BAR = [
     icon: IconUsersGroup,
     link: PATH.HR_MANAGEMENT,
     children: [
-      { label: "Phòng ban", link: PATH.HR_DEPARTMENT },
-      { label: "Vị trí", link: PATH.HR_POSITION },
-      { label: "Đội nhóm", link: PATH.HR_TEAM },
-      { label: "Nhân sự", link: PATH.HR_EMPLOYEE },
+      { label: "Danh sách nhân sự", link: PATH.HR_EMPLOYEE },
+      { label: "Danh sách phòng ban", link: PATH.HR_DEPARTMENT },
+      { label: "Danh sách vị trí", link: PATH.HR_POSITION },
+      { label: "Danh sách đội nhóm", link: PATH.HR_TEAM },
       { label: "Lịch sử", link: PATH.HR_HISTORY },
     ],
   },
@@ -208,20 +207,20 @@ export const NAV_BAR = [
     link: PATH.COMPANY,
     children: [
       {
-        label: "Địa chỉ",
-        link: PATH.COMPANY_ADDRESS,
-      },
-      {
-        label: "Nhà cung cấp",
+        label: "Danh sách nhà cung cấp",
         link: PATH.COMPANY,
       },
       {
-        label: "Khách hàng",
+        label: "Danh sách khách hàng",
         link: PATH.COMPANY_CUSTOMER,
       },
       {
-        label: "Đối tác",
+        label: "Danh sách đối tác",
         link: PATH.COMPANY_PARTNER,
+      },
+      {
+        label: "Danh sách địa chỉ",
+        link: PATH.COMPANY_ADDRESS,
       },
       { label: "Lịch sử", link: PATH.COMPANY_HISTORY },
     ],
@@ -285,12 +284,12 @@ export const NAV_BAR = [
     link: PATH.STOCK_MANAGEMENT,
     children: [
       { label: "Khu vực quản lý", link: PATH.STOCK_AREA },
-      { label: "Kho vận", link: PATH.STOCK_DELIVERY },
-      { label: "Xuất/nhập vật tư", link: PATH.STOCK_SUPPLY },
-      { label: "Xuất/nhập thuốc", link: PATH.STOCK_PESTICIDE },
-      { label: "Xuất/nhập máy móc", link: PATH.STOCK_MACHINE },
-      { label: "Xuất/nhập hạt giống", link: PATH.STOCK_SEED },
+      { label: "Danh sách kho vận", link: PATH.STOCK_DELIVERY },
+      { label: "Xuất/nhập vật tư nông nghiệp", link: PATH.STOCK_SUPPLY },
+      { label: "Xuất/nhập máy móc - thiết bị", link: PATH.STOCK_MACHINE },
+      { label: "Xuất/nhập thuốc BVTV", link: PATH.STOCK_PESTICIDE },
       { label: "Xuất/nhập phân bón", link: PATH.STOCK_FERTILIZER },
+      { label: "Xuất/nhập hạt giống", link: PATH.STOCK_SEED },
     ],
   },
   {
@@ -298,7 +297,7 @@ export const NAV_BAR = [
     icon: IconBuildingStore,
     link: PATH.PURCHASE_MANAGEMENT,
     children: [
-      { label: "Sản phẩm", link: PATH.PURCHASE_MANAGEMENT_PRODUCT },
+      { label: "Sản phẩm kinh doanh", link: PATH.PURCHASE_MANAGEMENT_PRODUCT },
       { label: "Nguyên vật liệu", link: PATH.PURCHASE_MANAGEMENT_RAW_MATERIAL },
       { label: "Lịch sử", link: PATH.PURCHASE_MANAGEMENT_HISTORY },
     ],
@@ -367,6 +366,7 @@ export const NAV_BAR = [
       { label: "Địa hình", link: PATH.MAP_TERRAIN },
       { label: "Loại đất", link: PATH.AREA_SOIL },
       { label: "Phương pháp canh tác", link: PATH.AREA_CULTIVATION_METHOD },
+      { label: "Phân loại cây trồng", link: PATH.PLANT_CATALOG },
     ],
   },
 ];

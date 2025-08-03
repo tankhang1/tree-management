@@ -11,7 +11,6 @@ import {
   Select,
   Stack,
   Text,
-  Title,
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { IconSearch } from "@tabler/icons-react";
@@ -99,23 +98,17 @@ const HarvestManagementQueryMapPage = () => {
         p={"sm"}
       >
         <Stack w={300}>
-          <Title order={4}>Truy vấn báo cáo thu hoạch</Title>
-          <Select
-            label="Chọn vùng"
-            placeholder="Chọn vùng"
-            radius={4}
-            clearable
-          />
+          <Select label="Vùng" placeholder="Chọn vùng" radius={4} clearable />
           <Select label="Khu vực" placeholder="Khu vực" radius={4} clearable />
           <Select label="Lô" placeholder="Lô" radius={4} clearable />
-          <Select label="Hàng" placeholder="Hàng" radius={4} clearable />
+          {/* <Select label="Hàng" placeholder="Hàng" radius={4} clearable /> */}
 
           <Button
             radius={4}
             leftSection={<IconSearch size={18} />}
             onClick={openSearchReport}
           >
-            Tìm kiếm
+            Xem thống kê
           </Button>
         </Stack>
         <Modal
