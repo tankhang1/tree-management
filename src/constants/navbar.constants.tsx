@@ -45,6 +45,7 @@ export const NAV_BAR = [
       { label: "Phân bổ khu vực", link: PATH.MAP_AREA },
       { label: "Phân bổ lô", link: PATH.MAP_PLOT },
       { label: "Bản đồ", link: PATH.MAP_MAP },
+      { label: "Lịch sử", link: PATH.MAP_HISTORY },
     ],
   },
   {
@@ -67,7 +68,8 @@ export const NAV_BAR = [
     link: PATH.SEASON_MANAGEMENT,
     children: [
       { label: "Mùa vụ", link: PATH.SEASON_GROWTH },
-      { label: "Chu kỳ", link: PATH.SEASON_CYCLE },
+      { label: "Chu kỳ sinh trưởng", link: PATH.SEASON_CYCLE },
+      { label: "Lịch sử", link: PATH.SEASON_HISTORY },
     ],
   },
   {
@@ -75,8 +77,8 @@ export const NAV_BAR = [
     icon: IconSettingsAutomation,
     link: PATH.PLAN_MANAGEMENT,
     children: [
-      { label: "Kế hoạch", link: PATH.PLAN_MAIN },
-      { label: "Phân công việc", link: PATH.PLAN_ASSIGN },
+      { label: "Lập kế hoạch", link: PATH.PLAN_MAIN },
+      { label: "Phân bổ công việc", link: PATH.PLAN_ASSIGN },
       { label: "Giao việc phát sinh", link: PATH.PLAN_UNPLANNED },
       { label: "Lịch sử", link: PATH.PLAN_HISTORY },
     ],
@@ -88,6 +90,7 @@ export const NAV_BAR = [
     children: [
       { label: "Công việc phát sinh", link: PATH.TASK_MAIN },
       { label: "Công việc BATMAN", link: PATH.TASK_BATMAN },
+      { label: "Lịch sử", link: PATH.TASK_HISTORY },
     ],
   },
   {
@@ -129,7 +132,7 @@ export const NAV_BAR = [
   {
     label: "Phân bón",
     icon: IconBox,
-    link: "12123",
+    link: PATH.FERTILIZER_MAIN,
     children: [
       { label: "Danh mục phân bón", link: PATH.FERTILIZER_TYPE },
       { label: "Phân bón", link: PATH.FERTILIZER_MAIN },
@@ -173,6 +176,7 @@ export const NAV_BAR = [
         link: PATH.PRODUCT_RAW_MATERIAL_TYPE,
       },
       { label: "Nguyên vật liệu", link: PATH.PRODUCT_RAW_MATERIAL },
+      { label: "Lịch sử", link: PATH.PRODUCT_HISTORY },
     ],
   },
 
@@ -195,6 +199,7 @@ export const NAV_BAR = [
       { label: "Vị trí", link: PATH.HR_POSITION },
       { label: "Đội nhóm", link: PATH.HR_TEAM },
       { label: "Nhân sự", link: PATH.HR_EMPLOYEE },
+      { label: "Lịch sử", link: PATH.HR_HISTORY },
     ],
   },
   {
@@ -218,6 +223,7 @@ export const NAV_BAR = [
         label: "Đối tác",
         link: PATH.COMPANY_PARTNER,
       },
+      { label: "Lịch sử", link: PATH.COMPANY_HISTORY },
     ],
   },
 
@@ -238,6 +244,7 @@ export const NAV_BAR = [
       { label: "Hợp đồng gửi giữ tài sản", link: PATH.CONTRACT_STORAGE },
       { label: "Hợp đồng ủy quyền", link: PATH.CONTRACT_AUTHORIZATION },
       { label: "Hợp đồng hợp tác", link: PATH.CONTRACT_PARTNERSHIP },
+      { label: "Lịch sử", link: PATH.CONTRACT_HISTORY },
     ],
   },
   {
@@ -293,6 +300,7 @@ export const NAV_BAR = [
     children: [
       { label: "Sản phẩm", link: PATH.PURCHASE_MANAGEMENT_PRODUCT },
       { label: "Nguyên vật liệu", link: PATH.PURCHASE_MANAGEMENT_RAW_MATERIAL },
+      { label: "Lịch sử", link: PATH.PURCHASE_MANAGEMENT_HISTORY },
     ],
   },
   {
@@ -317,6 +325,7 @@ export const NAV_BAR = [
         label: "Tạo đơn hàng",
         link: PATH.ORDER_MANAGEMENT_CREATE,
       },
+      { label: "Lịch sử", link: PATH.ORDER_MANAGEMENT_HISTORY },
     ],
   },
   {

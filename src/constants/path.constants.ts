@@ -68,6 +68,7 @@ export const PATH = {
   MAP_ADD_PLOT: "/map-management/plot/add",
   MAP_TERRAIN: "/map-management/terrain",
   MAP_MAP: "/map-management/map",
+  MAP_HISTORY: "/map-management/history",
 
   // Plant Management
   PLANT_MANAGEMENT: "/plant-management",
@@ -91,7 +92,7 @@ export const PATH = {
   SEASON_CYCLE: "/season-management/cycle",
   SEASON_CYCLE_DETAIL: "/season-management/cycle/detail",
   SEASON_ADD_CYCLE: "/season-management/cycle/add",
-
+  SEASON_HISTORY: "/season-management/history",
   // Plan Management
   PLAN_MANAGEMENT: "/plan-management",
   PLAN_MAIN: "/plan-management/main",
@@ -110,7 +111,7 @@ export const PATH = {
   TASK_MAIN: "/task-management/main",
   TASK_MAIN_DETAIL: "/task-management/main/detail",
   TASK_BATMAN: "/task-management/batman",
-
+  TASK_HISTORY: "/task-management/history",
   // Harvest Management
   HARVEST_MANAGEMENT: "/harvest-management",
   HARVEST_REPORT: "/harvest-management/report",
@@ -125,12 +126,12 @@ export const PATH = {
   PRODUCT_RAW_MATERIAL: "/product-management/raw-material",
   PRODUCT_RAW_MATERIAL_ADD: "/product-management/raw-material/add",
   PRODUCT_RAW_MATERIAL_TYPE: "/product-management/raw-material-type",
-
+  PRODUCT_HISTORY: "/product-management/history",
   // Contract Management
   CONTRACT_MANAGEMENT: "/contract-management",
   CONTRACT_ADD_MANAGEMENT: "/contract-management/add",
   CONTRACT_MANAGEMENT_DETAIL: "/contract-management/detail",
-
+  CONTRACT_HISTORY: "/contract-management/history",
   CONTRACT_SALE: "/contract-management/sale",
   CONTRACT_EXCHANGE: "/contract-management/exchange",
   CONTRACT_GIFT: "/contract-management/gift",
@@ -154,7 +155,7 @@ export const PATH = {
   HR_EMPLOYEE: "/hr-management/employee",
   HR_ADD_EMPLOYEE: "/hr-management/employee/add",
   HR_EMPLOYEE_DETAIL: "/hr-management/employee/detail",
-
+  HR_HISTORY: "/hr-management/history",
   // Factory Management
   FACTORY_MANAGEMENT: "/factory-management",
   FACTORY_MAIN: "/factory-management/main",
@@ -218,6 +219,7 @@ export const PATH = {
   COMPANY_PARTNER: "/company/partners",
   COMPANY_DETAIL: "/company/detail",
   COMPANY_ADD: "/company/add",
+  COMPANY_HISTORY: "/company/history",
   VENDOR: "/vendor",
   // Purchase & Sales
   PURCHASE: "/purchase",
@@ -227,6 +229,7 @@ export const PATH = {
   FINANCE_ACCOUNT: "/finance-account",
 
   //Purchase
+  PURCHASE_MANAGEMENT_HISTORY: "/purchase-management/history",
   PURCHASE_MANAGEMENT: "/purchase-management",
   PURCHASE_MANAGEMENT_PRODUCT: "/purchase-management/product",
   PURCHASE_MANAGEMENT_PRODUCT_ADD: "/purchase-management/product/add",
@@ -237,6 +240,7 @@ export const PATH = {
   ORDER_MANAGEMENT_QUICK: "/order-management/quick",
   ORDER_MANAGEMENT_LOGGED_IN: "/order-management/logged-in",
   ORDER_MANAGEMENT_ADDRESS: "/order-management/address",
+  ORDER_MANAGEMENT_HISTORY: "/order-management/history",
   //Bill Management
   BILL_MANAGEMENT: "/bill-management",
   BILL_MANAGEMENT_USER: "/bill-management/user",
