@@ -160,7 +160,70 @@ const ConfirmStep = () => {
           </Card>
         ))}
       </Group>
-
+      <Divider
+        label="Danh sách tài liệu kỹ thuật"
+        labelPosition="center"
+        my="md"
+      />
+      <Group>
+        <Card radius={4} withBorder shadow="xs" flex={1}>
+          <Stack>
+            <Text fw={"bold"}>Kỹ thuật canh tác</Text>
+            <Text size="sm" c="dimmed">
+              Hướng dẫn chi tiết về cách trồng và chăm sóc cây sầu riêng giống
+              Ri6, bao gồm các bước từ chuẩn bị đất, gieo hạt, tưới tiêu, và bón
+              phân.
+            </Text>
+            <a
+              href="https://example.com/ky-thuat-canh-tac.pdf"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <Text color="blue" size="sm">
+                Tải xuống tài liệu kỹ thuật canh tác
+              </Text>
+            </a>
+          </Stack>
+        </Card>
+        <Card radius={4} withBorder shadow="xs" flex={1}>
+          <Stack>
+            <Text fw={"bold"}>Tiêu chuẩn chất lượng</Text>
+            <Text size="sm" c="dimmed">
+              Các tiêu chuẩn chất lượng cần đạt được cho cây sầu riêng giống
+              Ri6, bao gồm kích thước trái, trọng lượng, và hàm lượng dinh
+              dưỡng.
+            </Text>
+            <a
+              href="https://example.com/tieu-chuan-chat-luong.pdf"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <Text color="blue" size="sm">
+                Tải xuống tài liệu tiêu chuẩn chất lượng
+              </Text>
+            </a>
+          </Stack>
+        </Card>
+        <Card radius={4} withBorder shadow="xs" flex={1}>
+          <Stack>
+            <Text fw={"bold"}>Giải pháp phòng trừ sâu bệnh</Text>
+            <Text size="sm" c="dimmed">
+              Hướng dẫn chi tiết về cách phòng trừ sâu bệnh cho cây sầu riêng
+              giống Ri6, bao gồm các loại thuốc bảo vệ thực vật và phương pháp
+              sử dụng an toàn.
+            </Text>
+            <a
+              href="https://example.com/phong-tru-sau-benh.pdf"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <Text color="blue" size="sm">
+                Tải xuống tài liệu giải pháp phòng trừ sâu bệnh
+              </Text>
+            </a>
+          </Stack>
+        </Card>
+      </Group>
       <Divider label="Danh sách hàng" labelPosition="center" my="md" />
 
       <Grid>

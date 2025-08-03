@@ -52,9 +52,7 @@ const PlantManagementTechnicalDocPage = () => {
   const onTechnicalDocDetail = () => {
     navigate(PATH.PLANT_TECHNICAL_DOC_DETAIL);
   };
-  const onAddTechnicalDoc = () => {
-    navigate(PATH.PLANT_ADD_TECHNICAL_DOC);
-  };
+
   const varietyDetailColumns: MRT_ColumnDef<TechnicalDoc>[] = [
     {
       accessorKey: "imageUrl",
@@ -115,9 +113,6 @@ const PlantManagementTechnicalDocPage = () => {
         <Group>
           <Button variant="outline" radius={4} leftSection={<IconFileExcel />}>
             Xuất File
-          </Button>
-          <Button radius={4} onClick={onAddTechnicalDoc}>
-            Thêm mới
           </Button>
         </Group>
       </Group>
