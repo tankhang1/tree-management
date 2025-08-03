@@ -154,12 +154,12 @@ const HRManagementEmployeeAddPage = () => {
           <Stepper.Step label="Bước 2" description="Thông tin trực thuộc">
             <Stack gap={"xs"}>
               <MultiSelect
-                label="Chọn phòng ban"
+                label="Phòng ban"
                 radius={4}
                 data={["Ban tài chính", "Ban kĩ thuật", "Ban kế hoạch"]}
               />
               <TextInput
-                label="Chọn đội nhóm"
+                label="Đội nhóm"
                 placeholder="Tìm kiếm đội nhóm"
                 leftSection={<IconSearch size={18} />}
                 radius={4}

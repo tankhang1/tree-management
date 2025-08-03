@@ -28,18 +28,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import SunEditor from "suneditor-react";
 import { SelectableSupplierCards } from "../../../SupplyManagementPage/Add/components/SelectableSupplierCards";
-const s = {
-  id: "sup-1",
-  name: "Công ty TNHH Nông Nghiệp Xanh",
-  type: "Doanh nghiệp",
-  representative: "Nguyễn Văn A",
-  phone: "0912345678",
-  email: "contact@nongnghiepxanh.vn",
-  address: "123 Đường Lê Lợi, Quận 1, TP.HCM",
-  taxCode: "0312345678",
-  sectors: ["Phân bón", "Thuốc BVTV"],
-  note: "Đối tác lâu năm",
-};
+
 const MachineManagementMainAddPage = () => {
   const navigate = useNavigate();
   const [manualPreviewUrl] = useState<string | null>(null);
@@ -289,80 +278,8 @@ const MachineManagementMainAddPage = () => {
               </Card>
             </Group>
             <Divider label="Nhà cung cấp" />
-            <Group>
-              <Card key={s.id} withBorder radius="md" p="md">
-                <Group justify="space-between" mb="xs">
-                  <Text fw={600}>{s.name}</Text>
-                </Group>
-                <Stack gap={2}>
-                  <Text size="sm">
-                    <strong>Loại:</strong> {s.type}
-                  </Text>
-                  <Text size="sm">
-                    <strong>Người đại diện:</strong> {s.representative}
-                  </Text>
-                  <Text size="sm">
-                    <strong>SĐT:</strong> {s.phone}
-                  </Text>
-                  <Text size="sm">
-                    <strong>Đơn giá:</strong> 122.000.000 VNĐ
-                  </Text>
-                  <Text size="sm">
-                    <strong>Số lượng:</strong> 12
-                  </Text>
-                  <Text size="sm">
-                    <strong>Đơn vị:</strong> chiếc
-                  </Text>
-                  {s.email && (
-                    <Text size="sm">
-                      <strong>Email:</strong> {s.email}
-                    </Text>
-                  )}
+            <SelectableSupplierCards isCheckbox={false} />
 
-                  {s.note && (
-                    <Text size="sm" c="dimmed">
-                      💬 {s.note}
-                    </Text>
-                  )}
-                </Stack>
-              </Card>
-              <Card key={s.id} withBorder radius="md" p="md">
-                <Group justify="space-between" mb="xs">
-                  <Text fw={600}>{s.name}</Text>
-                </Group>
-                <Stack gap={2}>
-                  <Text size="sm">
-                    <strong>Loại:</strong> {s.type}
-                  </Text>
-                  <Text size="sm">
-                    <strong>Người đại diện:</strong> {s.representative}
-                  </Text>
-                  <Text size="sm">
-                    <strong>SĐT:</strong> {s.phone}
-                  </Text>
-                  <Text size="sm">
-                    <strong>Đơn giá:</strong> 122.000.000 VNĐ
-                  </Text>
-                  <Text size="sm">
-                    <strong>Số lượng:</strong> 12
-                  </Text>
-                  <Text size="sm">
-                    <strong>Đơn vị:</strong> chiếc
-                  </Text>
-                  {s.email && (
-                    <Text size="sm">
-                      <strong>Email:</strong> {s.email}
-                    </Text>
-                  )}
-
-                  {s.note && (
-                    <Text size="sm" c="dimmed">
-                      💬 {s.note}
-                    </Text>
-                  )}
-                </Stack>
-              </Card>
-            </Group>
             <Divider label="Tài liệu kỹ thuật" />
             <Title order={5} mt="md">
               📘 Tài liệu kỹ thuật

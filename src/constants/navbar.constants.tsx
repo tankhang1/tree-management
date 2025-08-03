@@ -134,8 +134,8 @@ export const NAV_BAR = [
     icon: IconBox,
     link: PATH.FERTILIZER_MAIN,
     children: [
-      { label: "Loại phân bón", link: PATH.FERTILIZER_TYPE },
       { label: "Danh sách phân bón", link: PATH.FERTILIZER_MAIN },
+      { label: "Loại phân bón", link: PATH.FERTILIZER_TYPE },
       { label: "Lịch sử sử dụng", link: PATH.FERTILIZER_HISTORY },
       { label: "Lịch sử huỷ", link: PATH.FERTILIZER_DISPOSAL_HISTORY },
     ],

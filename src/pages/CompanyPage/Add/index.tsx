@@ -12,7 +12,6 @@ import {
   Paper,
   SimpleGrid,
   MultiSelect,
-  ScrollArea,
   Input,
   Modal,
   Select,
@@ -40,6 +39,7 @@ import {
 import { useNavigate } from "react-router-dom";
 import BankSelect from "../../../components/BankList";
 import { addressList } from "../../OrderManagementPage/Create";
+import Scrollable from "../../../components/Scrollable";
 
 export function CompanyAddPage() {
   const [openedAddressForm, setOpenedAddressForm] = useState(false);
@@ -212,12 +212,13 @@ export function CompanyAddPage() {
                     Thêm mới
                   </Button>
                 </Group>
-                <ScrollArea>
+                <Scrollable h={150}>
                   <Group wrap="nowrap" align="flex-start" gap="md">
                     {addressList.map((address) => (
                       <Card
                         key={address.id}
                         miw={300}
+                        h={150}
                         withBorder
                         shadow="sm"
                         radius="md"
@@ -247,7 +248,7 @@ export function CompanyAddPage() {
                       </Card>
                     ))}
                   </Group>
-                </ScrollArea>
+                </Scrollable>
                 <Input.Wrapper label="Phân loại">
                   <Group gap="md">
                     <Button
@@ -376,12 +377,18 @@ export function CompanyAddPage() {
                           Thêm mới
                         </Button>
                       </Group>
-                      <ScrollArea>
-                        <Group wrap="nowrap" align="flex-start" gap="md">
+                      <Scrollable h={150}>
+                        <Group
+                          p={"xs"}
+                          wrap="nowrap"
+                          align="flex-start"
+                          gap="md"
+                        >
                           {addressList.map((address) => (
                             <Card
                               key={address.id}
                               miw={300}
+                              h={150}
                               withBorder
                               shadow="sm"
                               radius="md"
@@ -392,7 +399,16 @@ export function CompanyAddPage() {
                                   selectedAddress === address.id
                                     ? "green"
                                     : undefined,
+                                position: "relative",
+                                transition: "transform 0.2s ease",
                               }}
+                              onMouseEnter={(e) =>
+                                (e.currentTarget.style.transform =
+                                  "scale(1.02)")
+                              }
+                              onMouseLeave={(e) =>
+                                (e.currentTarget.style.transform = "scale(1)")
+                              }
                               onClick={() => setSelectedAddress(address.id)}
                             >
                               <Stack gap="xs">
@@ -411,7 +427,7 @@ export function CompanyAddPage() {
                             </Card>
                           ))}
                         </Group>
-                      </ScrollArea>
+                      </Scrollable>
                     </Stack>
 
                     <Stack gap={"xs"}>

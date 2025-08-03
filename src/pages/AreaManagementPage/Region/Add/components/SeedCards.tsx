@@ -1,13 +1,6 @@
-import {
-  Card,
-  Group,
-  Stack,
-  Text,
-  Image,
-  Badge,
-  ScrollAreaAutosize,
-} from "@mantine/core";
+import { Card, Group, Stack, Text, Image, Badge } from "@mantine/core";
 import type { SeedOption } from "..";
+import Scrollable from "../../../../../components/Scrollable";
 
 interface SeedCardSelectorProps {
   seeds: SeedOption[];
@@ -21,12 +14,12 @@ const SeedCards: React.FC<SeedCardSelectorProps> = ({
   onSelect,
 }) => {
   return (
-    <ScrollAreaAutosize>
+    <Scrollable h={280}>
       <Group gap="md" wrap="nowrap" align="flex-start" p={"xs"}>
         {seeds.map((seed) => (
           <Card
             w={250}
-            h={300}
+            h={280}
             key={seed.code}
             withBorder
             radius="md"
@@ -65,7 +58,7 @@ const SeedCards: React.FC<SeedCardSelectorProps> = ({
           </Card>
         ))}
       </Group>
-    </ScrollAreaAutosize>
+    </Scrollable>
   );
 };
 

@@ -9,7 +9,6 @@ import {
   TextInput,
   Title,
   Card,
-  ScrollAreaAutosize,
   Accordion,
   Text,
   Image,
@@ -22,6 +21,7 @@ import SeedCard from "./components/SeedCard";
 import CropCards from "./components/CropCards";
 import SeedCards from "./components/SeedCards";
 import ConfirmStep from "./components/ConfirmStep";
+import Scrollable from "../../../../components/Scrollable";
 
 const growthCycleOptions = [
   { value: "cycle1", label: "Chu kỳ A" },
@@ -260,8 +260,8 @@ const SeasonManagementGrowthAddPage = () => {
               placeholder="Tìm kiếm hạt giống"
               radius={4}
             />
-            <ScrollAreaAutosize>
-              <Group wrap="nowrap" p={"xs"}>
+            <Scrollable h={450}>
+              <Group wrap="nowrap" align="flex-start" p={"xs"}>
                 <SeedCard
                   backgroundImage="https://food-map.s3.ap-southeast-1.amazonaws.com/news/2021/03/sau-rieng-ri6-3.jpg"
                   seedCode="SR-RI6"
@@ -314,7 +314,7 @@ const SeasonManagementGrowthAddPage = () => {
                   description="Giống RI6 cho năng suất cao, cơm vàng đậm, vị ngọt thơm"
                 />
               </Group>
-            </ScrollAreaAutosize>
+            </Scrollable>
           </Stack>
         )}
 

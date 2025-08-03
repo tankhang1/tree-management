@@ -20,7 +20,6 @@ import {
   Badge,
   Grid,
   SegmentedControl,
-  ScrollArea,
   Image,
 } from "@mantine/core";
 import { DatePickerInput } from "@mantine/dates";
@@ -46,6 +45,7 @@ import { EmployeeCardList } from "../../../HRManagementPage/Team/Add/components/
 import { SelectableSupplierCards } from "../../../SupplyManagementPage/Add/components/SelectableSupplierCards";
 import AreaCard from "../../Delivery/Add/components/AreaCard";
 import { useNavigate } from "react-router-dom";
+import Scrollable from "../../../../components/Scrollable";
 
 const areaGroups = [
   {
@@ -470,12 +470,13 @@ const StockManagementIOPage = () => {
                   radius={4}
                   leftSection={<IconSearch size={18} />}
                 />
-                <ScrollArea>
-                  <Group gap="md" wrap="nowrap">
+                <Scrollable h={150}>
+                  <Group gap="md" wrap="nowrap" p={"xs"}>
                     {machineTypes.map((machine, index) => (
                       <Card
                         key={index}
                         withBorder
+                        h={150}
                         miw={300}
                         shadow="sm"
                         radius="md"
@@ -503,7 +504,7 @@ const StockManagementIOPage = () => {
                       </Card>
                     ))}
                   </Group>
-                </ScrollArea>
+                </Scrollable>
                 <Group grow>
                   <NumberInput
                     label="Số lượng"
@@ -565,80 +566,82 @@ const StockManagementIOPage = () => {
                   {...form.getInputProps("contract")}
                   radius={4}
                 />
-                <Group>
-                  <Card shadow="sm" padding="md" radius="md" withBorder>
-                    <Group justify="apart" mb="xs">
-                      <Title order={5}>
-                        HĐMB-001 - Hợp đồng mua bán thiết bị tưới
-                      </Title>
-                      <Badge color="blue">Hợp đồng mua bán</Badge>
-                    </Group>
+                <Scrollable h={210}>
+                  <Group>
+                    <Card shadow="sm" padding="md" radius="md" withBorder>
+                      <Group justify="apart" mb="xs">
+                        <Title order={5}>
+                          HĐMB-001 - Hợp đồng mua bán thiết bị tưới
+                        </Title>
+                        <Badge color="blue">Hợp đồng mua bán</Badge>
+                      </Group>
 
-                    <Text size="sm">
-                      <b>Ngày ký:</b> 20/06/2025
-                    </Text>
-                    <Text size="sm">
-                      <b>Bên A:</b> CTY TNHH Thiết bị Nông nghiệp
-                    </Text>
-                    <Text size="sm">
-                      <b>Bên B:</b> Hợp tác xã Rau Sạch Lâm Đồng
-                    </Text>
-                    <Text size="sm">
-                      <b>Loại hợp đồng:</b> Mới
-                    </Text>
+                      <Text size="sm">
+                        <b>Ngày ký:</b> 20/06/2025
+                      </Text>
+                      <Text size="sm">
+                        <b>Bên A:</b> CTY TNHH Thiết bị Nông nghiệp
+                      </Text>
+                      <Text size="sm">
+                        <b>Bên B:</b> Hợp tác xã Rau Sạch Lâm Đồng
+                      </Text>
+                      <Text size="sm">
+                        <b>Loại hợp đồng:</b> Mới
+                      </Text>
 
-                    <Divider my="xs" />
-                    <Text size="sm" lineClamp={2}>
-                      <b>Nội dung:</b> Cung cấp hệ thống tưới tự động và thiết
-                      bị điều khiển trung tâm...
-                    </Text>
+                      <Divider my="xs" />
+                      <Text size="sm" lineClamp={2}>
+                        <b>Nội dung:</b> Cung cấp hệ thống tưới tự động và thiết
+                        bị điều khiển trung tâm...
+                      </Text>
 
-                    <Group mt="md" justify="apart">
-                      <Button size="xs" variant="light">
-                        Xem chi tiết
-                      </Button>
-                      <Button size="xs" variant="subtle" color="red">
-                        Huỷ
-                      </Button>
-                    </Group>
-                  </Card>
-                  <Card shadow="sm" padding="md" radius="md" withBorder>
-                    <Group justify="apart" mb="xs">
-                      <Title order={5}>
-                        HĐMB-001 - Hợp đồng mua bán thiết bị tưới
-                      </Title>
-                      <Badge color="blue">Hợp đồng mua bán</Badge>
-                    </Group>
+                      <Group mt="md" justify="apart">
+                        <Button size="xs" variant="light">
+                          Xem chi tiết
+                        </Button>
+                        <Button size="xs" variant="subtle" color="red">
+                          Huỷ
+                        </Button>
+                      </Group>
+                    </Card>
+                    <Card shadow="sm" padding="md" radius="md" withBorder>
+                      <Group justify="apart" mb="xs">
+                        <Title order={5}>
+                          HĐMB-001 - Hợp đồng mua bán thiết bị tưới
+                        </Title>
+                        <Badge color="blue">Hợp đồng mua bán</Badge>
+                      </Group>
 
-                    <Text size="sm">
-                      <b>Ngày ký:</b> 20/06/2025
-                    </Text>
-                    <Text size="sm">
-                      <b>Bên A:</b> CTY TNHH Thiết bị Nông nghiệp
-                    </Text>
-                    <Text size="sm">
-                      <b>Bên B:</b> Hợp tác xã Rau Sạch Lâm Đồng
-                    </Text>
-                    <Text size="sm">
-                      <b>Loại hợp đồng:</b> Mới
-                    </Text>
+                      <Text size="sm">
+                        <b>Ngày ký:</b> 20/06/2025
+                      </Text>
+                      <Text size="sm">
+                        <b>Bên A:</b> CTY TNHH Thiết bị Nông nghiệp
+                      </Text>
+                      <Text size="sm">
+                        <b>Bên B:</b> Hợp tác xã Rau Sạch Lâm Đồng
+                      </Text>
+                      <Text size="sm">
+                        <b>Loại hợp đồng:</b> Mới
+                      </Text>
 
-                    <Divider my="xs" />
-                    <Text size="sm" lineClamp={2}>
-                      <b>Nội dung:</b> Cung cấp hệ thống tưới tự động và thiết
-                      bị điều khiển trung tâm...
-                    </Text>
+                      <Divider my="xs" />
+                      <Text size="sm" lineClamp={2}>
+                        <b>Nội dung:</b> Cung cấp hệ thống tưới tự động và thiết
+                        bị điều khiển trung tâm...
+                      </Text>
 
-                    <Group mt="md" justify="apart">
-                      <Button size="xs" variant="light">
-                        Xem chi tiết
-                      </Button>
-                      <Button size="xs" variant="subtle" color="red">
-                        Huỷ
-                      </Button>
-                    </Group>
-                  </Card>
-                </Group>
+                      <Group mt="md" justify="apart">
+                        <Button size="xs" variant="light">
+                          Xem chi tiết
+                        </Button>
+                        <Button size="xs" variant="subtle" color="red">
+                          Huỷ
+                        </Button>
+                      </Group>
+                    </Card>
+                  </Group>
+                </Scrollable>
               </Stack>
             ) : (
               <Text>

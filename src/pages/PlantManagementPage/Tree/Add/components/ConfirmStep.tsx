@@ -74,8 +74,8 @@ const ConfirmStep = () => {
       <Title order={3}>Xác nhận thông tin cây trồng</Title>
 
       <Card withBorder>
-        <Group align="flex-start">
-          <Stack flex={1}>
+        <Group grow align="flex-start">
+          <Stack>
             <Group>
               <Text fw={500}>Vùng trồng:</Text>
               <Text>{data.region}</Text>
@@ -125,16 +125,16 @@ const ConfirmStep = () => {
               <Text>{data.description}</Text>
             </Group>
           </Stack>
-          {data.image && (
-            <Group justify="center" align="center">
-              <Image
-                flex={1}
-                src={data.image}
-                radius="md"
-                alt="Ảnh cây trồng"
-              />
-            </Group>
-          )}
+
+          <Stack justify="center" align="center">
+            <Image
+              w={300}
+              h={300}
+              src={data.image}
+              radius="md"
+              alt="Ảnh cây trồng"
+            />
+          </Stack>
         </Group>
       </Card>
 

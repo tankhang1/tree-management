@@ -31,6 +31,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { types } from "../../Type";
 import SunEditor from "suneditor-react";
+import Scrollable from "../../../../components/Scrollable";
 const bomList = [
   {
     group: "Nguyên vật liệu",
@@ -171,33 +172,45 @@ const ProductManagementItemAddPage = () => {
                   radius={4}
                 />
 
-                <Group gap="md" wrap="wrap">
-                  {types.map((category, index) => (
-                    <Card
-                      h={200}
-                      key={index}
-                      withBorder
-                      shadow="sm"
-                      radius="md"
-                      style={{
-                        width: "150px",
-                        cursor: "pointer",
-                        borderColor:
-                          form.category === category.name ? "green" : "#d9d9d9",
-                      }}
-                      onClick={() =>
-                        setForm({ ...form, category: category.name })
-                      }
-                    >
-                      <Stack align="center" justify="center" gap="xs">
-                        <Image src={category.img} h={100} />
-                        <Text ta="center" fw={500}>
-                          {category.name}
-                        </Text>
-                      </Stack>
-                    </Card>
-                  ))}
-                </Group>
+                <Scrollable h={220}>
+                  <Group gap="md" p={"xs"} wrap="nowrap">
+                    {types.map((category, index) => (
+                      <Card
+                        h={200}
+                        key={index}
+                        withBorder
+                        shadow="sm"
+                        radius={4}
+                        style={{
+                          width: "150px",
+                          cursor: "pointer",
+                          borderColor:
+                            form.category === category.name
+                              ? "green"
+                              : "#d9d9d9",
+                          position: "relative",
+                          transition: "transform 0.2s ease",
+                        }}
+                        onMouseEnter={(e) =>
+                          (e.currentTarget.style.transform = "scale(1.02)")
+                        }
+                        onMouseLeave={(e) =>
+                          (e.currentTarget.style.transform = "scale(1)")
+                        }
+                        onClick={() =>
+                          setForm({ ...form, category: category.name })
+                        }
+                      >
+                        <Stack align="center" justify="center" gap="xs">
+                          <Image src={category.img} h={100} />
+                          <Text ta="center" fw={500}>
+                            {category.name}
+                          </Text>
+                        </Stack>
+                      </Card>
+                    ))}
+                  </Group>
+                </Scrollable>
 
                 <Input.Wrapper label="Mô tả sản phẩm">
                   <SunEditor />
@@ -396,40 +409,53 @@ const ProductManagementItemAddPage = () => {
                         leftSection={<IconSearch size={18} />}
                         radius={4}
                       />
-                      <Group gap="md" wrap="nowrap">
-                        {materialList.map((material, index) => (
-                          <Card
-                            w={300}
-                            h={350}
-                            key={index}
-                            withBorder
-                            shadow="sm"
-                            radius="md"
-                            p="md"
-                          >
-                            <Stack>
-                              <Image
-                                src={material.img}
-                                alt={material.materialName}
-                                h={150}
-                                radius="md"
-                              />
-                              <Text>
-                                <b>Mã nguyên vật liệu:</b>{" "}
-                                {material.materialCode}
-                              </Text>
-                              <Text>
-                                <b>Tên nguyên vật liệu:</b>{" "}
-                                {material.materialName}
-                              </Text>
+                      <Scrollable>
+                        <Group p={"xs"} gap="md" wrap="nowrap">
+                          {materialList.map((material, index) => (
+                            <Card
+                              w={300}
+                              h={350}
+                              key={index}
+                              withBorder
+                              shadow="sm"
+                              radius="md"
+                              p="md"
+                              style={{
+                                position: "relative",
+                                transition: "transform 0.2s ease",
+                              }}
+                              onMouseEnter={(e) =>
+                                (e.currentTarget.style.transform =
+                                  "scale(1.02)")
+                              }
+                              onMouseLeave={(e) =>
+                                (e.currentTarget.style.transform = "scale(1)")
+                              }
+                            >
+                              <Stack>
+                                <Image
+                                  src={material.img}
+                                  alt={material.materialName}
+                                  h={150}
+                                  radius="md"
+                                />
+                                <Text>
+                                  <b>Mã nguyên vật liệu:</b>{" "}
+                                  {material.materialCode}
+                                </Text>
+                                <Text>
+                                  <b>Tên nguyên vật liệu:</b>{" "}
+                                  {material.materialName}
+                                </Text>
 
-                              <Text>
-                                <b>Mô tả:</b> {material.description}
-                              </Text>
-                            </Stack>
-                          </Card>
-                        ))}
-                      </Group>
+                                <Text>
+                                  <b>Mô tả:</b> {material.description}
+                                </Text>
+                              </Stack>
+                            </Card>
+                          ))}
+                        </Group>
+                      </Scrollable>
                     </Stack>
                   )}
                   {form.selectedGroup && (

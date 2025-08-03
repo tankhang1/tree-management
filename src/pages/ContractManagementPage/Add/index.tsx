@@ -39,6 +39,7 @@ import { useNavigate } from "react-router-dom";
 import { SelectableEnterpriseCards } from "../../StockManagementPage/Delivery/Add/components/SelectableEnterpriseCards";
 import { Dropzone } from "@mantine/dropzone";
 import SunEditor from "suneditor-react";
+import Scrollable from "../../../components/Scrollable";
 const itemTypes = [
   {
     label: "Máy móc thiết bị",
@@ -537,16 +538,28 @@ const ContractManagementAddPage = () => {
                           radius={4}
                           leftSection={<IconSearch size={18} />}
                         />
-                        <ScrollArea>
-                          <Group gap="md" wrap="nowrap">
+                        <Scrollable h={160}>
+                          <Group gap="md" p={"xs"} wrap="nowrap">
                             {machineTypes.map((machine, index) => (
                               <Card
                                 key={index}
                                 withBorder
                                 miw={300}
+                                h={150}
                                 shadow="sm"
                                 radius="md"
                                 p="md"
+                                style={{
+                                  position: "relative",
+                                  transition: "transform 0.2s ease",
+                                }}
+                                onMouseEnter={(e) =>
+                                  (e.currentTarget.style.transform =
+                                    "scale(1.02)")
+                                }
+                                onMouseLeave={(e) =>
+                                  (e.currentTarget.style.transform = "scale(1)")
+                                }
                               >
                                 <Group grow>
                                   <Image
@@ -571,7 +584,7 @@ const ContractManagementAddPage = () => {
                               </Card>
                             ))}
                           </Group>
-                        </ScrollArea>
+                        </Scrollable>
                         <Group grow key={index} align="flex-end">
                           <NumberInput
                             label="Số lượng"
@@ -677,8 +690,8 @@ const ContractManagementAddPage = () => {
                           radius={4}
                           leftSection={<IconSearch size={18} />}
                         />
-                        <ScrollArea>
-                          <Group gap="md" wrap="nowrap">
+                        <Scrollable h={160}>
+                          <Group gap="md" p={"xs"} wrap="nowrap">
                             {machineTypes.map((machine, index) => (
                               <Card
                                 key={index}
@@ -711,7 +724,7 @@ const ContractManagementAddPage = () => {
                               </Card>
                             ))}
                           </Group>
-                        </ScrollArea>
+                        </Scrollable>
                         <MultiSelect
                           label="Quy cách"
                           radius={4}

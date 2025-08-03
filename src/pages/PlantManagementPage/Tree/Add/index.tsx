@@ -13,11 +13,8 @@ import {
   Stepper,
   Textarea,
   MultiSelect,
-  Image,
-  SimpleGrid,
   Text,
   NumberInput,
-  ScrollAreaAutosize,
   Input,
   Radio,
 } from "@mantine/core";
@@ -39,28 +36,11 @@ import CropCards from "../../../AreaManagementPage/Region/Add/components/CropCar
 import SeedCards from "../../../AreaManagementPage/Region/Add/components/SeedCards";
 import { seedOptions } from "../../../AreaManagementPage/Row/Add";
 import SunEditor from "suneditor-react";
-const plantVarieties = [
-  {
-    id: "v1",
-    name: "Giống Ri6",
-    image:
-      "https://giongcaytrongeakmat.com/wp-content/uploads/giong-sau-rieng-ri6-2.jpg",
-  },
-  {
-    id: "v2",
-    name: "Giống Cát Chu",
-    image:
-      "https://giongcaytrong.com/wp-content/uploads/2017/06/xoai-cat-chu1.jpg",
-  },
-];
+import Scrollable from "../../../../components/Scrollable";
+
 const PlantManagementTreeAddPage = () => {
   const navigate = useNavigate();
   const [activeStep, setActiveStep] = useState(0);
-  const [selectedSeedId, setSelectedSeedId] = useState<string | null>(null);
-
-  const [plantImagePreview, setPlantImagePreview] = useState<string | null>(
-    null
-  );
 
   const form = useForm({
     initialValues: {
@@ -116,6 +96,13 @@ const PlantManagementTreeAddPage = () => {
         {activeStep === 0 && (
           <Group grow align="flex-start" mt="md" gap="xs">
             <Stack gap={"xs"}>
+              <TextInput
+                label="Mã cây"
+                placeholder="Mã cây"
+                required
+                {...form.getInputProps("id")}
+                radius={4}
+              />
               <Select
                 label="Nhóm cây trồng"
                 placeholder="Chọn nhóm cây trồng"
@@ -149,75 +136,6 @@ const PlantManagementTreeAddPage = () => {
                 placeholder="Tìm kiếm giống cây trồng"
               />
               <SeedCards selected="" seeds={seedOptions} onSelect={() => {}} />
-              <TextInput
-                label="Mã cây"
-                placeholder="Mã cây"
-                required
-                {...form.getInputProps("id")}
-                radius={4}
-              />
-              <Stack>
-                <Select
-                  label="Hạt giống cây (chọn một)"
-                  placeholder="Chọn giống cây"
-                  radius={4}
-                />
-                <ScrollAreaAutosize>
-                  <Group wrap="nowrap" p={"xs"}>
-                    <SeedCard
-                      backgroundImage="https://food-map.s3.ap-southeast-1.amazonaws.com/news/2021/03/sau-rieng-ri6-3.jpg"
-                      seedCode="SR-RI6"
-                      name="Hạt giống RI6"
-                      provider="Công ty giống cây trồng"
-                      origin="Việt Nam"
-                      germinationRate={85}
-                      yield={25}
-                      description="Giống RI6 cho năng suất cao, cơm vàng đậm, vị ngọt thơm"
-                    />
-                    <SeedCard
-                      backgroundImage="https://food-map.s3.ap-southeast-1.amazonaws.com/news/2021/03/sau-rieng-ri6-3.jpg"
-                      seedCode="SR-RI4"
-                      name="Hạt giống RI4"
-                      provider="Công ty giống cây trồng"
-                      origin="Việt Nam"
-                      germinationRate={85}
-                      yield={25}
-                      description="Giống RI6 cho năng suất cao, cơm vàng đậm, vị ngọt thơm"
-                    />
-
-                    <SeedCard
-                      backgroundImage="https://food-map.s3.ap-southeast-1.amazonaws.com/news/2021/03/sau-rieng-ri6-3.jpg"
-                      seedCode="SR-RI3"
-                      name="Hạt giống RI3"
-                      provider="Công ty giống cây trồng"
-                      origin="Việt Nam"
-                      germinationRate={85}
-                      yield={25}
-                      description="Giống RI6 cho năng suất cao, cơm vàng đậm, vị ngọt thơm"
-                    />
-                    <SeedCard
-                      backgroundImage="https://food-map.s3.ap-southeast-1.amazonaws.com/news/2021/03/sau-rieng-ri6-3.jpg"
-                      seedCode="SR-RI3"
-                      name="Hạt giống RI3"
-                      provider="Công ty giống cây trồng"
-                      origin="Việt Nam"
-                      germinationRate={85}
-                      yield={25}
-                      description="Giống RI6 cho năng suất cao, cơm vàng đậm, vị ngọt thơm"
-                    />
-                    <SeedCard
-                      backgroundImage="https://food-map.s3.ap-southeast-1.amazonaws.com/news/2021/03/sau-rieng-ri6-3.jpg"
-                      seedCode="SR-RI3"
-                      name="Hạt giống RI3"
-                      provider="Công ty giống cây trồng"
-                      origin="Việt Nam"
-                      germinationRate={85}
-                      yield={25}
-                      description="Giống RI6 cho năng suất cao, cơm vàng đậm, vị ngọt thơm"
-                    />
-                  </Group>
-                </ScrollAreaAutosize>
-              </Stack>
             </Stack>
 
             <Stack gap={"xs"}>
@@ -227,7 +145,6 @@ const PlantManagementTreeAddPage = () => {
                   onReject={(files) => console.log("rejected files", files)}
                   maxSize={5 * 1024 ** 2}
                   accept={IMAGE_MIME_TYPE}
-                  onChange={() => setPlantImagePreview("")}
                 >
                   <Group
                     justify="center"
@@ -279,80 +196,68 @@ const PlantManagementTreeAddPage = () => {
         )}
 
         {activeStep === 1 && (
-          <Group mt="md" align="flex-start" grow>
-            {/* Cây trồng bên trái */}
-            <Stack gap="xs" style={{ flex: 1 }}>
-              <Title order={5}>🌳 Cây trồng</Title>
-              {plantImagePreview && (
-                <Image
-                  src={plantImagePreview}
-                  alt="Ảnh cây trồng"
-                  width={220}
-                  height={140}
-                  radius="md"
-                  fit="contain"
+          <Stack mt={"md"}>
+            <Select
+              label="Hạt giống cây (chọn một)"
+              placeholder="Chọn giống cây"
+              radius={4}
+            />
+            <Scrollable h={450}>
+              <Group wrap="nowrap" p={"xs"}>
+                <SeedCard
+                  backgroundImage="https://food-map.s3.ap-southeast-1.amazonaws.com/news/2021/03/sau-rieng-ri6-3.jpg"
+                  seedCode="SR-RI6"
+                  name="Hạt giống RI6"
+                  provider="Công ty giống cây trồng"
+                  origin="Việt Nam"
+                  germinationRate={85}
+                  yield={25}
+                  description="Giống RI6 cho năng suất cao, cơm vàng đậm, vị ngọt thơm"
                 />
-              )}
-              <TextInput
-                label="Mã cây"
-                disabled
-                {...form.getInputProps("id")}
-                radius={4}
-              />
-              <TextInput
-                label="Tên cây"
-                disabled
-                {...form.getInputProps("name")}
-                radius={4}
-              />
-              <Textarea
-                label="Mô tả cây"
-                disabled
-                {...form.getInputProps("note")}
-                radius={4}
-              />
-            </Stack>
+                <SeedCard
+                  backgroundImage="https://food-map.s3.ap-southeast-1.amazonaws.com/news/2021/03/sau-rieng-ri6-3.jpg"
+                  seedCode="SR-RI4"
+                  name="Hạt giống RI4"
+                  provider="Công ty giống cây trồng"
+                  origin="Việt Nam"
+                  germinationRate={85}
+                  yield={25}
+                  description="Giống RI6 cho năng suất cao, cơm vàng đậm, vị ngọt thơm"
+                />
 
-            {/* Giống cây bên phải: chọn bằng card */}
-            <Stack gap="xs" style={{ flex: 1 }}>
-              <Title order={5}>🌱 Giống cây</Title>
-              <SimpleGrid cols={{ base: 1, sm: 2 }} spacing="sm">
-                {plantVarieties.map((seed) => (
-                  <Card
-                    key={seed.id}
-                    withBorder
-                    shadow="sm"
-                    radius="md"
-                    padding="sm"
-                    style={{
-                      cursor: "pointer",
-                      borderColor:
-                        selectedSeedId === seed.id ? "green" : undefined,
-                      transition: "transform 0.2s ease",
-                    }}
-                    onClick={() => setSelectedSeedId(seed.id)}
-                    onMouseEnter={(e) =>
-                      (e.currentTarget.style.transform = "translateY(-2px)")
-                    }
-                    onMouseLeave={(e) =>
-                      (e.currentTarget.style.transform = "none")
-                    }
-                  >
-                    <Image
-                      src={seed.image}
-                      height={220}
-                      fit="cover"
-                      radius="md"
-                      mb={8}
-                    />
-                    <Text ta="center" fw={500}>
-                      {seed.name}
-                    </Text>
-                  </Card>
-                ))}
-              </SimpleGrid>
-            </Stack>
-          </Group>
+                <SeedCard
+                  backgroundImage="https://food-map.s3.ap-southeast-1.amazonaws.com/news/2021/03/sau-rieng-ri6-3.jpg"
+                  seedCode="SR-RI3"
+                  name="Hạt giống RI3"
+                  provider="Công ty giống cây trồng"
+                  origin="Việt Nam"
+                  germinationRate={85}
+                  yield={25}
+                  description="Giống RI6 cho năng suất cao, cơm vàng đậm, vị ngọt thơm"
+                />
+                <SeedCard
+                  backgroundImage="https://food-map.s3.ap-southeast-1.amazonaws.com/news/2021/03/sau-rieng-ri6-3.jpg"
+                  seedCode="SR-RI3"
+                  name="Hạt giống RI3"
+                  provider="Công ty giống cây trồng"
+                  origin="Việt Nam"
+                  germinationRate={85}
+                  yield={25}
+                  description="Giống RI6 cho năng suất cao, cơm vàng đậm, vị ngọt thơm"
+                />
+                <SeedCard
+                  backgroundImage="https://food-map.s3.ap-southeast-1.amazonaws.com/news/2021/03/sau-rieng-ri6-3.jpg"
+                  seedCode="SR-RI3"
+                  name="Hạt giống RI3"
+                  provider="Công ty giống cây trồng"
+                  origin="Việt Nam"
+                  germinationRate={85}
+                  yield={25}
+                  description="Giống RI6 cho năng suất cao, cơm vàng đậm, vị ngọt thơm"
+                />
+              </Group>
+            </Scrollable>
+          </Stack>
         )}
 
         {activeStep === 2 && (

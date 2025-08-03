@@ -1,13 +1,6 @@
-import {
-  Card,
-  Stack,
-  Text,
-  Group,
-  Image,
-  Badge,
-  ScrollAreaAutosize,
-} from "@mantine/core";
+import { Card, Stack, Text, Group, Image, Badge } from "@mantine/core";
 import type { CropOption } from "..";
+import Scrollable from "../../../../../components/Scrollable";
 
 interface PlantCardSelectorProps {
   plants: CropOption[];
@@ -21,9 +14,9 @@ const CropCards: React.FC<PlantCardSelectorProps> = ({
   onSelect,
 }) => {
   return (
-    <ScrollAreaAutosize>
+    <Scrollable>
       <Group wrap="nowrap" gap="md" align="flex-start" p={"xs"}>
-        {plants.map((plant) => (
+        {[...plants, ...plants].map((plant) => (
           <Card
             h={350}
             key={plant.code}
@@ -72,7 +65,7 @@ const CropCards: React.FC<PlantCardSelectorProps> = ({
           </Card>
         ))}
       </Group>
-    </ScrollAreaAutosize>
+    </Scrollable>
   );
 };
 

@@ -8,7 +8,6 @@ import {
   Stepper,
   MultiSelect,
   Text,
-  ScrollArea,
   TextInput,
   SimpleGrid,
   Image,
@@ -31,6 +30,7 @@ import LotCard from "./components/LotCard";
 import GrowthStageCard from "./components/GrowthStageCard";
 import CropCards from "./components/CropCards";
 import ConfirmStep from "./components/ConfirmStep";
+import Scrollable from "../../../../components/Scrollable";
 const zoneCards: ZoneCardProps[] = [
   {
     code: "VT-001",
@@ -302,13 +302,13 @@ const PlanManagementMainAddPage = () => {
               leftSection={<IconMapPin size={16} />}
               {...form.getInputProps("zone")}
             />
-            <ScrollArea>
-              <Group gap="md" align="flex-start">
+            <Scrollable h={250}>
+              <Group gap="md" wrap="nowrap" align="flex-start">
                 {zoneCards.map((area, index) => (
                   <ZoneCard key={area.code} {...area} isActive={index === 0} />
                 ))}
               </Group>
-            </ScrollArea>
+            </Scrollable>
             <TextInput
               radius={4}
               label="Tìm kiếm khu vực"
@@ -316,13 +316,13 @@ const PlanManagementMainAddPage = () => {
               leftSection={<IconMapPin size={16} />}
               {...form.getInputProps("area")}
             />
-            <ScrollArea>
+            <Scrollable h={250}>
               <Group gap="md" align="flex-start">
                 {areaCards.map((area, index) => (
                   <AreaCard key={area.code} {...area} isActive={index === 0} />
                 ))}
               </Group>
-            </ScrollArea>
+            </Scrollable>
             <TextInput
               radius={4}
               label="Tìm kiếm lô"
@@ -330,13 +330,13 @@ const PlanManagementMainAddPage = () => {
               leftSection={<IconMapPin size={16} />}
               {...form.getInputProps("plot")}
             />
-            <ScrollArea>
+            <Scrollable h={250}>
               <Group gap="md">
                 {lotCards.map((area) => (
                   <LotCard key={area.code} {...area} />
                 ))}
               </Group>
-            </ScrollArea>
+            </Scrollable>
           </Stack>
         )}
         {active === 2 && (

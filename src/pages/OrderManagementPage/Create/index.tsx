@@ -29,6 +29,7 @@ import {
 } from "@tabler/icons-react";
 import { SelectableSupplierCards } from "../../SupplyManagementPage/Add/components/SelectableSupplierCards";
 import { useNavigate } from "react-router-dom";
+import Scrollable from "../../../components/Scrollable";
 const bankList = [
   {
     id: "VCB",
@@ -317,38 +318,49 @@ const OrderManagementCreatePage = () => {
                         leftSection={<IconSearch size={18} />}
                         radius={4}
                       />
-                      <Group gap="md" wrap="wrap">
-                        {types.map((category, index) => (
-                          <Card
-                            h={200}
-                            key={index}
-                            withBorder
-                            shadow="sm"
-                            radius="md"
-                            style={{
-                              width: "150px",
-                              cursor: "pointer",
-                              borderColor:
-                                formData.category === category.name
-                                  ? "green"
-                                  : "#d9d9d9",
-                            }}
-                            onClick={() =>
-                              setFormData({
-                                ...formData,
-                                category: category.name,
-                              })
-                            }
-                          >
-                            <Stack align="center" justify="center" gap="xs">
-                              <Image src={category.img} h={100} />
-                              <Text ta="center" fw={500}>
-                                {category.name}
-                              </Text>
-                            </Stack>
-                          </Card>
-                        ))}
-                      </Group>
+                      <Scrollable h={200}>
+                        <Group p="xs" gap="md" wrap="nowrap">
+                          {types.map((category, index) => (
+                            <Card
+                              h={200}
+                              key={index}
+                              withBorder
+                              shadow="sm"
+                              radius="md"
+                              style={{
+                                width: "150px",
+                                cursor: "pointer",
+                                borderColor:
+                                  formData.category === category.name
+                                    ? "green"
+                                    : "#d9d9d9",
+                                position: "relative",
+                                transition: "transform 0.2s ease",
+                              }}
+                              onMouseEnter={(e) =>
+                                (e.currentTarget.style.transform =
+                                  "scale(1.02)")
+                              }
+                              onMouseLeave={(e) =>
+                                (e.currentTarget.style.transform = "scale(1)")
+                              }
+                              onClick={() =>
+                                setFormData({
+                                  ...formData,
+                                  category: category.name,
+                                })
+                              }
+                            >
+                              <Stack align="center" justify="center" gap="xs">
+                                <Image src={category.img} h={100} />
+                                <Text ta="center" fw={500}>
+                                  {category.name}
+                                </Text>
+                              </Stack>
+                            </Card>
+                          ))}
+                        </Group>
+                      </Scrollable>
                     </Stack>
                   ) : (
                     <Select
@@ -373,38 +385,51 @@ const OrderManagementCreatePage = () => {
                         leftSection={<IconSearch size={18} />}
                         radius={4}
                       />
-                      <Group gap="md">
-                        {productList.map((product, index) => (
-                          <Card
-                            w={300}
-                            h={350}
-                            key={index}
-                            withBorder
-                            shadow="sm"
-                            radius="md"
-                            p="md"
-                          >
-                            <Stack>
-                              <Image
-                                src={product.img}
-                                alt={product.productName}
-                                height={150}
-                                radius="md"
-                              />
-                              <Text>
-                                <b>Mã sản phẩm:</b> {product.productCode}
-                              </Text>
-                              <Text>
-                                <b>Tên sản phẩm:</b> {product.productName}
-                              </Text>
+                      <Scrollable h={350}>
+                        <Group gap="md" wrap="nowrap" p={"xs"}>
+                          {productList.map((product, index) => (
+                            <Card
+                              w={300}
+                              h={350}
+                              key={index}
+                              withBorder
+                              shadow="sm"
+                              radius="md"
+                              p="md"
+                              style={{
+                                position: "relative",
+                                transition: "transform 0.2s ease",
+                              }}
+                              onMouseEnter={(e) =>
+                                (e.currentTarget.style.transform =
+                                  "scale(1.02)")
+                              }
+                              onMouseLeave={(e) =>
+                                (e.currentTarget.style.transform = "scale(1)")
+                              }
+                            >
+                              <Stack>
+                                <Image
+                                  src={product.img}
+                                  alt={product.productName}
+                                  height={150}
+                                  radius="md"
+                                />
+                                <Text>
+                                  <b>Mã sản phẩm:</b> {product.productCode}
+                                </Text>
+                                <Text>
+                                  <b>Tên sản phẩm:</b> {product.productName}
+                                </Text>
 
-                              <Text>
-                                <b>Danh mục:</b> {product.category}
-                              </Text>
-                            </Stack>
-                          </Card>
-                        ))}
-                      </Group>
+                                <Text>
+                                  <b>Danh mục:</b> {product.category}
+                                </Text>
+                              </Stack>
+                            </Card>
+                          ))}
+                        </Group>
+                      </Scrollable>
                     </Stack>
                   )}
                   {formData.bomType === "Nguyên Vật Liệu" && (
@@ -624,80 +649,82 @@ const OrderManagementCreatePage = () => {
                   placeholder="(Tuỳ chọn)"
                   radius={4}
                 />
-                <Group>
-                  <Card shadow="sm" padding="md" radius="md" withBorder>
-                    <Group justify="apart" mb="xs">
-                      <Title order={5}>
-                        HĐMB-001 - Hợp đồng mua bán thiết bị tưới
-                      </Title>
-                      <Badge color="blue">Hợp đồng mua bán</Badge>
-                    </Group>
+                <Scrollable h={250}>
+                  <Group>
+                    <Card shadow="sm" padding="md" radius="md" withBorder>
+                      <Group justify="apart" mb="xs">
+                        <Title order={5}>
+                          HĐMB-001 - Hợp đồng mua bán thiết bị tưới
+                        </Title>
+                        <Badge color="blue">Hợp đồng mua bán</Badge>
+                      </Group>
 
-                    <Text size="sm">
-                      <b>Ngày ký:</b> 20/06/2025
-                    </Text>
-                    <Text size="sm">
-                      <b>Bên A:</b> CTY TNHH Thiết bị Nông nghiệp
-                    </Text>
-                    <Text size="sm">
-                      <b>Bên B:</b> Hợp tác xã Rau Sạch Lâm Đồng
-                    </Text>
-                    <Text size="sm">
-                      <b>Loại hợp đồng:</b> Mới
-                    </Text>
+                      <Text size="sm">
+                        <b>Ngày ký:</b> 20/06/2025
+                      </Text>
+                      <Text size="sm">
+                        <b>Bên A:</b> CTY TNHH Thiết bị Nông nghiệp
+                      </Text>
+                      <Text size="sm">
+                        <b>Bên B:</b> Hợp tác xã Rau Sạch Lâm Đồng
+                      </Text>
+                      <Text size="sm">
+                        <b>Loại hợp đồng:</b> Mới
+                      </Text>
 
-                    <Divider my="xs" />
-                    <Text size="sm" lineClamp={2}>
-                      <b>Nội dung:</b> Cung cấp hệ thống tưới tự động và thiết
-                      bị điều khiển trung tâm...
-                    </Text>
+                      <Divider my="xs" />
+                      <Text size="sm" lineClamp={2}>
+                        <b>Nội dung:</b> Cung cấp hệ thống tưới tự động và thiết
+                        bị điều khiển trung tâm...
+                      </Text>
 
-                    <Group mt="md" justify="apart">
-                      <Button size="xs" variant="light">
-                        Xem chi tiết
-                      </Button>
-                      <Button size="xs" variant="subtle" color="red">
-                        Huỷ
-                      </Button>
-                    </Group>
-                  </Card>
-                  <Card shadow="sm" padding="md" radius="md" withBorder>
-                    <Group justify="apart" mb="xs">
-                      <Title order={5}>
-                        HĐMB-001 - Hợp đồng mua bán thiết bị tưới
-                      </Title>
-                      <Badge color="blue">Hợp đồng mua bán</Badge>
-                    </Group>
+                      <Group mt="md" justify="apart">
+                        <Button size="xs" variant="light">
+                          Xem chi tiết
+                        </Button>
+                        <Button size="xs" variant="subtle" color="red">
+                          Huỷ
+                        </Button>
+                      </Group>
+                    </Card>
+                    <Card shadow="sm" padding="md" radius="md" withBorder>
+                      <Group justify="apart" mb="xs">
+                        <Title order={5}>
+                          HĐMB-001 - Hợp đồng mua bán thiết bị tưới
+                        </Title>
+                        <Badge color="blue">Hợp đồng mua bán</Badge>
+                      </Group>
 
-                    <Text size="sm">
-                      <b>Ngày ký:</b> 20/06/2025
-                    </Text>
-                    <Text size="sm">
-                      <b>Bên A:</b> CTY TNHH Thiết bị Nông nghiệp
-                    </Text>
-                    <Text size="sm">
-                      <b>Bên B:</b> Hợp tác xã Rau Sạch Lâm Đồng
-                    </Text>
-                    <Text size="sm">
-                      <b>Loại hợp đồng:</b> Mới
-                    </Text>
+                      <Text size="sm">
+                        <b>Ngày ký:</b> 20/06/2025
+                      </Text>
+                      <Text size="sm">
+                        <b>Bên A:</b> CTY TNHH Thiết bị Nông nghiệp
+                      </Text>
+                      <Text size="sm">
+                        <b>Bên B:</b> Hợp tác xã Rau Sạch Lâm Đồng
+                      </Text>
+                      <Text size="sm">
+                        <b>Loại hợp đồng:</b> Mới
+                      </Text>
 
-                    <Divider my="xs" />
-                    <Text size="sm" lineClamp={2}>
-                      <b>Nội dung:</b> Cung cấp hệ thống tưới tự động và thiết
-                      bị điều khiển trung tâm...
-                    </Text>
+                      <Divider my="xs" />
+                      <Text size="sm" lineClamp={2}>
+                        <b>Nội dung:</b> Cung cấp hệ thống tưới tự động và thiết
+                        bị điều khiển trung tâm...
+                      </Text>
 
-                    <Group mt="md" justify="apart">
-                      <Button size="xs" variant="light">
-                        Xem chi tiết
-                      </Button>
-                      <Button size="xs" variant="subtle" color="red">
-                        Huỷ
-                      </Button>
-                    </Group>
-                  </Card>
-                </Group>
+                      <Group mt="md" justify="apart">
+                        <Button size="xs" variant="light">
+                          Xem chi tiết
+                        </Button>
+                        <Button size="xs" variant="subtle" color="red">
+                          Huỷ
+                        </Button>
+                      </Group>
+                    </Card>
+                  </Group>
+                </Scrollable>
               </Stack>
               <TextInput
                 label="Mã hóa đơn"
@@ -783,32 +810,34 @@ const OrderManagementCreatePage = () => {
                 </Input.Wrapper>
               )}
               <Input.Wrapper label="Địa chỉ nhận hàng (chọn một)">
-                <Group align="flex-start" gap="md">
-                  {addressList.map((address) => (
-                    <Card
-                      key={address.id}
-                      w={300}
-                      withBorder
-                      shadow="sm"
-                      radius="md"
-                      p="lg"
-                    >
-                      <Stack gap="xs">
-                        <Group justify="space-between">
-                          <Title order={4} fw={500}>
-                            {address.recipientName}
-                          </Title>
-                        </Group>
-                        <Text size="sm">
-                          <b>Số điện thoại:</b> {address.phoneNumber}
-                        </Text>
-                        <Text size="sm">
-                          <b>Địa chỉ:</b> {address.address}
-                        </Text>
-                      </Stack>
-                    </Card>
-                  ))}
-                </Group>
+                <Scrollable h={150}>
+                  <Group align="flex-start" wrap="nowrap" gap="md">
+                    {addressList.map((address) => (
+                      <Card
+                        key={address.id}
+                        w={300}
+                        withBorder
+                        shadow="sm"
+                        radius="md"
+                        p="lg"
+                      >
+                        <Stack gap="xs">
+                          <Group justify="space-between">
+                            <Title order={4} fw={500}>
+                              {address.recipientName}
+                            </Title>
+                          </Group>
+                          <Text size="sm">
+                            <b>Số điện thoại:</b> {address.phoneNumber}
+                          </Text>
+                          <Text size="sm">
+                            <b>Địa chỉ:</b> {address.address}
+                          </Text>
+                        </Stack>
+                      </Card>
+                    ))}
+                  </Group>
+                </Scrollable>
               </Input.Wrapper>
             </Stack>
           </Stepper.Step>

@@ -5,12 +5,11 @@ import {
   Text,
   Badge,
   Image,
-  ScrollArea,
-  ActionIcon,
   Divider,
   Tooltip,
+  Button,
 } from "@mantine/core";
-import { IconTrash, IconUser } from "@tabler/icons-react";
+import Scrollable from "../../../../../components/Scrollable";
 
 const employees = [
   {
@@ -23,6 +22,105 @@ const employees = [
     department: "Phòng Nông Nghiệp",
     status: "Đang hoạt động",
     manager: "Lê Thị B",
+  },
+  {
+    id: "EMP002",
+    username: "tranthib",
+    fullName: "Trần Thị B",
+    dob: "1992-08-15",
+    role: "Nhân viên kỹ thuật",
+    level: "Nhân viên",
+    department: "Phòng Kỹ Thuật",
+    status: "Thử việc",
+    manager: "Nguyễn Văn A",
+  },
+  {
+    id: "EMP003",
+    username: "levanc",
+    fullName: "Lê Văn C",
+    dob: "1988-03-22",
+    role: "Nhân viên kho",
+    level: "Nhân viên",
+    department: "Phòng Vật Tư",
+    status: "Đang hoạt động",
+    manager: "Phạm Thị D",
+  },
+  {
+    id: "EMP004",
+    username: "phamthid",
+    fullName: "Phạm Thị D",
+    dob: "1995-11-05",
+    role: "Trưởng nhóm nghiên cứu",
+    level: "Trưởng nhóm",
+    department: "Phòng Nghiên Cứu",
+    status: "Đang hoạt động",
+    manager: "Lê Văn E",
+  },
+  {
+    id: "EMP005",
+    username: "nguyenvane",
+    fullName: "Nguyễn Văn E",
+    dob: "1993-06-18",
+    role: "Nhân viên phát triển sản phẩm",
+    level: "Nhân viên",
+    department: "Phòng Phát Triển",
+    status: "Đang hoạt động",
+    manager: "Phạm Thị D",
+  },
+  {
+    id: "EMP006",
+    username: "tranvanf",
+    fullName: "Trần Văn F",
+    dob: "1985-12-30",
+    role: "Trưởng nhóm kinh doanh",
+    level: "Trưởng nhóm",
+    department: "Phòng Kinh Doanh",
+    status: "Đang hoạt động",
+    manager: "Nguyễn Thị G",
+  },
+  {
+    id: "EMP007",
+    username: "nguyenthig",
+    fullName: "Nguyễn Thị G",
+    dob: "1990-09-12",
+    role: "Nhân viên chăm sóc khách hàng",
+    level: "Nhân viên",
+    department: "Phòng Chăm Sóc Khách Hàng",
+    status: "Đang hoạt động",
+    manager: "Trần Văn F",
+  },
+  {
+    id: "EMP008",
+    username: "phamvanh",
+    fullName: "Phạm Văn H",
+    dob: "1987-04-25",
+    role: "Chuyên viên Marketing",
+    level: "Nhân viên",
+    department: "Phòng Marketing",
+    status: "Đang hoạt động",
+    manager: "Nguyễn Thị I",
+  },
+  {
+    id: "EMP009",
+    username: "nguyenthii",
+    fullName: "Nguyễn Thị I",
+    dob: "1991-07-19",
+    role: "Trưởng nhóm Marketing",
+    level: "Trưởng nhóm",
+    department: "Phòng Marketing",
+    status: "Đang hoạt động",
+    manager: "Lê Văn J",
+  },
+  {
+    id: "EMP010",
+    username: "levanj",
+    fullName: "Lê Văn J",
+    dob: "1983-02-14",
+    role: "Trưởng phòng hành chính",
+    level: "Trưởng phòng",
+    department: "Phòng Hành Chính",
+    status: "Đang hoạt động",
+    manager: "Nguyễn Văn K",
   },
 ];
 
@@ -40,17 +138,17 @@ type TEmployeeCard = {
 
 export function EmployeeCardList({ isDelete = false }: TEmployeeCard) {
   return (
-    <ScrollArea>
-      <Group gap="lg" align="flex-start" wrap="wrap" p="xs">
+    <Scrollable h={220}>
+      <Group gap="lg" align="flex-start" wrap="nowrap" p="xs">
         {employees.map((emp) => (
           <Card
             key={emp.id}
             withBorder
-            radius="md"
+            radius={4}
             shadow="sm"
             p="md"
+            miw={600}
             style={{
-              width: 320,
               position: "relative",
               transition: "transform 0.2s ease",
             }}
@@ -59,14 +157,14 @@ export function EmployeeCardList({ isDelete = false }: TEmployeeCard) {
             }
             onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
           >
-            <Group align="flex-start" gap="md">
+            <Group grow align="flex-start" gap="md">
               <Image
                 src={
                   "https://cdn.prod.website-files.com/5fbb9b89508062592a9731b1/6448c1ce35d6ffe59e4d6f46_GettyImages-1399565382.jpg"
                 }
-                w={70}
-                h={70}
+                h={160}
                 radius={4}
+                fit="cover"
                 alt="Employee Avatar"
               />
               <Stack gap={4} style={{ flex: 1 }}>
@@ -77,15 +175,6 @@ export function EmployeeCardList({ isDelete = false }: TEmployeeCard) {
                   <Badge color={getStatusColor(emp.status)}>{emp.status}</Badge>
                 </Group>
                 <Divider my="xs" />
-                <Text size="sm" c="dimmed">
-                  <b>Mã nhân sự:</b> {emp.id}
-                </Text>
-                <Text size="sm" c="dimmed">
-                  <b>Tài khoản:</b> {emp.username}
-                </Text>
-                <Text size="sm" c="dimmed">
-                  <b>Ngày sinh:</b> {emp.dob}
-                </Text>
                 <Text size="sm" c="dimmed">
                   <b>Vai trò:</b> {emp.role}
                 </Text>
@@ -102,21 +191,21 @@ export function EmployeeCardList({ isDelete = false }: TEmployeeCard) {
             </Group>
             {isDelete && (
               <Tooltip label="Xóa nhân sự" position="top" withArrow>
-                <ActionIcon
+                <Button
                   pos="absolute"
                   variant="light"
                   color="red"
                   right={16}
-                  top={16}
+                  bottom={16}
                   radius={4}
                 >
-                  <IconTrash size={19} />
-                </ActionIcon>
+                  Xoá
+                </Button>
               </Tooltip>
             )}
           </Card>
         ))}
       </Group>
-    </ScrollArea>
+    </Scrollable>
   );
 }

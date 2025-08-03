@@ -40,12 +40,59 @@ export const types: Type[] = [
     name: "Sầu riêng đông lạnh",
     note: "Sầu riêng đông lạnh là sản phẩm chế biến từ sầu riêng tươi, giữ nguyên hương vị và chất lượng.",
   },
-
+  {
+    id: "T002",
+    img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQlYBaKOa_i9kDFe7NcpVlO5ymNmreB977Wug&s",
+    name: "Sầu riêng tươi",
+    note: "Sầu riêng tươi được thu hoạch trực tiếp từ vườn, đảm bảo độ tươi ngon và chất lượng.",
+  },
   {
     id: "T003",
     img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQlYBaKOa_i9kDFe7NcpVlO5ymNmreB977Wug&s",
     name: "Sầu riêng khay",
     note: "Sầu riêng là loại cây ăn quả nhiệt đới.",
+  },
+  {
+    id: "T004",
+    img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQlYBaKOa_i9kDFe7NcpVlO5ymNmreB977Wug&s",
+    name: "Sầu riêng sấy khô",
+    note: "Sầu riêng sấy khô là sản phẩm tiện lợi, dễ bảo quản và mang đi.",
+  },
+  {
+    id: "T005",
+    img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQlYBaKOa_i9kDFe7NcpVlO5ymNmreB977Wug&s",
+    name: "Sầu riêng nguyên trái",
+    note: "Sầu riêng nguyên trái được chọn lọc kỹ càng, đảm bảo chất lượng cao nhất.",
+  },
+  {
+    id: "T006",
+    img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQlYBaKOa_i9kDFe7NcpVlO5ymNmreB977Wug&s",
+    name: "Sầu riêng đông lạnh nguyên múi",
+    note: "Sản phẩm giữ nguyên múi sầu riêng, được đông lạnh để bảo quản lâu dài.",
+  },
+  {
+    id: "T007",
+    img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQlYBaKOa_i9kDFe7NcpVlO5ymNmreB977Wug&s",
+    name: "Sầu riêng nghiền",
+    note: "Sầu riêng nghiền là nguyên liệu lý tưởng cho các món tráng miệng và bánh.",
+  },
+  {
+    id: "T008",
+    img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQlYBaKOa_i9kDFe7NcpVlO5ymNmreB977Wug&s",
+    name: "Kem sầu riêng",
+    note: "Kem sầu riêng thơm ngon, mát lạnh, phù hợp cho mọi lứa tuổi.",
+  },
+  {
+    id: "T009",
+    img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQlYBaKOa_i9kDFe7NcpVlO5ymNmreB977Wug&s",
+    name: "Bánh sầu riêng",
+    note: "Bánh sầu riêng là món ăn vặt hấp dẫn, được làm từ sầu riêng tươi.",
+  },
+  {
+    id: "T010",
+    img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQlYBaKOa_i9kDFe7NcpVlO5ymNmreB977Wug&s",
+    name: "Sầu riêng đóng hộp",
+    note: "Sầu riêng đóng hộp tiện lợi, dễ dàng sử dụng và bảo quản.",
   },
 ];
 const ProductManagementTypePage = () => {

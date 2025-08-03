@@ -1,12 +1,5 @@
-import {
-  Card,
-  Stack,
-  Text,
-  Group,
-  Badge,
-  SimpleGrid,
-  Title,
-} from "@mantine/core";
+import { Card, Stack, Text, Group, Badge, Title } from "@mantine/core";
+import Scrollable from "../../../../../components/Scrollable";
 
 const departments = [
   {
@@ -34,36 +27,51 @@ const departments = [
 
 export function DepartmentCardList() {
   return (
-    <SimpleGrid cols={{ base: 1, sm: 2, md: 3 }} spacing="md">
-      {departments.map((dept) => (
-        <Card key={dept.code} withBorder radius="md" shadow="xs" p="md">
-          <Stack gap="xs">
-            <Group justify="space-between">
-              <Title order={5}>{dept.name}</Title>
-              <Badge variant="light" color="gray">
-                {dept.code}
-              </Badge>
-            </Group>
-            <Text size="sm" c="dimmed">
-              {dept.description}
-            </Text>
-            <Group justify="space-between" mt="xs">
-              <Text size="xs" c="dimmed">
-                Ngày tạo:{" "}
-                <Text span fw={500}>
-                  {dept.createdAt}
-                </Text>
+    <Scrollable h={150}>
+      <Group wrap="nowrap" gap={"md"} p={"xs"}>
+        {departments.map((dept) => (
+          <Card
+            h={130}
+            miw={300}
+            key={dept.code}
+            withBorder
+            radius="md"
+            shadow="xs"
+            p="md"
+            style={{ position: "relative", transition: "transform 0.2s ease" }}
+            onMouseEnter={(e) =>
+              (e.currentTarget.style.transform = "scale(1.02)")
+            }
+            onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
+          >
+            <Stack gap="xs">
+              <Group justify="space-between">
+                <Title order={5}>{dept.name}</Title>
+                <Badge variant="light" color="gray">
+                  {dept.code}
+                </Badge>
+              </Group>
+              <Text size="sm" c="dimmed">
+                {dept.description}
               </Text>
-              <Text size="xs" c="dimmed">
-                Cập nhật:{" "}
-                <Text span fw={500}>
-                  {dept.updatedAt}
+              <Group justify="space-between" mt="xs">
+                <Text size="xs" c="dimmed">
+                  Ngày tạo:{" "}
+                  <Text span fw={500}>
+                    {dept.createdAt}
+                  </Text>
                 </Text>
-              </Text>
-            </Group>
-          </Stack>
-        </Card>
-      ))}
-    </SimpleGrid>
+                <Text size="xs" c="dimmed">
+                  Cập nhật:{" "}
+                  <Text span fw={500}>
+                    {dept.updatedAt}
+                  </Text>
+                </Text>
+              </Group>
+            </Stack>
+          </Card>
+        ))}
+      </Group>
+    </Scrollable>
   );
 }

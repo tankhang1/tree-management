@@ -7,7 +7,6 @@ import {
   Tooltip,
   ActionIcon,
   Autocomplete,
-  ScrollArea,
 } from "@mantine/core";
 import {
   IconBuildingFactory,
@@ -18,6 +17,7 @@ import {
   IconIdBadge,
   IconSearch,
 } from "@tabler/icons-react";
+import Scrollable from "../Scrollable";
 
 const suppliers = [
   {
@@ -60,8 +60,8 @@ export function VendorList() {
         leftSection={<IconSearch size={18} />}
         radius={4}
       />
-      <ScrollArea pb={"lg"} offsetScrollbars>
-        <Group wrap="nowrap" gap="md">
+      <Scrollable h={270}>
+        <Group wrap="nowrap" gap="md" p={"xs"}>
           {suppliers.map((sup, index) => (
             <Card
               miw={400}
@@ -71,6 +71,16 @@ export function VendorList() {
               padding="lg"
               radius="md"
               withBorder
+              style={{
+                position: "relative",
+                transition: "transform 0.2s ease",
+              }}
+              onMouseEnter={(e) =>
+                (e.currentTarget.style.transform = "scale(1.02)")
+              }
+              onMouseLeave={(e) =>
+                (e.currentTarget.style.transform = "scale(1)")
+              }
             >
               <Group justify="space-between">
                 <Group>
@@ -142,7 +152,7 @@ export function VendorList() {
             </Card>
           ))}
         </Group>
-      </ScrollArea>
+      </Scrollable>
     </Stack>
   );
 }

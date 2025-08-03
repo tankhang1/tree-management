@@ -211,9 +211,7 @@ const PlanManagementAssignAddPage = () => {
                         Chọn người kiểm định chất lượng
                       </Button>
                     </Group>
-                    <Group mt="md">
-                      <EmployeeCardList isDelete={true} />
-                    </Group>
+                    <EmployeeCardList isDelete={true} />
                   </Stack>
                 </Group>
               </Stack>

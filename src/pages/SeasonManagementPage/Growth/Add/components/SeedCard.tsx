@@ -43,6 +43,7 @@ const SeedCard = ({
       withBorder
       padding="md"
       w={300}
+      h={430}
       style={{ position: "relative", transition: "transform 0.2s ease" }}
       onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.02)")}
       onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}

@@ -23,7 +23,7 @@ const LotCard = ({
   soilType,
 }: LotCardProps) => {
   return (
-    <Card w={300} shadow="sm" radius="md" withBorder padding="md">
+    <Card w={300} h={250} shadow="sm" radius="md" withBorder padding="md">
       <Stack gap="xs">
         <Group justify="space-between">
           <Title order={5}>{name}</Title>

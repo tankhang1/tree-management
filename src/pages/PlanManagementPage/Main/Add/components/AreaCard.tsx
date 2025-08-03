@@ -30,6 +30,7 @@ const AreaCard = ({
       radius="md"
       withBorder
       w={300}
+      h={240}
       padding="md"
       style={{ borderColor: isActive ? "green" : undefined }}
     >
