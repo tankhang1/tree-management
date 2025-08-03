@@ -157,7 +157,7 @@ const PurchaseManagementProductAddPage = () => {
               radius={4}
             />
             <TextInput
-              label="Doanh nghiệp / hộ nông dân (chọn một)"
+              label="Doanh nghiệp / nông hộ (chọn một)"
               placeholder="Tìm kiếm doanh nghiệp"
               radius={4}
               leftSection={<IconSearch size={18} />}

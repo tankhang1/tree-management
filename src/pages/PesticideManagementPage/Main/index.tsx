@@ -70,7 +70,7 @@ const PesticideManagementMainPage = () => {
     { accessorKey: "usage", header: "Hướng dẫn sử dụng" },
     {
       accessorKey: "actions",
-      header: "",
+      header: "Tuỳ chọn",
       enableColumnActions: false,
       size: 10,
       Cell: () => (

@@ -18,6 +18,7 @@ import {
   TextInput,
   Radio,
   MultiSelect,
+  Image,
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { IconArrowLeft, IconSearch, IconUser } from "@tabler/icons-react";
@@ -352,7 +353,7 @@ const AreaManagementAddRegionPage = () => {
       }));
       form.setFieldValue("plots", plots);
     }
-    setActive((current) => (current < 2 ? current + 1 : current));
+    setActive((current) => (current < 3 ? current + 1 : current));
   };
 
   const prevStep = () =>
@@ -380,6 +381,28 @@ const AreaManagementAddRegionPage = () => {
         <Stepper.Step label="Bước 1" description="Vùng trồng" />
         <Stepper.Step label="Bước 2" description="Cây trồng" />
         <Stepper.Step label="Bước 3" description="Xác nhận" />
+        <Stepper.Completed>
+          <Stack align="center" justify="center" mt="xl">
+            <Image
+              src={
+                "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQjPNbBpZeXnXfTuA6AWek-Kj8NYEVbYdG6ayi5bIWarDuryXDrILdKMTd597quLD0PBKM&usqp=CAU"
+              }
+              w={200}
+              fit="cover"
+            />
+            <Text fz={"h2"} ta="center">
+              Thêm vùng trồng mới thành công!
+            </Text>
+            <Text fz={"md"} ta="center" c="dimmed">
+              Vùng trồng mới đã được thêm thành công. Vui lòng kiểm tra lại
+              thông tin để đảm bảo tính chính xác.
+            </Text>
+
+            <Button size="md" mt="md" radius={4} onClick={() => navigate(-1)}>
+              Xác nhận
+            </Button>
+          </Stack>
+        </Stepper.Completed>
       </Stepper>
 
       <form onSubmit={form.onSubmit(handleSubmit)}>
@@ -737,25 +760,27 @@ const AreaManagementAddRegionPage = () => {
           </Stack>
         )}
 
-        <Group mt="xl" justify="space-between">
-          <Button
-            radius={4}
-            onClick={prevStep}
-            disabled={active === 0}
-            variant="default"
-          >
-            Quay lại
-          </Button>
-          {active < 2 ? (
-            <Button radius={4} onClick={nextStep}>
-              Tiếp theo
+        {active < 3 && (
+          <Group mt="xl" justify="space-between">
+            <Button
+              radius={4}
+              onClick={prevStep}
+              disabled={active === 0}
+              variant="default"
+            >
+              Quay lại
             </Button>
-          ) : (
-            <Button radius={4} type="submit" color="green">
-              Lưu
-            </Button>
-          )}
-        </Group>
+            {active < 2 ? (
+              <Button radius={4} onClick={nextStep}>
+                Tiếp theo
+              </Button>
+            ) : (
+              <Button radius={4} onClick={nextStep} color="green">
+                Lưu
+              </Button>
+            )}
+          </Group>
+        )}
       </form>
       <Modal
         opened={opened}

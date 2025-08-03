@@ -83,7 +83,7 @@ const CompanyDetailPage = () => {
         >
           Quay lại
         </Button>
-        <Title order={3}>Thông tin doanh nghiệp / hộ nông dân</Title>
+        <Title order={3}>Thông tin doanh nghiệp / nông hộ</Title>
       </Group>
       <Stack gap="md">
         {/* THÔNG TIN CƠ BẢN */}

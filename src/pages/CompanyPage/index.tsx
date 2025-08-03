@@ -83,7 +83,7 @@ const CompanyPage = () => {
     { accessorKey: "landCertificateNo", header: "Số sổ đỏ" },
     {
       accessorKey: "actions",
-      header: "",
+      header: "Tuỳ chọn",
       enableColumnActions: false,
       size: 10,
       Cell: () => (
@@ -117,7 +117,7 @@ const CompanyPage = () => {
     <Stack gap="lg">
       <Group justify="space-between">
         <Title flex={1} order={2}>
-          Quản lý doanh nghiệp / hộ nông dân
+          Quản lý doanh nghiệp / nông hộ
         </Title>
         <Group>
           <Button variant="outline" radius={4} leftSection={<IconFileExcel />}>

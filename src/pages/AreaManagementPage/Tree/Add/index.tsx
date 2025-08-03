@@ -14,6 +14,7 @@ import {
   NumberInput,
   Modal,
   Accordion,
+  Image,
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import {
@@ -1059,6 +1060,28 @@ const AreaManagementTreeAddPage = () => {
               </Button>
             </Group>
           </Stepper.Step>
+          <Stepper.Completed>
+            <Stack align="center" justify="center" mt="xl">
+              <Image
+                src={
+                  "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQjPNbBpZeXnXfTuA6AWek-Kj8NYEVbYdG6ayi5bIWarDuryXDrILdKMTd597quLD0PBKM&usqp=CAU"
+                }
+                w={200}
+                fit="cover"
+              />
+              <Text fz={"h2"} ta="center">
+                Thêm cây canh tác mới thành công!
+              </Text>
+              <Text fz={"md"} ta="center" c="dimmed">
+                Cây canh tác mới đã được thêm thành công. Vui lòng kiểm tra lại
+                thông tin để đảm bảo tính chính xác.
+              </Text>
+
+              <Button size="md" mt="md" radius={4} onClick={() => navigate(-1)}>
+                Xác nhận
+              </Button>
+            </Stack>
+          </Stepper.Completed>
         </Stepper>
       </form>
       <Modal

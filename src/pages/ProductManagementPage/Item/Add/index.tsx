@@ -763,24 +763,51 @@ const ProductManagementItemAddPage = () => {
               </Group>
             </Stack>
           </Stepper.Step>
+          <Stepper.Completed>
+            <Stack align="center" justify="center" mt="xl">
+              <Image
+                src={
+                  "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQjPNbBpZeXnXfTuA6AWek-Kj8NYEVbYdG6ayi5bIWarDuryXDrILdKMTd597quLD0PBKM&usqp=CAU"
+                }
+                w={200}
+                fit="cover"
+              />
+              <Text fz={"h2"} ta="center">
+                Thêm mới sản phẩm thành công!
+              </Text>
+              <Text fz={"md"} ta="center" c="dimmed">
+                Sản phẩm mới đã được tạo thành công. Bạn có thể xem lại thông
+                tin chi tiết trong danh sách sản phẩm hoặc tiếp tục thêm mới sản
+                phẩm khác.
+              </Text>
+
+              <Button size="md" mt="md" radius={4} onClick={() => navigate(-1)}>
+                Xác nhận
+              </Button>
+            </Stack>
+          </Stepper.Completed>
         </Stepper>
 
-        <Group justify="space-between" mt="md">
-          <Button
-            variant="default"
-            onClick={() => setActive((a) => Math.max(a - 1, 0))}
-            radius={4}
-          >
-            Quay lại
-          </Button>
-          {active < 3 ? (
-            <Button onClick={() => setActive((a) => a + 1)} radius={4}>
-              Tiếp theo
+        {active < 4 && (
+          <Group justify="space-between" mt="md">
+            <Button
+              variant="default"
+              onClick={() => setActive((a) => Math.max(a - 1, 0))}
+              radius={4}
+            >
+              Quay lại
             </Button>
-          ) : (
-            <Button radius={4}>Tạo mới</Button>
-          )}
-        </Group>
+            {active < 3 ? (
+              <Button onClick={() => setActive((a) => a + 1)} radius={4}>
+                Tiếp theo
+              </Button>
+            ) : (
+              <Button onClick={() => setActive((a) => a + 1)} radius={4}>
+                Hoàn Thành
+              </Button>
+            )}
+          </Group>
+        )}
       </Stack>
     </Card>
   );

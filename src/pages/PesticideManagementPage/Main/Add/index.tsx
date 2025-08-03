@@ -63,7 +63,7 @@ const PesticideManagementMainAddPage = () => {
     },
   });
 
-  const nextStep = () => setActive((cur) => (cur < 3 ? cur + 1 : cur));
+  const nextStep = () => setActive((cur) => (cur < 4 ? cur + 1 : cur));
   const prevStep = () => setActive((cur) => (cur > 0 ? cur - 1 : cur));
 
   return (
@@ -380,24 +380,53 @@ const PesticideManagementMainAddPage = () => {
             <SelectableSupplierCards isCheckbox={false} />
           </Stack>
         </Stepper.Step>
+
+        <Stepper.Completed>
+          <Stack align="center" justify="center" mt="xl">
+            <Image
+              src={
+                "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQjPNbBpZeXnXfTuA6AWek-Kj8NYEVbYdG6ayi5bIWarDuryXDrILdKMTd597quLD0PBKM&usqp=CAU"
+              }
+              w={200}
+              fit="cover"
+            />
+            <Text fz={"h2"} ta="center">
+              Thêm mới thuốc bảo vệ thực vật thành công!
+            </Text>
+            <Text fz={"md"} ta="center" c="dimmed">
+              Thuốc mới đã được tạo thành công. Bạn có thể xem lại thông tin chi
+              tiết trong danh sách thuốc bảo vệ thực vật.
+            </Text>
+
+            <Button size="md" mt="md" radius={4} onClick={() => navigate(-1)}>
+              Xác nhận
+            </Button>
+          </Stack>
+        </Stepper.Completed>
       </Stepper>
 
-      <Group mt="xl" justify="space-between">
-        <Button
-          variant="default"
-          radius={4}
-          onClick={prevStep}
-          disabled={active === 0}
-        >
-          Quay lại
-        </Button>
-        {active < 3 && (
-          <Button onClick={nextStep} radius={4}>
-            Tiếp theo
+      {active < 4 && (
+        <Group mt="xl" justify="space-between">
+          <Button
+            variant="default"
+            radius={4}
+            onClick={prevStep}
+            disabled={active === 0}
+          >
+            Quay lại
           </Button>
-        )}
-        {active === 3 && <Button radius={4}>Lưu</Button>}
-      </Group>
+          {active < 3 && (
+            <Button onClick={nextStep} radius={4}>
+              Tiếp theo
+            </Button>
+          )}
+          {active === 3 && (
+            <Button onClick={nextStep} radius={4}>
+              Hoàn thành
+            </Button>
+          )}
+        </Group>
+      )}
     </Card>
   );
 };

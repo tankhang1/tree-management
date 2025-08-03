@@ -70,7 +70,7 @@ const CompanyAddressPage = () => {
     { accessorKey: "note", header: "Ghi chú" },
     {
       accessorKey: "actions",
-      header: "",
+      header: "Tuỳ chọn",
       enableColumnActions: false,
       size: 10,
       Cell: () => (
@@ -102,7 +102,7 @@ const CompanyAddressPage = () => {
     <Stack gap="lg">
       <Group justify="space-between">
         <Title flex={1} order={2}>
-          Quản lý địa chỉ doanh nghiệp / hộ nông dân
+          Quản lý địa chỉ doanh nghiệp / nông hộ
         </Title>
         <Group>
           <Button variant="outline" radius={4} leftSection={<IconFileExcel />}>

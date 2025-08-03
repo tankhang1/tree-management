@@ -8,6 +8,8 @@ import {
   // MultiSelect,
   Stack,
   Title,
+  Image,
+  Text,
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { IconArrowLeft, IconSearch } from "@tabler/icons-react";
@@ -127,23 +129,47 @@ const HRManagementTeamAddPage = () => {
               </Stack>
             </Card>
           </Stepper.Step>
+          <Stepper.Completed>
+            <Stack align="center" justify="center" mt="xl">
+              <Image
+                src={
+                  "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQjPNbBpZeXnXfTuA6AWek-Kj8NYEVbYdG6ayi5bIWarDuryXDrILdKMTd597quLD0PBKM&usqp=CAU"
+                }
+                w={200}
+                fit="cover"
+              />
+              <Text fz={"h2"} ta="center">
+                Thêm mới nhóm thành công!
+              </Text>
+              <Text fz={"md"} ta="center" c="dimmed">
+                Nhóm mới đã được tạo thành công. Bạn có thể xem lại thông tin
+                chi tiết trong danh sách nhóm.
+              </Text>
+
+              <Button size="md" mt="md" radius={4} onClick={() => navigate(-1)}>
+                Xác nhận
+              </Button>
+            </Stack>
+          </Stepper.Completed>
         </Stepper>
 
-        <Group justify="space-between" mt="lg">
-          <Button
-            radius={4}
-            variant="default"
-            onClick={() => setActive((prev) => Math.max(prev - 1, 0))}
-          >
-            Quay lại
-          </Button>
-          <Button
-            radius={4}
-            onClick={() => setActive((prev) => Math.min(prev + 1, 2))}
-          >
-            {active === 2 ? "Tạo nhóm" : "Tiếp tục"}
-          </Button>
-        </Group>
+        {active < 3 && (
+          <Group justify="space-between" mt="lg">
+            <Button
+              radius={4}
+              variant="default"
+              onClick={() => setActive((prev) => Math.max(prev - 1, 0))}
+            >
+              Quay lại
+            </Button>
+            <Button
+              radius={4}
+              onClick={() => setActive((prev) => Math.min(prev + 1, 3))}
+            >
+              {active === 2 ? "Hoàn thành" : "Tiếp tục"}
+            </Button>
+          </Group>
+        )}
       </Stack>
     </Card>
   );

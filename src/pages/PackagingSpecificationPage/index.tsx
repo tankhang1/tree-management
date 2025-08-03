@@ -89,7 +89,7 @@ const PackagingSpecificationPage = () => {
     },
     {
       accessorKey: "actions",
-      header: "Hành động",
+      header: "Tuỳ chọn",
       enableColumnActions: false,
       size: 10,
       Cell: () => (

@@ -11,6 +11,7 @@ import {
   ScrollArea,
   TextInput,
   SimpleGrid,
+  Image,
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { useState } from "react";
@@ -188,7 +189,7 @@ const PlanManagementMainAddPage = () => {
     },
   });
 
-  const nextStep = () => setActive((current) => Math.min(current + 1, 4));
+  const nextStep = () => setActive((current) => Math.min(current + 1, 5));
   const prevStep = () => setActive((current) => Math.max(current - 1, 0));
 
   return (
@@ -210,6 +211,28 @@ const PlanManagementMainAddPage = () => {
         <Stepper.Step label="Bước 3" description="Thông tin cây trồng" />
         <Stepper.Step label="Bước 4" description="Phân bổ giai đoạn & vật tư" />
         <Stepper.Step label="Bước 5" description="Xác nhận" />
+        <Stepper.Completed>
+          <Stack align="center" justify="center" mt="xl">
+            <Image
+              src={
+                "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQjPNbBpZeXnXfTuA6AWek-Kj8NYEVbYdG6ayi5bIWarDuryXDrILdKMTd597quLD0PBKM&usqp=CAU"
+              }
+              w={200}
+              fit="cover"
+            />
+            <Text fz={"h2"} ta="center">
+              Thêm mới kế hoạch mùa vụ thành công
+            </Text>
+            <Text fz={"md"} ta="center" c="dimmed">
+              Kế hoạch mùa vụ của bạn đã được tạo thành công. Bạn có thể xem lại
+              thông tin chi tiết trong danh sách kế hoạch mùa vụ.
+            </Text>
+
+            <Button size="md" mt="md" radius={4} onClick={() => navigate(-1)}>
+              Xác nhận
+            </Button>
+          </Stack>
+        </Stepper.Completed>
       </Stepper>
 
       <form onSubmit={form.onSubmit((values) => console.log(values))}>
@@ -821,25 +844,27 @@ const PlanManagementMainAddPage = () => {
           </Stack>
         )}
         {active === 4 && <ConfirmStep />}
-        <Group justify="space-between" mt="xl">
-          <Button
-            radius={4}
-            variant="default"
-            onClick={prevStep}
-            disabled={active === 0}
-          >
-            Quay lại
-          </Button>
-          {active < 4 ? (
-            <Button radius={4} onClick={nextStep}>
-              Tiếp theo
+        {active < 5 && (
+          <Group justify="space-between" mt="xl">
+            <Button
+              radius={4}
+              variant="default"
+              onClick={prevStep}
+              disabled={active === 0}
+            >
+              Quay lại
             </Button>
-          ) : (
-            <Button radius={4} type="submit" color="green">
-              Lưu kế hoạch
-            </Button>
-          )}
-        </Group>
+            {active < 4 ? (
+              <Button radius={4} onClick={nextStep}>
+                Tiếp theo
+              </Button>
+            ) : (
+              <Button radius={4} onClick={nextStep} type="submit" color="green">
+                Hoàn thành
+              </Button>
+            )}
+          </Group>
+        )}
       </form>
     </Card>
   );

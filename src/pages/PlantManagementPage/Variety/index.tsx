@@ -145,7 +145,7 @@ const PlantManagementVarietyPage = () => {
     },
     {
       id: "actions",
-      header: "",
+      header: "Tuỳ chọn",
       enableColumnActions: false,
       enableSorting: false,
       size: 10,

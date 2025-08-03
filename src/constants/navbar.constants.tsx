@@ -293,7 +293,7 @@ export const NAV_BAR = [
     ],
   },
   {
-    label: "Doanh nghiệp / Hộ nông dân",
+    label: "Doanh nghiệp / Nông hộ",
     icon: IconBuildings,
     link: PATH.COMPANY,
     children: [

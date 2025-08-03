@@ -76,7 +76,7 @@ export function ConfirmStep({
           <Grid.Col span={6}>
             <Group gap="xs">
               <IconBuildingFactory size={18} />
-              <Text fw={500}>Tổ chức / Hộ nông dân:</Text>
+              <Text fw={500}>Tổ chức / Nông hộ:</Text>
               <Text>{farmer}</Text>
             </Group>
           </Grid.Col>

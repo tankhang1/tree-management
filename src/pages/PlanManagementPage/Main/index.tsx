@@ -128,7 +128,7 @@ const PlanManagementMainPage = () => {
     },
     {
       accessorKey: "actions",
-      header: "",
+      header: "Tuỳ chọn",
       enableColumnActions: false,
       size: 10,
       Cell: () => (

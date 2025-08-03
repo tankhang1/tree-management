@@ -115,7 +115,7 @@ export function CompanyAddPage() {
         >
           Quay lại
         </Button>
-        <Title order={3}>Tạo mới doanh nghiệp / hộ nông dân</Title>
+        <Title order={3}>Tạo mới doanh nghiệp / nông hộ</Title>
       </Group>
 
       <Stepper active={active} onStepClick={setActive}>

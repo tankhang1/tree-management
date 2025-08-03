@@ -153,7 +153,7 @@ const MapManagementRegionPage = () => {
     },
     {
       accessorKey: "orgUnit",
-      header: "Doanh nghiệp / Hộ nông dân",
+      header: "Doanh nghiệp / nông hộ",
     },
     {
       accessorKey: "area",
@@ -184,7 +184,7 @@ const MapManagementRegionPage = () => {
     },
     {
       accessorKey: "actions",
-      header: "",
+      header: "Tuỳ chọn",
       enableColumnActions: false,
       size: 10,
       Cell: () => (

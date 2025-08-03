@@ -96,7 +96,7 @@ const HRManagementEmployeePage = () => {
     { accessorKey: "manager", header: "Người quản lý" },
     {
       accessorKey: "actions",
-      header: "",
+      header: "Tuỳ chọn",
       enableColumnActions: false,
       size: 10,
       Cell: () => (

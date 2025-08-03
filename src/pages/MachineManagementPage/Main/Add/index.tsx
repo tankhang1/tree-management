@@ -67,13 +67,9 @@ const MachineManagementMainAddPage = () => {
   });
 
   const nextStep = () =>
-    setActive((current) => (current < 3 ? current + 1 : current));
+    setActive((current) => (current < 4 ? current + 1 : current));
   const prevStep = () =>
     setActive((current) => (current > 0 ? current - 1 : current));
-
-  const handleSubmit = (values: typeof form.values) => {
-    console.log("🛠️ Submitting Machine:", values);
-  };
 
   return (
     <Card shadow="sm" p="lg" radius={4}>
@@ -434,29 +430,51 @@ const MachineManagementMainAddPage = () => {
         </Stepper.Step>
 
         <Stepper.Completed>
-          <Text>✅ Kiểm tra lại thông tin trước khi lưu.</Text>
-          <Button onClick={() => handleSubmit(form.values)} mt="md" fullWidth>
-            🚀 Tạo máy móc
-          </Button>
+          <Stack align="center" justify="center" mt="xl">
+            <Image
+              src={
+                "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQjPNbBpZeXnXfTuA6AWek-Kj8NYEVbYdG6ayi5bIWarDuryXDrILdKMTd597quLD0PBKM&usqp=CAU"
+              }
+              w={200}
+              fit="cover"
+            />
+            <Text fz={"h2"} ta="center">
+              Thêm mới máy móc thành công!
+            </Text>
+            <Text fz={"md"} ta="center" c="dimmed">
+              Máy móc mới đã được thêm thành công. Bạn có thể xem lại thông tin
+              chi tiết trong danh sách máy móc.
+            </Text>
+
+            <Button size="md" mt="md" radius={4} onClick={() => navigate(-1)}>
+              Xác nhận
+            </Button>
+          </Stack>
         </Stepper.Completed>
       </Stepper>
 
-      <Group mt="xl" justify="space-between">
-        <Button
-          radius={4}
-          variant="default"
-          onClick={prevStep}
-          disabled={active === 0}
-        >
-          Quay lại
-        </Button>
-
-        {active < 3 && (
-          <Button radius={4} onClick={nextStep}>
-            Tiếp theo
+      {active < 4 && (
+        <Group mt="xl" justify="space-between">
+          <Button
+            radius={4}
+            variant="default"
+            onClick={prevStep}
+            disabled={active === 0}
+          >
+            Quay lại
           </Button>
-        )}
-      </Group>
+
+          {active < 3 ? (
+            <Button radius={4} onClick={nextStep}>
+              Tiếp theo
+            </Button>
+          ) : (
+            <Button radius={4} onClick={nextStep}>
+              Hoàn thành
+            </Button>
+          )}
+        </Group>
+      )}
     </Card>
   );
 };

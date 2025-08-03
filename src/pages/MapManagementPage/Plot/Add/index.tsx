@@ -10,6 +10,7 @@ import {
   ActionIcon,
   Alert,
   NumberInput,
+  Image,
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import {
@@ -91,6 +92,28 @@ const MapManagementPlotAddPage = () => {
         <Stepper.Step label="Bước 3" description="Bản đồ lô" />
         {/* <Stepper.Step label="Bước 4" description="Tạo hàng" /> */}
         <Stepper.Step label="Bước 4" description="Xác nhận" />
+        <Stepper.Completed>
+          <Stack align="center" justify="center" mt="xl">
+            <Image
+              src={
+                "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQjPNbBpZeXnXfTuA6AWek-Kj8NYEVbYdG6ayi5bIWarDuryXDrILdKMTd597quLD0PBKM&usqp=CAU"
+              }
+              w={200}
+              fit="cover"
+            />
+            <Text fz={"h2"} ta="center">
+              Thêm mới phân bổ lô thành công!
+            </Text>
+            <Text fz={"md"} ta="center" c="dimmed">
+              Phân bổ lô mới đã được thêm thành công. Vui lòng kiểm tra lại
+              thông tin để đảm bảo tính chính xác.
+            </Text>
+
+            <Button size="md" mt="md" radius={4} onClick={() => navigate(-1)}>
+              Xác nhận
+            </Button>
+          </Stack>
+        </Stepper.Completed>
       </Stepper>
 
       <form onSubmit={form.onSubmit(handleSubmit)}>
@@ -260,28 +283,34 @@ const MapManagementPlotAddPage = () => {
             ]}
           />
         )}
-        <Group justify="space-between" mt="xl">
-          <Button
-            variant="default"
-            radius={4}
-            disabled={activeStep === 0}
-            onClick={() => setActiveStep((prev) => prev - 1)}
-          >
-            Quay lại
-          </Button>
-          {activeStep < 3 ? (
+        {activeStep < 4 && (
+          <Group justify="space-between" mt="xl">
             <Button
+              variant="default"
               radius={4}
-              onClick={() => setActiveStep((prev) => prev + 1)}
+              disabled={activeStep === 0}
+              onClick={() => setActiveStep((prev) => prev - 1)}
             >
-              Tiếp theo
+              Quay lại
             </Button>
-          ) : (
-            <Button radius={4} color="green">
-              Lưu
-            </Button>
-          )}
-        </Group>
+            {activeStep < 3 ? (
+              <Button
+                radius={4}
+                onClick={() => setActiveStep((prev) => prev + 1)}
+              >
+                Tiếp theo
+              </Button>
+            ) : (
+              <Button
+                radius={4}
+                onClick={() => setActiveStep((prev) => prev + 1)}
+                color="green"
+              >
+                Hoàn thành
+              </Button>
+            )}
+          </Group>
+        )}
       </form>
     </Card>
   );

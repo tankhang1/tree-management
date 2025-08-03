@@ -759,7 +759,7 @@ const ContractManagementAddPage = () => {
             <Stack gap={"xs"}>
               <Title order={4}>Thông tin bên A</Title>
               <TextInput
-                label="Chọn doanh nghiệp / hộ nông dân (chọn một)"
+                label="Chọn doanh nghiệp / nông hộ (chọn một)"
                 placeholder="Tìm kiếm doanh nghiệp"
                 radius={4}
                 leftSection={<IconSearch size={18} />}
@@ -773,7 +773,7 @@ const ContractManagementAddPage = () => {
             <Stack gap={"xs"}>
               <Title order={4}>Thông tin bên B</Title>
               <TextInput
-                label="Chọn doanh nghiệp / hộ nông dân (chọn một)"
+                label="Chọn doanh nghiệp / nông hộ (chọn một)"
                 placeholder="Tìm kiếm doanh nghiệp"
                 radius={4}
                 leftSection={<IconSearch size={18} />}
@@ -903,27 +903,51 @@ const ContractManagementAddPage = () => {
               </Stack>
             </Paper>
           </Stepper.Step>
+          <Stepper.Completed>
+            <Stack align="center" justify="center" mt="xl">
+              <Image
+                src={
+                  "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQjPNbBpZeXnXfTuA6AWek-Kj8NYEVbYdG6ayi5bIWarDuryXDrILdKMTd597quLD0PBKM&usqp=CAU"
+                }
+                w={200}
+                fit="cover"
+              />
+              <Text fz={"h2"} ta="center">
+                Thêm mới hợp đồng thành công!
+              </Text>
+              <Text fz={"md"} ta="center" c="dimmed">
+                Hợp đồng mới đã được tạo thành công. Bạn có thể xem lại thông
+                tin chi tiết trong danh sách hợp đồng.
+              </Text>
+
+              <Button size="md" mt="md" radius={4} onClick={() => navigate(-1)}>
+                Xác nhận
+              </Button>
+            </Stack>
+          </Stepper.Completed>
         </Stepper>
 
-        <Group justify="space-between" mt="xl">
-          <Button
-            radius={4}
-            variant="default"
-            onClick={() => setActiveStep((p) => Math.max(p - 1, 0))}
-            disabled={activeStep === 0}
-          >
-            Quay lại
-          </Button>
-          {activeStep < 4 ? (
-            <Button radius={4} onClick={() => setActiveStep((p) => p + 1)}>
-              Tiếp theo
+        {activeStep < 5 && (
+          <Group justify="space-between" mt="xl">
+            <Button
+              radius={4}
+              variant="default"
+              onClick={() => setActiveStep((p) => Math.max(p - 1, 0))}
+              disabled={activeStep === 0}
+            >
+              Quay lại
             </Button>
-          ) : (
-            <Button radius={4} color="green">
-              Tạo hợp đồng
-            </Button>
-          )}
-        </Group>
+            {activeStep < 4 ? (
+              <Button radius={4} onClick={() => setActiveStep((p) => p + 1)}>
+                Tiếp theo
+              </Button>
+            ) : (
+              <Button radius={4} onClick={() => setActiveStep((p) => p + 1)}>
+                Hoàn thành
+              </Button>
+            )}
+          </Group>
+        )}
       </Stack>
     </Card>
   );

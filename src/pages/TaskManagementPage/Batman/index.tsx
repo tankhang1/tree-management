@@ -96,7 +96,7 @@ const TaskManagementBatmanPage = () => {
     { accessorKey: "reviewer", header: "Người kiểm duyệt" },
     {
       accessorKey: "actions",
-      header: "",
+      header: "Tuỳ chọn",
       enableColumnActions: false,
       size: 10,
       Cell: () => (

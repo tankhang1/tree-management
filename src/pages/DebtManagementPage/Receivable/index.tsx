@@ -118,7 +118,7 @@ const DebtManagementReceivablePage = () => {
     { accessorKey: "lastPaymentDate", header: "Thanh toán gần nhất" },
     {
       accessorKey: "actions",
-      header: "",
+      header: "Tuỳ chọn",
       enableColumnActions: false,
       size: 10,
       Cell: () => (

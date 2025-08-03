@@ -14,6 +14,7 @@ import {
   ActionIcon,
   Modal,
   Card,
+  Image,
 } from "@mantine/core";
 import { useState } from "react";
 import { MapContainer, TileLayer, Polygon } from "react-leaflet";
@@ -78,7 +79,7 @@ const MapManagementAddAreaPage = () => {
     setCoords((prev) => prev.filter((_, i) => i !== index));
   };
 
-  const nextStep = () => setActive((cur) => Math.min(cur + 1, 3));
+  const nextStep = () => setActive((cur) => Math.min(cur + 1, 4));
   const prevStep = () => setActive((cur) => Math.max(cur - 1, 0));
 
   const handleChange = <K extends keyof AreaForm>(
@@ -329,31 +330,51 @@ const MapManagementAddAreaPage = () => {
             </Card>
           </Stack>
         </Stepper.Step>
+        <Stepper.Completed>
+          <Stack align="center" justify="center" mt="xl">
+            <Image
+              src={
+                "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQjPNbBpZeXnXfTuA6AWek-Kj8NYEVbYdG6ayi5bIWarDuryXDrILdKMTd597quLD0PBKM&usqp=CAU"
+              }
+              w={200}
+              fit="cover"
+            />
+            <Text fz={"h2"} ta="center">
+              Thêm mới khu vực trồng thành công!
+            </Text>
+            <Text fz={"md"} ta="center" c="dimmed">
+              Khu vực trồng mới đã được thêm thành công. Vui lòng kiểm tra lại
+              thông tin để đảm bảo tính chính xác.
+            </Text>
+
+            <Button size="md" mt="md" radius={4} onClick={() => navigate(-1)}>
+              Xác nhận
+            </Button>
+          </Stack>
+        </Stepper.Completed>
       </Stepper>
 
-      <Group justify="space-between" mt="xl">
-        <Button
-          radius={4}
-          variant="default"
-          onClick={prevStep}
-          disabled={active === 0}
-        >
-          Quay lại
-        </Button>
-        {active < 3 ? (
-          <Button radius={4} onClick={nextStep}>
-            Tiếp tục
-          </Button>
-        ) : (
+      {active < 4 && (
+        <Group justify="space-between" mt="xl">
           <Button
             radius={4}
-            color="green"
-            onClick={() => console.log("Submitted", form)}
+            variant="default"
+            onClick={prevStep}
+            disabled={active === 0}
           >
-            Hoàn tất
+            Quay lại
           </Button>
-        )}
-      </Group>
+          {active < 3 ? (
+            <Button radius={4} onClick={nextStep}>
+              Tiếp tục
+            </Button>
+          ) : (
+            <Button radius={4} onClick={nextStep}>
+              Hoàn thành
+            </Button>
+          )}
+        </Group>
+      )}
       <Modal
         opened={openedAddLocation}
         onClose={closeAddLocation}

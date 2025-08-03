@@ -4,6 +4,7 @@ import {
   Card,
   Grid,
   Group,
+  Image,
   Input,
   MultiSelect,
   Select,
@@ -336,16 +337,34 @@ const HRManagementEmployeeAddPage = () => {
                 <Button variant="default" onClick={prevStep} radius={4}>
                   Quay lại
                 </Button>
-                <Button
-                  color="green"
-                  radius={4}
-                  onClick={() => alert("Đã xác nhận!")}
-                >
-                  Xác nhận & Hoàn tất
+                <Button color="green" radius={4} onClick={nextStep}>
+                  Hoàn thành
                 </Button>
               </Group>
             </Stack>
           </Stepper.Step>
+          <Stepper.Completed>
+            <Stack align="center" justify="center" mt="xl">
+              <Image
+                src={
+                  "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQjPNbBpZeXnXfTuA6AWek-Kj8NYEVbYdG6ayi5bIWarDuryXDrILdKMTd597quLD0PBKM&usqp=CAU"
+                }
+                w={200}
+                fit="cover"
+              />
+              <Text fz={"h2"} ta="center">
+                Thêm mới nhân sự thành công!
+              </Text>
+              <Text fz={"md"} ta="center" c="dimmed">
+                Nhân sự mới đã được thêm thành công. Bạn có thể xem lại thông
+                tin chi tiết trong danh sách nhân sự.
+              </Text>
+
+              <Button size="md" mt="md" radius={4} onClick={() => navigate(-1)}>
+                Xác nhận
+              </Button>
+            </Stack>
+          </Stepper.Completed>
         </Stepper>
       </form>
     </Card>

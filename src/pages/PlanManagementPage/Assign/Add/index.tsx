@@ -15,6 +15,7 @@ import {
   Modal,
   Text,
   Radio,
+  Image,
 } from "@mantine/core";
 import { DateInput } from "@mantine/dates";
 import {
@@ -72,7 +73,7 @@ const PlanManagementAssignAddPage = () => {
     },
   });
 
-  const nextStep = () => setActive((current) => Math.min(current + 1, 2));
+  const nextStep = () => setActive((current) => Math.min(current + 1, 3));
   const prevStep = () => setActive((current) => Math.max(current - 1, 0));
 
   return (
@@ -99,6 +100,34 @@ const PlanManagementAssignAddPage = () => {
                 description="Phân công theo giai đoạn"
               />
               <Stepper.Step label="Bước 3" description="Xác nhận" />
+              <Stepper.Completed>
+                <Stack align="center" justify="center" mt="xl">
+                  <Image
+                    src={
+                      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQjPNbBpZeXnXfTuA6AWek-Kj8NYEVbYdG6ayi5bIWarDuryXDrILdKMTd597quLD0PBKM&usqp=CAU"
+                    }
+                    w={200}
+                    fit="cover"
+                  />
+                  <Text fz={"h2"} ta="center">
+                    Thêm mới công việc canh tác thành công!
+                  </Text>
+                  <Text fz={"md"} ta="center" c="dimmed">
+                    Công việc canh tác mới đã được tạo thành công. Bạn có thể
+                    xem lại thông tin chi tiết trong danh sách công việc canh
+                    tác.
+                  </Text>
+
+                  <Button
+                    size="md"
+                    mt="md"
+                    radius={4}
+                    onClick={() => navigate(-1)}
+                  >
+                    Xác nhận
+                  </Button>
+                </Stack>
+              </Stepper.Completed>
             </Stepper>
 
             {active === 0 && (
@@ -327,25 +356,32 @@ const PlanManagementAssignAddPage = () => {
             )}
 
             {active === 2 && <ConfirmStep />}
-            <Group justify="space-between" mt="lg">
-              <Button
-                radius={4}
-                onClick={prevStep}
-                disabled={active === 0}
-                variant="default"
-              >
-                Quay lại
-              </Button>
-              {active < 2 ? (
-                <Button radius={4} onClick={nextStep}>
-                  Tiếp tục
+            {active < 3 && (
+              <Group justify="space-between" mt="lg">
+                <Button
+                  radius={4}
+                  onClick={prevStep}
+                  disabled={active === 0}
+                  variant="default"
+                >
+                  Quay lại
                 </Button>
-              ) : (
-                <Button radius={4} type="submit" color="green">
-                  Tạo công việc
-                </Button>
-              )}
-            </Group>
+                {active < 2 ? (
+                  <Button radius={4} onClick={nextStep}>
+                    Tiếp tục
+                  </Button>
+                ) : (
+                  <Button
+                    radius={4}
+                    onClick={nextStep}
+                    type="submit"
+                    color="green"
+                  >
+                    Hoàn thành
+                  </Button>
+                )}
+              </Group>
+            )}
           </form>
         </Grid.Col>
         {form.getValues().plan !== "" && (

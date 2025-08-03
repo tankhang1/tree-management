@@ -67,7 +67,7 @@ const ProductManagementTypePage = () => {
     { accessorKey: "note", header: "Ghi chú" },
     {
       accessorKey: "actions",
-      header: "Hành động",
+      header: "Tuỳ chọn",
       enableColumnActions: false,
       size: 10,
       Cell: () => (

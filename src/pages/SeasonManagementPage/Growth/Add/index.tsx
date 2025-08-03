@@ -12,6 +12,7 @@ import {
   ScrollAreaAutosize,
   Accordion,
   Text,
+  Image,
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { IconArrowLeft, IconSearch } from "@tabler/icons-react";
@@ -191,6 +192,31 @@ const SeasonManagementGrowthAddPage = () => {
         <Stepper.Step label="Bước 1" description="Thông tin cơ bản" />
         <Stepper.Step label="Bước 2" description="Chu kỳ & giai đoạn" />
         <Stepper.Step label="Bước 3" description="Xác nhận" />
+        <Stepper.Completed>
+          <Stack align="center" justify="center" mt="xl">
+            <Image
+              src={
+                "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQjPNbBpZeXnXfTuA6AWek-Kj8NYEVbYdG6ayi5bIWarDuryXDrILdKMTd597quLD0PBKM&usqp=CAU"
+              }
+              w={200}
+              fit="cover"
+            />
+            <Text fz={"h2"} ta="center">
+              Thêm mới mùa vụ thành công
+            </Text>
+            <Text fz={"md"} ta="center" c="dimmed">
+              Thêm mới mùa vụ thành công, bạn có thể xem lại trong danh sách mùa
+              vụ hoặc tiếp tục thêm mới mùa vụ khác.
+              <br />
+              Hoặc bạn có thể quay lại trang quản lý mùa vụ để xem danh sách các
+              mùa vụ.
+            </Text>
+
+            <Button size="md" mt="md" radius={4} onClick={() => navigate(-1)}>
+              Xác nhận
+            </Button>
+          </Stack>
+        </Stepper.Completed>
       </Stepper>
 
       <form onSubmit={form.onSubmit(nextStep)}>
@@ -367,18 +393,21 @@ const SeasonManagementGrowthAddPage = () => {
           </Stack>
         )}
         {activeStep === 2 && <ConfirmStep />}
-        <Group justify="space-between" mt="md">
-          <Button variant="default" onClick={() => setActiveStep(0)} radius={4}>
-            Quay lại
-          </Button>
+        {activeStep < 3 && (
+          <Group justify="space-between" mt="md">
+            <Button
+              variant="default"
+              onClick={() => setActiveStep(0)}
+              radius={4}
+            >
+              Quay lại
+            </Button>
 
-          <Button
-            onClick={() => activeStep < 2 && setActiveStep(activeStep + 1)}
-            radius={4}
-          >
-            {activeStep === 2 ? "Tạo mới" : "Tiếp tục"}
-          </Button>
-        </Group>
+            <Button onClick={() => setActiveStep(activeStep + 1)} radius={4}>
+              {activeStep === 2 ? "Hoàn thành" : "Tiếp tục"}
+            </Button>
+          </Group>
+        )}
       </form>
     </Card>
   );

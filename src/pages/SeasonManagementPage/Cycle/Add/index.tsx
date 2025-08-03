@@ -11,6 +11,7 @@ import {
   Select,
   Radio,
   Text,
+  Image,
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import {
@@ -75,6 +76,33 @@ const SeasonManagementCycleAddPage = () => {
             <Stepper.Step label="Bước 1" description="Thông tin chung" />
             <Stepper.Step label="Bước 2" description="Danh sách giai đoạn" />
             <Stepper.Step label="Bước 3" description="Xác nhận" />
+            <Stepper.Completed>
+              <Stack align="center" justify="center" mt="xl">
+                <Image
+                  src={
+                    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQjPNbBpZeXnXfTuA6AWek-Kj8NYEVbYdG6ayi5bIWarDuryXDrILdKMTd597quLD0PBKM&usqp=CAU"
+                  }
+                  w={200}
+                  fit="cover"
+                />
+                <Text fz={"h2"} ta="center">
+                  Thêm mới chu kì sinh trưởng thành công!
+                </Text>
+                <Text fz={"md"} ta="center" c="dimmed">
+                  Chu kì sinh trưởng mới đã được thêm thành công. Vui lòng kiểm
+                  tra lại thông tin để đảm bảo tính chính xác.
+                </Text>
+
+                <Button
+                  size="md"
+                  mt="md"
+                  radius={4}
+                  onClick={() => navigate(-1)}
+                >
+                  Xác nhận
+                </Button>
+              </Stack>
+            </Stepper.Completed>
           </Stepper>
 
           {active === 0 && (
@@ -201,25 +229,27 @@ const SeasonManagementCycleAddPage = () => {
             </Stack>
           )}
           {active === 2 && <ConfirmStep />}
-          <Group justify="space-between" mt="md">
-            <Button
-              variant="default"
-              onClick={() => setActive(Math.max(active - 1, 0))}
-              disabled={active === 0}
-              radius={4}
-            >
-              Quay lại
-            </Button>
-            {active < 2 ? (
-              <Button onClick={() => setActive(active + 1)} radius={4}>
-                Tiếp tục
+          {active < 3 && (
+            <Group justify="space-between" mt="md">
+              <Button
+                variant="default"
+                onClick={() => setActive(Math.max(active - 1, 0))}
+                disabled={active === 0}
+                radius={4}
+              >
+                Quay lại
               </Button>
-            ) : (
-              <Button color="green" radius={4}>
-                Tạo mới
-              </Button>
-            )}
-          </Group>
+              {active < 2 ? (
+                <Button onClick={() => setActive(active + 1)} radius={4}>
+                  Tiếp tục
+                </Button>
+              ) : (
+                <Button onClick={() => setActive(active + 1)} radius={4}>
+                  Hoàn thành
+                </Button>
+              )}
+            </Group>
+          )}
         </Stack>
       </form>
     </Card>

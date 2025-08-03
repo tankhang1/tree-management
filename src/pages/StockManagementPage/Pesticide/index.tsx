@@ -94,7 +94,7 @@ const StockManagementPesticidePage = () => {
     { accessorKey: "note", header: "Ghi chú" },
     {
       accessorKey: "actions",
-      header: "",
+      header: "Tuỳ chọn",
       enableColumnActions: false,
       size: 10,
       Cell: () => (

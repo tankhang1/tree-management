@@ -250,7 +250,7 @@ export default function StockManagementAddDeliveryPage() {
           <form onSubmit={form.onSubmit(() => setActive(1))}>
             <Stack gap="xs">
               <TextInput
-                label="Doanh nghiệp / hộ nông dân (chọn một)"
+                label="Doanh nghiệp / nông hộ (chọn một)"
                 placeholder="Tìm kiếm doanh nghiệp"
                 leftSection={<IconSearch size={18} />}
               />

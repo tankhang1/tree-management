@@ -100,7 +100,7 @@ const AreaManagementRegionDetailPage = () => {
               <Text>{region.name}</Text>
             </Grid.Col>
             <Grid.Col span={6}>
-              <Text fw={500}>Doanh nghiệp / Hộ nông dân:</Text>
+              <Text fw={500}>Doanh nghiệp / Nông hộ:</Text>
               <Text>{region.orgUnit}</Text>
             </Grid.Col>
             <Grid.Col span={6}>
