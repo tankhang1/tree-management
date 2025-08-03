@@ -165,6 +165,11 @@ const company = {
 export default function StockManagementAddDeliveryPage() {
   const navigate = useNavigate();
   const [active, setActive] = useState(0);
+  const [selectedArea, setSelectedArea] = useState<string | null>(null);
+  const [selectedSubArea, setSelectedSubArea] = useState<string | null>(null);
+  const [selectedWarehouse, setSelectedWarehouse] = useState<string | null>(
+    null
+  );
   const [importedItems, setImportedItems] = useState<WarehouseItem[]>([
     {
       group: "Phân bón",
@@ -259,7 +264,7 @@ export default function StockManagementAddDeliveryPage() {
                 Khu vực (chọn một)
               </Text>
               <Grid>
-                {areaGroups.map((group, index) => (
+                {areaGroups.map((group) => (
                   <Grid.Col span={{ base: 12, sm: 6 }} key={group.parentId}>
                     <Card
                       withBorder
@@ -268,7 +273,21 @@ export default function StockManagementAddDeliveryPage() {
                       // onClick={() => handleAreaCardClick(group)}
                       style={{
                         cursor: "pointer",
-                        borderColor: index === 0 ? "green" : undefined,
+                        position: "relative",
+                        transition: "transform 0.2s ease",
+
+                        borderColor:
+                          selectedArea === group.parentId ? "green" : undefined,
+                      }}
+                      onMouseEnter={(e) =>
+                        (e.currentTarget.style.transform = "scale(1.02)")
+                      }
+                      onMouseLeave={(e) =>
+                        (e.currentTarget.style.transform = "scale(1)")
+                      }
+                      onClick={() => {
+                        setSelectedArea(group.parentId);
+                        setSelectedSubArea(null);
                       }}
                     >
                       <Group justify="apart">
@@ -308,13 +327,15 @@ export default function StockManagementAddDeliveryPage() {
                         longitude: 106.662,
                         areaSize: 700,
                       },
-                    ].map((group, index) => (
+                    ].map((group) => (
                       <AreaCard
                         isCheckbox
                         key={group.id}
                         {...group}
-                        selected={index === 0}
-                        onToggle={() => {}}
+                        selected={selectedSubArea === group.id}
+                        onToggle={() => {
+                          setSelectedSubArea(group.id);
+                        }}
                         closable={false}
                       />
                     ))}
@@ -350,7 +371,7 @@ export default function StockManagementAddDeliveryPage() {
                 >
                   <Center>
                     <Group gap="sm">
-                      <IconMapPin size={20} color="teal" />
+                      <IconMapPin size={20} color="green" />
                       <Text fw={600}>{area}</Text>
                     </Group>
                   </Center>
@@ -385,6 +406,13 @@ export default function StockManagementAddDeliveryPage() {
                             minWidth: 200,
                             cursor: "pointer",
                             transition: "all 0.2s",
+                            borderColor:
+                              selectedWarehouse === w.title
+                                ? "green"
+                                : undefined,
+                          }}
+                          onClick={() => {
+                            setSelectedWarehouse(w.title);
                           }}
                           onMouseEnter={(e) =>
                             (e.currentTarget.style.boxShadow =

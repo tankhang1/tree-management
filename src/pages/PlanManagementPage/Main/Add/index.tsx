@@ -172,7 +172,7 @@ const cropOptions: CropOption[] = [
 const PlanManagementMainAddPage = () => {
   const navigate = useNavigate();
   const [active, setActive] = useState(0);
-
+  const [selectedZone, setSelectedZone] = useState<string>("");
   const form = useForm({
     initialValues: {
       seasonId: "",
@@ -297,43 +297,64 @@ const PlanManagementMainAddPage = () => {
           <Stack>
             <TextInput
               radius={4}
-              label="Tìm kiếm vùng trồng"
+              label="Vùng trồng (chọn một)"
               placeholder="Tìm kiếm vùng trồng"
               leftSection={<IconMapPin size={16} />}
               {...form.getInputProps("zone")}
             />
             <Scrollable h={250}>
               <Group gap="md" wrap="nowrap" align="flex-start">
-                {zoneCards.map((area, index) => (
-                  <ZoneCard key={area.code} {...area} isActive={index === 0} />
+                {zoneCards.map((area) => (
+                  <ZoneCard
+                    key={area.code}
+                    {...area}
+                    isActive={selectedZone === area.code}
+                    onClick={() => {
+                      setSelectedZone(area.code);
+                      form.setFieldValue("zone", area.code);
+                    }}
+                  />
                 ))}
               </Group>
             </Scrollable>
             <TextInput
               radius={4}
-              label="Tìm kiếm khu vực"
+              label="Khu vực (chọn một)"
               placeholder="Tìm kiếm khu vực"
               leftSection={<IconMapPin size={16} />}
               {...form.getInputProps("area")}
             />
             <Scrollable h={250}>
               <Group gap="md" align="flex-start">
-                {areaCards.map((area, index) => (
-                  <AreaCard key={area.code} {...area} isActive={index === 0} />
+                {areaCards.map((area) => (
+                  <AreaCard
+                    key={area.code}
+                    {...area}
+                    isActive={selectedZone === area.code}
+                    onClick={() => {
+                      form.setFieldValue("area", area.code);
+                      setSelectedZone(area.code);
+                    }}
+                  />
                 ))}
               </Group>
             </Scrollable>
             <TextInput
               radius={4}
-              label="Tìm kiếm lô"
+              label="Lô (chọn một)"
               placeholder="Tìm kiếm lô"
               leftSection={<IconMapPin size={16} />}
               {...form.getInputProps("plot")}
             />
             <Scrollable h={250}>
-              <Group gap="md">
+              <Group gap="md" p={"xs"}>
                 {lotCards.map((area) => (
-                  <LotCard key={area.code} {...area} />
+                  <LotCard
+                    key={area.code}
+                    isActive={form.values.plot === area.code}
+                    {...area}
+                    onClick={() => form.setFieldValue("plot", area.code)}
+                  />
                 ))}
               </Group>
             </Scrollable>
@@ -351,7 +372,7 @@ const PlanManagementMainAddPage = () => {
             />
             <CropCards selected="" plants={cropOptions} onSelect={() => {}} />
             <Text fw={500} fz={15}>
-              Chọn cây trồng (chọn một)
+              Cây trồng (chọn một)
             </Text>
             <TextInput
               placeholder="Tìm kiếm cây trồng"

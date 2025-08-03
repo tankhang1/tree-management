@@ -19,6 +19,8 @@ interface SeedDetailCardProps {
   germinationRate: number;
   uniformityRate: number;
   yieldPerHectare: string;
+  isActive?: boolean;
+  onClick?: () => void;
 }
 
 const SeedDetailCard = ({
@@ -30,6 +32,8 @@ const SeedDetailCard = ({
   germinationRate,
   uniformityRate,
   yieldPerHectare,
+  isActive = false,
+  onClick,
 }: SeedDetailCardProps) => {
   return (
     <Card
@@ -41,9 +45,11 @@ const SeedDetailCard = ({
       style={{
         position: "relative",
         transition: "transform 0.2s ease",
+        borderColor: isActive ? "green" : undefined,
       }}
       onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.02)")}
       onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
+      onClick={onClick}
     >
       <Card.Section>
         <Image src={imageUrl} height={160} alt={seedName} />

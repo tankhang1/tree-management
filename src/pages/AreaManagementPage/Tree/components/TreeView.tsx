@@ -54,7 +54,7 @@ const TreeDetailView = ({
           </Group>
 
           <Group align="flex-start">
-            <ThemeIcon variant="light" color="teal" size="lg" radius="xl">
+            <ThemeIcon variant="light" color="green" size="lg" radius="xl">
               <IconLeaf size={20} />
             </ThemeIcon>
             <Stack gap={0}>

@@ -1,18 +1,29 @@
 import { Card, Stack, Text, Group, Image, Badge } from "@mantine/core";
 import type { CropOption } from "..";
 import Scrollable from "../../../../../components/Scrollable";
+import { useState } from "react";
 
 interface PlantCardSelectorProps {
   plants: CropOption[];
+  isMultiple?: boolean;
   selected: string;
   onSelect: (code: string) => void;
 }
 
 const CropCards: React.FC<PlantCardSelectorProps> = ({
   plants,
-  selected,
-  onSelect,
+  isMultiple = true,
 }) => {
+  const [selectedId, setSelectedId] = useState<string[]>([]);
+  const onSelect = (code: string) => {
+    if (isMultiple) {
+      setSelectedId((prev) =>
+        prev.includes(code) ? prev.filter((id) => id !== code) : [...prev, code]
+      );
+    } else {
+      setSelectedId([code]);
+    }
+  };
   return (
     <Scrollable>
       <Group wrap="nowrap" gap="md" align="flex-start" p={"xs"}>
@@ -21,14 +32,15 @@ const CropCards: React.FC<PlantCardSelectorProps> = ({
             h={350}
             key={plant.code}
             withBorder
-            shadow={selected === plant.code ? "md" : "xs"}
             radius="md"
             style={{
-              borderColor: selected === plant.code ? "teal" : undefined,
               cursor: "pointer",
               width: 300,
               position: "relative",
               transition: "transform 0.2s ease",
+              borderColor: selectedId.includes(plant.code)
+                ? "green"
+                : undefined,
             }}
             onMouseEnter={(e) =>
               (e.currentTarget.style.transform = "scale(1.02)")

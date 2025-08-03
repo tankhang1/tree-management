@@ -78,7 +78,7 @@ const DebtManagementReceivableAddPage = () => {
                     radius={4}
                     onClick={() => setSelectedCategory("partner")}
                   >
-                    Đối tác
+                    Đối tác (chọn một)
                   </Button>
                 </Group>
               </Input.Wrapper>
@@ -97,7 +97,7 @@ const DebtManagementReceivableAddPage = () => {
                 }
                 leftSection={<IconSearch size={18} />}
               />
-              <SelectableSupplierCards isCheckbox={false} />
+              <SelectableSupplierCards isMultiple={false} isCheckbox={false} />
             </Stack>
           </Stepper.Step>
 

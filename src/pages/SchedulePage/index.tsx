@@ -601,7 +601,7 @@ const SchedulePage = () => {
               <Text size="sm" c="dimmed">
                 Loại cây
               </Text>
-              <Badge color="teal" variant="light">
+              <Badge color="green" variant="light">
                 {mockJob.cropType}
               </Badge>
             </Stack>

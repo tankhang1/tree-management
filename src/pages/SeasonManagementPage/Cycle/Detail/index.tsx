@@ -66,7 +66,7 @@ const SeasonManagementCycleDetailPage = () => {
               Tổng thời gian
             </Text>
             <Group gap={4}>
-              <ThemeIcon variant="light" color="teal" size="sm">
+              <ThemeIcon variant="light" color="green" size="sm">
                 <IconClock size={16} />
               </ThemeIcon>
               <Text fw={600}>{sampleData.duration} ngày</Text>

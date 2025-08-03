@@ -93,7 +93,6 @@ const PlantManagementSeedAddPage = () => {
               placeholder="Giống Ri6"
               {...form.getInputProps("name")}
               radius={4}
-              required
             />
 
             <VendorList />

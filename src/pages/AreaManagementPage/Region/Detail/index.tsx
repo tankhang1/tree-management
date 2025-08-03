@@ -183,7 +183,7 @@ const AreaManagementRegionDetailPage = () => {
                       <Text size="sm">{area.soilType}</Text>
                     </Group>
                     <Group mb={8}>
-                      <ThemeIcon variant="light" color="teal" size={24}>
+                      <ThemeIcon variant="light" color="green" size={24}>
                         <IconTree size={16} />
                       </ThemeIcon>
                       <Text size="sm">{area.mainCrop}</Text>

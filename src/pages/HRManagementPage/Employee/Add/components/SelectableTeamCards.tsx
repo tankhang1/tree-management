@@ -140,7 +140,7 @@ export function SelectableTeamCards({
           </Text>
           <Group gap={4} mb={4}>
             {team.roles.map((r) => (
-              <Badge key={r} color="teal" variant="light">
+              <Badge key={r} color="green" variant="light">
                 {r}
               </Badge>
             ))}

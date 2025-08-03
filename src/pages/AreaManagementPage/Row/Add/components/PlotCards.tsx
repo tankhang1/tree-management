@@ -1,6 +1,7 @@
 import { Card, Stack, Text, Group, Badge } from "@mantine/core";
 import type { LotOption } from "..";
 import Scrollable from "../../../../../components/Scrollable";
+import { useState } from "react";
 
 interface LotCardSelectorProps {
   lots: LotOption[];
@@ -8,11 +9,11 @@ interface LotCardSelectorProps {
   onSelect: (code: string) => void;
 }
 
-const PlotCardSelector: React.FC<LotCardSelectorProps> = ({
-  lots,
-  selected,
-  onSelect,
-}) => {
+const PlotCardSelector: React.FC<LotCardSelectorProps> = ({ lots }) => {
+  const [selected, setSelected] = useState("");
+  const onSelect = (code: string) => {
+    setSelected(code);
+  };
   return (
     <Scrollable h={180}>
       <Group gap="md" p={"xs"} wrap="nowrap">
@@ -24,7 +25,7 @@ const PlotCardSelector: React.FC<LotCardSelectorProps> = ({
             h={170}
             shadow={selected === lot.code ? "md" : "xs"}
             style={{
-              borderColor: selected === lot.code ? "teal" : undefined,
+              borderColor: selected === lot.code ? "green" : undefined,
               cursor: "pointer",
               minWidth: 300,
               position: "relative",

@@ -94,6 +94,9 @@ const PurchaseManagementProductAddPage = () => {
     openedFilterEmployee,
     { open: openFilterEmployee, close: closeFilterEmployee },
   ] = useDisclosure(false);
+  const [selectedWarehouse, setSelectedWarehouse] = useState<number>();
+  const [selectedDevice, setSelectedDevice] = useState<number>();
+  const [selectedContract, setSelectedContract] = useState<number>();
   const [mode, setMode] = useState("");
   const [segment, setSegment] = useState("Kho");
   const [active, setActive] = useState(0);
@@ -149,7 +152,7 @@ const PurchaseManagementProductAddPage = () => {
         allowNextStepsSelect={false}
       >
         {/* Step 1 */}
-        <Stepper.Step label="Bước 1" description="Thông tin cơ bản">
+        <Stepper.Step label="Bước 1" description="Đơn vị thu mua">
           <Stack>
             <DatePickerInput
               label="Ngày thực hiện"
@@ -198,91 +201,8 @@ const PurchaseManagementProductAddPage = () => {
         </Stepper.Step>
 
         {/* Step 2 */}
-        <Stepper.Step label="Bước 2" description="Thông tin hợp đồng">
-          <Stack>
-            <Stack gap={"xs"}>
-              <TextInput
-                leftSection={<IconSearch size={18} />}
-                placeholder="Tìm kiếm hợp đồng"
-                label="Hợp đồng (chọn một)"
-                radius={4}
-              />
-              <Group>
-                <Card shadow="sm" padding="md" radius="md" withBorder>
-                  <Group justify="apart" mb="xs">
-                    <Title order={5}>
-                      HĐMB-001 - Hợp đồng mua bán thiết bị tưới
-                    </Title>
-                    <Badge color="blue">Hợp đồng mua bán</Badge>
-                  </Group>
-
-                  <Text size="sm">
-                    <b>Ngày ký:</b> 20/06/2025
-                  </Text>
-                  <Text size="sm">
-                    <b>Bên A:</b> CTY TNHH Thiết bị Nông nghiệp
-                  </Text>
-                  <Text size="sm">
-                    <b>Bên B:</b> Hợp tác xã Rau Sạch Lâm Đồng
-                  </Text>
-                  <Text size="sm">
-                    <b>Loại hợp đồng:</b> Mới
-                  </Text>
-
-                  <Divider my="xs" />
-                  <Text size="sm" lineClamp={2}>
-                    <b>Nội dung:</b> Cung cấp hệ thống tưới tự động và thiết bị
-                    điều khiển trung tâm...
-                  </Text>
-
-                  <Group mt="md" justify="apart">
-                    <Button size="xs" variant="light">
-                      Xem chi tiết
-                    </Button>
-                    <Button size="xs" variant="subtle" color="red">
-                      Huỷ
-                    </Button>
-                  </Group>
-                </Card>
-                <Card shadow="sm" padding="md" radius="md" withBorder>
-                  <Group justify="apart" mb="xs">
-                    <Title order={5}>
-                      HĐMB-001 - Hợp đồng mua bán thiết bị tưới
-                    </Title>
-                    <Badge color="blue">Hợp đồng mua bán</Badge>
-                  </Group>
-
-                  <Text size="sm">
-                    <b>Ngày ký:</b> 20/06/2025
-                  </Text>
-                  <Text size="sm">
-                    <b>Bên A:</b> CTY TNHH Thiết bị Nông nghiệp
-                  </Text>
-                  <Text size="sm">
-                    <b>Bên B:</b> Hợp tác xã Rau Sạch Lâm Đồng
-                  </Text>
-                  <Text size="sm">
-                    <b>Loại hợp đồng:</b> Mới
-                  </Text>
-
-                  <Divider my="xs" />
-                  <Text size="sm" lineClamp={2}>
-                    <b>Nội dung:</b> Cung cấp hệ thống tưới tự động và thiết bị
-                    điều khiển trung tâm...
-                  </Text>
-
-                  <Group mt="md" justify="apart">
-                    <Button size="xs" variant="light">
-                      Xem chi tiết
-                    </Button>
-                    <Button size="xs" variant="subtle" color="red">
-                      Huỷ
-                    </Button>
-                  </Group>
-                </Card>
-              </Group>
-            </Stack>
-
+        <Stepper.Step label="Bước 2" description="Thông tin sản phẩm">
+          <Stack mt={"md"}>
             <SegmentedControl
               orientation="horizontal"
               data={["Kho", "Mua bán"]}
@@ -304,8 +224,19 @@ const PurchaseManagementProductAddPage = () => {
                         shadow="sm"
                         p="md"
                         style={{
-                          borderColor: index === 0 ? "green" : undefined,
+                          cursor: "pointer",
+                          position: "relative",
+                          transition: "transform 0.2s ease",
+                          borderColor:
+                            selectedWarehouse === index ? "green" : undefined,
                         }}
+                        onMouseEnter={(e) =>
+                          (e.currentTarget.style.transform = "scale(1.02)")
+                        }
+                        onMouseLeave={(e) =>
+                          (e.currentTarget.style.transform = "scale(1)")
+                        }
+                        onClick={() => setSelectedWarehouse(index)}
                       >
                         <Title order={5} mb="xs">
                           🏬 Kho lưu trữ
@@ -394,7 +325,7 @@ const PurchaseManagementProductAddPage = () => {
                   leftSection={<IconSearch size={18} />}
                 />
                 <Scrollable h={130}>
-                  <Group gap="md" wrap="nowrap">
+                  <Group gap="md" wrap="nowrap" p={"xs"}>
                     {machineTypes.map((machine, index) => (
                       <Card
                         key={index}
@@ -403,6 +334,20 @@ const PurchaseManagementProductAddPage = () => {
                         shadow="sm"
                         radius="md"
                         p="md"
+                        style={{
+                          cursor: "pointer",
+                          position: "relative",
+                          transition: "transform 0.2s ease",
+                          borderColor:
+                            selectedDevice === index ? "green" : undefined,
+                        }}
+                        onClick={() => setSelectedDevice(index)}
+                        onMouseEnter={(e) =>
+                          (e.currentTarget.style.transform = "scale(1.02)")
+                        }
+                        onMouseLeave={(e) =>
+                          (e.currentTarget.style.transform = "scale(1)")
+                        }
                       >
                         <Group grow>
                           <Image
@@ -489,8 +434,26 @@ const PurchaseManagementProductAddPage = () => {
                   radius={4}
                 />
                 <Scrollable h={220}>
-                  <Group>
-                    <Card shadow="sm" padding="md" radius="md" withBorder>
+                  <Group p={"xs"}>
+                    <Card
+                      shadow="sm"
+                      padding="md"
+                      radius="md"
+                      withBorder
+                      style={{
+                        cursor: "pointer",
+                        transition: "transform 0.2s ease",
+                        borderColor:
+                          selectedContract === 0 ? "green" : undefined,
+                      }}
+                      onMouseEnter={(e) =>
+                        (e.currentTarget.style.transform = "scale(1.02)")
+                      }
+                      onMouseLeave={(e) =>
+                        (e.currentTarget.style.transform = "scale(1)")
+                      }
+                      onClick={() => setSelectedContract(0)}
+                    >
                       <Group justify="apart" mb="xs">
                         <Title order={5}>
                           HĐMB-001 - Hợp đồng mua bán thiết bị tưới
@@ -526,7 +489,25 @@ const PurchaseManagementProductAddPage = () => {
                         </Button>
                       </Group>
                     </Card>
-                    <Card shadow="sm" padding="md" radius="md" withBorder>
+                    <Card
+                      shadow="sm"
+                      padding="md"
+                      radius="md"
+                      withBorder
+                      style={{
+                        cursor: "pointer",
+                        transition: "transform 0.2s ease",
+                        borderColor:
+                          selectedContract === 1 ? "green" : undefined,
+                      }}
+                      onMouseEnter={(e) =>
+                        (e.currentTarget.style.transform = "scale(1.02)")
+                      }
+                      onMouseLeave={(e) =>
+                        (e.currentTarget.style.transform = "scale(1)")
+                      }
+                      onClick={() => setSelectedContract(1)}
+                    >
                       <Group justify="apart" mb="xs">
                         <Title order={5}>
                           HĐMB-001 - Hợp đồng mua bán thiết bị tưới
@@ -712,6 +693,7 @@ const PurchaseManagementProductAddPage = () => {
       <Modal
         opened={openedFilterEmployee}
         onClose={closeFilterEmployee}
+        size={"lg"}
         title={<Text fw={"bold"}>Lọc nhân sự</Text>}
       >
         <Stack gap={"xs"}>

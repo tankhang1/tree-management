@@ -200,7 +200,7 @@ export function CompanyAddPage() {
                 />
                 <Group align="flex-end">
                   <TextInput
-                    label="Địa chỉ"
+                    label="Địa chỉ (chọn một)"
                     placeholder={"Tìm kiếm địa chỉ"}
                     radius={4}
                     flex={1}
@@ -359,7 +359,7 @@ export function CompanyAddPage() {
                       <TextInput label="Email" radius={4} />
                       <Group align="flex-end">
                         <TextInput
-                          label="Địa chỉ"
+                          label="Địa chỉ (chọn một)"
                           placeholder={"Tìm kiếm địa chỉ"}
                           radius={4}
                           flex={1}

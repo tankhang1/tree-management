@@ -66,14 +66,14 @@ export function ConfirmStep({
           </Grid.Col>
           <Grid.Col span={6}>
             <Group gap="xs">
-              <ThemeIcon color="teal" variant="light">
+              <ThemeIcon color="green" variant="light">
                 <IconPlant size={18} />
               </ThemeIcon>
               <Text fw={500}>Tên lô:</Text>
               <Badge color="green">{block}</Badge>
             </Group>
             <Group gap="xs" mt="xs">
-              <ThemeIcon color="teal" variant="light">
+              <ThemeIcon color="green" variant="light">
                 <IconRulerMeasure size={18} />
               </ThemeIcon>
               <Text fw={500}>Diện tích:</Text>

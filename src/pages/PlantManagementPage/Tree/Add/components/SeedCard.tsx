@@ -24,6 +24,8 @@ interface SeedCardProps {
   yield: number;
   description?: string;
   backgroundImage: string;
+  onSelect?: (code: string) => void;
+  isActive?: boolean;
 }
 
 const SeedCard = ({
@@ -35,6 +37,8 @@ const SeedCard = ({
   yield: seedYield,
   description,
   backgroundImage,
+  onSelect,
+  isActive = false,
 }: SeedCardProps) => {
   return (
     <Card
@@ -43,7 +47,13 @@ const SeedCard = ({
       withBorder
       padding="md"
       w={300}
-      style={{ position: "relative", transition: "transform 0.2s ease" }}
+      style={{
+        position: "relative",
+        transition: "transform 0.2s ease",
+        cursor: "pointer",
+        borderColor: isActive ? "green" : undefined,
+      }}
+      onClick={() => onSelect?.(seedCode)}
       onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.02)")}
       onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
     >

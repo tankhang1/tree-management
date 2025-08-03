@@ -1,6 +1,7 @@
 import { Card, Group, Text, Stack, Badge } from "@mantine/core";
 import type { RegionOption } from "..";
 import Scrollable from "../../../../../components/Scrollable";
+import { useState } from "react";
 
 interface RegionCardSelectorProps {
   regions: RegionOption[];
@@ -8,11 +9,11 @@ interface RegionCardSelectorProps {
   onSelect: (code: string) => void;
 }
 
-const RegionCardSelector: React.FC<RegionCardSelectorProps> = ({
-  regions,
-  selected,
-  onSelect,
-}) => {
+const RegionCardSelector: React.FC<RegionCardSelectorProps> = ({ regions }) => {
+  const [selected, setSelected] = useState("");
+  const onSelect = (code: string) => {
+    setSelected(code);
+  };
   return (
     <Scrollable h={150}>
       <Group p={"xs"} gap="md" wrap="nowrap" align="flex-start">
@@ -25,10 +26,10 @@ const RegionCardSelector: React.FC<RegionCardSelectorProps> = ({
             h={130}
             shadow={selected === r.code ? "md" : "xs"}
             style={{
-              borderColor: selected === r.code ? "teal" : undefined,
               cursor: "pointer",
               position: "relative",
               transition: "transform 0.2s ease",
+              borderColor: selected === r.code ? "green" : undefined,
             }}
             onMouseEnter={(e) =>
               (e.currentTarget.style.transform = "scale(1.02)")

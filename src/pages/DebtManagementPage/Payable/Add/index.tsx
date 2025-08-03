@@ -124,14 +124,14 @@ const DebtManagementPayableAddPage = () => {
                     ? "Nhà cung cấp"
                     : selectedCategory === "bank"
                     ? "Ngân hàng"
-                    : "Phân loại"
+                    : "Phân loại" + " (chọn một)"
                 }
                 rightSection={
                   <IconSearch size={18} style={{ cursor: "pointer" }} />
                 }
                 leftSection={<IconSearch size={18} />}
               />
-              <SelectableSupplierCards isCheckbox={false} />
+              <SelectableSupplierCards isCheckbox={false} isMultiple={false} />
             </Stack>
           </Stepper.Step>
 

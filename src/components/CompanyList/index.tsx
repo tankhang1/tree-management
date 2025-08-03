@@ -18,6 +18,7 @@ import {
   IconSearch,
 } from "@tabler/icons-react";
 import Scrollable from "../Scrollable";
+import { useState } from "react";
 
 const data = [
   {
@@ -86,6 +87,7 @@ const data = [
 ];
 
 export function CompanyList() {
+  const [selectedId, setSelectedId] = useState("");
   return (
     <Stack gap={"xs"}>
       <Text fw={500} fz={15}>
@@ -106,10 +108,13 @@ export function CompanyList() {
               radius={4}
               miw={500}
               h={300}
+              onClick={() => setSelectedId(item.id)}
               withBorder
               style={{
                 position: "relative",
                 transition: "transform 0.2s ease",
+                borderColor: selectedId === item.id ? "green" : undefined,
+                cursor: "pointer",
               }}
               onMouseEnter={(e) =>
                 (e.currentTarget.style.transform = "scale(1.02)")
@@ -125,7 +130,7 @@ export function CompanyList() {
                     <Text size="lg" fw={700}>
                       {item.name}
                     </Text>
-                    <Badge color="teal" variant="light" mt={4}>
+                    <Badge color="green" variant="light" mt={4}>
                       {item.type}
                     </Badge>
                   </div>

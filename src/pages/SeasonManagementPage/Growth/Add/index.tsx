@@ -137,6 +137,7 @@ const SeasonManagementGrowthAddPage = () => {
   const navigate = useNavigate();
   const [activeStep, setActiveStep] = useState(0);
   const [cycleStageList, setCycleStageList] = useState<CycleStage[]>([]);
+  const [selectedSeeds, setSelectedSeeds] = useState<string[]>([]);
 
   const form = useForm({
     initialValues: {
@@ -271,6 +272,14 @@ const SeasonManagementGrowthAddPage = () => {
                   germinationRate={85}
                   yield={25}
                   description="Giống RI6 cho năng suất cao, cơm vàng đậm, vị ngọt thơm"
+                  onClick={() => {
+                    setSelectedSeeds((prev) =>
+                      prev.includes("SR-RI6")
+                        ? prev.filter((s) => s !== "SR-RI6")
+                        : [...prev, "SR-RI6"]
+                    );
+                  }}
+                  isActive={selectedSeeds.includes("SR-RI6")}
                 />
                 <SeedCard
                   backgroundImage="https://food-map.s3.ap-southeast-1.amazonaws.com/news/2021/03/sau-rieng-ri6-3.jpg"
@@ -281,6 +290,14 @@ const SeasonManagementGrowthAddPage = () => {
                   germinationRate={85}
                   yield={25}
                   description="Giống RI6 cho năng suất cao, cơm vàng đậm, vị ngọt thơm"
+                  onClick={() => {
+                    setSelectedSeeds((prev) =>
+                      prev.includes("SR-RI2")
+                        ? prev.filter((s) => s !== "SR-RI2")
+                        : [...prev, "SR-RI2"]
+                    );
+                  }}
+                  isActive={selectedSeeds.includes("SR-RI2")}
                 />
 
                 <SeedCard
@@ -292,6 +309,14 @@ const SeasonManagementGrowthAddPage = () => {
                   germinationRate={85}
                   yield={25}
                   description="Giống RI6 cho năng suất cao, cơm vàng đậm, vị ngọt thơm"
+                  onClick={() => {
+                    setSelectedSeeds((prev) =>
+                      prev.includes("SR-RI3")
+                        ? prev.filter((s) => s !== "SR-RI3")
+                        : [...prev, "SR-RI3"]
+                    );
+                  }}
+                  isActive={selectedSeeds.includes("SR-RI3")}
                 />
                 <SeedCard
                   backgroundImage="https://food-map.s3.ap-southeast-1.amazonaws.com/news/2021/03/sau-rieng-ri6-3.jpg"
@@ -302,6 +327,14 @@ const SeasonManagementGrowthAddPage = () => {
                   germinationRate={85}
                   yield={25}
                   description="Giống RI6 cho năng suất cao, cơm vàng đậm, vị ngọt thơm"
+                  onClick={() => {
+                    setSelectedSeeds((prev) =>
+                      prev.includes("SR-RI4")
+                        ? prev.filter((s) => s !== "SR-RI4")
+                        : [...prev, "SR-RI4"]
+                    );
+                  }}
+                  isActive={selectedSeeds.includes("SR-RI4")}
                 />
                 <SeedCard
                   backgroundImage="https://food-map.s3.ap-southeast-1.amazonaws.com/news/2021/03/sau-rieng-ri6-3.jpg"
@@ -312,6 +345,14 @@ const SeasonManagementGrowthAddPage = () => {
                   germinationRate={85}
                   yield={25}
                   description="Giống RI6 cho năng suất cao, cơm vàng đậm, vị ngọt thơm"
+                  onClick={() => {
+                    setSelectedSeeds((prev) =>
+                      prev.includes("SR-RI5")
+                        ? prev.filter((s) => s !== "SR-RI5")
+                        : [...prev, "SR-RI5"]
+                    );
+                  }}
+                  isActive={selectedSeeds.includes("SR-RI5")}
                 />
               </Group>
             </Scrollable>

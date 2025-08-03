@@ -10,6 +10,7 @@ import {
   Button,
 } from "@mantine/core";
 import Scrollable from "../../../../../components/Scrollable";
+import { useState } from "react";
 
 const employees = [
   {
@@ -134,9 +135,26 @@ function getStatusColor(status: string) {
 
 type TEmployeeCard = {
   isDelete?: boolean;
+  isMultiple?: boolean;
+  isTouchable?: boolean;
 };
 
-export function EmployeeCardList({ isDelete = false }: TEmployeeCard) {
+export function EmployeeCardList({
+  isDelete = false,
+  isMultiple = true,
+  isTouchable = true,
+}: TEmployeeCard) {
+  const [selected, setSelected] = useState<string[]>([]);
+  const onSelect = (id: string) => {
+    if (!isTouchable) return;
+    if (isMultiple) {
+      setSelected((prev) =>
+        prev.includes(id) ? prev.filter((i) => i !== id) : [...prev, id]
+      );
+    } else {
+      setSelected([id]);
+    }
+  };
   return (
     <Scrollable h={220}>
       <Group gap="lg" align="flex-start" wrap="nowrap" p="xs">
@@ -151,10 +169,13 @@ export function EmployeeCardList({ isDelete = false }: TEmployeeCard) {
             style={{
               position: "relative",
               transition: "transform 0.2s ease",
+              borderColor: selected.includes(emp.id) ? "green" : undefined,
+              cursor: "pointer",
             }}
             onMouseEnter={(e) =>
               (e.currentTarget.style.transform = "scale(1.02)")
             }
+            onClick={() => onSelect(emp.id)}
             onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
           >
             <Group grow align="flex-start" gap="md">

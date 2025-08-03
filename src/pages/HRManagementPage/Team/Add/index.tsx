@@ -73,7 +73,7 @@ const HRManagementTeamAddPage = () => {
                 radius={4}
               />
               <TextInput
-                label="Phòng ban"
+                label="Phòng ban (chọn nhiều)"
                 placeholder="Tìm kiếm phòng ban liên quan"
                 {...form.getInputProps("departments")}
                 leftSection={<IconSearch size={16} />}
@@ -93,7 +93,7 @@ const HRManagementTeamAddPage = () => {
           <Stepper.Step label="Bước 2" description="Thành viên nhóm">
             <Stack gap={"xs"}>
               <TextInput
-                label="Tìm kiếm nhân viên"
+                label="Nhân viên (chọn nhiều)"
                 placeholder="Chọn thành viên từ nhân sự"
                 leftSection={<IconSearch size={16} />}
                 {...form.getInputProps("members")}

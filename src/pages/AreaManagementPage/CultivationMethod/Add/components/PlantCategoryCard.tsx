@@ -74,7 +74,7 @@ const PlantCategoryCard = ({
               <Text size="sm">ICC: {iccCode}</Text>
             </Group>
 
-            <Badge color="teal" variant="light">
+            <Badge color="green" variant="light">
               {group}
             </Badge>
           </Stack>

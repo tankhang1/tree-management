@@ -98,7 +98,7 @@ const ConfirmStep = () => {
               <Text size="sm" c="dimmed">
                 {data.seedDesc}
               </Text>
-              <Badge variant="outline" color="teal">
+              <Badge variant="outline" color="green">
                 Đơn vị thu hoạch: {data.unit}
               </Badge>
             </Stack>

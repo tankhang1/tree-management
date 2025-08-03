@@ -14,7 +14,12 @@ const CatalogList = () => {
         radius={4}
         placeholder="Tìm kiếm danh mục cây trồng"
       />
-      <CropCards selected="" plants={cropOptions} onSelect={() => {}} />
+      <CropCards
+        isMultiple={false}
+        selected=""
+        plants={cropOptions}
+        onSelect={() => {}}
+      />
     </Stack>
   );
 };

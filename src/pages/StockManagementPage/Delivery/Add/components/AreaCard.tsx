@@ -30,9 +30,13 @@ const AreaCard = ({
       radius="md"
       padding="md"
       style={{
+        transition: "transform 0.2s ease",
+
         borderColor: selected ? "green" : undefined,
       }}
       bg={"white"}
+      onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.02)")}
+      onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
       onClick={onToggle}
     >
       <Stack gap={4}>

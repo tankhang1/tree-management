@@ -249,6 +249,7 @@ const AddMaintenanceForm = () => {
       <Modal
         opened={openedFilterEmployee}
         onClose={closeFilterEmployee}
+        size={"lg"}
         title={<Text fw={"bold"}>Lọc nhân sự</Text>}
       >
         <Stack gap={"xs"}>

@@ -158,7 +158,7 @@ const AddEmployeeForm = () => {
         <Button radius={4} variant="light" color="gray">
           Huỷ
         </Button>
-        <Button radius={4} variant="filled" color="teal">
+        <Button radius={4} variant="filled" color="green">
           Tạo nhân sự
         </Button>
       </Group>

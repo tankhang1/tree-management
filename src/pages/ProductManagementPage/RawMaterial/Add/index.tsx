@@ -207,7 +207,7 @@ export default function ProductManagementRawMaterialAddPage() {
                 label="Danh sách nhà cung cấp (Chọn một)"
                 leftSection={<IconSearch size={18} />}
               />
-              <SelectableSupplierCards isCheckbox={false} />
+              <SelectableSupplierCards isMultiple={false} isCheckbox={false} />
               <NumberInput
                 label="Số lượng"
                 radius={4}

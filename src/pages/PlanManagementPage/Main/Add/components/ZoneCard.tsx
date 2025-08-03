@@ -11,6 +11,7 @@ export interface ZoneCardProps {
   soilType: string;
   terrain: string[];
   isActive?: boolean;
+  onClick?: () => void;
 }
 
 const ZoneCard = ({
@@ -23,6 +24,7 @@ const ZoneCard = ({
   soilType,
   terrain,
   isActive,
+  onClick,
 }: ZoneCardProps) => {
   return (
     <Card
@@ -33,6 +35,7 @@ const ZoneCard = ({
       withBorder
       padding="md"
       style={{ borderColor: isActive ? "green" : undefined }}
+      onClick={onClick}
     >
       <Stack gap={6}>
         <Group justify="space-between">

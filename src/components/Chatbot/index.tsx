@@ -306,7 +306,7 @@ const ChatbotModal = ({ closeChatbot }: TChatbotModal) => {
                           <Button
                             component="a"
                             variant="light"
-                            color="teal"
+                            color="green"
                             size="xs"
                             fullWidth
                             onClick={() => {
@@ -448,7 +448,7 @@ const ChatbotModal = ({ closeChatbot }: TChatbotModal) => {
         <ActionIcon
           size={36}
           variant="outline"
-          color="teal"
+          color="green"
           onClick={() => {
             setMessages([
               { from: "bot", text: "Xin chào! Tôi có thể giúp gì cho bạn?" },
@@ -460,7 +460,7 @@ const ChatbotModal = ({ closeChatbot }: TChatbotModal) => {
         >
           <IconReload size={24} />
         </ActionIcon>
-        <ActionIcon size={36} variant="filled" color="teal">
+        <ActionIcon size={36} variant="filled" color="green">
           <IconSend size={24} />
         </ActionIcon>
       </Group>

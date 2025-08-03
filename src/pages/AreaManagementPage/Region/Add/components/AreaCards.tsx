@@ -21,7 +21,7 @@ const AreaCards: React.FC<AreaCardSelectorProps> = ({
           radius="md"
           shadow={selected === area.code ? "md" : "xs"}
           style={{
-            borderColor: selected === area.code ? "teal" : undefined,
+            borderColor: selected === area.code ? "green" : undefined,
             cursor: "pointer",
             minWidth: 280,
             position: "relative",

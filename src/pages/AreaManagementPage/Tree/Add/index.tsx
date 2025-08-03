@@ -302,7 +302,7 @@ const AreaManagementTreeAddPage = () => {
                             <Group align="flex-start">
                               <ThemeIcon
                                 variant="light"
-                                color="teal"
+                                color="green"
                                 size="lg"
                                 radius="xl"
                               >
@@ -380,7 +380,7 @@ const AreaManagementTreeAddPage = () => {
                             <Group align="flex-start">
                               <ThemeIcon
                                 variant="light"
-                                color="teal"
+                                color="green"
                                 size="lg"
                                 radius="xl"
                               >
@@ -495,7 +495,7 @@ const AreaManagementTreeAddPage = () => {
                                   <Group align="flex-start">
                                     <ThemeIcon
                                       variant="light"
-                                      color="teal"
+                                      color="green"
                                       size="lg"
                                       radius="xl"
                                     >
@@ -573,7 +573,7 @@ const AreaManagementTreeAddPage = () => {
                                   <Group align="flex-start">
                                     <ThemeIcon
                                       variant="light"
-                                      color="teal"
+                                      color="green"
                                       size="lg"
                                       radius="xl"
                                     >
@@ -687,7 +687,7 @@ const AreaManagementTreeAddPage = () => {
                           <Group align="flex-start">
                             <ThemeIcon
                               variant="light"
-                              color="teal"
+                              color="green"
                               size="lg"
                               radius="xl"
                             >
@@ -764,7 +764,7 @@ const AreaManagementTreeAddPage = () => {
                           <Group align="flex-start">
                             <ThemeIcon
                               variant="light"
-                              color="teal"
+                              color="green"
                               size="lg"
                               radius="xl"
                             >

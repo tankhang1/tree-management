@@ -203,7 +203,7 @@ const FertilizerManagementMainAddPage = () => {
               <Stack gap={"xs"}>
                 <Title order={4}>Bịch nhựa 1kg (10 cái)</Title>
                 <TextInput
-                  label="Nhà cung cấp"
+                  label="Nhà cung cấp (chọn nhiều)"
                   radius={4}
                   placeholder="Chọn nhà cung cấp"
                   {...form.getInputProps("suppliers")}

@@ -1,5 +1,6 @@
 import { Card, Group, Stack, Text, Image, Badge } from "@mantine/core";
 import Scrollable from "../../../../../components/Scrollable";
+import { useState } from "react";
 
 interface SeedOption {
   code: string;
@@ -15,11 +16,13 @@ interface SeedCardSelectorProps {
   onSelect: (code: string) => void;
 }
 
-const SeedCards: React.FC<SeedCardSelectorProps> = ({
-  seeds,
-  selected,
-  onSelect,
-}) => {
+const SeedCards: React.FC<SeedCardSelectorProps> = ({ seeds }) => {
+  const [selectedIds, setSelectedIds] = useState<string[]>([]);
+  const onSelect = (code: string) => {
+    setSelectedIds((prev) =>
+      prev.includes(code) ? prev.filter((id) => id !== code) : [...prev, code]
+    );
+  };
   return (
     <Scrollable h={320}>
       <Group p={"xs"} gap="md" wrap="nowrap" align="flex-start">
@@ -29,13 +32,14 @@ const SeedCards: React.FC<SeedCardSelectorProps> = ({
             key={seed.code}
             withBorder
             radius="md"
-            shadow={selected === seed.code ? "md" : "xs"}
             style={{
-              borderColor: selected === seed.code ? "teal" : undefined,
               cursor: "pointer",
               width: 320,
               position: "relative",
               transition: "transform 0.2s ease",
+              borderColor: selectedIds.includes(seed.code)
+                ? "green"
+                : undefined,
             }}
             onMouseEnter={(e) =>
               (e.currentTarget.style.transform = "scale(1.02)")

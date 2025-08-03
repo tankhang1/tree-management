@@ -39,7 +39,7 @@ const data = [
   { month: "12", income: 160000, expense: 115000 },
 ];
 const summaryCards = [
-  { label: "Tổng số cây trồng", value: "1.200", color: "teal.7" },
+  { label: "Tổng số cây trồng", value: "1.200", color: "green.7" },
   { label: "Sản lượng hôm nay", value: "850 kg", color: "green.7" },
   { label: "Tăng trưởng so với hôm qua", value: "+16%", color: "blue.6" },
   { label: "Báo cáo mới hôm nay", value: "5", color: "grape.6" },
@@ -207,7 +207,7 @@ const HomePage = () => {
               <Text size="xs">18 khu vực - Mức cao</Text>
               <Progress
                 value={20}
-                color="teal"
+                color="green"
                 radius={4}
                 size="md"
                 style={{ flex: 1 }}

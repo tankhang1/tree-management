@@ -22,7 +22,7 @@ const CropCards: React.FC<PlantCardSelectorProps> = ({
           shadow={selected === plant.code ? "md" : "xs"}
           radius="md"
           style={{
-            borderColor: selected === plant.code ? "teal" : undefined,
+            borderColor: selected === plant.code ? "green" : undefined,
             cursor: "pointer",
             width: 300,
             position: "relative",

@@ -230,7 +230,10 @@ const MachineManagementMainAddPage = () => {
                   placeholder="Chọn nhà cung cấp"
                   {...form.getInputProps("suppliers")}
                 />
-                <SelectableSupplierCards isCheckbox={false} />
+                <SelectableSupplierCards
+                  isMultiple={false}
+                  isCheckbox={false}
+                />
                 <NumberInput
                   label="Số lượng"
                   placeholder="Số lượng"

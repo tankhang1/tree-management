@@ -184,7 +184,7 @@ export default function SupplyManagementPage() {
                 label="Danh sách nhà cung cấp (Chọn một)"
                 leftSection={<IconSearch size={18} />}
               />
-              <SelectableSupplierCards isCheckbox={false} />
+              <SelectableSupplierCards isMultiple={false} isCheckbox={false} />
               <NumberInput
                 label="Số lượng"
                 placeholder="Nhập số lượng"

@@ -159,6 +159,11 @@ const StockManagementIOPage = () => {
   const [mode, setMode] = useState("");
   const [segment, setSegment] = useState("Kho");
   const [active, setActive] = useState(0);
+  const [selectedArea, setSelectedArea] = useState<number>();
+  const [selectedWarehouse, setSelectedWarehouse] = useState<number>();
+  const [selectedSubArea, setSelectedSubArea] = useState<number>();
+  const [selectedDevice, setSelectedDevice] = useState<number>();
+  const [selectedContract, setSelectedContract] = useState<string | null>(null);
   const form = useForm({
     initialValues: {
       type: "nhập",
@@ -259,8 +264,9 @@ const StockManagementIOPage = () => {
                     // onClick={() => handleAreaCardClick(group)}
                     style={{
                       cursor: "pointer",
-                      borderColor: index === 0 ? "green" : undefined,
+                      borderColor: selectedArea === index ? "green" : undefined,
                     }}
+                    onClick={() => setSelectedArea(index)}
                   >
                     <Group justify="apart">
                       <Text fw={600}>{group.parentName}</Text>
@@ -304,8 +310,8 @@ const StockManagementIOPage = () => {
                       isCheckbox
                       key={group.id}
                       {...group}
-                      selected={index === 0}
-                      onToggle={() => {}}
+                      selected={selectedSubArea === index}
+                      onToggle={() => setSelectedSubArea(index)}
                       closable={false}
                     />
                   ))}
@@ -381,8 +387,18 @@ const StockManagementIOPage = () => {
                         shadow="sm"
                         p="md"
                         style={{
-                          borderColor: index === 0 ? "green" : undefined,
+                          borderColor:
+                            selectedWarehouse === index ? "green" : undefined,
+                          cursor: "pointer",
+                          transition: "transform 0.2s ease",
                         }}
+                        onMouseEnter={(e) =>
+                          (e.currentTarget.style.transform = "scale(1.02)")
+                        }
+                        onMouseLeave={(e) =>
+                          (e.currentTarget.style.transform = "scale(1)")
+                        }
+                        onClick={() => setSelectedWarehouse(index)}
                       >
                         <Title order={5} mb="xs">
                           🏬 Kho lưu trữ
@@ -465,7 +481,7 @@ const StockManagementIOPage = () => {
                   ]}
                 />
                 <TextInput
-                  label="Máy móc thiết bị"
+                  label="Máy móc thiết bị (chọn một)"
                   placeholder="Tìm kiếm máy móc thiết bị"
                   radius={4}
                   leftSection={<IconSearch size={18} />}
@@ -481,6 +497,20 @@ const StockManagementIOPage = () => {
                         shadow="sm"
                         radius="md"
                         p="md"
+                        onClick={() => setSelectedDevice(index)}
+                        style={{
+                          position: "relative",
+                          transition: "transform 0.2s ease",
+                          borderColor:
+                            selectedDevice === index ? "green" : undefined,
+                          cursor: "pointer",
+                        }}
+                        onMouseEnter={(e) =>
+                          (e.currentTarget.style.transform = "scale(1.02)")
+                        }
+                        onMouseLeave={(e) =>
+                          (e.currentTarget.style.transform = "scale(1)")
+                        }
                       >
                         <Group grow>
                           <Image
@@ -567,8 +597,26 @@ const StockManagementIOPage = () => {
                   radius={4}
                 />
                 <Scrollable h={210}>
-                  <Group>
-                    <Card shadow="sm" padding="md" radius="md" withBorder>
+                  <Group p={"xs"}>
+                    <Card
+                      shadow="sm"
+                      padding="md"
+                      radius="md"
+                      withBorder
+                      style={{
+                        transition: "transform 0.2s ease",
+                        cursor: "pointer",
+                        borderColor:
+                          selectedContract === "HĐMB-001" ? "green" : undefined,
+                      }}
+                      onMouseEnter={(e) =>
+                        (e.currentTarget.style.transform = "scale(1.02)")
+                      }
+                      onMouseLeave={(e) =>
+                        (e.currentTarget.style.transform = "scale(1)")
+                      }
+                      onClick={() => setSelectedContract("HĐMB-001")}
+                    >
                       <Group justify="apart" mb="xs">
                         <Title order={5}>
                           HĐMB-001 - Hợp đồng mua bán thiết bị tưới
@@ -604,7 +652,25 @@ const StockManagementIOPage = () => {
                         </Button>
                       </Group>
                     </Card>
-                    <Card shadow="sm" padding="md" radius="md" withBorder>
+                    <Card
+                      shadow="sm"
+                      padding="md"
+                      radius="md"
+                      withBorder
+                      style={{
+                        transition: "transform 0.2s ease",
+                        cursor: "pointer",
+                        borderColor:
+                          selectedContract === "HĐMB-002" ? "green" : undefined,
+                      }}
+                      onMouseEnter={(e) =>
+                        (e.currentTarget.style.transform = "scale(1.02)")
+                      }
+                      onMouseLeave={(e) =>
+                        (e.currentTarget.style.transform = "scale(1)")
+                      }
+                      onClick={() => setSelectedContract("HĐMB-002")}
+                    >
                       <Group justify="apart" mb="xs">
                         <Title order={5}>
                           HĐMB-001 - Hợp đồng mua bán thiết bị tưới
@@ -788,6 +854,7 @@ const StockManagementIOPage = () => {
       <Modal
         opened={openedFilterEmployee}
         onClose={closeFilterEmployee}
+        size={"lg"}
         title={<Text fw={"bold"}>Lọc nhân sự</Text>}
       >
         <Stack gap={"xs"}>

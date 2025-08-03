@@ -297,7 +297,7 @@ const AreaManagementAddRegionPage = () => {
     { open: openFilterEmployee, close: closeFilterEmployee },
   ] = useDisclosure(false);
   const [mode, setMode] = useState<"group" | "dept">("group");
-
+  const [selectedSeed, setSelectedSeed] = useState<string>("");
   const [active, setActive] = useState(0);
   const [opened, setOpened] = useState(false);
   const [selectedLots, setSelectedLots] = useState<string[]>([]);
@@ -469,7 +469,7 @@ const AreaManagementAddRegionPage = () => {
                 Chọn nhân viên quản lý
               </Button>
             </Group>
-            <EmployeeCardList />
+            <EmployeeCardList isDelete={true} isTouchable={false} />
             <Stack gap={"xs"}>
               <Text fw={500} fz={15}>
                 Chọn phân bổ vùng trồng (chọn một)
@@ -497,6 +497,7 @@ const AreaManagementAddRegionPage = () => {
                 radius={4}
               />
               <RegionCardSelector
+                isMultiSelect
                 regions={areaOptions}
                 selected={""}
                 onSelect={() => {
@@ -611,6 +612,10 @@ const AreaManagementAddRegionPage = () => {
                               germinationRate={85}
                               uniformityRate={60}
                               yieldPerHectare="25 tấn/ha"
+                              isActive={selectedSeed === "SR-RI6"}
+                              onClick={() => {
+                                setSelectedSeed("SR-RI6");
+                              }}
                             />
 
                             <SeedDetailCard
@@ -622,6 +627,10 @@ const AreaManagementAddRegionPage = () => {
                               germinationRate={85}
                               uniformityRate={60}
                               yieldPerHectare="25 tấn/ha"
+                              isActive={selectedSeed === "SR-MS"}
+                              onClick={() => {
+                                setSelectedSeed("SR-MS");
+                              }}
                             />
                           </Group>
                         </Scrollable>
@@ -866,6 +875,7 @@ const AreaManagementAddRegionPage = () => {
       <Modal
         opened={openedFilterEmployee}
         onClose={closeFilterEmployee}
+        size={"lg"}
         title={<Text fw={"bold"}>Lọc nhân sự</Text>}
       >
         <Stack gap={"xs"}>

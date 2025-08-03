@@ -119,7 +119,7 @@ const PlanDetail = () => {
                 <Title order={5} mb={0}>
                   Lô
                 </Title>
-                <Badge color="teal" variant="light">
+                <Badge color="green" variant="light">
                   LO-A1-01
                 </Badge>
               </Group>

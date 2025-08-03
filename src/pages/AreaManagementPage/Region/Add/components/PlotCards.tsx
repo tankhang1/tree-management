@@ -21,7 +21,7 @@ const PlotCards: React.FC<LotCardSelectorProps> = ({
           radius="md"
           shadow={selected === lot.code ? "md" : "xs"}
           style={{
-            borderColor: selected === lot.code ? "teal" : undefined,
+            borderColor: selected === lot.code ? "green" : undefined,
             cursor: "pointer",
             minWidth: 280,
             position: "relative",

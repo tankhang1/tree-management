@@ -21,7 +21,7 @@ const SeedCards: React.FC<SeedCardSelectorProps> = ({
           radius="md"
           shadow={selected === seed.code ? "md" : "xs"}
           style={{
-            borderColor: selected === seed.code ? "teal" : undefined,
+            borderColor: selected === seed.code ? "green" : undefined,
             cursor: "pointer",
             width: 320,
             position: "relative",

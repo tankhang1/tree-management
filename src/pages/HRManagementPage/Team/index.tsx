@@ -93,7 +93,7 @@ const HRManagementTeamPage = () => {
       Cell: ({ cell }) => (
         <Group gap="xs" wrap="wrap">
           {cell.getValue<string[]>()?.map((role, idx) => (
-            <Badge key={idx} color="teal" variant="light">
+            <Badge key={idx} color="green" variant="light">
               {role}
             </Badge>
           ))}

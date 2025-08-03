@@ -159,6 +159,11 @@ const PurchaseManagementMaterialAddPage = () => {
   const [mode, setMode] = useState("");
   const [segment, setSegment] = useState("Kho");
   const [active, setActive] = useState(0);
+  const [selectedWarehouse, setSelectedWarehouse] = useState<number>();
+  const [selectedDevice, setSelectedDevice] = useState<number>();
+  const [selectedContract, setSelectedContract] = useState<number>();
+  const [selectedArea, setSelectedArea] = useState<number>();
+  const [selectedSubArea, setSelectedSubArea] = useState<number>();
   const form = useForm({
     initialValues: {
       type: "nhập",
@@ -256,10 +261,25 @@ const PurchaseManagementMaterialAddPage = () => {
                     withBorder
                     shadow="xs"
                     radius="md"
-                    // onClick={() => handleAreaCardClick(group)}
                     style={{
+                      borderColor: selectedArea === index ? "green" : undefined,
                       cursor: "pointer",
-                      borderColor: index === 0 ? "green" : undefined,
+                      position: "relative",
+                      transition: "transform 0.2s ease",
+                    }}
+                    onMouseEnter={(e) =>
+                      (e.currentTarget.style.transform = "scale(1.02)")
+                    }
+                    onMouseLeave={(e) =>
+                      (e.currentTarget.style.transform = "scale(1)")
+                    }
+                    onClick={() => {
+                      if (selectedArea === index) {
+                        setSelectedArea(undefined);
+                      } else {
+                        setSelectedArea(index);
+                        setSelectedSubArea(undefined);
+                      }
                     }}
                   >
                     <Group justify="apart">
@@ -304,8 +324,14 @@ const PurchaseManagementMaterialAddPage = () => {
                       isCheckbox
                       key={group.id}
                       {...group}
-                      selected={index === 0}
-                      onToggle={() => {}}
+                      selected={selectedSubArea === index}
+                      onToggle={() => {
+                        if (selectedSubArea === index) {
+                          setSelectedSubArea(undefined);
+                        } else {
+                          setSelectedSubArea(index);
+                        }
+                      }}
                       closable={false}
                     />
                   ))}
@@ -381,8 +407,19 @@ const PurchaseManagementMaterialAddPage = () => {
                         shadow="sm"
                         p="md"
                         style={{
-                          borderColor: index === 0 ? "green" : undefined,
+                          borderColor:
+                            selectedWarehouse === index ? "green" : undefined,
+                          cursor: "pointer",
+                          position: "relative",
+                          transition: "transform 0.2s ease",
                         }}
+                        onMouseEnter={(e) =>
+                          (e.currentTarget.style.transform = "scale(1.02)")
+                        }
+                        onMouseLeave={(e) =>
+                          (e.currentTarget.style.transform = "scale(1)")
+                        }
+                        onClick={() => setSelectedWarehouse(index)}
                       >
                         <Title order={5} mb="xs">
                           🏬 Kho lưu trữ
@@ -465,13 +502,13 @@ const PurchaseManagementMaterialAddPage = () => {
                   ]}
                 />
                 <TextInput
-                  label="Máy móc thiết bị"
+                  label="Máy móc thiết bị (chọn một)"
                   placeholder="Tìm kiếm máy móc thiết bị"
                   radius={4}
                   leftSection={<IconSearch size={18} />}
                 />
                 <ScrollArea>
-                  <Group gap="md" wrap="nowrap">
+                  <Group gap="md" wrap="nowrap" p={"xs"}>
                     {machineTypes.map((machine, index) => (
                       <Card
                         key={index}
@@ -480,6 +517,20 @@ const PurchaseManagementMaterialAddPage = () => {
                         shadow="sm"
                         radius="md"
                         p="md"
+                        style={{
+                          borderColor:
+                            selectedDevice === index ? "green" : undefined,
+                          cursor: "pointer",
+                          position: "relative",
+                          transition: "transform 0.2s ease",
+                        }}
+                        onMouseEnter={(e) =>
+                          (e.currentTarget.style.transform = "scale(1.02)")
+                        }
+                        onMouseLeave={(e) =>
+                          (e.currentTarget.style.transform = "scale(1)")
+                        }
+                        onClick={() => setSelectedDevice(index)}
                       >
                         <Group grow>
                           <Image
@@ -566,7 +617,22 @@ const PurchaseManagementMaterialAddPage = () => {
                   radius={4}
                 />
                 <Group>
-                  <Card shadow="sm" padding="md" radius="md" withBorder>
+                  <Card
+                    shadow="sm"
+                    padding="md"
+                    radius="md"
+                    withBorder
+                    style={{
+                      borderColor: selectedContract === 0 ? "green" : undefined,
+                    }}
+                    onMouseEnter={(e) =>
+                      (e.currentTarget.style.transform = "scale(1.02)")
+                    }
+                    onMouseLeave={(e) =>
+                      (e.currentTarget.style.transform = "scale(1)")
+                    }
+                    onClick={() => setSelectedContract(0)}
+                  >
                     <Group justify="apart" mb="xs">
                       <Title order={5}>
                         HĐMB-001 - Hợp đồng mua bán thiết bị tưới
@@ -602,7 +668,22 @@ const PurchaseManagementMaterialAddPage = () => {
                       </Button>
                     </Group>
                   </Card>
-                  <Card shadow="sm" padding="md" radius="md" withBorder>
+                  <Card
+                    shadow="sm"
+                    padding="md"
+                    radius="md"
+                    withBorder
+                    style={{
+                      borderColor: selectedContract === 1 ? "green" : undefined,
+                    }}
+                    onMouseEnter={(e) =>
+                      (e.currentTarget.style.transform = "scale(1.02)")
+                    }
+                    onMouseLeave={(e) =>
+                      (e.currentTarget.style.transform = "scale(1)")
+                    }
+                    onClick={() => setSelectedContract(1)}
+                  >
                     <Group justify="apart" mb="xs">
                       <Title order={5}>
                         HĐMB-001 - Hợp đồng mua bán thiết bị tưới
@@ -784,6 +865,7 @@ const PurchaseManagementMaterialAddPage = () => {
       <Modal
         opened={openedFilterEmployee}
         onClose={closeFilterEmployee}
+        size={"lg"}
         title={<Text fw={"bold"}>Lọc nhân sự</Text>}
       >
         <Stack gap={"xs"}>

@@ -68,7 +68,7 @@ const PesticideManagementMainDetailPage = () => {
           <Text color="dimmed" w={120}>
             Loại thuốc:
           </Text>
-          <Badge color="teal" radius={4}>
+          <Badge color="green" radius={4}>
             {typeMap[pesticide.typeId] || pesticide.typeId}
           </Badge>
         </Group>

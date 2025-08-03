@@ -1,6 +1,7 @@
 import { Card, Stack, Text, Group, Badge } from "@mantine/core";
 import type { AreaOption } from "..";
 import Scrollable from "../../../../../components/Scrollable";
+import { useState } from "react";
 
 interface AreaCardSelectorProps {
   areas: AreaOption[];
@@ -8,11 +9,8 @@ interface AreaCardSelectorProps {
   onSelect: (code: string) => void;
 }
 
-const AreaCards: React.FC<AreaCardSelectorProps> = ({
-  areas,
-  selected,
-  onSelect,
-}) => {
+const AreaCards: React.FC<AreaCardSelectorProps> = ({ areas }) => {
+  const [selectedId, setSelectedId] = useState("");
   return (
     <Scrollable h={150}>
       <Group gap="md" wrap="nowrap" p={"xs"}>
@@ -23,9 +21,8 @@ const AreaCards: React.FC<AreaCardSelectorProps> = ({
             radius="md"
             miw={400}
             h={130}
-            shadow={selected === area.code ? "md" : "xs"}
             style={{
-              borderColor: selected === area.code ? "teal" : undefined,
+              borderColor: selectedId === area.code ? "green" : undefined,
               cursor: "pointer",
 
               position: "relative",
@@ -35,7 +32,7 @@ const AreaCards: React.FC<AreaCardSelectorProps> = ({
               (e.currentTarget.style.transform = "scale(1.02)")
             }
             onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
-            onClick={() => onSelect(area.code)}
+            onClick={() => setSelectedId(area.code)}
           >
             <Stack gap={4}>
               <Group justify="space-between">

@@ -1,5 +1,6 @@
 import { Card, Stack, Text, Group, Badge, Title } from "@mantine/core";
 import Scrollable from "../../../../../components/Scrollable";
+import { useState } from "react";
 
 const departments = [
   {
@@ -26,6 +27,13 @@ const departments = [
 ];
 
 export function DepartmentCardList() {
+  const [selectedIds, setSelectedIds] = useState<string[]>([]);
+
+  const toggleSelection = (code: string) => {
+    setSelectedIds((prev) =>
+      prev.includes(code) ? prev.filter((s) => s !== code) : [...prev, code]
+    );
+  };
   return (
     <Scrollable h={150}>
       <Group wrap="nowrap" gap={"md"} p={"xs"}>
@@ -35,10 +43,17 @@ export function DepartmentCardList() {
             miw={300}
             key={dept.code}
             withBorder
-            radius="md"
+            radius={4}
             shadow="xs"
             p="md"
-            style={{ position: "relative", transition: "transform 0.2s ease" }}
+            style={{
+              position: "relative",
+              transition: "transform 0.2s ease",
+              borderColor: selectedIds.includes(dept.code)
+                ? "green"
+                : undefined,
+            }}
+            onClick={() => toggleSelection(dept.code)}
             onMouseEnter={(e) =>
               (e.currentTarget.style.transform = "scale(1.02)")
             }

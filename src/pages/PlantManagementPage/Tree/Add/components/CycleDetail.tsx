@@ -20,7 +20,7 @@ const CycleDetail = () => {
           spacing="xs"
           size="sm"
           icon={
-            <ThemeIcon color="teal" size={20} radius="xl">
+            <ThemeIcon color="green" size={20} radius="xl">
               <IconCircleCheck size={14} />
             </ThemeIcon>
           }

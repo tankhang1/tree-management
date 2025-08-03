@@ -101,7 +101,8 @@ const materialList = [
 const ProductManagementItemAddPage = () => {
   const navigate = useNavigate();
   const [active, setActive] = useState(0);
-
+  const [selectedProduct, setSelectedProduct] = useState("");
+  const [selectedMaterial, setSelectedMaterial] = useState("");
   const [form, setForm] = useState({
     productCode: "SP001",
     productName: "Sầu riêng Ri6",
@@ -167,7 +168,7 @@ const ProductManagementItemAddPage = () => {
                 />
                 <TextInput
                   placeholder="Danh mục sản phẩm"
-                  label="Danh mục sản phẩm"
+                  label="Danh mục sản phẩm (chọn một)"
                   leftSection={<IconSearch size={18} />}
                   radius={4}
                 />
@@ -310,43 +311,45 @@ const ProductManagementItemAddPage = () => {
                     <Stack gap={"xs"}>
                       <TextInput
                         placeholder="Danh mục sản phẩm"
-                        label="Danh mục sản phẩm"
+                        label="Danh mục sản phẩm (chọn một)"
                         leftSection={<IconSearch size={18} />}
                         radius={4}
                       />
-                      <Group gap="md" wrap="wrap">
-                        {types.map((category, index) => (
-                          <Card
-                            h={200}
-                            key={index}
-                            withBorder
-                            shadow="sm"
-                            radius="md"
-                            style={{
-                              width: "150px",
-                              cursor: "pointer",
-                              borderColor:
-                                form.category === category.name
-                                  ? "green"
-                                  : "#d9d9d9",
-                            }}
-                            onClick={() =>
-                              setForm({ ...form, category: category.name })
-                            }
-                          >
-                            <Stack align="center" justify="center" gap="xs">
-                              <Image src={category.img} h={100} />
-                              <Text ta="center" fw={500}>
-                                {category.name}
-                              </Text>
-                            </Stack>
-                          </Card>
-                        ))}
-                      </Group>
+                      <Scrollable h={200}>
+                        <Group gap="md" wrap="nowrap" p={"xs"}>
+                          {types.map((category, index) => (
+                            <Card
+                              h={200}
+                              key={index}
+                              withBorder
+                              shadow="sm"
+                              radius="md"
+                              style={{
+                                width: "150px",
+                                cursor: "pointer",
+                                borderColor:
+                                  form.category === category.name
+                                    ? "green"
+                                    : "#d9d9d9",
+                              }}
+                              onClick={() =>
+                                setForm({ ...form, category: category.name })
+                              }
+                            >
+                              <Stack align="center" justify="center" gap="xs">
+                                <Image src={category.img} h={100} />
+                                <Text ta="center" fw={500}>
+                                  {category.name}
+                                </Text>
+                              </Stack>
+                            </Card>
+                          ))}
+                        </Group>
+                      </Scrollable>
                     </Stack>
                   ) : (
                     <Select
-                      label="Danh mục nguyên vật liệu"
+                      label="Danh mục nguyên vật liệu (chọn một)"
                       placeholder="Danh mục nguyên vật liệu"
                       radius={4}
                       data={[
@@ -363,49 +366,69 @@ const ProductManagementItemAddPage = () => {
                     <Stack gap={"xs"}>
                       <TextInput
                         placeholder="Sản phẩm"
-                        label="Sản phẩm"
+                        label="Sản phẩm (chọn một)"
                         leftSection={<IconSearch size={18} />}
                         radius={4}
                       />
-                      <Group gap="md">
-                        {productList.map((product, index) => (
-                          <Card
-                            w={300}
-                            h={350}
-                            key={index}
-                            withBorder
-                            shadow="sm"
-                            radius="md"
-                            p="md"
-                          >
-                            <Stack>
-                              <Image
-                                src={product.img}
-                                alt={product.productName}
-                                height={150}
-                                radius="md"
-                              />
-                              <Text>
-                                <b>Mã sản phẩm:</b> {product.productCode}
-                              </Text>
-                              <Text>
-                                <b>Tên sản phẩm:</b> {product.productName}
-                              </Text>
+                      <Scrollable h={350}>
+                        <Group gap="md" p={"xs"} wrap="nowrap">
+                          {productList.map((product, index) => (
+                            <Card
+                              w={300}
+                              h={350}
+                              key={index}
+                              withBorder
+                              shadow="sm"
+                              radius="md"
+                              p="md"
+                              style={{
+                                position: "relative",
+                                transition: "transform 0.2s ease",
+                                borderColor:
+                                  selectedProduct === product.productCode
+                                    ? "green"
+                                    : undefined,
+                              }}
+                              onClick={() =>
+                                setSelectedProduct(product.productCode)
+                              }
+                              onMouseEnter={(e) =>
+                                (e.currentTarget.style.transform =
+                                  "scale(1.02)")
+                              }
+                              onMouseLeave={(e) =>
+                                (e.currentTarget.style.transform = "scale(1)")
+                              }
+                            >
+                              <Stack>
+                                <Image
+                                  src={product.img}
+                                  alt={product.productName}
+                                  height={150}
+                                  radius="md"
+                                />
+                                <Text>
+                                  <b>Mã sản phẩm:</b> {product.productCode}
+                                </Text>
+                                <Text>
+                                  <b>Tên sản phẩm:</b> {product.productName}
+                                </Text>
 
-                              <Text>
-                                <b>Danh mục:</b> {product.category}
-                              </Text>
-                            </Stack>
-                          </Card>
-                        ))}
-                      </Group>
+                                <Text>
+                                  <b>Danh mục:</b> {product.category}
+                                </Text>
+                              </Stack>
+                            </Card>
+                          ))}
+                        </Group>
+                      </Scrollable>
                     </Stack>
                   )}
                   {form.bomType === "Nguyên Vật Liệu" && (
                     <Stack gap={"xs"}>
                       <TextInput
                         placeholder="Nguyên vật liệu"
-                        label="Nguyên vật liệu"
+                        label="Nguyên vật liệu (chọn một)"
                         leftSection={<IconSearch size={18} />}
                         radius={4}
                       />
@@ -423,6 +446,10 @@ const ProductManagementItemAddPage = () => {
                               style={{
                                 position: "relative",
                                 transition: "transform 0.2s ease",
+                                borderColor:
+                                  selectedMaterial === material.materialCode
+                                    ? "green"
+                                    : undefined,
                               }}
                               onMouseEnter={(e) =>
                                 (e.currentTarget.style.transform =
@@ -430,6 +457,9 @@ const ProductManagementItemAddPage = () => {
                               }
                               onMouseLeave={(e) =>
                                 (e.currentTarget.style.transform = "scale(1)")
+                              }
+                              onClick={() =>
+                                setSelectedMaterial(material.materialCode)
                               }
                             >
                               <Stack>
@@ -707,7 +737,7 @@ const ProductManagementItemAddPage = () => {
                   style={{ maxWidth: 400 }}
                 >
                   <Stack gap="sm">
-                    <Title order={4} ta="center" c="teal">
+                    <Title order={4} ta="center" c="green">
                       Thông tin giá
                     </Title>
                     <Divider />
@@ -736,7 +766,7 @@ const ProductManagementItemAddPage = () => {
                   style={{ maxWidth: 400 }}
                 >
                   <Stack gap="sm">
-                    <Title order={4} ta="center" c="teal">
+                    <Title order={4} ta="center" c="green">
                       Thông tin giá
                     </Title>
                     <Divider />
@@ -765,7 +795,7 @@ const ProductManagementItemAddPage = () => {
                   style={{ maxWidth: 400 }}
                 >
                   <Stack gap="sm">
-                    <Title order={4} ta="center" c="teal">
+                    <Title order={4} ta="center" c="green">
                       Thông tin giá
                     </Title>
                     <Divider />

@@ -11,6 +11,7 @@ export interface AreaCardProps {
   soilType: string;
   terrain: string[];
   isActive?: boolean;
+  onClick?: () => void;
 }
 
 const AreaCard = ({
@@ -23,6 +24,7 @@ const AreaCard = ({
   soilType,
   terrain,
   isActive,
+  onClick,
 }: AreaCardProps) => {
   return (
     <Card
@@ -33,6 +35,7 @@ const AreaCard = ({
       h={240}
       padding="md"
       style={{ borderColor: isActive ? "green" : undefined }}
+      onClick={onClick}
     >
       <Stack gap={6}>
         <Group justify="space-between">

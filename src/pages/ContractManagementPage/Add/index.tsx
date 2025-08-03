@@ -90,6 +90,7 @@ const ContractManagementAddPage = () => {
   const [presentType, setPresentType] = useState("Tổng quan");
   const navigate = useNavigate();
   const [activeStep, setActiveStep] = useState(0);
+  const [selectedMachine, setSelectedMachine] = useState<string>();
   const [form, setForm] = useState({
     code: "HD-2025-001",
     name: "Hợp đồng mua máy cày Kubota",
@@ -533,7 +534,7 @@ const ContractManagementAddPage = () => {
                           ]}
                         />
                         <TextInput
-                          label="Máy móc thiết bị"
+                          label="Máy móc thiết bị (chọn một)"
                           placeholder="Tìm kiếm máy móc thiết bị"
                           radius={4}
                           leftSection={<IconSearch size={18} />}
@@ -552,7 +553,13 @@ const ContractManagementAddPage = () => {
                                 style={{
                                   position: "relative",
                                   transition: "transform 0.2s ease",
+                                  borderColor:
+                                    selectedMachine === machine.id
+                                      ? "green"
+                                      : undefined,
+                                  cursor: "pointer",
                                 }}
+                                onClick={() => setSelectedMachine(machine.id)}
                                 onMouseEnter={(e) =>
                                   (e.currentTarget.style.transform =
                                     "scale(1.02)")
@@ -685,7 +692,7 @@ const ContractManagementAddPage = () => {
                           ]}
                         />
                         <TextInput
-                          label="Máy móc thiết bị"
+                          label="Máy móc thiết bị (chọn một)"
                           placeholder="Tìm kiếm máy móc thiết bị"
                           radius={4}
                           leftSection={<IconSearch size={18} />}
@@ -700,6 +707,23 @@ const ContractManagementAddPage = () => {
                                 shadow="sm"
                                 radius="md"
                                 p="md"
+                                style={{
+                                  position: "relative",
+                                  transition: "transform 0.2s ease",
+                                  borderColor:
+                                    selectedMachine === machine.id
+                                      ? "green"
+                                      : undefined,
+                                  cursor: "pointer",
+                                }}
+                                onClick={() => setSelectedMachine(machine.id)}
+                                onMouseEnter={(e) =>
+                                  (e.currentTarget.style.transform =
+                                    "scale(1.02)")
+                                }
+                                onMouseLeave={(e) =>
+                                  (e.currentTarget.style.transform = "scale(1)")
+                                }
                               >
                                 <Group grow>
                                   <Image
@@ -777,7 +801,7 @@ const ContractManagementAddPage = () => {
                 radius={4}
                 leftSection={<IconSearch size={18} />}
               />
-              <SelectableEnterpriseCards />
+              <SelectableEnterpriseCards isMulti={false} isCheckbox={false} />
             </Stack>
           </Stepper.Step>
 
@@ -791,7 +815,7 @@ const ContractManagementAddPage = () => {
                 radius={4}
                 leftSection={<IconSearch size={18} />}
               />
-              <SelectableEnterpriseCards />
+              <SelectableEnterpriseCards isCheckbox={false} isMulti={false} />
             </Stack>
           </Stepper.Step>
 

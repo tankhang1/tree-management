@@ -1,18 +1,29 @@
 import { Card, Group, Text, Stack, Badge } from "@mantine/core";
 import type { RegionOption } from "..";
 import Scrollable from "../../../../../components/Scrollable";
+import { useState } from "react";
 
 interface RegionCardSelectorProps {
   regions: RegionOption[];
+  isMultiSelect?: boolean;
   selected: string;
   onSelect: (code: string) => void;
 }
 
 const RegionCardSelector: React.FC<RegionCardSelectorProps> = ({
   regions,
-  selected,
-  onSelect,
+  isMultiSelect,
 }) => {
+  const [selectedId, setSelectedId] = useState<string[]>([]);
+  const handleSelect = (code: string) => {
+    if (isMultiSelect) {
+      setSelectedId((prev) =>
+        prev.includes(code) ? prev.filter((id) => id !== code) : [...prev, code]
+      );
+    } else {
+      setSelectedId([code]);
+    }
+  };
   return (
     <Scrollable h={160}>
       <Group p={"xs"} gap="md" wrap="nowrap" align="flex-start">
@@ -23,19 +34,20 @@ const RegionCardSelector: React.FC<RegionCardSelectorProps> = ({
             miw={350}
             h={160}
             radius="md"
-            shadow={selected === r.code ? "md" : "xs"}
             style={{
-              borderColor: selected === r.code ? "teal" : undefined,
               cursor: "pointer",
               minWidth: 260,
               position: "relative",
               transition: "transform 0.2s ease",
+              borderColor: selectedId.includes(r.code) ? "green" : undefined,
             }}
             onMouseEnter={(e) =>
               (e.currentTarget.style.transform = "scale(1.02)")
             }
             onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
-            onClick={() => onSelect(r.code)}
+            onClick={() => {
+              handleSelect(r.code);
+            }}
           >
             <Stack gap={4}>
               <Group justify="space-between">

@@ -41,7 +41,7 @@ import Scrollable from "../../../../components/Scrollable";
 const PlantManagementTreeAddPage = () => {
   const navigate = useNavigate();
   const [activeStep, setActiveStep] = useState(0);
-
+  const [selectedSeed, setSelectedSeed] = useState<string>("");
   const form = useForm({
     initialValues: {
       id: "",
@@ -126,7 +126,12 @@ const PlantManagementTreeAddPage = () => {
                 radius={4}
                 leftSection={<IconSearch size={18} />}
               />
-              <CropCards selected="" plants={cropOptions} onSelect={() => {}} />
+              <CropCards
+                isMultiple={false}
+                selected=""
+                plants={cropOptions}
+                onSelect={() => {}}
+              />
               <Text fw={500} fz={15}>
                 Giống cây trồng (chọn một)
               </Text>
@@ -213,6 +218,8 @@ const PlantManagementTreeAddPage = () => {
                   germinationRate={85}
                   yield={25}
                   description="Giống RI6 cho năng suất cao, cơm vàng đậm, vị ngọt thơm"
+                  onSelect={(code) => setSelectedSeed(code)}
+                  isActive={selectedSeed === "SR-RI6"}
                 />
                 <SeedCard
                   backgroundImage="https://food-map.s3.ap-southeast-1.amazonaws.com/news/2021/03/sau-rieng-ri6-3.jpg"
@@ -223,6 +230,8 @@ const PlantManagementTreeAddPage = () => {
                   germinationRate={85}
                   yield={25}
                   description="Giống RI6 cho năng suất cao, cơm vàng đậm, vị ngọt thơm"
+                  onSelect={(code) => setSelectedSeed(code)}
+                  isActive={selectedSeed === "SR-RI4"}
                 />
 
                 <SeedCard
@@ -233,27 +242,33 @@ const PlantManagementTreeAddPage = () => {
                   origin="Việt Nam"
                   germinationRate={85}
                   yield={25}
+                  onSelect={(code) => setSelectedSeed(code)}
+                  isActive={selectedSeed === "SR-RI3"}
                   description="Giống RI6 cho năng suất cao, cơm vàng đậm, vị ngọt thơm"
                 />
                 <SeedCard
                   backgroundImage="https://food-map.s3.ap-southeast-1.amazonaws.com/news/2021/03/sau-rieng-ri6-3.jpg"
-                  seedCode="SR-RI3"
-                  name="Hạt giống RI3"
+                  seedCode="SR-RI8"
+                  name="Hạt giống RI8"
                   provider="Công ty giống cây trồng"
                   origin="Việt Nam"
                   germinationRate={85}
                   yield={25}
-                  description="Giống RI6 cho năng suất cao, cơm vàng đậm, vị ngọt thơm"
+                  onSelect={(code) => setSelectedSeed(code)}
+                  isActive={selectedSeed === "SR-RI8"}
+                  description="Giống RI8 cho năng suất cao, cơm vàng đậm, vị ngọt thơm"
                 />
                 <SeedCard
                   backgroundImage="https://food-map.s3.ap-southeast-1.amazonaws.com/news/2021/03/sau-rieng-ri6-3.jpg"
-                  seedCode="SR-RI3"
-                  name="Hạt giống RI3"
+                  seedCode="SR-RI9"
+                  name="Hạt giống RI9"
                   provider="Công ty giống cây trồng"
                   origin="Việt Nam"
                   germinationRate={85}
                   yield={25}
-                  description="Giống RI6 cho năng suất cao, cơm vàng đậm, vị ngọt thơm"
+                  onSelect={(code) => setSelectedSeed(code)}
+                  isActive={selectedSeed === "SR-RI9"}
+                  description="Giống RI9 cho năng suất cao, cơm vàng đậm, vị ngọt thơm"
                 />
               </Group>
             </Scrollable>

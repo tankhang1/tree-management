@@ -18,6 +18,7 @@ import {
   IconSearch,
 } from "@tabler/icons-react";
 import Scrollable from "../Scrollable";
+import { useState } from "react";
 
 const suppliers = [
   {
@@ -50,6 +51,11 @@ const suppliers = [
 ];
 
 export function VendorList() {
+  const [selected, setSelected] = useState("");
+
+  const onSelect = (code: string) => {
+    setSelected(code);
+  };
   return (
     <Stack gap={"xs"}>
       <Text fw={500} fz={15}>
@@ -74,7 +80,10 @@ export function VendorList() {
               style={{
                 position: "relative",
                 transition: "transform 0.2s ease",
+                borderColor: selected === sup.code ? "green" : undefined,
+                cursor: "pointer",
               }}
+              onClick={() => onSelect(sup.code)}
               onMouseEnter={(e) =>
                 (e.currentTarget.style.transform = "scale(1.02)")
               }

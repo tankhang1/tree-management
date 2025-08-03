@@ -325,7 +325,7 @@ const MapManagementAddAreaPage = () => {
                 style={{ height: "200px", width: "100%", borderRadius: 8 }}
               >
                 <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
-                <Polygon positions={coords} color="teal" />
+                <Polygon positions={coords} color="green" />
               </MapContainer>
             </Card>
           </Stack>

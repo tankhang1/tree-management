@@ -89,7 +89,7 @@ const PlantManagementTreeDetailPage = () => {
             </Group>
             <Group justify="space-between">
               <Text>Loại cây:</Text>
-              <Badge color="teal" size="sm">
+              <Badge color="green" size="sm">
                 {form.values.type}
               </Badge>
             </Group>

@@ -151,6 +151,9 @@ const types = [
 const OrderManagementCreatePage = () => {
   const navigate = useNavigate();
   const [activeStep, setActiveStep] = useState(0);
+  const [selectedProduct, setSelectedProduct] = useState<string>();
+  const [selectedMaterial, setSelectedMaterial] = useState<string>();
+  const [selectedContract, setSelectedContract] = useState<string>();
   const [formData, setFormData] = useState({
     orderId: "ORD001",
     orderName: "Đơn hàng phân bón NPK",
@@ -162,6 +165,7 @@ const OrderManagementCreatePage = () => {
     discountAmount: 500000,
     paymentAmount: 4500000,
     bankInfo: "Ngân hàng A",
+    address: "",
     category: "",
     bomType: "Sản phẩm", // "Sản phẩm" or "Nguyên Vật Liệu"
     method: "cash", // "cash" or "bank_transfer"
@@ -314,7 +318,7 @@ const OrderManagementCreatePage = () => {
                     <Stack gap={"xs"}>
                       <TextInput
                         placeholder="Danh mục sản phẩm"
-                        label="Danh mục sản phẩm"
+                        label="Danh mục sản phẩm (chọn một)"
                         leftSection={<IconSearch size={18} />}
                         radius={4}
                       />
@@ -381,7 +385,7 @@ const OrderManagementCreatePage = () => {
                     <Stack gap={"xs"}>
                       <TextInput
                         placeholder="Sản phẩm"
-                        label="Sản phẩm"
+                        label="Sản phẩm (chọn một)"
                         leftSection={<IconSearch size={18} />}
                         radius={4}
                       />
@@ -399,7 +403,15 @@ const OrderManagementCreatePage = () => {
                               style={{
                                 position: "relative",
                                 transition: "transform 0.2s ease",
+                                borderColor:
+                                  selectedProduct === product.productCode
+                                    ? "green"
+                                    : "#d9d9d9",
+                                cursor: "pointer",
                               }}
+                              onClick={() =>
+                                setSelectedProduct(product.productCode)
+                              }
                               onMouseEnter={(e) =>
                                 (e.currentTarget.style.transform =
                                   "scale(1.02)")
@@ -436,7 +448,7 @@ const OrderManagementCreatePage = () => {
                     <Stack gap={"xs"}>
                       <TextInput
                         placeholder="Nguyên vật liệu"
-                        label="Nguyên vật liệu"
+                        label="Nguyên vật liệu (chọn một)"
                         leftSection={<IconSearch size={18} />}
                         radius={4}
                       />
@@ -450,6 +462,24 @@ const OrderManagementCreatePage = () => {
                             shadow="sm"
                             radius="md"
                             p="md"
+                            style={{
+                              position: "relative",
+                              transition: "transform 0.2s ease",
+                              borderColor:
+                                selectedMaterial === material.materialCode
+                                  ? "green"
+                                  : undefined,
+                              cursor: "pointer",
+                            }}
+                            onClick={() => {
+                              setSelectedMaterial(material.materialCode);
+                            }}
+                            onMouseEnter={(e) =>
+                              (e.currentTarget.style.transform = "scale(1.02)")
+                            }
+                            onMouseLeave={(e) =>
+                              (e.currentTarget.style.transform = "scale(1)")
+                            }
                           >
                             <Stack>
                               <Image
@@ -650,8 +680,28 @@ const OrderManagementCreatePage = () => {
                   radius={4}
                 />
                 <Scrollable h={250}>
-                  <Group>
-                    <Card shadow="sm" padding="md" radius="md" withBorder>
+                  <Group p={"xs"}>
+                    <Card
+                      shadow="sm"
+                      padding="md"
+                      radius="md"
+                      withBorder
+                      style={{
+                        borderColor:
+                          selectedContract === "contract1"
+                            ? "green"
+                            : undefined,
+                        cursor: "pointer",
+                        transition: "transform 0.2s ease",
+                      }}
+                      onClick={() => setSelectedContract("contract1")}
+                      onMouseEnter={(e) =>
+                        (e.currentTarget.style.transform = "scale(1.02)")
+                      }
+                      onMouseLeave={(e) =>
+                        (e.currentTarget.style.transform = "scale(1)")
+                      }
+                    >
                       <Group justify="apart" mb="xs">
                         <Title order={5}>
                           HĐMB-001 - Hợp đồng mua bán thiết bị tưới
@@ -687,7 +737,27 @@ const OrderManagementCreatePage = () => {
                         </Button>
                       </Group>
                     </Card>
-                    <Card shadow="sm" padding="md" radius="md" withBorder>
+                    <Card
+                      shadow="sm"
+                      padding="md"
+                      radius="md"
+                      withBorder
+                      style={{
+                        borderColor:
+                          selectedContract === "contract2"
+                            ? "green"
+                            : undefined,
+                        cursor: "pointer",
+                        transition: "transform 0.2s ease",
+                      }}
+                      onClick={() => setSelectedContract("contract2")}
+                      onMouseEnter={(e) =>
+                        (e.currentTarget.style.transform = "scale(1.02)")
+                      }
+                      onMouseLeave={(e) =>
+                        (e.currentTarget.style.transform = "scale(1)")
+                      }
+                    >
                       <Group justify="apart" mb="xs">
                         <Title order={5}>
                           HĐMB-001 - Hợp đồng mua bán thiết bị tưới
@@ -820,6 +890,21 @@ const OrderManagementCreatePage = () => {
                         shadow="sm"
                         radius="md"
                         p="lg"
+                        style={{
+                          position: "relative",
+                          transition: "transform 0.2s ease",
+                          borderColor:
+                            formData.address === address.id
+                              ? "green"
+                              : "#d9d9d9",
+                          cursor: "pointer",
+                        }}
+                        onClick={() =>
+                          setFormData((prev) => ({
+                            ...prev,
+                            address: address.id,
+                          }))
+                        }
                       >
                         <Stack gap="xs">
                           <Group justify="space-between">

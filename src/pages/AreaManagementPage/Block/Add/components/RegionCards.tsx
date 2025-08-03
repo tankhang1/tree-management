@@ -21,7 +21,7 @@ const RegionCardSelector: React.FC<RegionCardSelectorProps> = ({
           radius="md"
           shadow={selected === r.code ? "md" : "xs"}
           style={{
-            borderColor: selected === r.code ? "teal" : undefined,
+            borderColor: selected === r.code ? "green" : undefined,
             cursor: "pointer",
             minWidth: 260,
           }}

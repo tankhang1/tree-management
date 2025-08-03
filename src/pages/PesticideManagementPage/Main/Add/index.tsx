@@ -288,7 +288,7 @@ const PesticideManagementMainAddPage = () => {
               <Stack gap={"xs"}>
                 <Title order={4}>Thùng carton lớn (20 cái)</Title>
                 <TextInput
-                  label="Nhà cung cấp"
+                  label="Nhà cung cấp (chọn nhiều)"
                   radius={4}
                   placeholder="Chọn nhà cung cấp"
                   {...form.getInputProps("suppliers")}
@@ -305,7 +305,7 @@ const PesticideManagementMainAddPage = () => {
               <Stack gap={"xs"}>
                 <Title order={4}>Hộp nhựa 500 ml (30 cái)</Title>
                 <TextInput
-                  label="Nhà cung cấp"
+                  label="Nhà cung cấp (chọn nhiều)"
                   radius={4}
                   placeholder="Chọn nhà cung cấp"
                   {...form.getInputProps("suppliers")}

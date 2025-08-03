@@ -5,13 +5,19 @@ import Scrollable from "../../../../../components/Scrollable";
 
 type TSelectableSupplierCards = {
   isCheckbox?: boolean;
+  isMultiple?: boolean;
 };
 export function SelectableSupplierCards({
   isCheckbox,
+  isMultiple = true,
 }: TSelectableSupplierCards) {
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
 
   const toggleSelection = (id: string) => {
+    if (!isMultiple) {
+      setSelectedIds([id]);
+      return;
+    }
     setSelectedIds((prev) =>
       prev.includes(id) ? prev.filter((s) => s !== id) : [...prev, id]
     );
