@@ -140,16 +140,13 @@ const MapManagementRegionPage = () => {
   const areaZoneColumns: MRT_ColumnDef<AreaZone>[] = [
     {
       accessorKey: "code",
-      header: "Mã khu vực",
+      header: "Mã vùng",
       Cell: ({ row }) => <Text fw={500}>{row.original.code}</Text>,
     },
-    {
-      accessorKey: "name",
-      header: "Tên khu vực",
-    },
+
     {
       accessorKey: "regionName",
-      header: "Vùng trồng",
+      header: "Vùng",
     },
     {
       accessorKey: "orgUnit",
@@ -178,10 +175,6 @@ const MapManagementRegionPage = () => {
       ),
     },
 
-    {
-      accessorKey: "numberOfLots",
-      header: "Số lô",
-    },
     {
       accessorKey: "actions",
       header: "Tuỳ chọn",

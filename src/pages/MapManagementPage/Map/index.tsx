@@ -1,13 +1,4 @@
-import {
-  Box,
-  Button,
-  Group,
-  Paper,
-  Select,
-  Stack,
-  Text,
-  Title,
-} from "@mantine/core";
+import { Box, Button, Group, Paper, Select, Stack, Text } from "@mantine/core";
 import { IconSearch } from "@tabler/icons-react";
 import { MapContainer, TileLayer } from "react-leaflet";
 
@@ -44,13 +35,7 @@ const MapManagementMapPage = () => {
         p={"sm"}
       >
         <Stack w={300} gap={"xs"}>
-          <Title order={4}>Tìm kiếm cây trồng</Title>
-          <Select
-            label="Chọn vùng"
-            placeholder="Chọn vùng"
-            radius={4}
-            clearable
-          />
+          <Select label="Vùng" placeholder="Chọn vùng" radius={4} clearable />
           <Select label="Khu vực" placeholder="Khu vực" radius={4} clearable />
           <Select label="Lô" placeholder="Lô" radius={4} clearable />
           {/* <Select

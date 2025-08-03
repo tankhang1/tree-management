@@ -137,11 +137,11 @@ const MapManagementAreaPage = () => {
     },
     {
       accessorKey: "name",
-      header: "Tên khu vực",
+      header: "Khu vực",
     },
     {
       accessorKey: "regionName",
-      header: "Vùng trồng",
+      header: "Vùng",
     },
     {
       accessorKey: "area",

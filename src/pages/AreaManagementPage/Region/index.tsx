@@ -157,25 +157,33 @@ const AreaManagementRegionPage = () => {
     navigate(PATH.AREA_REGION_DETAIL);
   };
   const areaZoneColumns: MRT_ColumnDef<AreaZone>[] = [
-    {
-      accessorKey: "code",
-      header: "Mã vùng trồng",
-      Cell: ({ row }) => <Text fw={500}>{row.original.code}</Text>,
-    },
+    // {
+    //   accessorKey: "code",
+    //   header: "Mã vùng",
+    //   Cell: ({ row }) => <Text fw={500}>{row.original.code}</Text>,
+    // },
     {
       accessorKey: "regionName",
-      header: "Vùng trồng",
+      header: "Vùng",
     },
-
+    {
+      accessorKey: "areaName",
+      header: "Khu vực",
+    },
+    {
+      accessorKey: "plotName",
+      header: "Lô",
+    },
+    {
+      accessorKey: "area",
+      header: "Diện tích canh tác (m²)",
+      Cell: ({ row }) => <Text>{row.original.area.toLocaleString()} m²</Text>,
+    },
     {
       accessorKey: "employee",
       header: "Người quản lý",
     },
-    {
-      accessorKey: "area",
-      header: "Diện tích (m²)",
-      Cell: ({ row }) => <Text>{row.original.area.toLocaleString()} m²</Text>,
-    },
+
     {
       accessorKey: "soilType",
       header: "Loại đất",
@@ -193,14 +201,7 @@ const AreaManagementRegionPage = () => {
         </Group>
       ),
     },
-    {
-      accessorKey: "mainCrop",
-      header: "Cây trồng chính",
-    },
-    {
-      accessorKey: "numberOfLots",
-      header: "Số khu vực",
-    },
+
     {
       accessorKey: "actions",
       header: "Tuỳ chọn",

@@ -21,6 +21,7 @@ import {
   IconCash,
   IconLayersIntersect,
   IconCashBanknote,
+  IconSettings,
 } from "@tabler/icons-react";
 import { PATH } from "./path.constants";
 
@@ -36,7 +37,18 @@ export const NAV_BAR = [
     link: PATH.SCHEDULE,
   },
   {
-    label: "Quản lý vùng trồng",
+    label: "Biểu đồ vùng",
+    icon: IconMap2,
+    link: PATH.MAP_REGION,
+    children: [
+      { label: "Phân bổ vùng", link: PATH.MAP_REGION },
+      { label: "Phân bổ khu vực", link: PATH.MAP_AREA },
+      { label: "Phân bổ lô", link: PATH.MAP_PLOT },
+      { label: "Bản đồ", link: PATH.MAP_MAP },
+    ],
+  },
+  {
+    label: "Vùng canh tác",
     icon: IconMap,
     link: PATH.AREA_MANAGEMENT,
     children: [
@@ -44,39 +56,13 @@ export const NAV_BAR = [
       // { label: "Khu vực", link: PATH.AREA_ZONE },
       // { label: "Lô canh tác", link: PATH.AREA_BLOCK },
       // { label: "Hàng", link: PATH.AREA_ROW },
-      { label: "Cây canh tác", link: PATH.AREA_TREE },
-      { label: "Loại đất", link: PATH.AREA_SOIL },
-      { label: "Phương pháp canh tác", link: PATH.AREA_CULTIVATION_METHOD },
+      { label: "Khai báo canh tác", link: PATH.AREA_TREE },
+
       { label: "Lịch sử", link: PATH.AREA_HISTORY },
     ],
   },
   {
-    label: "Quản lý biểu đồ",
-    icon: IconMap2,
-    link: PATH.MAP_REGION,
-    children: [
-      { label: "Phân bổ vùng", link: PATH.MAP_REGION },
-      { label: "Phân bổ khu vực", link: PATH.MAP_AREA },
-      { label: "Phân bổ lô", link: PATH.MAP_PLOT },
-      { label: "Bản đồ địa chính", link: PATH.MAP_MAP },
-      { label: "Địa hình", link: PATH.MAP_TERRAIN },
-    ],
-  },
-  {
-    label: "Quản lý cây trồng",
-    icon: IconTrees,
-    link: PATH.PLANT_MANAGEMENT,
-    children: [
-      { label: "Nhóm cây trồng", link: PATH.PLANT_GROUP },
-      { label: "Danh mục cây trồng", link: PATH.PLANT_CATALOG },
-      { label: "Giống cây", link: PATH.PLANT_VARIETY },
-      { label: "Hạt giống", link: PATH.PLANT_SEED },
-      { label: "Cây trồng", link: PATH.PLANT_TREE },
-      { label: "Tài liệu kỹ thuật", link: PATH.PLANT_TECHNICAL_DOC },
-    ],
-  },
-  {
-    label: "Quản lý mùa vụ & chu kỳ",
+    label: "Chu kỳ canh tác",
     icon: IconReportAnalytics,
     link: PATH.SEASON_MANAGEMENT,
     children: [
@@ -85,7 +71,7 @@ export const NAV_BAR = [
     ],
   },
   {
-    label: "Quản lý kế hoạch",
+    label: "Kế hoạch canh tác",
     icon: IconSettingsAutomation,
     link: PATH.PLAN_MANAGEMENT,
     children: [
@@ -96,7 +82,7 @@ export const NAV_BAR = [
     ],
   },
   {
-    label: "Quản lý công việc",
+    label: "Công việc phát sinh",
     icon: IconBook2,
     link: PATH.TASK_MANAGEMENT,
     children: [
@@ -105,69 +91,19 @@ export const NAV_BAR = [
     ],
   },
   {
-    label: "Quản lý thu hoạch",
-    icon: IconReportAnalytics,
-    link: PATH.HARVEST_MANAGEMENT,
-    children: [
-      { label: "Báo cáo thu hoạch", link: PATH.HARVEST_REPORT },
-      { label: "Truy vấn cây theo bản đồ", link: PATH.HARVEST_QUERY },
-    ],
-  },
-  {
-    label: "Quản lý sản phẩm",
+    label: "Vật tư nông nghiệp",
     icon: IconPackage,
-    link: PATH.PRODUCT_MANAGEMENT,
+    link: PATH.SUPPLY_MANAGEMENT,
     children: [
-      { label: "Danh mục sản phẩm", link: PATH.PRODUCT_TYPE },
-      { label: "Sản phẩm", link: PATH.PRODUCT_ITEM },
-      {
-        label: "Danh mục nguyên vật liệu",
-        link: PATH.PRODUCT_RAW_MATERIAL_TYPE,
-      },
-      { label: "Nguyên vật liệu", link: PATH.PRODUCT_RAW_MATERIAL },
+      { label: "Danh mục vật tư", link: PATH.SUPPLY_TYPE },
+      { label: "Vật tư", link: PATH.SUPPLY_MAIN },
+      { label: "Lịch sử sử dụng", link: PATH.SUPPLY_HISTORY },
+      { label: "Lịch sử thanh lý", link: PATH.SUPPLY_DISPOSAL_HISTORY },
     ],
   },
+
   {
-    label: "Quản lý hợp đồng",
-    icon: IconReportMoney,
-    link: PATH.CONTRACT_MANAGEMENT,
-    children: [
-      { label: "Hợp đồng mua bán", link: PATH.CONTRACT_SALE },
-      { label: "Hợp đồng trao đổi", link: PATH.CONTRACT_EXCHANGE },
-      { label: "Hợp đồng cho tặng", link: PATH.CONTRACT_GIFT },
-      { label: "Hợp đồng vay", link: PATH.CONTRACT_LOAN },
-      { label: "Hợp đồng thuê", link: PATH.CONTRACT_RENT },
-      { label: "Hợp đồng mượn", link: PATH.CONTRACT_BORROW },
-      { label: "Hợp đồng dịch vụ", link: PATH.CONTRACT_SERVICE },
-      { label: "Hợp đồng vận chuyển", link: PATH.CONTRACT_TRANSPORT },
-      { label: "Hợp đồng gia công", link: PATH.CONTRACT_PROCESSING },
-      { label: "Hợp đồng gửi giữ tài sản", link: PATH.CONTRACT_STORAGE },
-      { label: "Hợp đồng ủy quyền", link: PATH.CONTRACT_AUTHORIZATION },
-      { label: "Hợp đồng hợp tác", link: PATH.CONTRACT_PARTNERSHIP },
-    ],
-  },
-  {
-    label: "Quản lý nhân sự",
-    icon: IconUsersGroup,
-    link: PATH.HR_MANAGEMENT,
-    children: [
-      { label: "Phòng ban", link: PATH.HR_DEPARTMENT },
-      { label: "Vị trí", link: PATH.HR_POSITION },
-      { label: "Đội nhóm", link: PATH.HR_TEAM },
-      { label: "Nhân sự", link: PATH.HR_EMPLOYEE },
-    ],
-  },
-  // {
-  //   label: "Quản lý nhà máy",
-  //   icon: IconBuildingFactory,
-  //   link: PATH.FACTORY_MANAGEMENT,
-  //   children: [
-  //     { label: "Nhà máy", link: PATH.FACTORY_MAIN },
-  //     { label: "Lịch sử chỉnh sửa", link: PATH.FACTORY_HISTORY },
-  //   ],
-  // },
-  {
-    label: "Quản lý máy móc",
+    label: "Máy móc - Thiết bị",
     icon: IconTractor,
     link: PATH.MACHINE_MANAGEMENT,
     children: [
@@ -189,19 +125,9 @@ export const NAV_BAR = [
       { label: "Lịch sử huỷ", link: PATH.PESTICIDE_DISPOSAL_HISTORY },
     ],
   },
+
   {
-    label: "Quản lý vật tư",
-    icon: IconPackage,
-    link: PATH.SUPPLY_MANAGEMENT,
-    children: [
-      { label: "Danh mục vật tư", link: PATH.SUPPLY_TYPE },
-      { label: "Vật tư", link: PATH.SUPPLY_MAIN },
-      { label: "Lịch sử sử dụng", link: PATH.SUPPLY_HISTORY },
-      { label: "Lịch sử thanh lý", link: PATH.SUPPLY_DISPOSAL_HISTORY },
-    ],
-  },
-  {
-    label: "Quản lý phân bón",
+    label: "Phân bón",
     icon: IconBox,
     link: "12123",
     children: [
@@ -212,84 +138,63 @@ export const NAV_BAR = [
     ],
   },
   {
-    label: "Quản lý thu mua",
-    icon: IconBuildingStore,
-    link: PATH.PURCHASE_MANAGEMENT,
+    label: "Cây trồng",
+    icon: IconTrees,
+    link: PATH.PLANT_MANAGEMENT,
     children: [
-      { label: "Sản phẩm", link: PATH.PURCHASE_MANAGEMENT_PRODUCT },
-      { label: "Nguyên vật liệu", link: PATH.PURCHASE_MANAGEMENT_RAW_MATERIAL },
-    ],
-  },
-  {
-    label: "Quản lý đơn hàng",
-    icon: IconShoppingCart,
-    link: PATH.ORDER_MANAGEMENT,
-    children: [
-      // {
-      //   label: "Địa chỉ giao hàng",
-      //   link: PATH.ORDER_MANAGEMENT_ADDRESS,
-      // },
-      {
-        label: "Đặt hàng nhanh",
-        link: PATH.ORDER_MANAGEMENT_QUICK,
-      },
-
-      // {
-      //   label: "Đặt hàng (đăng nhập)",
-      //   link: PATH.ORDER_MANAGEMENT_LOGGED_IN,
-      // },
-      {
-        label: "Tạo đơn hàng",
-        link: PATH.ORDER_MANAGEMENT_CREATE,
-      },
-    ],
-  },
-  {
-    label: "Quản lý hoá đơn",
-    icon: IconReceiptRupee,
-    link: PATH.BILL_MANAGEMENT,
-    children: [
-      {
-        label: "Cá nhân",
-        link: PATH.BILL_MANAGEMENT_USER,
-      },
-      {
-        label: "Doanh nghiệp",
-        link: PATH.BILL_MANAGEMENT_COMPANY,
-      },
+      { label: "Nhóm cây trồng", link: PATH.PLANT_GROUP },
+      { label: "Danh mục cây trồng", link: PATH.PLANT_CATALOG },
+      { label: "Giống cây", link: PATH.PLANT_VARIETY },
+      { label: "Hạt giống", link: PATH.PLANT_SEED },
+      { label: "Cây trồng", link: PATH.PLANT_TREE },
+      { label: "Tài liệu kỹ thuật", link: PATH.PLANT_TECHNICAL_DOC },
     ],
   },
 
   {
-    label: "Quản lý công nợ",
-    icon: IconReportMoney,
-    link: PATH.DEBT_MANAGEMENT,
+    label: "Báo cáo thu hoạch",
+    icon: IconReportAnalytics,
+    link: PATH.HARVEST_MANAGEMENT,
     children: [
+      // Thêm báo cáo thu hoạch vào đây nếu cần
+      { label: "Báo cáo thu hoạch", link: PATH.HARVEST_REPORT },
+      { label: "Truy vấn cây theo bản đồ", link: PATH.HARVEST_QUERY },
+    ],
+  },
+  {
+    label: "Sản phẩm kinh doanh",
+    icon: IconPackage,
+    link: PATH.PRODUCT_MANAGEMENT,
+    children: [
+      { label: "Danh mục sản phẩm", link: PATH.PRODUCT_TYPE },
+      { label: "Sản phẩm", link: PATH.PRODUCT_ITEM },
       {
-        label: "Công nợ phải thu",
-        icon: IconCash,
-        link: PATH.DEBT_RECEIVABLE,
+        label: "Danh mục nguyên vật liệu",
+        link: PATH.PRODUCT_RAW_MATERIAL_TYPE,
       },
-      {
-        label: "Công nợ phải trả",
-        icon: IconCreditCard,
-        link: PATH.DEBT_PAYABLE,
-      },
+      { label: "Nguyên vật liệu", link: PATH.PRODUCT_RAW_MATERIAL },
     ],
   },
 
+  // {
+  //   label: "Quản lý nhà máy",
+  //   icon: IconBuildingFactory,
+  //   link: PATH.FACTORY_MANAGEMENT,
+  //   children: [
+  //     { label: "Nhà máy", link: PATH.FACTORY_MAIN },
+  //     { label: "Lịch sử chỉnh sửa", link: PATH.FACTORY_HISTORY },
+  //   ],
+  // },
+
   {
-    label: "Quản lý kho",
-    icon: IconCoin,
-    link: PATH.STOCK_MANAGEMENT,
+    label: "Nhân sự",
+    icon: IconUsersGroup,
+    link: PATH.HR_MANAGEMENT,
     children: [
-      { label: "Khu vực quản lý", link: PATH.STOCK_AREA },
-      { label: "Kho vận", link: PATH.STOCK_DELIVERY },
-      { label: "Xuất/nhập vật tư", link: PATH.STOCK_SUPPLY },
-      { label: "Xuất/nhập thuốc", link: PATH.STOCK_PESTICIDE },
-      { label: "Xuất/nhập máy móc", link: PATH.STOCK_MACHINE },
-      { label: "Xuất/nhập hạt giống", link: PATH.STOCK_SEED },
-      { label: "Xuất/nhập phân bón", link: PATH.STOCK_FERTILIZER },
+      { label: "Phòng ban", link: PATH.HR_DEPARTMENT },
+      { label: "Vị trí", link: PATH.HR_POSITION },
+      { label: "Đội nhóm", link: PATH.HR_TEAM },
+      { label: "Nhân sự", link: PATH.HR_EMPLOYEE },
     ],
   },
   {
@@ -315,34 +220,144 @@ export const NAV_BAR = [
       },
     ],
   },
+
   {
-    label: "Quy cách",
-    icon: IconLayersIntersect,
-    link: PATH.PACKAGING_SPECIFICATION,
+    label: "Hợp đồng ký kết",
+    icon: IconReportMoney,
+    link: PATH.CONTRACT_MANAGEMENT,
+    children: [
+      { label: "Hợp đồng mua bán", link: PATH.CONTRACT_SALE },
+      { label: "Hợp đồng trao đổi", link: PATH.CONTRACT_EXCHANGE },
+      { label: "Hợp đồng cho tặng", link: PATH.CONTRACT_GIFT },
+      { label: "Hợp đồng vay", link: PATH.CONTRACT_LOAN },
+      { label: "Hợp đồng thuê", link: PATH.CONTRACT_RENT },
+      { label: "Hợp đồng mượn", link: PATH.CONTRACT_BORROW },
+      { label: "Hợp đồng dịch vụ", link: PATH.CONTRACT_SERVICE },
+      { label: "Hợp đồng vận chuyển", link: PATH.CONTRACT_TRANSPORT },
+      { label: "Hợp đồng gia công", link: PATH.CONTRACT_PROCESSING },
+      { label: "Hợp đồng gửi giữ tài sản", link: PATH.CONTRACT_STORAGE },
+      { label: "Hợp đồng ủy quyền", link: PATH.CONTRACT_AUTHORIZATION },
+      { label: "Hợp đồng hợp tác", link: PATH.CONTRACT_PARTNERSHIP },
+    ],
+  },
+  {
+    label: "Hoá đơn",
+    icon: IconReceiptRupee,
+    link: PATH.BILL_MANAGEMENT,
+    children: [
+      {
+        label: "Cá nhân",
+        link: PATH.BILL_MANAGEMENT_USER,
+      },
+      {
+        label: "Doanh nghiệp",
+        link: PATH.BILL_MANAGEMENT_COMPANY,
+      },
+    ],
+  },
+  {
+    label: "Công nợ",
+    icon: IconReportMoney,
+    link: PATH.DEBT_MANAGEMENT,
+    children: [
+      {
+        label: "Công nợ phải thu",
+        icon: IconCash,
+        link: PATH.DEBT_RECEIVABLE,
+      },
+      {
+        label: "Công nợ phải trả",
+        icon: IconCreditCard,
+        link: PATH.DEBT_PAYABLE,
+      },
+    ],
+  },
+  {
+    label: "Kho vận",
+    icon: IconCoin,
+    link: PATH.STOCK_MANAGEMENT,
+    children: [
+      { label: "Khu vực quản lý", link: PATH.STOCK_AREA },
+      { label: "Kho vận", link: PATH.STOCK_DELIVERY },
+      { label: "Xuất/nhập vật tư", link: PATH.STOCK_SUPPLY },
+      { label: "Xuất/nhập thuốc", link: PATH.STOCK_PESTICIDE },
+      { label: "Xuất/nhập máy móc", link: PATH.STOCK_MACHINE },
+      { label: "Xuất/nhập hạt giống", link: PATH.STOCK_SEED },
+      { label: "Xuất/nhập phân bón", link: PATH.STOCK_FERTILIZER },
+    ],
+  },
+  {
+    label: "Đơn hàng - Thu mua",
+    icon: IconBuildingStore,
+    link: PATH.PURCHASE_MANAGEMENT,
+    children: [
+      { label: "Sản phẩm", link: PATH.PURCHASE_MANAGEMENT_PRODUCT },
+      { label: "Nguyên vật liệu", link: PATH.PURCHASE_MANAGEMENT_RAW_MATERIAL },
+    ],
+  },
+  {
+    label: "Đơn hàng - Buôn bán",
+    icon: IconShoppingCart,
+    link: PATH.ORDER_MANAGEMENT,
+    children: [
+      // {
+      //   label: "Địa chỉ giao hàng",
+      //   link: PATH.ORDER_MANAGEMENT_ADDRESS,
+      // },
+      {
+        label: "Đặt hàng nhanh",
+        link: PATH.ORDER_MANAGEMENT_QUICK,
+      },
+
+      // {
+      //   label: "Đặt hàng (đăng nhập)",
+      //   link: PATH.ORDER_MANAGEMENT_LOGGED_IN,
+      // },
+      {
+        label: "Tạo đơn hàng",
+        link: PATH.ORDER_MANAGEMENT_CREATE,
+      },
+    ],
   },
   {
     label: "Ngân hàng",
     icon: IconCashBanknote,
     link: PATH.BANK_MANAGEMENT,
   },
+  {
+    label: "Quy cách",
+    icon: IconLayersIntersect,
+    link: PATH.PACKAGING_SPECIFICATION,
+  },
+
   // {
   //   label: "Quản lý nhà cung cấp",
   //   icon: IconBuildingWarehouse,
   //   link: PATH.VENDOR,
   // },
+  // {
+  //   label: "Mua hàng",
+  //   icon: IconShoppingCart,
+  //   link: PATH.PURCHASE,
+  // },
+  // {
+  //   label: "Bán hàng",
+  //   icon: IconBuildingStore,
+  //   link: PATH.SELL,
+  // },
+  // {
+  //   label: "Tài chính & Kế toán",
+  //   icon: IconReportMoney,
+  //   link: PATH.FINANCE_ACCOUNT,
+  // },
   {
-    label: "Mua hàng",
-    icon: IconShoppingCart,
-    link: PATH.PURCHASE,
-  },
-  {
-    label: "Bán hàng",
-    icon: IconBuildingStore,
-    link: PATH.SELL,
-  },
-  {
-    label: "Tài chính & Kế toán",
-    icon: IconReportMoney,
-    link: PATH.FINANCE_ACCOUNT,
+    label: "Cài đặt",
+    icon: IconSettings,
+    link: PATH.SETTINGS,
+    children: [
+      { label: "Địa hình", link: PATH.MAP_TERRAIN },
+      { label: "Loại đất", link: PATH.AREA_SOIL },
+      { label: "Phương pháp canh tác", link: PATH.AREA_CULTIVATION_METHOD },
+    ],
   },
 ];

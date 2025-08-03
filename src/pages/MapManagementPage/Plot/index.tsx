@@ -16,7 +16,8 @@ type TPlot = {
   code: string;
   name: string;
   area: number;
-
+  area_name: string;
+  zone: string;
   gps: string;
   contour: string;
   numberOfRows: number;
@@ -27,6 +28,8 @@ const areaBlockList: TPlot[] = [
     areaId: "KV001",
     code: "LO-A1",
     name: "Lô A1",
+    zone: "Vùng A",
+    area_name: "Khu vực A1",
     area: 1500,
     contour: "Địa hình dốc nhẹ, từ 48m đến 56m",
     gps: "10.776,106.699 10.777,106.698 10.778,106.700",
@@ -37,6 +40,8 @@ const areaBlockList: TPlot[] = [
     areaId: "KV002",
     code: "LO-B1",
     name: "Lô B1",
+    zone: "Vùng B",
+    area_name: "Khu vực B1",
     area: 2000,
     contour: "Địa hình dốc nhẹ, từ 48m đến 56m",
     gps: "10.779,106.695 10.780,106.696 10.781,106.694",
@@ -47,6 +52,8 @@ const areaBlockList: TPlot[] = [
     areaId: "KV003",
     code: "LO-C1",
     name: "Lô C1",
+    zone: "Vùng c",
+    area_name: "Khu vực C1",
     area: 1800,
     contour: "Địa hình bằng phẳng, cao độ 50m",
     gps: "10.782,106.693 10.783,106.692 10.784,106.694",
@@ -57,6 +64,8 @@ const areaBlockList: TPlot[] = [
     areaId: "KV004",
     code: "LO-D1",
     name: "Lô D1",
+    zone: "Vùng D",
+    area_name: "Khu vực D1",
     area: 2500,
     contour: "Địa hình dốc mạnh, từ 60m đến 70m",
     gps: "10.785,106.691 10.786,106.690 10.787,106.692",
@@ -67,6 +76,8 @@ const areaBlockList: TPlot[] = [
     areaId: "KV005",
     code: "LO-E1",
     name: "Lô E1",
+    zone: "Vùng E",
+    area_name: "Khu vực E1",
     area: 3000,
     contour: "Địa hình trũng, từ 40m đến 45m",
     gps: "10.788,106.689 10.789,106.688 10.790,106.690",
@@ -77,6 +88,8 @@ const areaBlockList: TPlot[] = [
     areaId: "KV006",
     code: "LO-F1",
     name: "Lô F1",
+    zone: "Vùng F",
+    area_name: "Khu vực F1",
     area: 2200,
     contour: "Địa hình đồi núi, từ 55m đến 65m",
     gps: "10.791,106.687 10.792,106.686 10.793,106.688",
@@ -86,6 +99,8 @@ const areaBlockList: TPlot[] = [
     id: "L007",
     areaId: "KV007",
     code: "LO-G1",
+    zone: "Vùng G",
+    area_name: "Khu vực G1",
     name: "Lô G1",
     area: 1700,
     contour: "Địa hình bằng phẳng, cao độ 52m",
@@ -97,6 +112,8 @@ const areaBlockList: TPlot[] = [
     areaId: "KV008",
     code: "LO-H1",
     name: "Lô H1",
+    zone: "Vùng H",
+    area_name: "Khu vực H1",
     area: 2800,
     contour: "Địa hình dốc nhẹ, từ 50m đến 58m",
     gps: "10.797,106.683 10.798,106.682 10.799,106.684",
@@ -111,7 +128,9 @@ const MapManagementPlotPage = () => {
   };
   const areaBlockColumns: MRT_ColumnDef<TPlot>[] = [
     { accessorKey: "code", header: "Mã lô" },
-    { accessorKey: "name", header: "Tên lô" },
+    { accessorKey: "name", header: "Lô" },
+    { accessorKey: "area_name", header: "Khu vực" },
+    { accessorKey: "zone", header: "Vùng" },
     {
       accessorKey: "area",
       header: "Diện tích (m²)",

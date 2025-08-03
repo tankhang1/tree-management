@@ -256,4 +256,5 @@ export const PATH = {
   PACKAGING_SPECIFICATION: "/packaging/specification",
   // Bank Management
   BANK_MANAGEMENT: "/bank-management",
+  SETTINGS: "/settings",
 };
