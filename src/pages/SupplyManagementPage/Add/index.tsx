@@ -20,6 +20,59 @@ import { IconArrowLeft, IconPlus, IconSearch } from "@tabler/icons-react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { SelectableSupplierCards } from "./components/SelectableSupplierCards";
+import Scrollable from "../../../components/Scrollable";
+export const companies = [
+  {
+    companyName: "Công ty TNHH Nông Nghiệp Xanh",
+    businessType: "Cá nhân",
+    representative: "Nguyễn Văn A",
+    phoneNumber: "0912345678",
+    unit: "cái",
+    specification: "1 bộ/đơn vị",
+    quantity: 120,
+    note: "",
+  },
+  {
+    companyName: "Công ty TNHH Hoa Lúa",
+    businessType: "Hộ kinh doanh",
+    representative: "Trần Thị B",
+    phoneNumber: "0988111222",
+    unit: "kg",
+    specification: "10kg/bao",
+    quantity: 850,
+    note: "Ưu tiên giao trước 10h",
+  },
+  {
+    companyName: "Công ty Cổ phần Trái Cây Việt",
+    businessType: "Công ty cổ phần",
+    representative: "Lê Văn C",
+    phoneNumber: "0938999777",
+    unit: "thùng",
+    specification: "12 hộp/thùng",
+    quantity: 65,
+    note: "Giao theo đơn đặt trước",
+  },
+  {
+    companyName: "Công ty TNHH Gạo Sạch",
+    businessType: "Cá nhân",
+    representative: "Phạm Thị D",
+    phoneNumber: "0977666555",
+    unit: "bao",
+    specification: "25kg/bao",
+    quantity: 340,
+    note: "",
+  },
+  {
+    companyName: "Công ty TNHH Rau Quả An Toàn",
+    businessType: "Hộ kinh doanh",
+    representative: "Ngô Minh E",
+    phoneNumber: "0909988776",
+    unit: "giỏ",
+    specification: "5kg/giỏ",
+    quantity: 200,
+    note: "Chỉ giao nội thành",
+  },
+];
 
 export default function SupplyManagementPage() {
   const navigate = useNavigate();
@@ -118,17 +171,6 @@ export default function SupplyManagementPage() {
                   { value: "protective", label: "Đồ bảo hộ lao động" },
                 ]}
               />
-              <Select
-                label="Đơn vị"
-                radius={4}
-                placeholder="Chọn đơn vị"
-                data={[
-                  { value: "kg", label: "Kilogram (kg)" },
-                  { value: "litre", label: "Lít (l)" },
-                  { value: "piece", label: "Cái (cái)" },
-                  { value: "set", label: "Bộ (bộ)" },
-                ]}
-              />
               <Textarea
                 label="Ghi chú"
                 value={formData.note}
@@ -185,12 +227,38 @@ export default function SupplyManagementPage() {
                 leftSection={<IconSearch size={18} />}
               />
               <SelectableSupplierCards isMultiple={false} isCheckbox={false} />
-              <NumberInput
-                label="Số lượng"
-                placeholder="Nhập số lượng"
-                min={1}
-                radius={4}
-              />
+              <Group grow>
+                <NumberInput
+                  label="Số lượng"
+                  placeholder="Nhập số lượng"
+                  min={1}
+                  radius={4}
+                />
+                <MultiSelect
+                  label="Đơn vị"
+                  radius={4}
+                  clearable
+                  placeholder="Chọn đơn vị"
+                  data={[
+                    { value: "kg", label: "Kilogram (kg)" },
+                    { value: "litre", label: "Lít (l)" },
+                    { value: "piece", label: "Cái (cái)" },
+                    { value: "set", label: "Bộ (bộ)" },
+                  ]}
+                />
+                <MultiSelect
+                  label="Quy cách"
+                  radius={4}
+                  placeholder="Chọn quy cách"
+                  searchable
+                  clearable
+                  data={[
+                    { value: "1 bộ/đơn vị", label: "1 bộ/đơn vị" },
+                    { value: "1 chai/đơn vị", label: "1 chai/đơn vị" },
+                    { value: "1 túi/đơn vị", label: "1 túi/đơn vị" },
+                  ]}
+                />
+              </Group>
             </Stack>
           </Card>
           <Button
@@ -217,55 +285,77 @@ export default function SupplyManagementPage() {
         <Stack gap="md">
           <Title order={4}>📝 Xác nhận thông tin</Title>
 
-          <Group align="flex-start">
-            <Card withBorder flex={1} h={300}>
-              <Stack>
-                <Title order={4}>Thông tin vật tư</Title>
-                <Text>
-                  <strong>Mã vật tư:</strong> {formData.code}
-                </Text>
-                <Text>
-                  <strong>Tên vật tư:</strong> {formData.name}
-                </Text>
-                <Text>
-                  <strong>Loại vật tư:</strong> Thiết bị tưới tiêu
-                </Text>
-                <Text>
-                  <strong>Số lượng:</strong> 100
-                </Text>
-                <Text>
-                  <strong>Đơn vị tính:</strong> cái
-                </Text>
-                <Text>
-                  <strong>Quy cách:</strong> 1 bộ/đơn vị
-                </Text>
-                <Text>
-                  <strong>Ghi chú:</strong> {formData.note}
-                </Text>
+          <Group align="stretch" grow>
+            {/* Thông tin vật tư */}
+            <Card withBorder shadow="sm" radius={4} p="md" h={300}>
+              <Stack justify="space-between" h="100%">
+                <Stack gap="xs">
+                  <Title order={4}>Thông tin vật tư</Title>
+                  <Text size="sm">
+                    <strong>Mã vật tư:</strong> {formData.code}
+                  </Text>
+                  <Text size="sm">
+                    <strong>Tên vật tư:</strong> {formData.name}
+                  </Text>
+                  <Text size="sm">
+                    <strong>Loại vật tư:</strong> Thiết bị tưới tiêu
+                  </Text>
+                </Stack>
               </Stack>
             </Card>
-            <Card withBorder flex={1} h={300}>
-              <Stack flex={1}>
-                <Title order={4}>Ảnh vật tư</Title>
-                <Stack justify="center" align="center">
-                  <Image
-                    src={
-                      "https://encrypted-tbn3.gstatic.com/shopping?q=tbn:ANd9GcQHUVFr-uUHq8EgkgEc-KvQnK1Sw1jvIVax8B4kebK98FtujU5D2n3_mZ8ib6LoLZPk9eGKlOr3ZVslkIrWYU6VjTByZJiIpTvMqGqiK1Ds8kWIra4f2kxZ4w&usqp=CAc"
-                    }
-                    alt="Preview"
-                    radius="md"
-                    mt="sm"
-                    h={200}
-                    fit="contain"
-                  />
-                </Stack>
+            <Card h={300} withBorder radius={4} p="md" style={{ flex: 1 }}>
+              <Stack>
+                <Title order={4}>Hình ảnh vật tư</Title>
+                <Image
+                  src="https://hoasenviet.net/uploads/images/thiet-bi-tuoi-1.jpg"
+                  h={200}
+                  fit="contain"
+                />
               </Stack>
             </Card>
           </Group>
 
           <Divider label="🏪 Nhà cung cấp" labelPosition="center" />
-
-          <SelectableSupplierCards isCheckbox={false} />
+          <Scrollable h={300}>
+            <Group align="flex-start" gap={"md"} wrap="nowrap">
+              {companies.map((item, index) => (
+                <Card
+                  key={index}
+                  withBorder
+                  shadow="sm"
+                  radius={4}
+                  miw={400}
+                  p="md"
+                  mb="sm"
+                >
+                  <Stack gap="xs">
+                    <Text fw="bold">{item.companyName}</Text>
+                    <Text>
+                      <strong>Loại doanh nghiệp:</strong> {item.businessType}
+                    </Text>
+                    <Text>
+                      <strong>Người đại diện:</strong> {item.representative}
+                    </Text>
+                    <Text>
+                      <strong>SĐT:</strong> {item.phoneNumber}
+                    </Text>
+                    <Text>
+                      <strong>Đơn vị tính:</strong> {item.unit}
+                    </Text>
+                    <Text>
+                      <strong>Quy cách:</strong> {item.specification}
+                    </Text>
+                    <Text>
+                      <strong>Số lượng:</strong> {item.quantity}
+                    </Text>
+                    <Text>
+                      <strong>Ghi chú:</strong> {item.note || "Không có"}
+                    </Text>
+                  </Stack>
+                </Card>
+              ))}
+            </Group>
+          </Scrollable>
           <Group justify="space-between" mt="md">
             <Button radius={4} variant="default" onClick={prevStep}>
               Quay lại

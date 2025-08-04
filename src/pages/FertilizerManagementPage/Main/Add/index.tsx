@@ -22,6 +22,7 @@ import { useForm } from "@mantine/form";
 import {
   IconArrowLeft,
   IconPhoto,
+  IconPlus,
   IconUpload,
   IconX,
 } from "@tabler/icons-react";
@@ -29,6 +30,8 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { SelectableSupplierCards } from "../../../SupplyManagementPage/Add/components/SelectableSupplierCards";
 import { Dropzone, IMAGE_MIME_TYPE } from "@mantine/dropzone";
+import { companies } from "../../../SupplyManagementPage/Add";
+import Scrollable from "../../../../components/Scrollable";
 
 const FertilizerManagementMainAddPage = () => {
   const navigate = useNavigate();
@@ -110,38 +113,7 @@ const FertilizerManagementMainAddPage = () => {
                 withAsterisk
                 {...form.getInputProps("nutrientContent")}
               />
-              <MultiSelect
-                label="Quy cách"
-                radius={4}
-                placeholder="Quy cách"
-                value={["PKG004", "PKG005"]}
-                data={[
-                  {
-                    value: "PKG001",
-                    label: "Hộp giấy nhỏ (50 cái)",
-                  },
-                  {
-                    value: "PKG002",
-                    label: "Túi nilon lớn (100 cái)",
-                  },
-                  {
-                    value: "PKG003",
-                    label: "Bao tải 25kg (25 cái)",
-                  },
-                  {
-                    value: "PKG004",
-                    label: "Bịch nhựa 1kg (10 cái)",
-                  },
-                  {
-                    value: "PKG005",
-                    label: "Thùng carton lớn (20 cái)",
-                  },
-                  {
-                    value: "PKG006",
-                    label: "Hộp nhựa 500ml (30 cái)",
-                  },
-                ]}
-              />
+
               <MultiSelect
                 label="HashTag"
                 data={["Sử dụng thường xuyên", "Sử dụng mùa hè"]}
@@ -199,32 +171,80 @@ const FertilizerManagementMainAddPage = () => {
 
         <Stepper.Step label="Bước 2" description="Đóng gói & sản xuất">
           <Stack gap={"xs"}>
-            <Card withBorder shadow="sm" radius={4} p="lg">
+            <Input.Wrapper label="Danh sách nhà cung cấp">
               <Stack gap={"xs"}>
-                <Title order={4}>Bịch nhựa 1kg (10 cái)</Title>
-                <TextInput
-                  label="Nhà cung cấp (chọn nhiều)"
+                <Card withBorder shadow="sm" radius={4} p="lg">
+                  <Stack gap={"xs"}>
+                    <TextInput
+                      label="Nhà cung cấp (chọn một)"
+                      radius={4}
+                      placeholder="Chọn nhà cung cấp"
+                      {...form.getInputProps("suppliers")}
+                    />
+                    <SelectableSupplierCards
+                      isCheckbox={false}
+                      isMultiple={false}
+                    />
+                    <Group grow>
+                      <NumberInput label="Số lượng" radius={4} />
+                      <MultiSelect
+                        label="Đơn vị"
+                        radius={4}
+                        clearable
+                        placeholder="Chọn đơn vị"
+                        data={[
+                          { value: "kg", label: "Kilogram (kg)" },
+                          { value: "g", label: "Gram (g)" },
+                          { value: "tấn", label: "Tấn (tấn)" },
+                          { value: "bao", label: "Bao (bao)" },
+                          { value: "thùng", label: "Thùng (thùng)" },
+                        ]}
+                      />
+                      <MultiSelect
+                        label="Quy cách"
+                        radius={4}
+                        clearable
+                        placeholder="Quy cách"
+                        data={[
+                          {
+                            value: "PKG001",
+                            label: "Hộp giấy nhỏ (50 cái)",
+                          },
+                          {
+                            value: "PKG002",
+                            label: "Túi nilon lớn (100 cái)",
+                          },
+                          {
+                            value: "PKG003",
+                            label: "Bao tải 25kg (25 cái)",
+                          },
+                          {
+                            value: "PKG004",
+                            label: "Bịch nhựa 1kg (10 cái)",
+                          },
+                          {
+                            value: "PKG005",
+                            label: "Thùng carton lớn (20 cái)",
+                          },
+                          {
+                            value: "PKG006",
+                            label: "Hộp nhựa 500ml (30 cái)",
+                          },
+                        ]}
+                      />
+                    </Group>
+                  </Stack>
+                </Card>
+                <Button
+                  variant="outline"
                   radius={4}
-                  placeholder="Chọn nhà cung cấp"
-                  {...form.getInputProps("suppliers")}
-                />
-                <SelectableSupplierCards isCheckbox={true} />
-                <NumberInput label="Số lượng" radius={4} />
+                  leftSection={<IconPlus size={18} />}
+                  onClick={prevStep}
+                >
+                  Thêm mới
+                </Button>
               </Stack>
-            </Card>
-            <Card withBorder shadow="sm" radius={4} p="lg">
-              <Stack gap={"xs"}>
-                <Title order={4}>Thùng carton lớn (20 cái)</Title>
-                <TextInput
-                  label="Nhà cung cấp"
-                  radius={4}
-                  placeholder="Chọn nhà cung cấp"
-                  {...form.getInputProps("suppliers")}
-                />
-                <SelectableSupplierCards isCheckbox={true} />
-                <NumberInput label="Số lượng" radius={4} />
-              </Stack>
-            </Card>
+            </Input.Wrapper>
             <Textarea
               label="Ghi chú"
               placeholder="Mô tả thêm (tuỳ chọn)"
@@ -278,7 +298,46 @@ const FertilizerManagementMainAddPage = () => {
               my="md"
             />
 
-            <SelectableSupplierCards isCheckbox={false} />
+            <Scrollable h={300}>
+              <Group align="flex-start" gap={"md"} wrap="nowrap">
+                {companies.map((item, index) => (
+                  <Card
+                    key={index}
+                    withBorder
+                    shadow="sm"
+                    radius={4}
+                    miw={400}
+                    p="md"
+                    mb="sm"
+                  >
+                    <Stack gap="xs">
+                      <Text fw="bold">{item.companyName}</Text>
+                      <Text>
+                        <strong>Loại doanh nghiệp:</strong> {item.businessType}
+                      </Text>
+                      <Text>
+                        <strong>Người đại diện:</strong> {item.representative}
+                      </Text>
+                      <Text>
+                        <strong>SĐT:</strong> {item.phoneNumber}
+                      </Text>
+                      <Text>
+                        <strong>Đơn vị tính:</strong> {item.unit}
+                      </Text>
+                      <Text>
+                        <strong>Quy cách:</strong> {item.specification}
+                      </Text>
+                      <Text>
+                        <strong>Số lượng:</strong> {item.quantity}
+                      </Text>
+                      <Text>
+                        <strong>Ghi chú:</strong> {item.note || "Không có"}
+                      </Text>
+                    </Stack>
+                  </Card>
+                ))}
+              </Group>
+            </Scrollable>
           </Stack>
         </Stepper.Step>
         <Stepper.Completed>

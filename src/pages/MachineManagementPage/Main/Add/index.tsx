@@ -28,6 +28,8 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import SunEditor from "suneditor-react";
 import { SelectableSupplierCards } from "../../../SupplyManagementPage/Add/components/SelectableSupplierCards";
+import { companies } from "../../../SupplyManagementPage/Add";
+import Scrollable from "../../../../components/Scrollable";
 
 const MachineManagementMainAddPage = () => {
   const navigate = useNavigate();
@@ -97,7 +99,6 @@ const MachineManagementMainAddPage = () => {
                 radius={4}
                 required
               />
-              <Select label="Đơn vị" data={["Chiếc", "Cái", "Bộ"]} radius={4} />
               <MultiSelect
                 label="HashTag"
                 data={["Sử dụng thường xuyên", "Sử dụng mùa hè"]}
@@ -234,11 +235,23 @@ const MachineManagementMainAddPage = () => {
                   isMultiple={false}
                   isCheckbox={false}
                 />
-                <NumberInput
-                  label="Số lượng"
-                  placeholder="Số lượng"
-                  radius={4}
-                />
+                <Group grow>
+                  <NumberInput
+                    label="Số lượng"
+                    placeholder="Số lượng"
+                    radius={4}
+                  />
+                  <MultiSelect
+                    label="Đơn vị"
+                    data={["Chiếc", "Cái", "Bộ"]}
+                    radius={4}
+                  />
+                  <MultiSelect
+                    radius={4}
+                    label="Quy cách"
+                    data={["10 chiếc/bộ", "20 chiếc/cái", "5 bộ/chiếc"]}
+                  />
+                </Group>
               </Stack>
             </Card>
             <Button
@@ -281,7 +294,46 @@ const MachineManagementMainAddPage = () => {
               </Card>
             </Group>
             <Divider label="Nhà cung cấp" />
-            <SelectableSupplierCards isCheckbox={false} />
+            <Scrollable h={300}>
+              <Group align="flex-start" gap={"md"} wrap="nowrap">
+                {companies.map((item, index) => (
+                  <Card
+                    key={index}
+                    withBorder
+                    shadow="sm"
+                    radius={4}
+                    miw={400}
+                    p="md"
+                    mb="sm"
+                  >
+                    <Stack gap="xs">
+                      <Text fw="bold">{item.companyName}</Text>
+                      <Text>
+                        <strong>Loại doanh nghiệp:</strong> {item.businessType}
+                      </Text>
+                      <Text>
+                        <strong>Người đại diện:</strong> {item.representative}
+                      </Text>
+                      <Text>
+                        <strong>SĐT:</strong> {item.phoneNumber}
+                      </Text>
+                      <Text>
+                        <strong>Đơn vị tính:</strong> {item.unit}
+                      </Text>
+                      <Text>
+                        <strong>Quy cách:</strong> {item.specification}
+                      </Text>
+                      <Text>
+                        <strong>Số lượng:</strong> {item.quantity}
+                      </Text>
+                      <Text>
+                        <strong>Ghi chú:</strong> {item.note || "Không có"}
+                      </Text>
+                    </Stack>
+                  </Card>
+                ))}
+              </Group>
+            </Scrollable>
 
             <Divider label="Tài liệu kỹ thuật" />
             <Title order={5} mt="md">
