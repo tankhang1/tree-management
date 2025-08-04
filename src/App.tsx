@@ -184,7 +184,7 @@ export default function App() {
           h={58}
           radius={100}
           pos="fixed"
-          bottom={24}
+          bottom={100}
           right={24}
           onClick={openChatbot}
           style={{

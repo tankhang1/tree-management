@@ -69,6 +69,9 @@ const TaskManagementMainPage = () => {
   const onMainDetail = () => {
     navigate(PATH.TASK_MAIN_DETAIL);
   };
+  const onTaskAssign = () => {
+    navigate(PATH.PLAN_ADD_ASSIGN);
+  };
   const columns: MRT_ColumnDef<EmployeeTask>[] = [
     { accessorKey: "employee", header: "Nhân viên" },
     { accessorKey: "taskName", header: "Tên công việc" },
@@ -145,7 +148,9 @@ const TaskManagementMainPage = () => {
           <Button variant="outline" radius={4} leftSection={<IconFileExcel />}>
             Xuất File
           </Button>
-          <Button radius={4}>Thêm mới</Button>
+          <Button radius={4} onClick={onTaskAssign}>
+            Thêm mới
+          </Button>
         </Group>
       </Group>
 
