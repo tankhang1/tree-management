@@ -28,6 +28,8 @@ type AreaZone = {
   code: string;
   name: string;
   regionName: string;
+  areaName?: string;
+  plotName?: string;
   employee: string;
   area: number; // diện tích (m²)
   soilType: string;
@@ -106,6 +108,7 @@ const areaZoneData: AreaZone[] = [
     id: "V006",
     code: "V-F5",
     name: "Khu vực F5",
+    areaName: "Khu vực F5",
     regionName: "Vùng Trồng F",
     employee: "Hoàng Thị F",
     area: 7000,
@@ -118,6 +121,8 @@ const areaZoneData: AreaZone[] = [
   {
     id: "V007",
     code: "V-G6",
+    areaName: "Khu vực G6",
+    plotName: "Lô G61, Lô G62",
     name: "Khu vực G6",
     regionName: "Vùng Trồng G",
     employee: "Vũ Văn G",

@@ -755,6 +755,34 @@ const ROUTES = [
     element={<PackagingSpecificationPage />}
   />,
   <Route path={PATH.BANK_MANAGEMENT} element={<BankManagementPage />} />,
+  <Route path={PATH.MAP_HISTORY} element={<AreaManagementHistoryPage />} />,
+  <Route path={PATH.SEASON_HISTORY} element={<AreaManagementHistoryPage />} />,
+  <Route path={PATH.PLAN_HISTORY} element={<AreaManagementHistoryPage />} />,
+  <Route path={PATH.TASK_HISTORY} element={<AreaManagementHistoryPage />} />,
+  <Route path={PATH.PRODUCT_HISTORY} element={<AreaManagementHistoryPage />} />,
+  <Route
+    path={PATH.FERTILIZER_HISTORY}
+    element={<AreaManagementHistoryPage />}
+  />,
+  <Route
+    path={PATH.PESTICIDE_HISTORY}
+    element={<AreaManagementHistoryPage />}
+  />,
+  <Route path={PATH.SUPPLY_HISTORY} element={<AreaManagementHistoryPage />} />,
+  <Route path={PATH.COMPANY_HISTORY} element={<AreaManagementHistoryPage />} />,
+  <Route path={PATH.HR_HISTORY} element={<AreaManagementHistoryPage />} />,
+  <Route
+    path={PATH.CONTRACT_HISTORY}
+    element={<AreaManagementHistoryPage />}
+  />,
+  <Route
+    path={PATH.PURCHASE_MANAGEMENT_HISTORY}
+    element={<AreaManagementHistoryPage />}
+  />,
+  <Route
+    path={PATH.ORDER_MANAGEMENT_HISTORY}
+    element={<AreaManagementHistoryPage />}
+  />,
 ];
 
 createRoot(document.getElementById("root")!).render(

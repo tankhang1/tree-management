@@ -39,7 +39,7 @@ const SeasonManagementGrowthDetailPage = () => {
 
         <Stack gap="xs">
           <Text>
-            <strong>Tên mùa vụ:</strong> {season.name}
+            <strong>Mùa vụ:</strong> {season.name}
           </Text>
           <Text>
             <strong>Thời gian ước tính:</strong> {season.estimatedDuration} ngày

@@ -224,7 +224,7 @@ const SeasonManagementGrowthAddPage = () => {
         {activeStep === 0 && (
           <Stack gap={"xs"}>
             <TextInput
-              label="Tên mùa vụ"
+              label="Mùa vụ"
               radius={4}
               {...form.getInputProps("name")}
             />

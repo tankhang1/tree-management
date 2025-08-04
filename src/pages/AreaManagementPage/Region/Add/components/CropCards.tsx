@@ -27,7 +27,7 @@ const CropCards: React.FC<PlantCardSelectorProps> = ({
   return (
     <Scrollable>
       <Group wrap="nowrap" gap="md" align="flex-start" p={"xs"}>
-        {[...plants, ...plants].map((plant) => (
+        {plants.map((plant) => (
           <Card
             h={350}
             key={plant.code}

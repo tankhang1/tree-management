@@ -63,7 +63,7 @@ const PlanManagementMainPage = () => {
     navigate(PATH.PLAN_ADD_MAIN);
   };
   const seasonPlanColumns: MRT_ColumnDef<SeasonPlan>[] = [
-    { accessorKey: "seasonName", header: "Tên mùa vụ" },
+    { accessorKey: "seasonName", header: "Mùa vụ" },
 
     {
       accessorKey: "duration",

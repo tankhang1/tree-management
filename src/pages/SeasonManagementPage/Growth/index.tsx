@@ -111,7 +111,7 @@ const SeasonManagementGrowthPage = () => {
     },
     {
       accessorKey: "name",
-      header: "Tên mùa vụ",
+      header: "Mùa vụ",
     },
     {
       accessorKey: "estimatedDuration",

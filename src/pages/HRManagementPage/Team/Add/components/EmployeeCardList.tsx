@@ -165,7 +165,7 @@ export function EmployeeCardList({
             radius={4}
             shadow="sm"
             p="md"
-            miw={600}
+            miw={400}
             style={{
               position: "relative",
               transition: "transform 0.2s ease",
@@ -178,12 +178,13 @@ export function EmployeeCardList({
             onClick={() => onSelect(emp.id)}
             onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
           >
-            <Group grow align="flex-start" gap="md">
+            <Group align="flex-start" gap="md">
               <Image
                 src={
-                  "https://cdn.prod.website-files.com/5fbb9b89508062592a9731b1/6448c1ce35d6ffe59e4d6f46_GettyImages-1399565382.jpg"
+                  "https://faceinch.vn/upload/elfinder/Ảnh/chup-chan-dung.jpg"
                 }
                 h={160}
+                w={100}
                 radius={4}
                 fit="cover"
                 alt="Employee Avatar"

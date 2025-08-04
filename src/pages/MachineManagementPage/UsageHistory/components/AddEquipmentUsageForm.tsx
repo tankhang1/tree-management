@@ -251,7 +251,7 @@ const AddEquipmentUsageForm = () => {
             </>
           )}
           <TextInput
-            label="Tìm kiếm nhân viên"
+            label="Tìm kiếm nhân viên (chọn nhiều)"
             placeholder="Chọn thành viên từ nhân sự"
             leftSection={<IconSearch size={16} />}
             radius={4}

@@ -57,7 +57,7 @@ const ConfirmStep = () => {
           <Stack gap="xs">
             <Group>
               <IconCalendar size={18} />
-              <Text fw={500}>Tên mùa vụ:</Text>
+              <Text fw={500}>Mùa vụ:</Text>
               <Text>{data.name}</Text>
             </Group>
             <Group>
