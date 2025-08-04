@@ -30,6 +30,8 @@ import {
 import { SelectableSupplierCards } from "../../SupplyManagementPage/Add/components/SelectableSupplierCards";
 import { useNavigate } from "react-router-dom";
 import Scrollable from "../../../components/Scrollable";
+import { materialList } from "../../ProductManagementPage/Item/Add";
+import { types } from "../../ProductManagementPage/Type";
 const bankList = [
   {
     id: "VCB",
@@ -79,27 +81,7 @@ const productList = [
     img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQwfg09hQiiHhgWNJZx_wrQAu-SWPqTz0yfAw&s",
   },
 ];
-const materialList = [
-  {
-    materialCode: "MAT001",
-    materialName: "Phân NPK",
-    description: "Phân NPK 16-16-8, dùng để bón cây trồng.",
-    img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR13HYMgDcPhnAzZ6lY8iTNwApj5XWCanAClQ&s",
-  },
-  {
-    materialCode: "MAT002",
-    materialName: "Phân hữu cơ",
-    description: "Phân hữu cơ vi sinh, cải tạo đất.",
 
-    img: "https://glawvn.com/wp-content/uploads/2023/04/phan-huu-co-la-gi-cac-loai-phan-huu-co-hien-hanh.jpeg",
-  },
-  {
-    materialCode: "MAT003",
-    materialName: "Hạt giống lúa",
-    description: "Hạt giống lúa chất lượng cao, năng suất tốt.",
-    img: "https://dantocmiennui-media.baotintuc.vn/images/c9bca312d68a4cb9c6013396197925b3d1b8e36a1725d1ac6318a949e7a3f3e724dfb1e5a06e02d6e56da454907910f8c375e3c3907454255baf9e67f8135c667a2f0b35f3ac576d14e6307ca755e480/cach-de-hat-lua-gong-nay-mam-deu-500x375-1.jpg.webp",
-  },
-];
 const s = {
   id: "sup-1",
   name: "Công ty TNHH Nông Nghiệp Xanh",
@@ -130,21 +112,6 @@ export const addressList = [
     recipientName: "Lê Văn C",
     phoneNumber: "0912345678",
     address: "789 Đường Hai Bà Trưng, Phường Đa Kao, Quận 1, TP.HCM",
-  },
-];
-const types = [
-  {
-    id: "T001",
-    img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQlYBaKOa_i9kDFe7NcpVlO5ymNmreB977Wug&s",
-    name: "Sầu riêng đông lạnh",
-    note: "Sầu riêng đông lạnh là sản phẩm chế biến từ sầu riêng tươi, giữ nguyên hương vị và chất lượng.",
-  },
-
-  {
-    id: "T003",
-    img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQlYBaKOa_i9kDFe7NcpVlO5ymNmreB977Wug&s",
-    name: "Sầu riêng khay",
-    note: "Sầu riêng là loại cây ăn quả nhiệt đới.",
   },
 ];
 
@@ -317,8 +284,8 @@ const OrderManagementCreatePage = () => {
                   {formData.bomType === "Sản phẩm" ? (
                     <Stack gap={"xs"}>
                       <TextInput
-                        placeholder="Danh mục sản phẩm"
-                        label="Danh mục sản phẩm (chọn một)"
+                        placeholder="Loại sản phẩm"
+                        label="Loại sản phẩm (chọn một)"
                         leftSection={<IconSearch size={18} />}
                         radius={4}
                       />
@@ -368,8 +335,8 @@ const OrderManagementCreatePage = () => {
                     </Stack>
                   ) : (
                     <Select
-                      label="Danh mục nguyên vật liệu"
-                      placeholder="Danh mục nguyên vật liệu"
+                      label="Loại nguyên vật liệu"
+                      placeholder="Loại nguyên vật liệu"
                       radius={4}
                       data={[
                         { value: "fertilizer", label: "Phân bón" },
@@ -435,7 +402,7 @@ const OrderManagementCreatePage = () => {
                                 </Text>
 
                                 <Text>
-                                  <b>Danh mục:</b> {product.category}
+                                  <b>Loại:</b> {product.category}
                                 </Text>
                               </Stack>
                             </Card>
@@ -554,7 +521,7 @@ const OrderManagementCreatePage = () => {
                                 </Text>
 
                                 <Text>
-                                  <b>Danh mục:</b> {product.category}
+                                  <b>Loại:</b> {product.category}
                                 </Text>
                                 <Group grow>
                                   <NumberInput label="Đơn giá" radius={4} />
@@ -1010,46 +977,48 @@ const OrderManagementCreatePage = () => {
                       <IconTools size={18} style={{ marginRight: 8 }} />
                       Thông tin sản phẩm / nguyên vật liệu
                     </Title>
-                    <Stack gap="xs">
-                      {materialList.map((material, index) => (
-                        <Card
-                          key={index}
-                          withBorder
-                          shadow="sm"
-                          radius="md"
-                          p="md"
-                        >
-                          <Group>
-                            <Image
-                              src={material.img}
-                              alt={material.materialName}
-                              w={150}
-                              radius="md"
-                            />
-                            <Stack gap={4}>
-                              <Text>
-                                <b>Mã nguyên vật liệu:</b>{" "}
-                                {material.materialCode}
-                              </Text>
-                              <Text>
-                                <b>Tên nguyên vật liệu:</b>{" "}
-                                {material.materialName}
-                              </Text>
+                    <ScrollAreaAutosize mah={400}>
+                      <Stack gap="xs">
+                        {materialList.map((material, index) => (
+                          <Card
+                            key={index}
+                            withBorder
+                            shadow="sm"
+                            radius="md"
+                            p="md"
+                          >
+                            <Group>
+                              <Image
+                                src={material.img}
+                                alt={material.materialName}
+                                w={150}
+                                radius="md"
+                              />
+                              <Stack gap={4}>
+                                <Text>
+                                  <b>Mã nguyên vật liệu:</b>{" "}
+                                  {material.materialCode}
+                                </Text>
+                                <Text>
+                                  <b>Tên nguyên vật liệu:</b>{" "}
+                                  {material.materialName}
+                                </Text>
 
-                              <Text>
-                                <b>Mô tả:</b> {material.description}
-                              </Text>
-                              <Text>
-                                <b>Đơn giá:</b> 33.33.000 đ
-                              </Text>
-                              <Text>
-                                <b>Số lượng (đơn vị):</b> 3kg
-                              </Text>
-                            </Stack>
-                          </Group>
-                        </Card>
-                      ))}
-                    </Stack>
+                                <Text>
+                                  <b>Mô tả:</b> {material.description}
+                                </Text>
+                                <Text>
+                                  <b>Đơn giá:</b> 33.33.000 đ
+                                </Text>
+                                <Text>
+                                  <b>Số lượng (đơn vị):</b> 3kg
+                                </Text>
+                              </Stack>
+                            </Group>
+                          </Card>
+                        ))}
+                      </Stack>
+                    </ScrollAreaAutosize>
                   </Card>
                 </Stack>
                 <Stack gap={"xs"}>

@@ -7,7 +7,7 @@ import AddPesticideUsageForm from "./components/AddPesticideUsageForm";
 
 type PesticideUsage = {
   id: string;
-  pesticideId: string; // mã thuốc (liên kết danh mục thuốc)
+  pesticideId: string; // mã thuốc (liên kết loại thuốc)
   fieldId: string; // mã vùng sử dụng thuốc
   startTime: string; // thời gian bắt đầu sử dụng
   endTime: string; // thời gian kết thúc

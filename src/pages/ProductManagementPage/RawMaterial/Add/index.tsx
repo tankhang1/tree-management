@@ -101,7 +101,7 @@ export default function ProductManagementRawMaterialAddPage() {
                 radius={4}
               />
               <Select
-                label="Danh mục nguyên vật liệu"
+                label="Loại nguyên vật liệu"
                 value={formData.name}
                 required
                 radius={4}
@@ -250,7 +250,7 @@ export default function ProductManagementRawMaterialAddPage() {
                   <strong>Tên nguyên vật liệu:</strong> {formData.name}
                 </Text>
                 <Text>
-                  <strong>Danh mục nguyên vật liệu:</strong> Thiết bị tưới tiêu
+                  <strong>Loại nguyên vật liệu:</strong> Thiết bị tưới tiêu
                 </Text>
                 <Text>
                   <strong>Quy cách:</strong> Bao 5kg, Thùng 20kg

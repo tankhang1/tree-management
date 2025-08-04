@@ -92,7 +92,7 @@ const PesticideManagementCategoryPage = () => {
     <Stack gap="lg">
       <Group justify="space-between">
         <Title flex={1} order={2}>
-          Quản lý danh mục thuốc
+          Quản lý loại thuốc
         </Title>
         <Group>
           <Button variant="outline" radius={4} leftSection={<IconFileExcel />}>
@@ -108,7 +108,7 @@ const PesticideManagementCategoryPage = () => {
       <Modal
         opened={openedPesticideForm}
         onClose={closePesticideForm}
-        title={<Text fw={"bold"}>Thêm mới danh mục thuốc</Text>}
+        title={<Text fw={"bold"}>Thêm mới loại thuốc</Text>}
       >
         <AddPesticideCategoryForm />
       </Modal>

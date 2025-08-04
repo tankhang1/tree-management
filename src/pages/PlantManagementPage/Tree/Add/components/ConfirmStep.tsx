@@ -97,7 +97,7 @@ const ConfirmStep = () => {
               <Text>{data.treeGroup}</Text>
             </Group>
             <Group>
-              <Text fw={500}>Danh mục cây:</Text>
+              <Text fw={500}>Loại cây:</Text>
               <Text>{data.treeCategory}</Text>
             </Group>
             <Group>

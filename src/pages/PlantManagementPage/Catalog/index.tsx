@@ -89,11 +89,11 @@ const PlantManagementCatalogPage = () => {
     },
     {
       accessorKey: "name",
-      header: "Danh mục cây",
+      header: "Loại cây",
     },
     {
       accessorKey: "vn_name",
-      header: "Danh mục cây ( tiếng việt )",
+      header: "Loại cây ( tiếng việt )",
     },
     {
       accessorKey: "eppo_code",
@@ -144,7 +144,7 @@ const PlantManagementCatalogPage = () => {
     <Stack gap="lg">
       <Group justify="space-between">
         <Title flex={1} order={2}>
-          Quản lý danh mục cây trồng
+          Quản lý loại cây trồng
         </Title>
         <Group>
           <Button variant="outline" radius={4} leftSection={<IconFileExcel />}>
@@ -160,7 +160,7 @@ const PlantManagementCatalogPage = () => {
       <Modal
         opened={openedAddCatalogForm}
         onClose={closeAddCatalogForm}
-        title={<Text fw={500}>Tạo mới danh mục cây</Text>}
+        title={<Text fw={500}>Tạo mới loại cây</Text>}
       >
         <AddCatalogForm />
       </Modal>

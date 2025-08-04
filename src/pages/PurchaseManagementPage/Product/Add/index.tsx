@@ -40,31 +40,10 @@ import { DepartmentCardList } from "../../../HRManagementPage/Team/Add/component
 import { EmployeeCardList } from "../../../HRManagementPage/Team/Add/components/EmployeeCardList";
 import { SelectableSupplierCards } from "../../../SupplyManagementPage/Add/components/SelectableSupplierCards";
 import { SelectableEnterpriseCards } from "../../../StockManagementPage/Delivery/Add/components/SelectableEnterpriseCards";
-import { warehouses } from "../../Material/Add";
+import { machineTypes, warehouses } from "../../Material/Add";
 import { useNavigate } from "react-router-dom";
 import Scrollable from "../../../../components/Scrollable";
-const machineTypes = [
-  {
-    id: "MCH01",
-    name: "Máy cày Kubota",
-    img: "https://kubotadailoi.com/uploads/images/P-1176_L3218_slide.jpg",
-  },
-  {
-    id: "MCH02",
-    name: "Máy phun thuốc Honda",
-    img: "https://www.ketnoitieudung.vn/data/bt6/may-phun-thuoc-honda-wjr2525t1-gcs-1604389460.jpg",
-  },
-  {
-    id: "MCH03",
-    name: "Máy gặt đập liên hợp Yanmar",
-    img: "https://dailoi.vn/uploads/images/2021/09/1631365221-single_product1-kubotadc70plusa.jpg",
-  },
-  {
-    id: "MCH04",
-    name: "Máy bay nông nghiệp DJI Agras",
-    img: "https://agridrone.vn/wp-content/uploads/2023/02/16887_T50_%E6%AD%A3%E4%BE%A7.jpg",
-  },
-];
+
 const contracts = ["HD-001 - Công ty A", "HD-002 - Công ty B"];
 const assetTypes = [
   {
@@ -297,8 +276,8 @@ const PurchaseManagementProductAddPage = () => {
                 </Input.Wrapper>
                 <Select
                   radius={4}
-                  label="Danh mục máy móc thiết bị"
-                  placeholder="Tìm kiếm danh mục máy móc thiết bị"
+                  label="Loại máy móc thiết bị"
+                  placeholder="Tìm kiếm loại máy móc thiết bị"
                   leftSection={<IconTruck size={18} />}
                   data={[
                     { value: "MCH01", label: "Máy cày Kubota" },
@@ -319,7 +298,7 @@ const PurchaseManagementProductAddPage = () => {
                   ]}
                 />
                 <TextInput
-                  label="Máy móc thiết bị"
+                  label="Máy móc thiết bị (chọn một)"
                   placeholder="Tìm kiếm máy móc thiết bị"
                   radius={4}
                   leftSection={<IconSearch size={18} />}

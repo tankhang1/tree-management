@@ -29,7 +29,7 @@ const ZoneCard = ({
   return (
     <Card
       w={300}
-      h={240}
+      h={250}
       shadow="sm"
       radius="md"
       withBorder

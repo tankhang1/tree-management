@@ -92,7 +92,7 @@ const SupplyManagementCategoryPage = () => {
     <Stack gap="lg">
       <Group justify="space-between">
         <Title flex={1} order={2}>
-          Quản lý danh mục vật tư
+          Quản lý loại vật tư
         </Title>
         <Group>
           <Button variant="outline" radius={4} leftSection={<IconFileExcel />}>
@@ -108,7 +108,7 @@ const SupplyManagementCategoryPage = () => {
       <Modal
         opened={openedMaterialForm}
         onClose={closeMaterialForm}
-        title={<Text fw={"bold"}>Thêm mới danh mục vật tư</Text>}
+        title={<Text fw={"bold"}>Thêm mới loại vật tư</Text>}
       >
         <AddMaterialCategoryForm />
       </Modal>

@@ -92,7 +92,7 @@ const MachineManagementCategoryPage = () => {
     <Stack gap="lg">
       <Group justify="space-between">
         <Title flex={1} order={2}>
-          Quản lý danh mục máy móc
+          Quản lý loại máy móc
         </Title>
         <Group>
           <Button variant="outline" radius={4} leftSection={<IconFileExcel />}>
@@ -108,7 +108,7 @@ const MachineManagementCategoryPage = () => {
       <Modal
         opened={openedMachineForm}
         onClose={closeMachineForm}
-        title={<Text fw={"bold"}>Thêm mới danh mục máy móc</Text>}
+        title={<Text fw={"bold"}>Thêm mới loại máy móc</Text>}
       >
         <AddMachineCategoryForm />
       </Modal>

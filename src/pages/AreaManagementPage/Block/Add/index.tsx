@@ -485,10 +485,10 @@ const AreaManagementBlockAddPage = () => {
                 radius={4}
               />
               <Text fw={500} fz={15}>
-                Danh mục cây trồng
+                Loại cây trồng
               </Text>
               <TextInput
-                placeholder="Tìm kiếm danh mục cây"
+                placeholder="Tìm kiếm loại cây"
                 radius={4}
                 leftSection={<IconSearch size={18} />}
               />
@@ -671,7 +671,7 @@ const AreaManagementBlockAddPage = () => {
                 </Group>
                 <Group justify="apart">
                   <Text size="sm" fw={500}>
-                    Danh mục cây:
+                    Loại cây:
                   </Text>
                   <Text>{confirmDataset.plant}</Text>
                 </Group>

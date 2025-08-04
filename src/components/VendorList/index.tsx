@@ -59,7 +59,7 @@ export function VendorList() {
   return (
     <Stack gap={"xs"}>
       <Text fw={500} fz={15}>
-        Chọn nhà cung cấp (chọn một)
+        Nhà cung cấp (chọn một)
       </Text>
       <Autocomplete
         placeholder="Tìm nhà cung cấp"

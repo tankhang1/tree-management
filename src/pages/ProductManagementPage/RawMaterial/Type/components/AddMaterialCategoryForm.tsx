@@ -37,7 +37,7 @@ const AddMaterialCategoryForm = () => {
           {...form.getInputProps("id")}
         />
         <TextInput
-          label="Tên danh mục nguyên vật liệu"
+          label="Tên loại nguyên vật liệu"
           radius={4}
           placeholder="Nhập tên ví dụ: Phân bón"
           {...form.getInputProps("name")}

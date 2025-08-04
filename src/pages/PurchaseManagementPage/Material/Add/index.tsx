@@ -128,28 +128,91 @@ const assetTypes = [
     icon: <IconPlant2 size={18} />,
   },
 ];
-const machineTypes = [
+export const machineTypes = [
   {
     id: "MCH01",
-    name: "Máy cày Kubota",
+    name: "Máy cày Kubota L3218",
+    manufacturer: "Kubota",
+    description:
+      "Máy cày 4 bánh, công suất mạnh mẽ, phù hợp nhiều loại địa hình.",
     img: "https://kubotadailoi.com/uploads/images/P-1176_L3218_slide.jpg",
+    usage: "Làm đất, cày xới ruộng",
   },
   {
     id: "MCH02",
-    name: "Máy phun thuốc Honda",
+    name: "Máy phun thuốc Honda WJR2525T1",
+    manufacturer: "Honda",
+    description: "Bình phun thuốc trừ sâu công suất cao, tiết kiệm nhiên liệu.",
     img: "https://www.ketnoitieudung.vn/data/bt6/may-phun-thuoc-honda-wjr2525t1-gcs-1604389460.jpg",
+    usage: "Phun thuốc trừ sâu, phân bón lá",
   },
   {
     id: "MCH03",
-    name: "Máy gặt đập liên hợp Yanmar",
+    name: "Máy gặt đập liên hợp Yanmar AW70V",
+    manufacturer: "Yanmar",
+    description:
+      "Máy gặt đập hiệu suất cao, tiết kiệm nhân công, thích hợp đồng bằng.",
     img: "https://dailoi.vn/uploads/images/2021/09/1631365221-single_product1-kubotadc70plusa.jpg",
+    usage: "Gặt lúa, đập lúa liên hợp",
   },
   {
     id: "MCH04",
-    name: "Máy bay nông nghiệp DJI Agras",
-    img: "https://agridrone.vn/wp-content/uploads/2023/02/16887_T50_%E6%AD%A3%E4%BE%A7.jpg",
+    name: "Máy bay nông nghiệp DJI Agras T50",
+    manufacturer: "DJI",
+    description: "Drone phun thuốc tự động, tích hợp GPS và camera cảm biến.",
+    img: "https://encrypted-tbn0.gstatic.com/shopping?q=tbn:ANd9GcRPNoIVZSOZKDCV_rHWN-7FwO-uRjQtLeJWRg_4ivGdZ8IbyeuoBTJZcJOWiDDPXCmlBtAoJJI0chNiY5bXY6wyypfAdxL_Q_wPB3MPWLRrDVrt7f5kcDzv",
+    usage: "Phun thuốc, giám sát cây trồng",
+  },
+  {
+    id: "MCH05",
+    name: "Máy gieo hạt đa năng 3A",
+    manufacturer: "3A",
+    description: "Gieo hạt tự động cho các loại rau màu, tiết kiệm thời gian.",
+    img: "https://encrypted-tbn2.gstatic.com/shopping?q=tbn:ANd9GcQT-K9SIg4mgw5K3tPo5AmUITSdQGM4h2FImcalxrIj0AtJSiFM3SjX6IXPpwl0SySyjMGvw9aIbFOGRQux0CxNgYjMh4GC7m8kVNdr6fG7DEUSKTywtN0l",
+    usage: "Gieo hạt giống rau, ngũ cốc",
+  },
+  {
+    id: "MCH06",
+    name: "Máy đào hố trồng cây chạy xăng",
+    manufacturer: "Trâu Vàng",
+    description: "Thiết kế nhỏ gọn, phù hợp trồng cây công nghiệp hoặc ăn quả.",
+    img: "https://encrypted-tbn1.gstatic.com/shopping?q=tbn:ANd9GcTy3IGABijni0VG9I8kLg1vZclcWRKBkx7Ck0FWWAl-M_XKNqfS-zRuxZNH4DkGKTgy4Se__6Td7uN1XXvbiiSV5GqBHiU-bXVImobuTcO0yAAb9sq7N9_k1g",
+    usage: "Đào hố trồng cây",
+  },
+  {
+    id: "MCH07",
+    name: "Máy sạ lúa kéo tay",
+    manufacturer: "Mekong",
+    description: "Sạ đều hạt, giảm giống hao phí, phù hợp ruộng bằng.",
+    img: "https://encrypted-tbn0.gstatic.com/shopping?q=tbn:ANd9GcSL81Q3dkgSqleQnze8g-ijyZvve4md8axzJ6DwNMwqzo2ihdATnIV9a8XE0dFE0guf3bJ62XFDEzzEvUYW70rDhXfO332OQF0ge7tyCTF5qlXYf2HZmeKi3Q",
+    usage: "Sạ lúa giống",
+  },
+  {
+    id: "MCH08",
+    name: "Máy cắt cỏ Oshima",
+    manufacturer: "Oshima",
+    description: "Cắt cỏ nhanh gọn, sử dụng linh hoạt ở bờ ruộng, vườn.",
+    img: "https://encrypted-tbn0.gstatic.com/shopping?q=tbn:ANd9GcQlxUxTZlEAFvWMVwF7CKLdMer6LH5c5Zm7-jkJ3Lp-sDRdfNx0uT079x1y99fNhbDbYDs4kqDk5o5x4Lq8HnHvQeuBNtMLSehW5l6tLp5Rs88XMJqU85xOCA",
+    usage: "Cắt cỏ, dọn bờ",
+  },
+  {
+    id: "MCH09",
+    name: "Máy bơm nước nông nghiệp chạy xăng",
+    manufacturer: "Hữu Toàn",
+    description: "Bơm nước tưới tiêu, thoát nước trong ruộng vườn.",
+    img: "https://encrypted-tbn1.gstatic.com/shopping?q=tbn:ANd9GcTSTmlWXPhA0cKQ6wTs1SEjB8ysOGJluzpiLovodixiMk1hZK9OgGUPzCNSgkrdajOn7FDCivv48jtZKPq-ymxO5Xc1-wPd4GP7c0QjaIp0SS1IgHWH2ZHqaA",
+    usage: "Tưới tiêu, thoát nước",
+  },
+  {
+    id: "MCH10",
+    name: "Máy sấy nông sản mini",
+    manufacturer: "Việt Trung",
+    description: "Sấy khô lúa, ngô, đậu, tăng thời gian bảo quản.",
+    img: "https://encrypted-tbn2.gstatic.com/shopping?q=tbn:ANd9GcToEjnPvC5dqcEL8oeejxXlIXsQMeknYeKX7PiIXJYa6YLAZHuNSRkTrOCSB1ngQTf5a07tIjxmZkXGDxX-PHsmEdH5zCuzn7OaddeZCTJ3kOSCK3Ci9OzuuFs",
+    usage: "Sấy nông sản",
   },
 ];
+
 const PurchaseManagementMaterialAddPage = () => {
   const navigate = useNavigate();
   const [
@@ -480,8 +543,8 @@ const PurchaseManagementMaterialAddPage = () => {
                 </Input.Wrapper>
                 <Select
                   radius={4}
-                  label="Danh mục máy móc thiết bị"
-                  placeholder="Tìm kiếm danh mục máy móc thiết bị"
+                  label="Loại máy móc thiết bị"
+                  placeholder="Tìm kiếm loại máy móc thiết bị"
                   leftSection={<IconTruck size={18} />}
                   data={[
                     { value: "MCH01", label: "Máy cày Kubota" },
@@ -514,6 +577,7 @@ const PurchaseManagementMaterialAddPage = () => {
                         key={index}
                         withBorder
                         miw={300}
+                        h={150}
                         shadow="sm"
                         radius="md"
                         p="md"

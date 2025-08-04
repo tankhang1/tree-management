@@ -27,7 +27,7 @@ type Product = {
   id: string; // Mã sản phẩm
   name: string; // Tên sản phẩm
   tree: string; // Cây (chọn từ danh sách II)
-  category: string; // Danh mục sản phẩm (chọn từ XII.2)
+  category: string; // Loại sản phẩm (chọn từ XII.2)
   description: string; // Nội dung mô tả chi tiết
 };
 const productData: Product[] = [
@@ -72,7 +72,7 @@ const ProductManagementItemPage = () => {
     { accessorKey: "id", header: "Mã sản phẩm" },
     { accessorKey: "name", header: "Tên sản phẩm" },
     { accessorKey: "tree", header: "Cây" },
-    { accessorKey: "category", header: "Danh mục sản phẩm" },
+    { accessorKey: "category", header: "Loại sản phẩm" },
     { accessorKey: "description", header: "Mô tả" },
     {
       accessorKey: "actions",
@@ -135,7 +135,7 @@ const ProductManagementItemPage = () => {
           </Text>
           <Group>
             <Badge color="green">Cây: {product.tree}</Badge>
-            <Badge color="blue">Danh mục: {product.category}</Badge>
+            <Badge color="blue">Loại: {product.category}</Badge>
           </Group>
           <Divider my="sm" />
           {product.imageUrl && (

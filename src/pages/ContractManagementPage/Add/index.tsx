@@ -40,6 +40,7 @@ import { SelectableEnterpriseCards } from "../../StockManagementPage/Delivery/Ad
 import { Dropzone } from "@mantine/dropzone";
 import SunEditor from "suneditor-react";
 import Scrollable from "../../../components/Scrollable";
+import { machineTypes } from "../../PurchaseManagementPage/Material/Add";
 const itemTypes = [
   {
     label: "Máy móc thiết bị",
@@ -64,28 +65,7 @@ const contractTypes = [
   "Hợp đồng ủy quyền",
   "Hợp đồng hợp tác",
 ];
-const machineTypes = [
-  {
-    id: "MCH01",
-    name: "Máy cày Kubota",
-    img: "https://kubotadailoi.com/uploads/images/P-1176_L3218_slide.jpg",
-  },
-  {
-    id: "MCH02",
-    name: "Máy phun thuốc Honda",
-    img: "https://www.ketnoitieudung.vn/data/bt6/may-phun-thuoc-honda-wjr2525t1-gcs-1604389460.jpg",
-  },
-  {
-    id: "MCH03",
-    name: "Máy gặt đập liên hợp Yanmar",
-    img: "https://dailoi.vn/uploads/images/2021/09/1631365221-single_product1-kubotadc70plusa.jpg",
-  },
-  {
-    id: "MCH04",
-    name: "Máy bay nông nghiệp DJI Agras",
-    img: "https://agridrone.vn/wp-content/uploads/2023/02/16887_T50_%E6%AD%A3%E4%BE%A7.jpg",
-  },
-];
+
 const ContractManagementAddPage = () => {
   const [presentType, setPresentType] = useState("Tổng quan");
   const navigate = useNavigate();
@@ -512,8 +492,8 @@ const ContractManagementAddPage = () => {
                         </Input.Wrapper>
                         <Select
                           radius={4}
-                          label="Danh mục máy móc thiết bị"
-                          placeholder="Tìm kiếm danh mục máy móc thiết bị"
+                          label="Loại máy móc thiết bị"
+                          placeholder="Tìm kiếm loại máy móc thiết bị"
                           leftSection={<IconTruck size={18} />}
                           data={[
                             { value: "MCH01", label: "Máy cày Kubota" },
@@ -571,7 +551,7 @@ const ContractManagementAddPage = () => {
                                 <Group grow>
                                   <Image
                                     src={
-                                      machine.img ||
+                                      machine?.img ||
                                       "https://via.placeholder.com/150" // Placeholder nếu không có hình ảnh
                                     }
                                     alt={machine.name}
@@ -670,8 +650,8 @@ const ContractManagementAddPage = () => {
                         </Input.Wrapper>
                         <Select
                           radius={4}
-                          label="Danh mục máy móc thiết bị"
-                          placeholder="Tìm kiếm danh mục máy móc thiết bị"
+                          label="Loại máy móc thiết bị"
+                          placeholder="Tìm kiếm loại máy móc thiết bị"
                           leftSection={<IconTruck size={18} />}
                           data={[
                             { value: "MCH01", label: "Máy cày Kubota" },
@@ -704,6 +684,7 @@ const ContractManagementAddPage = () => {
                                 key={index}
                                 withBorder
                                 miw={300}
+                                h={150}
                                 shadow="sm"
                                 radius="md"
                                 p="md"

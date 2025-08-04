@@ -91,7 +91,7 @@ const MachineManagementMainAddPage = () => {
                 radius={4}
               />
               <Select
-                label="Danh mục máy móc/thiết bị"
+                label="Loại máy móc/thiết bị"
                 data={["Xe tải", "Xe múc", "Máy móc khác", "Xe cày"]}
                 {...form.getInputProps("type")}
                 radius={4}

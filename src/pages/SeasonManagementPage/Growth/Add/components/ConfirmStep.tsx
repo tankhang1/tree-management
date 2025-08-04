@@ -72,7 +72,7 @@ const ConfirmStep = () => {
             </Group>
             <Group>
               <IconPlant size={18} />
-              <Text fw={500}>Danh mục cây:</Text>
+              <Text fw={500}>Loại cây:</Text>
               <Text>{data.treeCategory}</Text>
             </Group>
             <Group>

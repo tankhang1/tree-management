@@ -47,7 +47,7 @@ const AddCatalogForm = () => {
           radius={4}
         />
         <TextInput
-          label="Tên danh mục cây"
+          label="Tên loại cây"
           placeholder="VD: Durio zibethinus"
           radius={4}
           {...form.getInputProps("name")}

@@ -119,10 +119,10 @@ const PlantManagementTreeAddPage = () => {
                 ]}
               />
               <Text fw={500} fz={15}>
-                Danh mục cây trồng (chọn một)
+                Loại cây trồng (chọn một)
               </Text>
               <TextInput
-                placeholder="Tìm kiếm danh mục cây"
+                placeholder="Tìm kiếm loại cây"
                 radius={4}
                 leftSection={<IconSearch size={18} />}
               />

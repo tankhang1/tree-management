@@ -185,7 +185,7 @@ const AreaManagementCultivationMethodAddPage = () => {
               />
             </div>
           )}
-          <Divider label="Danh mục cây trồng áp dụng" />
+          <Divider label="Loại cây trồng áp dụng" />
           <Group align="flex-start">
             <Stack flex={2}>
               <Group align="flex-end">

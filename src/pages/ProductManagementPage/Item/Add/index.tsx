@@ -77,7 +77,7 @@ const productList = [
     img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQwfg09hQiiHhgWNJZx_wrQAu-SWPqTz0yfAw&s",
   },
 ];
-const materialList = [
+export const materialList = [
   {
     materialCode: "MAT001",
     materialName: "Phân NPK",
@@ -88,7 +88,6 @@ const materialList = [
     materialCode: "MAT002",
     materialName: "Phân hữu cơ",
     description: "Phân hữu cơ vi sinh, cải tạo đất.",
-
     img: "https://glawvn.com/wp-content/uploads/2023/04/phan-huu-co-la-gi-cac-loai-phan-huu-co-hien-hanh.jpeg",
   },
   {
@@ -97,7 +96,51 @@ const materialList = [
     description: "Hạt giống lúa chất lượng cao, năng suất tốt.",
     img: "https://dantocmiennui-media.baotintuc.vn/images/c9bca312d68a4cb9c6013396197925b3d1b8e36a1725d1ac6318a949e7a3f3e724dfb1e5a06e02d6e56da454907910f8c375e3c3907454255baf9e67f8135c667a2f0b35f3ac576d14e6307ca755e480/cach-de-hat-lua-gong-nay-mam-deu-500x375-1.jpg.webp",
   },
+  {
+    materialCode: "MAT004",
+    materialName: "Thuốc trừ sâu sinh học",
+    description:
+      "Thuốc trừ sâu chiết xuất từ thảo mộc, an toàn cho môi trường.",
+    img: "https://encrypted-tbn1.gstatic.com/shopping?q=tbn:ANd9GcSWdIJle1qN2zNKe_CjjhGw2TPp4jsHuxiOOUQtPZaPRAABIbYfEauqdBPULtpa7JuWrRPAdErA1KHsuP3ft8wCMazBgfffnS_uywYctxKiDJcikmkOkZnH1w",
+  },
+  {
+    materialCode: "MAT005",
+    materialName: "Vôi bột nông nghiệp",
+    description: "Dùng để cải tạo đất phèn, trung hòa độ chua trong đất.",
+    img: "https://encrypted-tbn2.gstatic.com/shopping?q=tbn:ANd9GcSO2Af9ScDAA7rmWqP2PsP6lc9hk3uBU2CfJwasdgOdgWbclh88uC9gB3BJtB2xkbse9GYzWF1kjS90gA305K3Q4ji9RUUZfx5V_AzbKBTR4SMARnGJ7s1s",
+  },
+  {
+    materialCode: "MAT006",
+    materialName: "Thuốc kích thích ra rễ",
+    description: "Giúp cây con nhanh ra rễ, khỏe mạnh hơn.",
+    img: "https://encrypted-tbn0.gstatic.com/shopping?q=tbn:ANd9GcSpZPO0sCyeXaPNWvuAaZQcHv-zj9SemCjqLhifqfVZHS5Mr1gqBbF7SdeIxT3dd2q84YofT8Nh7iWrhxYfbKAE8cL793omW3yHYef1r6cya9D4Z0TcG_lseA",
+  },
+  {
+    materialCode: "MAT007",
+    materialName: "Bạt phủ nông nghiệp",
+    description: "Bạt phủ chống cỏ, giữ ẩm, dùng cho luống cây trồng.",
+    img: "https://encrypted-tbn2.gstatic.com/shopping?q=tbn:ANd9GcSm5l9z3oFM0uh8rbKp8gnfK20RDWFj6HHf5MAaKPfPatMrrh9fzbO1XxlWxu-BIoDt8vtGfq7GKvc3i2E-oEDeoq9VZ7bjFsY5IKAThaI",
+  },
+  {
+    materialCode: "MAT008",
+    materialName: "Bình xịt thuốc trừ sâu",
+    description: "Dụng cụ phun thuốc bảo vệ thực vật, dung tích 16 lít.",
+    img: "https://encrypted-tbn3.gstatic.com/shopping?q=tbn:ANd9GcQQCDRspucc8pqH16rieMgeZX5siFFZ9iRUgR1B9eYTa-UgQoEopIykf3So-aO4QbwlscA4GnP4pCAh5AYAiyWTA96rk2NSne6xWlcQMBUlWhAUeXhCgLnqGg",
+  },
+  {
+    materialCode: "MAT009",
+    materialName: "Phân vi sinh EM",
+    description: "Phân sinh học chứa vi khuẩn có lợi, cải thiện đất và rễ.",
+    img: "https://encrypted-tbn3.gstatic.com/shopping?q=tbn:ANd9GcQP4FJZXw9PcGUBhnkGHWnrgoeCo6zgRf7vE_kIx9C-n6PxTKW0pOUSbX_1QCQDzHSjA43khaS9pq6Mx8ocq_jhJyczO4qOsJRQd9aoDNLOPbuJopKBAa2WoNA",
+  },
+  {
+    materialCode: "MAT010",
+    materialName: "Hạt giống rau cải xanh",
+    description: "Giống rau cải dễ trồng, thu hoạch sau 30 ngày.",
+    img: "https://encrypted-tbn0.gstatic.com/shopping?q=tbn:ANd9GcRxMoV4-jqQfNn8be6eyFD8JgaUuQCUxiclJDsLbJNF0OwzV8ZSr1Acu_qk9u8HBA1cMiuRPffRAPEwgrEDoGdJUAMMA6PAnD_eMJ5D2BxHHV-C9nLtY1tJUA",
+  },
 ];
+
 const ProductManagementItemAddPage = () => {
   const navigate = useNavigate();
   const [active, setActive] = useState(0);
@@ -167,8 +210,8 @@ const ProductManagementItemAddPage = () => {
                   radius={4}
                 />
                 <TextInput
-                  placeholder="Danh mục sản phẩm"
-                  label="Danh mục sản phẩm (chọn một)"
+                  placeholder="Loại sản phẩm"
+                  label="Loại sản phẩm (chọn một)"
                   leftSection={<IconSearch size={18} />}
                   radius={4}
                 />
@@ -310,8 +353,8 @@ const ProductManagementItemAddPage = () => {
                   {form.bomType === "Sản phẩm" ? (
                     <Stack gap={"xs"}>
                       <TextInput
-                        placeholder="Danh mục sản phẩm"
-                        label="Danh mục sản phẩm (chọn một)"
+                        placeholder="Loại sản phẩm"
+                        label="Loại sản phẩm (chọn một)"
                         leftSection={<IconSearch size={18} />}
                         radius={4}
                       />
@@ -349,8 +392,8 @@ const ProductManagementItemAddPage = () => {
                     </Stack>
                   ) : (
                     <Select
-                      label="Danh mục nguyên vật liệu (chọn một)"
-                      placeholder="Danh mục nguyên vật liệu"
+                      label="Loại nguyên vật liệu (chọn một)"
+                      placeholder="Loại nguyên vật liệu"
                       radius={4}
                       data={[
                         { value: "fertilizer", label: "Phân bón" },
@@ -415,7 +458,7 @@ const ProductManagementItemAddPage = () => {
                                 </Text>
 
                                 <Text>
-                                  <b>Danh mục:</b> {product.category}
+                                  <b>Loại:</b> {product.category}
                                 </Text>
                               </Stack>
                             </Card>
@@ -666,7 +709,7 @@ const ProductManagementItemAddPage = () => {
                       <b>Tên sản phẩm:</b> {form.productName}
                     </Text>
                     <Text>
-                      <b>Danh mục:</b> {form.category}
+                      <b>Loại:</b> {form.category}
                     </Text>
                     <Text>
                       <b>Mô tả:</b> {form.content || "Không có"}
@@ -711,7 +754,7 @@ const ProductManagementItemAddPage = () => {
                                     <b>Tên:</b> {item.name}
                                   </Text>
                                   <Text>
-                                    <b>Danh mục:</b> {item.name}
+                                    <b>Loại:</b> {item.name}
                                   </Text>
                                   <Text>
                                     <b>Số lượng:</b> {item.quantity} {item.unit}

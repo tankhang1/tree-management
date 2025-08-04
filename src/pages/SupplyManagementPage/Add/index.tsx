@@ -101,7 +101,7 @@ export default function SupplyManagementPage() {
                 radius={4}
               />
               <Select
-                label="Danh mục vật tư"
+                label="Loại vật tư"
                 value={formData.name}
                 required
                 radius={4}
@@ -228,7 +228,7 @@ export default function SupplyManagementPage() {
                   <strong>Tên vật tư:</strong> {formData.name}
                 </Text>
                 <Text>
-                  <strong>Danh mục vật tư:</strong> Thiết bị tưới tiêu
+                  <strong>Loại vật tư:</strong> Thiết bị tưới tiêu
                 </Text>
                 <Text>
                   <strong>Số lượng:</strong> 100

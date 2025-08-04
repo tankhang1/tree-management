@@ -57,7 +57,7 @@ const ProductManagementRawMaterialTypePage = () => {
     },
     {
       accessorKey: "name",
-      header: "Tên danh mục nguyên vật liệu",
+      header: "Tên loại nguyên vật liệu",
     },
     {
       accessorKey: "actions",
@@ -92,7 +92,7 @@ const ProductManagementRawMaterialTypePage = () => {
     <Stack gap="lg">
       <Group justify="space-between">
         <Title flex={1} order={2}>
-          Quản lý danh mục nguyên vật liệu
+          Quản lý loại nguyên vật liệu
         </Title>
         <Group>
           <Button variant="outline" radius={4} leftSection={<IconFileExcel />}>
@@ -108,7 +108,7 @@ const ProductManagementRawMaterialTypePage = () => {
       <Modal
         opened={openedMaterialForm}
         onClose={closeMaterialForm}
-        title={<Text fw={"bold"}>Thêm mới danh mục nguyên vật liệu</Text>}
+        title={<Text fw={"bold"}>Thêm mới loại nguyên vật liệu</Text>}
       >
         <AddMaterialCategoryForm />
       </Modal>

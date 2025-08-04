@@ -86,8 +86,8 @@ const FertilizerManagementMainAddPage = () => {
                 {...form.getInputProps("name")}
               />
               <Select
-                label="Danh mục phân bón"
-                placeholder="Danh mục phân bón"
+                label="Loại phân bón"
+                placeholder="Loại phân bón"
                 radius={4}
                 data={[
                   { value: "npk", label: "Phân NPK" },

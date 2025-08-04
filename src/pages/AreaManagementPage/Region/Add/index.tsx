@@ -566,12 +566,12 @@ const AreaManagementAddRegionPage = () => {
                           radius={4}
                         />
                         <Text fw={500} fz={15}>
-                          Danh mục cây trồng (chọn một)
+                          Loại cây trồng (chọn một)
                         </Text>
                         <TextInput
                           leftSection={<IconSearch size={18} />}
                           radius={4}
-                          placeholder="Tìm kiếm danh mục cây trồng"
+                          placeholder="Tìm kiếm loại cây trồng"
                         />
                         <CropCards
                           selected=""
@@ -667,12 +667,12 @@ const AreaManagementAddRegionPage = () => {
                               radius={4}
                             />
                             <Text fw={500} fz={15}>
-                              Danh mục cây trồng (chọn nhiều)
+                              Loại cây trồng (chọn nhiều)
                             </Text>
                             <TextInput
                               leftSection={<IconSearch size={18} />}
                               radius={4}
-                              placeholder="Tìm kiếm danh mục cây trồng"
+                              placeholder="Tìm kiếm loại cây trồng"
                             />
                             <CropCards
                               selected=""
@@ -688,6 +688,7 @@ const AreaManagementAddRegionPage = () => {
                               placeholder="Tìm kiếm giống cây trồng"
                             />
                             <SeedCards
+                              isMultiple
                               selected=""
                               seeds={seedOptions}
                               onSelect={() => {}}

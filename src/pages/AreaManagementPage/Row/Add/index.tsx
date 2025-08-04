@@ -771,7 +771,7 @@ const AreaManagementRowAddPage = () => {
                 </Group>
                 <Group justify="apart">
                   <Text size="sm" fw={500}>
-                    Danh mục cây:
+                    Loại cây:
                   </Text>
                   <Text>{confirmDataset.plant}</Text>
                 </Group>

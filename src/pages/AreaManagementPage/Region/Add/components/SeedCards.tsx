@@ -7,12 +7,22 @@ interface SeedCardSelectorProps {
   seeds: SeedOption[];
   selected: string;
   onSelect: (code: string) => void;
+  isMultiple?: boolean;
 }
 
-const SeedCards: React.FC<SeedCardSelectorProps> = ({ seeds }) => {
-  const [selected, setSelected] = useState("");
+const SeedCards: React.FC<SeedCardSelectorProps> = ({
+  seeds,
+  isMultiple = false,
+}) => {
+  const [selected, setSelected] = useState<string[]>([]);
   const onSelect = (code: string) => {
-    setSelected(code);
+    if (isMultiple) {
+      setSelected((prev) =>
+        prev.includes(code) ? prev.filter((id) => id !== code) : [...prev, code]
+      );
+    } else {
+      setSelected([code]);
+    }
   };
   return (
     <Scrollable h={280}>
@@ -29,7 +39,7 @@ const SeedCards: React.FC<SeedCardSelectorProps> = ({ seeds }) => {
               width: 320,
               position: "relative",
               transition: "transform 0.2s ease",
-              borderColor: selected === seed.code ? "green" : undefined,
+              borderColor: selected.includes(seed.code) ? "green" : undefined,
             }}
             onMouseEnter={(e) =>
               (e.currentTarget.style.transform = "scale(1.02)")

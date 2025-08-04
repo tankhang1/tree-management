@@ -144,7 +144,7 @@ const ProductManagementTypePage = () => {
     <Stack gap="lg">
       <Group justify="space-between">
         <Title flex={1} order={2}>
-          Quản lý danh mục sản phẩm
+          Quản lý loại sản phẩm
         </Title>
         <Group>
           <Button variant="outline" radius={4} leftSection={<IconFileExcel />}>
@@ -158,13 +158,13 @@ const ProductManagementTypePage = () => {
 
       <Table columns={typeColumns} data={types} />
       <Modal
-        title={<Text fw={500}>Tạo mới danh mục sản phẩm</Text>}
+        title={<Text fw={500}>Tạo mới loại sản phẩm</Text>}
         opened={opened}
         onClose={() => setOpened(false)}
         radius={4}
       >
         <Stack gap={"xs"}>
-          <Input.Wrapper label="Ảnh danh mục sản phẩm">
+          <Input.Wrapper label="Ảnh loại sản phẩm">
             <Dropzone
               onDrop={(files) => console.log("accepted files", files)}
               onReject={(files) => console.log("rejected files", files)}
@@ -201,30 +201,30 @@ const ProductManagementTypePage = () => {
 
                 <div>
                   <Text size="xl" inline>
-                    Bỏ và thả ảnh danh mục sản phẩm tại đây
+                    Bỏ và thả ảnh loại sản phẩm tại đây
                   </Text>
                   <Text size="sm" c="dimmed" inline mt={7}>
-                    Đính kèm ảnh danh mục sản phẩm (tối đa 5MB)
+                    Đính kèm ảnh loại sản phẩm (tối đa 5MB)
                   </Text>
                 </div>
               </Group>
             </Dropzone>
           </Input.Wrapper>
           <TextInput
-            label="Mã danh mục"
+            label="Mã loại"
             placeholder="VD: DM001"
             radius={4}
             required
           />
           <TextInput
-            label="Tên danh mục"
+            label="Tên loại"
             placeholder="VD: Phân bón"
             radius={4}
             required
           />
           <Textarea
             label="Ghi chú"
-            placeholder="Thông tin thêm về danh mục"
+            placeholder="Thông tin thêm về loại"
             radius={4}
           />
         </Stack>
