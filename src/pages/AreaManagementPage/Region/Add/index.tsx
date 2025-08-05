@@ -19,6 +19,8 @@ import {
   Radio,
   MultiSelect,
   Image,
+  NumberInput,
+  Textarea,
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { IconArrowLeft, IconSearch, IconUser } from "@tabler/icons-react";
@@ -456,20 +458,6 @@ const AreaManagementAddRegionPage = () => {
       <form onSubmit={form.onSubmit(handleSubmit)}>
         {active === 0 && (
           <Stack mt="md">
-            <Group>
-              <Text fw={"500"} fz={15}>
-                Nhân viên quản lý
-              </Text>
-              <Button
-                variant="light"
-                radius={4}
-                onClick={openFilterEmployee}
-                leftSection={<IconUser size={18} />}
-              >
-                Chọn nhân viên quản lý
-              </Button>
-            </Group>
-            <EmployeeCardList isDelete={true} isTouchable={false} />
             <Stack gap={"xs"}>
               <Text fw={500} fz={15}>
                 Chọn phân bổ vùng trồng (chọn một)
@@ -531,6 +519,30 @@ const AreaManagementAddRegionPage = () => {
                 </Stack>
               </Card>
             </Stack>
+            <NumberInput
+              label="Diện tích vùng trồng (m²)"
+              placeholder="Nhập diện tích"
+              radius={4}
+            />
+            <Group>
+              <Text fw={"500"} fz={15}>
+                Nhân viên quản lý
+              </Text>
+              <Button
+                variant="light"
+                radius={4}
+                onClick={openFilterEmployee}
+                leftSection={<IconUser size={18} />}
+              >
+                Chọn nhân viên quản lý
+              </Button>
+            </Group>
+            <EmployeeCardList isDelete={true} isTouchable={false} />
+            <Textarea
+              label="Ghi chú"
+              placeholder="Ghi chú về vùng trồng"
+              radius={4}
+            />
           </Stack>
         )}
 
@@ -759,48 +771,89 @@ const AreaManagementAddRegionPage = () => {
 
         {active === 2 && (
           <Stack mt="md" gap="lg">
-            <Group grow align="flex-start">
-              <Card withBorder radius="md" shadow="xs" p="md">
-                <Title order={5} mb="xs">
-                  📌 Thông tin vùng trồng
-                </Title>
+            <Card withBorder radius="md" shadow="sm" p="md">
+              <Title order={5} mb="xs">
+                📌 Thông tin vùng trồng
+              </Title>
+              <Stack gap="xs">
+                {/* Thông tin nhân viên */}
                 <Text size="sm">
-                  <strong>Nhân viên quản lý:</strong>{" "}
-                  {form.values.region.employee}
+                  <strong>Nhân viên quản lý:</strong> Nguyễn Văn A
                 </Text>
                 <Text size="sm">
-                  <strong>Mã vùng:</strong> {form.values.region.codeSystem}
+                  <strong>Danh sách nhân viên tham gia:</strong> Nguyễn Văn A,
+                  Trần Thị B, Lê Văn C
                 </Text>
-              </Card>
 
-              <Card withBorder radius="md" shadow="xs" p="md">
-                <Title order={5} mb="xs">
-                  📍 Khu vực đã chọn
-                </Title>
-                {form.values.areas.map((area) => (
-                  <Box key={area.code} mb="sm">
-                    <Text size="sm">
-                      <strong>{area.name}</strong> (Mã: {area.code})
-                    </Text>
-                  </Box>
-                ))}
-              </Card>
-            </Group>
+                {/* Thông tin vùng */}
+                <Text size="sm">
+                  <strong>Mã vùng:</strong> VT-001
+                </Text>
+                <Text size="sm">
+                  <strong>Diện tích:</strong> 50.000 m²
+                </Text>
+                <Text size="sm">
+                  <strong>Loại đất:</strong> Đất đỏ bazan
+                </Text>
+                <Text size="sm">
+                  <strong>Địa hình:</strong> Cao, Thoai thoải
+                </Text>
+                <Text size="sm">
+                  <strong>Ghi chú:</strong> Vùng trồng này cần chú ý về hệ thống
+                  tưới tiêu và phân bón.
+                </Text>
+              </Stack>
+            </Card>
 
-            <Card withBorder radius="md" shadow="xs" p="md">
+            <Card withBorder radius="md" shadow="sm" p="md">
+              <Title order={5} mb="xs">
+                📍 Khu vực đã chọn
+              </Title>
+              <Scrollable h={100}>
+                <Group wrap="nowrap" gap="xs">
+                  {areaOptions.map((area) => (
+                    <Card
+                      key={area.code}
+                      withBorder
+                      radius="sm"
+                      shadow="xs"
+                      p="sm"
+                      miw={300}
+                      h={100}
+                    >
+                      <Text size="sm">
+                        <strong>{area.name}</strong> (Mã: {area.code})
+                      </Text>
+                      <Text size="sm">
+                        <strong>Diện tích:</strong> {area.area}
+                      </Text>
+                      <Text size="sm">
+                        <strong>Loại đất:</strong> {area.soilType}
+                      </Text>
+                      <Text size="sm">
+                        <strong>Địa hình:</strong> {area.terrain.join(", ")}
+                      </Text>
+                    </Card>
+                  ))}
+                </Group>
+              </Scrollable>
+            </Card>
+
+            <Card withBorder radius="md" shadow="sm" p="md">
               <Title order={5} mb="xs">
                 🌱 Thông tin các lô cây trồng
               </Title>
-              <Scrollable h={180}>
-                <Group gap="sm" wrap="nowrap">
+              <Scrollable h={200}>
+                <Group wrap="nowrap" gap="md">
                   {form.values.plots.map((plot) => (
                     <Card
                       key={plot.id}
                       withBorder
                       radius="sm"
+                      shadow="xs"
                       p="sm"
                       miw={450}
-                      h={180}
+                      h={200}
                     >
                       <Group justify="space-between" mb="xs">
                         <Box>
@@ -814,22 +867,28 @@ const AreaManagementAddRegionPage = () => {
                         </Text>
                       </Group>
 
-                      {plot.crops.map((crop, i) => (
-                        <Box key={i} mt="xs">
-                          <Text size="sm">
-                            🌾 <strong>Giống #{i + 1}</strong>
-                          </Text>
-                          <Text size="sm">
-                            - Nhóm cây: {crop.cropGroup || "Chưa chọn"}
-                          </Text>
-                          <Text size="sm">
-                            - Cây trồng: {crop.cropCode || "Chưa chọn"}
-                          </Text>
-                          <Text size="sm">
-                            - Hạt giống: {crop.seedCode || "Chưa chọn"}
-                          </Text>
-                        </Box>
-                      ))}
+                      {plot.crops.length > 0 ? (
+                        plot.crops.map((crop, i) => (
+                          <Box key={i} mt="xs">
+                            <Text size="sm">
+                              🌾 <strong>Giống #{i + 1}</strong>
+                            </Text>
+                            <Text size="sm">
+                              - Nhóm cây: {crop.cropGroup || "Chưa chọn"}
+                            </Text>
+                            <Text size="sm">
+                              - Cây trồng: {crop.cropCode || "Chưa chọn"}
+                            </Text>
+                            <Text size="sm">
+                              - Hạt giống: {crop.seedCode || "Chưa chọn"}
+                            </Text>
+                          </Box>
+                        ))
+                      ) : (
+                        <Text size="sm" c="dimmed">
+                          Chưa có cây trồng nào được thêm vào lô này.
+                        </Text>
+                      )}
                     </Card>
                   ))}
                 </Group>
@@ -837,7 +896,6 @@ const AreaManagementAddRegionPage = () => {
             </Card>
           </Stack>
         )}
-
         {active < 3 && (
           <Group mt="xl" justify="space-between">
             <Button
