@@ -82,7 +82,7 @@ const AreaManagementRegionDetailPage = () => {
         >
           Quay lại
         </Button>
-        <Title order={3}> Chi tiết vùng trồng</Title>
+        <Title order={3}>Chi tiết khu vực canh tác</Title>
       </Group>
       <Grid gutter="md" mb="xl">
         <Grid.Col span={6}>

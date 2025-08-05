@@ -37,6 +37,7 @@ type AreaZone = {
   mainCrop: string;
   gps: string;
   numberOfLots: number;
+  cultivationZone: string;
 };
 const areaZoneData: AreaZone[] = [
   {
@@ -51,6 +52,7 @@ const areaZoneData: AreaZone[] = [
     mainCrop: "Sầu riêng",
     gps: "12.3456,78.9101 12.3457,78.9102 12.3458,78.9103 12.3459,78.9104",
     numberOfLots: 5,
+    cultivationZone: "Khu vực canh tác Đồng Nai",
   },
   {
     id: "V002",
@@ -64,6 +66,7 @@ const areaZoneData: AreaZone[] = [
     mainCrop: "Xoài",
     gps: "13.1234,79.5678 13.1235,79.5679 13.1236,79.5680 13.1237,79.5681",
     numberOfLots: 3,
+    cultivationZone: "Khu vực canh tác Đồng Nai",
   },
   {
     id: "V003",
@@ -77,6 +80,7 @@ const areaZoneData: AreaZone[] = [
     mainCrop: "Chuối",
     gps: "14.5678,80.1234 14.5679,80.1235 14.5680,80.1236 14.5681,80.1237",
     numberOfLots: 4,
+    cultivationZone: "Khu vực canh tác Tây Nguyên",
   },
   {
     id: "V004",
@@ -90,6 +94,7 @@ const areaZoneData: AreaZone[] = [
     mainCrop: "Cà phê",
     gps: "15.6789,81.2345 15.6790,81.2346 15.6791,81.2347 15.6792,81.2348",
     numberOfLots: 6,
+    cultivationZone: "Khu vực canh tác Tây Nguyên",
   },
   {
     id: "V005",
@@ -103,6 +108,7 @@ const areaZoneData: AreaZone[] = [
     mainCrop: "Mít",
     gps: "16.7890,82.3456 16.7891,82.3457 16.7892,82.3458 16.7893,82.3459",
     numberOfLots: 4,
+    cultivationZone: "Khu vực canh tác Miền Tây",
   },
   {
     id: "V006",
@@ -117,6 +123,7 @@ const areaZoneData: AreaZone[] = [
     mainCrop: "Bưởi",
     gps: "17.8901,83.4567 17.8902,83.4568 17.8903,83.4569 17.8904,83.4570",
     numberOfLots: 3,
+    cultivationZone: "Khu vực canh tác Miền Tây",
   },
   {
     id: "V007",
@@ -132,6 +139,7 @@ const areaZoneData: AreaZone[] = [
     mainCrop: "Cam",
     gps: "18.9012,84.5678 18.9013,84.5679 18.9014,84.5680 18.9015,84.5681",
     numberOfLots: 5,
+    cultivationZone: "Khu vực canh tác Miền Trung",
   },
   {
     id: "V008",
@@ -145,6 +153,7 @@ const areaZoneData: AreaZone[] = [
     mainCrop: "Dừa",
     gps: "19.0123,85.6789 19.0124,85.6790 19.0125,85.6791 19.0126,85.6792",
     numberOfLots: 4,
+    cultivationZone: "Khu vực canh tác Miền Trung",
   },
 ];
 const mainCrops = ["Sầu riêng", "Xoài", "Chuối", "Cà phê", "Mít", "Bưởi"];
@@ -162,11 +171,10 @@ const AreaManagementRegionPage = () => {
     navigate(PATH.AREA_REGION_DETAIL);
   };
   const areaZoneColumns: MRT_ColumnDef<AreaZone>[] = [
-    // {
-    //   accessorKey: "code",
-    //   header: "Mã vùng",
-    //   Cell: ({ row }) => <Text fw={500}>{row.original.code}</Text>,
-    // },
+    {
+      accessorKey: "cultivationZone",
+      header: "Khu vực canh tác",
+    },
     {
       accessorKey: "regionName",
       header: "Vùng",

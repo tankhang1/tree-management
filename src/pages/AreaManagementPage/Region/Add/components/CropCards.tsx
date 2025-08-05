@@ -1,4 +1,12 @@
-import { Card, Stack, Text, Group, Image, Badge } from "@mantine/core";
+import {
+  Card,
+  Stack,
+  Text,
+  Group,
+  Image,
+  Badge,
+  Checkbox,
+} from "@mantine/core";
 import type { CropOption } from "..";
 import Scrollable from "../../../../../components/Scrollable";
 import { useState } from "react";
@@ -57,7 +65,15 @@ const CropCards: React.FC<PlantCardSelectorProps> = ({
               />
               <Group justify="space-between">
                 <Text fw={500}>{plant.name}</Text>
-                <Badge color="gray">{plant.code}</Badge>
+                <Group gap={"xs"}>
+                  <Badge color="gray">{plant.code}</Badge>
+                  {isMultiple && (
+                    <Checkbox
+                      checked={selectedId.includes(plant.code)}
+                      radius={4}
+                    />
+                  )}
+                </Group>
               </Group>
               <Text size="sm">
                 <strong>Hạt giống:</strong> {plant.seed}

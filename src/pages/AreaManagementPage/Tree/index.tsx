@@ -1,11 +1,10 @@
 import {
   ActionIcon,
-  Autocomplete,
   Button,
   Group,
-  Image,
   Menu,
   Modal,
+  Select,
   Stack,
   Text,
   Title,
@@ -27,76 +26,51 @@ import { useDisclosure } from "@mantine/hooks";
 import { useNavigate } from "react-router-dom";
 import { PATH } from "../../../constants/path.constants";
 import TreeDetailView from "./components/TreeView";
-type Tree = {
-  rowId: string;
-  zoneId: string;
-  blockId: string;
-  plotId: string;
-  img: string;
-  treeId: string;
-  plantedAt: Date;
-  gps: string;
+type Allocation = {
+  allocationId: string; // Mã đợt phân bổ
+  recordedAt: Date; // Ngày ghi nhận
+  crop: string; // Tên cây trồng
+  region: string; // Vùng
+  area: string; // Khu vực
+  plot: string; // Lô
+  cultivationZone: string; // Khu vực canh tác
 };
-const treeData: Tree[] = [
+const allocationData: Allocation[] = [
   {
-    rowId: "HR-001",
-    zoneId: "KV-A1",
-    blockId: "LO-01",
-    plotId: "RG-A",
-    treeId: "TREE-001",
-    img: "https://sinhhocchaua.com/wp-content/uploads/2024/02/gioi-thieu-cay-sau-rieng-1.jpg",
-    plantedAt: new Date("2022-03-15"),
-    gps: "10.762622,106.660172",
+    allocationId: "ĐPB-001",
+    recordedAt: new Date("2025-08-01"),
+    crop: "Sầu riêng Ri6",
+    region: "Vùng A",
+    area: "Khu vực A1",
+    plot: "Lô A1",
+    cultivationZone: "Khu vực canh tác Đồng Nai",
   },
   {
-    rowId: "HR-002",
-    zoneId: "KV-A1",
-    blockId: "LO-01",
-    plotId: "RG-A",
-    treeId: "TREE-002",
-    img: "https://sinhhocchaua.com/wp-content/uploads/2024/02/gioi-thieu-cay-sau-rieng-1.jpg",
-    plantedAt: new Date("2022-03-20"),
-    gps: "10.762500,106.660100",
+    allocationId: "ĐPB-002",
+    recordedAt: new Date("2025-08-02"),
+    crop: "Sầu riêng Monthong",
+    region: "Vùng A",
+    area: "Khu vực A2",
+    plot: "Lô A2",
+    cultivationZone: "Khu vực canh tác Đồng Nai",
   },
   {
-    rowId: "HR-003",
-    zoneId: "KV-A2",
-    blockId: "LO-02",
-    plotId: "RG-B",
-    treeId: "TREE-003",
-    img: "https://sinhhocchaua.com/wp-content/uploads/2024/02/gioi-thieu-cay-sau-rieng-2.jpg",
-    plantedAt: new Date("2022-04-10"),
-    gps: "10.763000,106.661000",
+    allocationId: "ĐPB-003",
+    recordedAt: new Date("2025-08-03"),
+    crop: "Mít Thái",
+    region: "Vùng B",
+    area: "Khu vực B1",
+    plot: "Lô B1",
+    cultivationZone: "Khu vực canh tác Tây Nguyên",
   },
   {
-    rowId: "HR-004",
-    zoneId: "KV-A2",
-    blockId: "LO-02",
-    plotId: "RG-B",
-    treeId: "TREE-004",
-    img: "https://sinhhocchaua.com/wp-content/uploads/2024/02/gioi-thieu-cay-sau-rieng-3.jpg",
-    plantedAt: new Date("2022-04-15"),
-    gps: "10.763500,106.661500",
-  },
-  {
-    rowId: "HR-005",
-    zoneId: "KV-B1",
-    blockId: "LO-03",
-    plotId: "RG-C",
-    treeId: "TREE-005",
-    img: "https://sinhhocchaua.com/wp-content/uploads/2024/02/gioi-thieu-cay-sau-rieng-1.jpg",
-    plantedAt: new Date("2022-05-01"),
-    gps: "10.764000,106.662000",
-  },
-  {
-    rowId: "HR-006",
-    zoneId: "KV-B1",
-    blockId: "LO-03",
-    plotId: "RG-C",
-    treeId: "TREE-006",
-    img: "https://sinhhocchaua.com/wp-content/uploads/2024/02/gioi-thieu-cay-sau-rieng-1.jpg",
-    plantedAt: new Date("2022-05-10"),
-    gps: "10.764500,106.662500",
+    allocationId: "ĐPB-004",
+    recordedAt: new Date("2025-08-04"),
+    crop: "Xoài Cát Hòa Lộc",
+    region: "Vùng B",
+    area: "Khu vực B2",
+    plot: "Lô B2",
+    cultivationZone: "Khu vực canh tác Tây Nguyên",
   },
 ];
 type TTree = {
@@ -130,6 +104,33 @@ const tree: TTree = {
     [10.124, 106.124],
   ],
 };
+const regionOptions = [
+  "Vùng trồng A - Đồng Nai",
+  "Vùng trồng B - Tây Nguyên",
+  "Vùng trồng C - Miền Tây",
+  "Vùng trồng D - Miền Trung",
+];
+
+const areaOptions = [
+  "Khu vực A1 - Đồng Nai",
+  "Khu vực B2 - Tây Nguyên",
+  "Khu vực C3 - Miền Tây",
+  "Khu vực D4 - Miền Trung",
+];
+
+const plotOptions = [
+  "Lô A1 - Khu vực A1",
+  "Lô B1 - Khu vực B2",
+  "Lô C1 - Khu vực C3",
+  "Lô D1 - Khu vực D4",
+];
+
+const rowOptions = [
+  "Hàng 1 - Lô A1",
+  "Hàng 2 - Lô B1",
+  "Hàng 3 - Lô C1",
+  "Hàng 4 - Lô D1",
+];
 const AreaManagementTreePage = () => {
   const navigate = useNavigate();
   const [openedRowForm, { open: openRowForm, close: closeRowForm }] =
@@ -137,43 +138,40 @@ const AreaManagementTreePage = () => {
   const onAddTree = () => {
     navigate(PATH.AREA_ADD_TREE);
   };
-  const treeColumns: MRT_ColumnDef<Tree>[] = [
+  const allocationColumns: MRT_ColumnDef<Allocation>[] = [
     {
-      accessorKey: "img",
-      header: "Hình ảnh",
-      Cell: ({ row }) => (
-        <Image src={row.original.img} w={100} h={100} radius={4} />
-      ),
+      accessorKey: "cultivationZone",
+      header: "Khu vực canh tác",
     },
     {
-      accessorKey: "treeId",
-      header: "Mã cây",
+      accessorKey: "allocationId",
+      header: "Đợt phân bổ",
     },
     {
-      accessorKey: "rowId",
-      header: "Mã hàng",
+      accessorKey: "recordedAt",
+      header: "Ngày ghi nhận",
+      Cell: ({ row }) =>
+        new Date(row.original.recordedAt).toLocaleDateString("vi-VN"),
     },
     {
-      accessorKey: "zoneId",
+      accessorKey: "crop",
+      header: "Cây trồng",
+    },
+    {
+      accessorKey: "region",
+      header: "Vùng",
+    },
+    {
+      accessorKey: "area",
       header: "Khu vực",
     },
     {
-      accessorKey: "blockId",
-      header: "Mã lô",
-    },
-    {
-      accessorKey: "plotId",
-      header: "Vùng trồng",
-    },
-    {
-      accessorKey: "plantedAt",
-      header: "Ngày trồng",
-      Cell: ({ row }) =>
-        new Date(row.original.plantedAt).toLocaleDateString("vi-VN"),
+      accessorKey: "plot",
+      header: "Lô",
     },
     {
       accessorKey: "actions",
-      header: "Tuỳ chọn",
+      header: "Tùy chọn",
       enableColumnActions: false,
       size: 10,
       Cell: () => (
@@ -195,7 +193,7 @@ const AreaManagementTreePage = () => {
               Chỉnh sửa
             </Menu.Item>
             <Menu.Item leftSection={<IconTrash size={18} />} color="red">
-              Xoá
+              Xóa
             </Menu.Item>
           </Menu.Dropdown>
         </Menu>
@@ -207,7 +205,7 @@ const AreaManagementTreePage = () => {
     <Stack gap="lg">
       <Group justify="space-between">
         <Title flex={1} order={2}>
-          Khai báo canh tác
+          Danh mục phân bổ
         </Title>
         <Group>
           <Button variant="outline" radius={4} leftSection={<IconFileExcel />}>
@@ -219,36 +217,40 @@ const AreaManagementTreePage = () => {
         </Group>
       </Group>
       <Group>
-        <Autocomplete
+        <Select
+          searchable
           radius={4}
           leftSection={<IconSearch size={18} />}
           placeholder="Tìm kiếm vùng"
-          data={["Vùng trồng sầu riêng Đồng Nai"]}
+          data={regionOptions}
         />
-        <Autocomplete
+        <Select
+          searchable
           radius={4}
           leftSection={<IconChartAreaFilled size={18} />}
           placeholder="Tìm kiếm khu vực"
-          data={["Vùng trồng sầu riêng Đồng Nai"]}
+          data={areaOptions}
         />
-        <Autocomplete
+        <Select
+          searchable
           radius={4}
           leftSection={<IconLivePhoto size={18} />}
           placeholder="Tìm kiếm lô"
-          data={["Vùng trồng sầu riêng Đồng Nai"]}
+          data={plotOptions}
         />
-        <Autocomplete
+        <Select
+          searchable
           radius={4}
           leftSection={<IconTableRow size={18} />}
           placeholder="Tìm kiếm hàng"
-          data={["Vùng trồng sầu riêng Đồng Nai"]}
+          data={rowOptions}
         />
       </Group>
-      <Table columns={treeColumns} data={treeData} />
+      <Table columns={allocationColumns} data={allocationData} />
       <Modal
         opened={openedRowForm}
         onClose={closeRowForm}
-        title={<Text fw={"bold"}>Thông tin cây</Text>}
+        title={<Text fw={"bold"}>Chi tiết phân bổ</Text>}
       >
         <TreeDetailView tree={tree} />
       </Modal>

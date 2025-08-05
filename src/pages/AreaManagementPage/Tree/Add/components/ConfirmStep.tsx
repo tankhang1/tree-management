@@ -1,14 +1,4 @@
-import {
-  Stack,
-  Card,
-  Group,
-  Text,
-  Title,
-  Divider,
-  Badge,
-  Image,
-  Accordion,
-} from "@mantine/core";
+import { Stack, Card, Group, Text, Title, Divider, Badge } from "@mantine/core";
 import { MapContainer, Polygon, TileLayer } from "react-leaflet";
 
 type GPS = { lat: number; lng: number };
@@ -32,6 +22,41 @@ type ConfirmPlantingProps = {
   imageUrls: string[];
   type: number;
 };
+export const treeDataList = [
+  {
+    type: "Sầu riêng",
+    variety: "Ri6",
+    seed: "Hạt giống F1",
+    locations: [
+      [10.762622, 106.660172],
+      [10.7628, 106.6603],
+      [10.76295, 106.66005],
+      [10.76272, 106.6599],
+    ],
+  },
+  {
+    type: "Xoài",
+    variety: "Cát Chu",
+    seed: "Hạt giống lai",
+    locations: [
+      [10.7635, 106.661],
+      [10.7637, 106.6612],
+      [10.7638, 106.6609],
+      [10.7636, 106.6607],
+    ],
+  },
+  {
+    type: "Chôm chôm",
+    variety: "Java",
+    seed: "Hạt giống sạch",
+    locations: [
+      [10.761, 106.662],
+      [10.7612, 106.6622],
+      [10.7613, 106.6619],
+      [10.7611, 106.6617],
+    ],
+  },
+];
 
 const ConfirmStep = ({
   area,
@@ -39,55 +64,49 @@ const ConfirmStep = ({
   block,
   row,
   plantingDate,
-  farmingMethod,
-  irrigation,
-  tree,
-  locations,
-  imageUrls,
-  type,
 }: ConfirmPlantingProps) => {
-  if (type === 0)
-    return (
-      <Stack gap="xl" mt={"md"}>
-        <Title order={3}>Xác nhận thông tin trồng cây</Title>
-        <Card withBorder radius="md" shadow="xs" p="md">
-          <Group grow align="flex-start" justify="space-between">
-            <Group align="flex-start" grow>
-              <Stack gap="xs" flex={1}>
+  return (
+    <Stack gap="xl" mt={"md"}>
+      <Title order={3}>Xác nhận thông tin trồng cây</Title>
+      <Card withBorder radius="md" shadow="xs" p="md">
+        <Group grow align="flex-start" justify="space-between">
+          <Group align="flex-start" grow>
+            <Stack gap="xs" flex={1}>
+              <Group justify="apart">
+                <Text fw={500}>Vùng trồng:</Text>
+                <Badge>{area}</Badge>
+              </Group>
+              <Group justify="apart">
+                <Text fw={500}>Khu vực:</Text>
+                <Badge>{zone}</Badge>
+              </Group>
+              <Group justify="apart">
+                <Text fw={500}>Lô:</Text>
+                <Badge>{block}</Badge>
+              </Group>
+              {row && (
                 <Group justify="apart">
-                  <Text fw={500}>Vùng trồng:</Text>
-                  <Badge>{area}</Badge>
+                  <Text fw={500}>Hàng:</Text>
+                  <Badge>{row}</Badge>
                 </Group>
+              )}
+              {plantingDate && (
                 <Group justify="apart">
-                  <Text fw={500}>Khu vực:</Text>
-                  <Badge>{zone}</Badge>
+                  <Text fw={500}>Ngày trồng:</Text>
+                  <Text>{plantingDate}</Text>
                 </Group>
-                <Group justify="apart">
-                  <Text fw={500}>Lô:</Text>
-                  <Badge>{block}</Badge>
-                </Group>
-                {row && (
-                  <Group justify="apart">
-                    <Text fw={500}>Hàng:</Text>
-                    <Badge>{row}</Badge>
-                  </Group>
-                )}
-                {plantingDate && (
-                  <Group justify="apart">
-                    <Text fw={500}>Ngày trồng:</Text>
-                    <Text>{plantingDate}</Text>
-                  </Group>
-                )}
-                <Group justify="apart">
-                  <Text fw={500}>Phương pháp canh tác:</Text>
-                  <Text>{farmingMethod}</Text>
-                </Group>
-                <Group justify="apart">
-                  <Text fw={500}>Phương pháp tưới tiêu:</Text>
-                  <Text>{irrigation}</Text>
-                </Group>
-              </Stack>
-              <Stack gap="xs">
+              )}
+            </Stack>
+          </Group>
+        </Group>
+      </Card>
+      <Divider label="Danh sách cây trồng" labelPosition="center" />
+
+      <Group wrap="wrap" align="flex-start" gap="md" p="xs">
+        {treeDataList.map((tree, index) => (
+          <Card key={index} miw={400} h={400} withBorder shadow="sm" radius={4}>
+            <Group gap="xs" align="flex-start">
+              <Stack gap="xs" style={{ flex: 1 }}>
                 <Group justify="apart">
                   <Text fw={500}>Loại cây trồng:</Text>
                   <Text>{tree.type}</Text>
@@ -102,260 +121,30 @@ const ConfirmStep = ({
                 </Group>
                 <Group justify="apart">
                   <Text fw={500}>Số lượng cây:</Text>
-                  <Text>{locations.length}</Text>
+                  <Text>{tree.locations.length}</Text>
                 </Group>
               </Stack>
-            </Group>
-            <Stack justify="center" align="center" flex={1}>
-              <Image
-                flex={1}
-                src={imageUrls[0]}
-                w={300}
-                h={300}
-                fit="cover"
-                radius="md"
-              />
-            </Stack>
-          </Group>
-        </Card>
-        <Divider label="Vị trí GPS từng cây" labelPosition="center" />
-        {locations.length > 0 && (
-          <Stack gap={"xs"}>
-            <Text size="sm" c="dimmed">
-              Danh sách tọa độ ({locations.length}):
-            </Text>
-            {locations.map((item, i) => (
-              <Group key={i} gap="xs">
-                <Text size="sm" w={"40%"}>
-                  {i + 1}. {item.lat}, {item.lng}
-                </Text>
-              </Group>
-            ))}
-          </Stack>
-        )}
-        Bản đồ Leaflet với polygon
-        <MapContainer
-          center={
-            locations.length >= 1 ? locations[0] : [10.762622, 106.660172]
-          }
-          zoom={16}
-          style={{ height: "300px", width: "100%", borderRadius: 8 }}
-        >
-          <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
-          <Polygon positions={locations} color="green" />
-        </MapContainer>
-      </Stack>
-    );
-  return (
-    <Stack>
-      <Title order={3}>Xác nhận thông tin trồng cây</Title>
-
-      <Accordion>
-        <Accordion.Item value="1">
-          <Accordion.Control fw={"bold"}>Hàng 3</Accordion.Control>
-          <Accordion.Panel>
-            <Stack gap="xl" mt={"md"}>
-              <Stack p="xs">
-                <Group align="flex-start" justify="space-between">
-                  <Stack gap="xs" flex={1}>
-                    <Group justify="apart">
-                      <Text fw={500}>Vùng trồng:</Text>
-                      <Badge>{area}</Badge>
-                    </Group>
-                    <Group justify="apart">
-                      <Text fw={500}>Khu vực:</Text>
-                      <Badge>{zone}</Badge>
-                    </Group>
-                    <Group justify="apart">
-                      <Text fw={500}>Lô:</Text>
-                      <Badge>{block}</Badge>
-                    </Group>
-                    {row && (
-                      <Group justify="apart">
-                        <Text fw={500}>Hàng:</Text>
-                        <Badge>{row}</Badge>
-                      </Group>
-                    )}
-                    {plantingDate && (
-                      <Group justify="apart">
-                        <Text fw={500}>Ngày trồng:</Text>
-                        <Text>{plantingDate}</Text>
-                      </Group>
-                    )}
-                    <Group justify="apart">
-                      <Text fw={500}>Phương pháp canh tác:</Text>
-                      <Text>{farmingMethod}</Text>
-                    </Group>
-                    <Group justify="apart">
-                      <Text fw={500}>Phương pháp tưới tiêu:</Text>
-                      <Text>{irrigation}</Text>
-                    </Group>
-                  </Stack>
-                  <Image
-                    flex={1}
-                    src={imageUrls[0]}
-                    w={300}
-                    h={300}
-                    fit="cover"
-                    radius="md"
-                  />
-                </Group>
-              </Stack>
-              <Divider label="Thông tin cây trồng" labelPosition="center" />
-              <Stack p="xs">
-                <Stack gap="xs">
-                  <Group justify="apart">
-                    <Text fw={500}>Loại cây trồng:</Text>
-                    <Text>{tree.type}</Text>
-                  </Group>
-                  <Group justify="apart">
-                    <Text fw={500}>Giống cây:</Text>
-                    <Text>{tree.variety}</Text>
-                  </Group>
-                  <Group justify="apart">
-                    <Text fw={500}>Hạt giống:</Text>
-                    <Text>{tree.seed}</Text>
-                  </Group>
-                  <Group justify="apart">
-                    <Text fw={500}>Số lượng cây:</Text>
-                    <Text>{locations.length}</Text>
-                  </Group>
-                </Stack>
-              </Stack>
-              <Divider label="Vị trí GPS từng cây" labelPosition="center" />
-              {locations.length > 0 && (
-                <Stack gap={"xs"}>
-                  <Text size="sm" c="dimmed">
-                    Danh sách tọa độ ({locations.length}):
-                  </Text>
-                  {locations.map((item, i) => (
-                    <Group key={i} gap="xs">
-                      <Text size="sm" w={"40%"}>
-                        {i + 1}. {item.lat}, {item.lng}
-                      </Text>
-                    </Group>
-                  ))}
-                </Stack>
-              )}
-              Bản đồ Leaflet với polygon
               <MapContainer
+                //@ts-expect-error no check
                 center={
-                  locations.length >= 1 ? locations[0] : [10.762622, 106.660172]
+                  tree.locations.length >= 1
+                    ? tree.locations[0]
+                    : [10.762622, 106.660172]
                 }
                 zoom={16}
-                style={{ height: "300px", width: "100%", borderRadius: 8 }}
+                style={{ height: "230px", width: "100%", borderRadius: 8 }}
               >
                 <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
-                <Polygon positions={locations} color="green" />
+                <Polygon
+                  //@ts-expect-error no check
+                  positions={tree?.locations || []}
+                  color="green"
+                />
               </MapContainer>
-            </Stack>
-          </Accordion.Panel>
-        </Accordion.Item>
-        <Accordion.Item value="2">
-          <Accordion.Control fw={"bold"}>Hàng 4</Accordion.Control>
-          <Accordion.Panel>
-            <Card withBorder>
-              <Stack gap="xl" mt={"md"}>
-                <Stack p="xs">
-                  <Group align="flex-start" justify="space-between">
-                    <Stack gap="xs" flex={1}>
-                      <Group justify="apart">
-                        <Text fw={500}>Vùng trồng:</Text>
-                        <Badge>{area}</Badge>
-                      </Group>
-                      <Group justify="apart">
-                        <Text fw={500}>Khu vực:</Text>
-                        <Badge>{zone}</Badge>
-                      </Group>
-                      <Group justify="apart">
-                        <Text fw={500}>Lô:</Text>
-                        <Badge>{block}</Badge>
-                      </Group>
-                      {row && (
-                        <Group justify="apart">
-                          <Text fw={500}>Hàng:</Text>
-                          <Badge>HÀNG 4</Badge>
-                        </Group>
-                      )}
-                      {plantingDate && (
-                        <Group justify="apart">
-                          <Text fw={500}>Ngày trồng:</Text>
-                          <Text>{plantingDate}</Text>
-                        </Group>
-                      )}
-                      <Group justify="apart">
-                        <Text fw={500}>Phương pháp canh tác:</Text>
-                        <Text>{farmingMethod}</Text>
-                      </Group>
-                      <Group justify="apart">
-                        <Text fw={500}>Phương pháp tưới tiêu:</Text>
-                        <Text>{irrigation}</Text>
-                      </Group>
-                    </Stack>
-                    <Image
-                      flex={1}
-                      src={imageUrls[0]}
-                      w={300}
-                      h={300}
-                      fit="cover"
-                      radius="md"
-                    />
-                  </Group>
-                </Stack>
-                <Divider label="Thông tin cây trồng" labelPosition="center" />
-                <Stack p="xs">
-                  <Stack gap="xs">
-                    <Group justify="apart">
-                      <Text fw={500}>Loại cây trồng:</Text>
-                      <Text>{tree.type}</Text>
-                    </Group>
-                    <Group justify="apart">
-                      <Text fw={500}>Giống cây:</Text>
-                      <Text>{tree.variety}</Text>
-                    </Group>
-                    <Group justify="apart">
-                      <Text fw={500}>Hạt giống:</Text>
-                      <Text>{tree.seed}</Text>
-                    </Group>
-                    <Group justify="apart">
-                      <Text fw={500}>Số lượng cây:</Text>
-                      <Text>{locations.length}</Text>
-                    </Group>
-                  </Stack>
-                </Stack>
-                <Divider label="Vị trí GPS từng cây" labelPosition="center" />
-                {locations.length > 0 && (
-                  <Stack gap={"xs"}>
-                    <Text size="sm" c="dimmed">
-                      Danh sách tọa độ ({locations.length}):
-                    </Text>
-                    {locations.map((item, i) => (
-                      <Group key={i} gap="xs">
-                        <Text size="sm" w={"40%"}>
-                          {i + 1}. {item.lat}, {item.lng}
-                        </Text>
-                      </Group>
-                    ))}
-                  </Stack>
-                )}
-                Bản đồ Leaflet với polygon
-                <MapContainer
-                  center={
-                    locations.length >= 1
-                      ? locations[0]
-                      : [10.762622, 106.660172]
-                  }
-                  zoom={16}
-                  style={{ height: "300px", width: "100%", borderRadius: 8 }}
-                >
-                  <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
-                  <Polygon positions={locations} color="green" />
-                </MapContainer>
-              </Stack>
-            </Card>
-          </Accordion.Panel>
-        </Accordion.Item>
-      </Accordion>
+            </Group>
+          </Card>
+        ))}
+      </Group>
     </Stack>
   );
 };

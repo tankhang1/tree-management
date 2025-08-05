@@ -1,4 +1,12 @@
-import { Card, Group, Stack, Text, Image, Badge } from "@mantine/core";
+import {
+  Card,
+  Group,
+  Stack,
+  Text,
+  Image,
+  Badge,
+  Checkbox,
+} from "@mantine/core";
 import type { SeedOption } from "..";
 import Scrollable from "../../../../../components/Scrollable";
 import { useState } from "react";
@@ -25,18 +33,17 @@ const SeedCards: React.FC<SeedCardSelectorProps> = ({
     }
   };
   return (
-    <Scrollable h={280}>
+    <Scrollable h={340}>
       <Group gap="md" wrap="nowrap" align="flex-start" p={"xs"}>
         {seeds.map((seed) => (
           <Card
-            w={250}
-            h={280}
+            w={300}
+            h={340}
             key={seed.code}
             withBorder
             radius="md"
             style={{
               cursor: "pointer",
-              width: 320,
               position: "relative",
               transition: "transform 0.2s ease",
               borderColor: selected.includes(seed.code) ? "green" : undefined,
@@ -56,7 +63,15 @@ const SeedCards: React.FC<SeedCardSelectorProps> = ({
               />
               <Group justify="space-between">
                 <Text fw={500}>{seed.seedName}</Text>
-                <Badge color="gray">{seed.code}</Badge>
+                <Group gap={"xs"}>
+                  <Badge color="gray">{seed.code}</Badge>
+                  {isMultiple && (
+                    <Checkbox
+                      radius={4}
+                      checked={selected.includes(seed.code)}
+                    />
+                  )}
+                </Group>
               </Group>
               <Text size="sm">
                 <strong>Loại cây:</strong> {seed.cropName}

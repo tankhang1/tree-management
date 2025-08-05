@@ -1,4 +1,4 @@
-import { Card, Group, Text, Stack, Badge } from "@mantine/core";
+import { Card, Group, Text, Stack, Badge, Checkbox } from "@mantine/core";
 import type { RegionOption } from "..";
 import Scrollable from "../../../../../components/Scrollable";
 import { useState } from "react";
@@ -52,7 +52,15 @@ const RegionCardSelector: React.FC<RegionCardSelectorProps> = ({
             <Stack gap={4}>
               <Group justify="space-between">
                 <Text fw={500}>{r.name}</Text>
-                <Badge color="gray">{r.code}</Badge>
+                <Group>
+                  <Badge color="gray">{r.code}</Badge>
+                  {isMultiSelect && (
+                    <Checkbox
+                      radius={4}
+                      checked={selectedId.includes(r.code)}
+                    />
+                  )}
+                </Group>
               </Group>
               <Text size="sm">
                 <strong>Diện tích:</strong> {r.area}

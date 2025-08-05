@@ -8,6 +8,7 @@ import {
   Divider,
   Tooltip,
   Button,
+  Checkbox,
 } from "@mantine/core";
 import Scrollable from "../../../../../components/Scrollable";
 import { useState } from "react";
@@ -165,7 +166,7 @@ export function EmployeeCardList({
             radius={4}
             shadow="sm"
             p="md"
-            miw={400}
+            miw={460}
             style={{
               position: "relative",
               transition: "transform 0.2s ease",
@@ -194,7 +195,17 @@ export function EmployeeCardList({
                   <Text fw={600} size="lg">
                     {emp.fullName}
                   </Text>
-                  <Badge color={getStatusColor(emp.status)}>{emp.status}</Badge>
+                  <Group gap={"xs"}>
+                    <Badge color={getStatusColor(emp.status)}>
+                      {emp.status}
+                    </Badge>
+                    {isMultiple && (
+                      <Checkbox
+                        radius={4}
+                        checked={selected.includes(emp.id)}
+                      />
+                    )}
+                  </Group>
                 </Group>
                 <Divider my="xs" />
                 <Text size="sm" c="dimmed">

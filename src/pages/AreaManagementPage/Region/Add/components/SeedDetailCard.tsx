@@ -7,6 +7,7 @@ import {
   Stack,
   Title,
   Image,
+  Checkbox,
 } from "@mantine/core";
 import { IconSeedling } from "@tabler/icons-react";
 
@@ -19,6 +20,7 @@ interface SeedDetailCardProps {
   germinationRate: number;
   uniformityRate: number;
   yieldPerHectare: string;
+  isMultiple?: boolean;
   isActive?: boolean;
   onClick?: () => void;
 }
@@ -32,6 +34,7 @@ const SeedDetailCard = ({
   germinationRate,
   uniformityRate,
   yieldPerHectare,
+  isMultiple = false,
   isActive = false,
   onClick,
 }: SeedDetailCardProps) => {
@@ -58,9 +61,12 @@ const SeedDetailCard = ({
       <Stack gap="xs" mt="sm">
         <Group justify="space-between">
           <Title order={5}>{seedName}</Title>
-          <Badge color="gray" variant="light">
-            {seedCode}
-          </Badge>
+          <Group gap={"xs"}>
+            <Badge color="gray" variant="light">
+              {seedCode}
+            </Badge>
+            {isMultiple && <Checkbox radius={4} checked={isActive} />}
+          </Group>
         </Group>
 
         <Text size="sm" c="dimmed">
