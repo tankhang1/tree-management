@@ -193,7 +193,7 @@ const AreaManagementAddZonePage = () => {
             </Stack>
             <Stack gap={"xs"}>
               <Text fw={500} fz={15}>
-                Chọn cây trồng chính
+                Cây trồng chính
               </Text>
               <CropCards
                 selected="1"
@@ -213,7 +213,7 @@ const AreaManagementAddZonePage = () => {
 
                 <Stack gap={"xs"}>
                   <Text fw={500} fz={15}>
-                    Chọn cây trồng chính
+                    Cây trồng chính
                   </Text>
                   <CropCards
                     selected="1"
@@ -250,7 +250,7 @@ const AreaManagementAddZonePage = () => {
 
                 <Stack gap={"xs"}>
                   <Text fw={500} fz={15}>
-                    Chọn cây trồng chính
+                    Cây trồng chính
                   </Text>
                   <CropCards
                     selected="1"
@@ -287,7 +287,7 @@ const AreaManagementAddZonePage = () => {
 
                 <Stack gap={"xs"}>
                   <Text fw={500} fz={15}>
-                    Chọn cây trồng chính
+                    Cây trồng chính
                   </Text>
                   <CropCards
                     selected="1"

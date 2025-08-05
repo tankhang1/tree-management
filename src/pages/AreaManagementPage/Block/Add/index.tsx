@@ -566,7 +566,7 @@ const AreaManagementBlockAddPage = () => {
                     onSelect={() => {}}
                   />
                   <Text fw={500} fz={15}>
-                    Chọn cây trồng
+                    Cây trồng
                   </Text>
                   <TextInput
                     placeholder="Tìm kiếm cây trồng"
@@ -583,7 +583,7 @@ const AreaManagementBlockAddPage = () => {
                 {form.getValues().farming === "Xen canh" && (
                   <Select
                     radius={4}
-                    label="Chọn hạt giống cây"
+                    label="Hạt giống cây"
                     data={["Giống A", "Giống B"]}
                   />
                 )}
@@ -609,7 +609,7 @@ const AreaManagementBlockAddPage = () => {
                     onSelect={() => {}}
                   />
                   <Text fw={500} fz={15}>
-                    Chọn cây trồng
+                    Cây trồng
                   </Text>
                   <TextInput
                     placeholder="Tìm kiếm cây trồng"
@@ -626,7 +626,7 @@ const AreaManagementBlockAddPage = () => {
                 {form.getValues().farming === "Xen canh" && (
                   <Select
                     radius={4}
-                    label="Chọn hạt giống cây"
+                    label="Hạt giống cây"
                     data={["Giống A", "Giống B"]}
                   />
                 )}

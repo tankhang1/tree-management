@@ -43,7 +43,7 @@ const AddBankModal = ({ onClose, onSubmit }: AddBankModalProps) => {
       <BankSelect />
       <Select
         label="Chi nhánh"
-        placeholder="Chọn chi nhánh"
+        placeholder="Chi nhánh"
         data={[
           { value: "hanoi", label: "Chi nhánh Hà Nội" },
           { value: "saigon", label: "Chi nhánh Sài Gòn" },
@@ -87,7 +87,7 @@ const AddBankModal = ({ onClose, onSubmit }: AddBankModalProps) => {
       />
       <Select
         label="Trạng thái"
-        placeholder="Chọn trạng thái"
+        placeholder="Trạng thái"
         data={[
           { value: "Hoạt động", label: "Hoạt động" },
           { value: "Không hoạt động", label: "Không hoạt động" },

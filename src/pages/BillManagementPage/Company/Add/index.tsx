@@ -102,7 +102,7 @@ const BillManagementCompanyAddPage = () => {
               </Group>
               <DatePickerInput
                 label="Ngày phát hành"
-                placeholder="Chọn ngày phát hành"
+                placeholder="Ngày phát hành"
                 locale="vi"
                 value={formData.issueDate}
                 radius={4}
@@ -209,7 +209,7 @@ const BillManagementCompanyAddPage = () => {
               />
               <Select
                 label="Trạng thái"
-                placeholder="Chọn trạng thái"
+                placeholder="Trạng thái"
                 data={[
                   { value: "pending", label: "Chờ xử lý" },
                   { value: "paid", label: "Đã thanh toán" },

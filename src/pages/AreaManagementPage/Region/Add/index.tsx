@@ -460,7 +460,7 @@ const AreaManagementAddRegionPage = () => {
           <Stack mt="md">
             <Stack gap={"xs"}>
               <Text fw={500} fz={15}>
-                Chọn phân bổ vùng trồng (chọn một)
+                Phân bổ vùng trồng (chọn một)
               </Text>
               <Autocomplete
                 placeholder="Tìm kiếm vùng trồng"
@@ -477,7 +477,7 @@ const AreaManagementAddRegionPage = () => {
             </Stack>
             <Stack gap={"xs"}>
               <Text fw={500} fz={15}>
-                Chọn phân bổ khu vực (chọn nhiều)
+                Phân bổ khu vực (chọn nhiều)
               </Text>
               <Autocomplete
                 placeholder="Tìm kiếm khu vực"
@@ -534,7 +534,7 @@ const AreaManagementAddRegionPage = () => {
                 onClick={openFilterEmployee}
                 leftSection={<IconUser size={18} />}
               >
-                Chọn nhân viên quản lý
+                Nhân viên quản lý
               </Button>
             </Group>
             <EmployeeCardList isDelete={true} isTouchable={false} />
@@ -962,13 +962,13 @@ const AreaManagementAddRegionPage = () => {
             value={mode}
             onChange={(val) => setMode(val as "group" | "dept")}
           >
-            <Radio value="group" mb={"xs"} label="Chọn theo đội nhóm" />
-            <Radio value="dept" label="Chọn theo phòng ban và vai trò" />
+            <Radio value="group" mb={"xs"} label="Đội nhóm" />
+            <Radio value="dept" label="Phòng ban và vai trò" />
           </Radio.Group>
 
           {mode === "group" && (
             <MultiSelect
-              label="Chọn đội nhóm"
+              label="Đội nhóm"
               radius={4}
               data={["Nhóm Canh tác", "Nhóm Vật tư"]}
             />
@@ -977,12 +977,12 @@ const AreaManagementAddRegionPage = () => {
           {mode === "dept" && (
             <>
               <MultiSelect
-                label="Chọn phòng ban"
+                label="Phòng ban"
                 radius={4}
                 data={["Ban tài chính", "Ban kĩ thuật", "Ban kế hoạch"]}
               />
               <MultiSelect
-                label="Chọn vai trò"
+                label="Vai trò"
                 radius={4}
                 data={["Giám đốc", "Tổ trưởng", "Trưởng phòng"]}
               />
@@ -990,7 +990,7 @@ const AreaManagementAddRegionPage = () => {
           )}
           <TextInput
             label="Tìm kiếm nhân viên (chọn nhiều)"
-            placeholder="Chọn thành viên từ nhân sự"
+            placeholder="Thành viên từ nhân sự"
             leftSection={<IconSearch size={16} />}
             {...form.getInputProps("members")}
             radius={4}

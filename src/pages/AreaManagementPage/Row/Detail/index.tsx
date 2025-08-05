@@ -397,8 +397,8 @@ const AreaManagementRowDetailPage = () => {
                           <Menu.Dropdown>
                             <Stack gap="xs">
                               <Select
-                                placeholder="Chọn cây"
-                                label="Chọn cây"
+                                placeholder="Cây trồng"
+                                label="Cây trồng"
                                 data={trees.map((tree) => tree.code)}
                                 radius={4}
                                 searchable

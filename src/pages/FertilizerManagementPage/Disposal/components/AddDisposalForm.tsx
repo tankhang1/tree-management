@@ -222,8 +222,8 @@ const AddDisposalForm = () => {
             value={mode}
             onChange={(val) => setMode(val as "group" | "dept")}
           >
-            <Radio value="group" label="Theo đội nhóm" />
-            <Radio value="dept" label="Theo phòng ban và vai trò" />
+            <Radio value="group" label="Đội nhóm" />
+            <Radio value="dept" label="Phòng ban và vai trò" />
           </Radio.Group>
 
           {mode === "group" && (

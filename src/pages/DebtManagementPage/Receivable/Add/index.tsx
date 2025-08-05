@@ -85,9 +85,7 @@ const DebtManagementReceivableAddPage = () => {
               <TextInput
                 radius={4}
                 placeholder={
-                  selectedCategory === "customer"
-                    ? "Chọn khách hàng"
-                    : "Chọn đối tác"
+                  selectedCategory === "customer" ? "Khách hàng" : "Đối tác"
                 }
                 label={
                   selectedCategory === "customer" ? "Khách hàng" : "Đối tác"
@@ -115,7 +113,7 @@ const DebtManagementReceivableAddPage = () => {
                     onClick={() => setSelectedPaymentType("invoice")}
                     radius={4}
                   >
-                    Theo hóa đơn
+                    Hóa đơn
                   </Button>
                   <Button
                     variant={
@@ -124,7 +122,7 @@ const DebtManagementReceivableAddPage = () => {
                     onClick={() => setSelectedPaymentType("batch")}
                     radius={4}
                   >
-                    Theo đợt thanh toán
+                    Đợt thanh toán
                   </Button>
                 </Group>
               </Input.Wrapper>
@@ -270,8 +268,8 @@ const DebtManagementReceivableAddPage = () => {
                   <Text fw={500}>Hình thức thanh toán:</Text>
                   <Text>
                     {selectedPaymentType === "invoice"
-                      ? "Theo hóa đơn"
-                      : "Theo đợt thanh toán"}
+                      ? "Hóa đơn"
+                      : "Đợt thanh toán"}
                   </Text>
                 </Group>
 

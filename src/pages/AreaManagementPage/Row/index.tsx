@@ -162,7 +162,7 @@ const AreaManagementRowPage = () => {
         <Autocomplete
           radius={4}
           leftSection={<IconTree size={18} />}
-          placeholder="Chọn cây trồng"
+          placeholder="Cây trồng"
           data={["Sầu riêng"]}
         />
       </Group>

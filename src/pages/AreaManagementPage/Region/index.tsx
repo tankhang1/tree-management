@@ -261,14 +261,14 @@ const AreaManagementRegionPage = () => {
           searchable
           radius={4}
           leftSection={<IconTree size={18} />}
-          placeholder="Chọn cây trồng chính"
+          placeholder="Cây trồng chính"
           data={mainCrops}
         />
         <Select
           searchable
           radius={4}
           leftSection={<IconSandbox size={18} />}
-          placeholder="Chọn loại đất"
+          placeholder="Loại đất"
           multiple
           data={soilTypes}
         />
@@ -277,7 +277,7 @@ const AreaManagementRegionPage = () => {
           radius={4}
           multiple
           leftSection={<IconBrandMetabrainz size={18} />}
-          placeholder="Chọn địa hình"
+          placeholder="Địa hình"
           data={terrains}
         />
       </Group>

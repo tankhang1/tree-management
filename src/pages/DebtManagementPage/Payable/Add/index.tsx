@@ -106,14 +106,14 @@ const DebtManagementPayableAddPage = () => {
                 radius={4}
                 placeholder={
                   selectedCategory === "customer"
-                    ? "Chọn khách hàng"
+                    ? "Khách hàng"
                     : selectedCategory === "partner"
-                    ? "Chọn đối tác"
+                    ? "Đối tác"
                     : selectedCategory === "supplier"
-                    ? "Chọn nhà cung cấp"
+                    ? "Nhà cung cấp"
                     : selectedCategory === "bank"
-                    ? "Chọn ngân hàng"
-                    : "Chọn phân loại"
+                    ? "Ngân hàng"
+                    : "Phân loại"
                 }
                 label={
                   selectedCategory === "customer"
@@ -149,7 +149,7 @@ const DebtManagementPayableAddPage = () => {
                     onClick={() => setSelectedPaymentType("invoice")}
                     radius={4}
                   >
-                    Theo hóa đơn
+                    Hóa đơn
                   </Button>
                   <Button
                     variant={
@@ -158,7 +158,7 @@ const DebtManagementPayableAddPage = () => {
                     onClick={() => setSelectedPaymentType("batch")}
                     radius={4}
                   >
-                    Theo đợt thanh toán
+                    Đợt thanh toán
                   </Button>
                 </Group>
               </Input.Wrapper>
@@ -304,8 +304,8 @@ const DebtManagementPayableAddPage = () => {
                   <Text fw={500}>Hình thức thanh toán:</Text>
                   <Text>
                     {selectedPaymentType === "invoice"
-                      ? "Theo hóa đơn"
-                      : "Theo đợt thanh toán"}
+                      ? "Hóa đơn"
+                      : "Đợt thanh toán"}
                   </Text>
                 </Group>
 

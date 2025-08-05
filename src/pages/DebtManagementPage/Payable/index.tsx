@@ -168,7 +168,7 @@ const DebtManagementPayablePage = () => {
       <Group>
         <Select
           label="Phân loại"
-          placeholder="Chọn phân loại"
+          placeholder="Phân loại"
           data={[
             { value: "customer", label: "Khách hàng" },
             { value: "partner", label: "Đối tác" },
@@ -179,7 +179,7 @@ const DebtManagementPayablePage = () => {
         />
         <Select
           label="Trạng thái"
-          placeholder="Chọn trạng thái"
+          placeholder="Trạng thái"
           data={[
             { value: "paid", label: "Đã thanh toán" },
             { value: "unpaid", label: "Chưa thanh toán" },

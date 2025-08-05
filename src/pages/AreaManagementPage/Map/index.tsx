@@ -45,21 +45,11 @@ const AreaManagementMapPage = () => {
       >
         <Stack w={300}>
           <Title order={4}>Tìm kiếm cây trồng</Title>
-          <Select
-            label="Chọn vùng"
-            placeholder="Chọn vùng"
-            radius={4}
-            clearable
-          />
+          <Select label="Vùng" placeholder="Vùng" radius={4} clearable />
           <Select label="Khu vực" placeholder="Khu vực" radius={4} clearable />
           <Select label="Lô" placeholder="Lô" radius={4} clearable />
           <Select label="Hàng" placeholder="Hàng" radius={4} clearable />
-          <Select
-            label="Chọn cây"
-            placeholder="Chọn cây"
-            radius={4}
-            clearable
-          />
+          <Select label="Cây" placeholder="Cây" radius={4} clearable />
           <Button radius={4} leftSection={<IconSearch size={18} />}>
             Tìm kiếm
           </Button>

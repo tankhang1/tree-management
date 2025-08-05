@@ -103,7 +103,7 @@ const HarvestManagementReportPage = () => {
         <Title order={3}>Báo cáo thu hoạch</Title>
         <Group align="flex-end">
           <DatePickerInput
-            label="Chọn ngày"
+            label="Ngày thu hoạch"
             placeholder="Chọn ngày thu hoạch"
             leftSection={<IconCalendarStats size={16} />}
             radius={4}

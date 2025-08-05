@@ -243,7 +243,7 @@ const AddFertilizerUsageForm = () => {
 
           {mode === "group" && (
             <MultiSelect
-              label="Chọn đội nhóm"
+              label="Đội nhóm"
               radius={4}
               data={["Nhóm Canh tác", "Nhóm Vật tư"]}
             />
@@ -259,7 +259,7 @@ const AddFertilizerUsageForm = () => {
               />
               <DepartmentCardList />
               <MultiSelect
-                label="Chọn vai trò"
+                label="Vai trò"
                 radius={4}
                 data={["Giám đốc", "Tổ trưởng", "Trưởng phòng"]}
               />

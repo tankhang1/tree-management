@@ -777,7 +777,7 @@ const ContractManagementAddPage = () => {
             <Stack gap={"xs"}>
               <Title order={4}>Thông tin bên A</Title>
               <TextInput
-                label="Chọn doanh nghiệp / nông hộ (chọn một)"
+                label="Doanh nghiệp / nông hộ (chọn một)"
                 placeholder="Tìm kiếm doanh nghiệp"
                 radius={4}
                 leftSection={<IconSearch size={18} />}
@@ -791,7 +791,7 @@ const ContractManagementAddPage = () => {
             <Stack gap={"xs"}>
               <Title order={4}>Thông tin bên B</Title>
               <TextInput
-                label="Chọn doanh nghiệp / nông hộ (chọn một)"
+                label="Doanh nghiệp / nông hộ (chọn một)"
                 placeholder="Tìm kiếm doanh nghiệp"
                 radius={4}
                 leftSection={<IconSearch size={18} />}

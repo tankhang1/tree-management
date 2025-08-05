@@ -239,13 +239,13 @@ const AddDisposalForm = () => {
             value={mode}
             onChange={(val) => setMode(val as "group" | "dept")}
           >
-            <Radio value="group" mb={"xs"} label="Chọn theo đội nhóm" />
-            <Radio value="dept" label="Chọn theo phòng ban và vai trò" />
+            <Radio value="group" mb={"xs"} label="Đội nhóm" />
+            <Radio value="dept" label="Phòng ban và vai trò" />
           </Radio.Group>
 
           {mode === "group" && (
             <MultiSelect
-              label="Chọn đội nhóm"
+              label="Đội nhóm"
               radius={4}
               data={["Nhóm Canh tác", "Nhóm Vật tư"]}
             />
@@ -261,7 +261,7 @@ const AddDisposalForm = () => {
               />
               <DepartmentCardList />
               <MultiSelect
-                label="Chọn vai trò"
+                label="Vai trò"
                 radius={4}
                 data={["Giám đốc", "Tổ trưởng", "Trưởng phòng"]}
               />

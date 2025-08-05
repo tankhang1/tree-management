@@ -181,19 +181,19 @@ const AreaManagementZonePage = () => {
         <Autocomplete
           radius={4}
           leftSection={<IconTree size={18} />}
-          placeholder="Chọn cây trồng chính"
+          placeholder="Cây trồng chính"
           data={["Sầu riêng"]}
         />
         <Autocomplete
           radius={4}
           leftSection={<IconSandbox size={18} />}
-          placeholder="Chọn loại đất"
+          placeholder="Loại đất"
           data={["Đất thịt"]}
         />
         <Autocomplete
           radius={4}
           leftSection={<IconBrandMetabrainz size={18} />}
-          placeholder="Chọn địa hình"
+          placeholder="Địa hình"
           data={["Cao"]}
         />
       </Group>

@@ -319,7 +319,7 @@ const SchedulePage = () => {
                 {["keHoach", "phatSinh", "batman"].map((type) => {
                   const label =
                     type === "keHoach"
-                      ? "Theo kế hoạch"
+                      ? "Kế hoạch"
                       : type === "phatSinh"
                       ? "Phát sinh"
                       : "BATMAN";
@@ -564,9 +564,7 @@ const SchedulePage = () => {
                     color={job.sourceType === "keHoach" ? "blue" : "violet"}
                     variant="light"
                   >
-                    {job.sourceType === "keHoach"
-                      ? "Theo kế hoạch"
-                      : "Phát sinh"}
+                    {job.sourceType === "keHoach" ? "Kế hoạch" : "Phát sinh"}
                   </Badge>
                 </Stack>
               </Card>

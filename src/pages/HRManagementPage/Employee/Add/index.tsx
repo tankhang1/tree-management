@@ -69,7 +69,7 @@ const HRManagementEmployeeAddPage = () => {
                 />
                 <Select
                   placeholder="Chọn tỉnh thành/ thành phố"
-                  label="Chọn tỉnh thành"
+                  label="Tỉnh thành"
                   radius={4}
                 />
                 {/* <Select
@@ -79,7 +79,7 @@ const HRManagementEmployeeAddPage = () => {
               /> */}
                 <Select
                   placeholder="Chọn phường/xã"
-                  label="Chọn phường/xã"
+                  label="Phường/xã"
                   radius={4}
                 />
                 <TextInput
