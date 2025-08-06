@@ -200,6 +200,7 @@ import FinancePurposeExpenseAddPage from "./pages/FinancePage/PurposeExpense/Add
 import FinancePurposeReceivePage from "./pages/FinancePage/PurposeReceive/index.tsx";
 import FinancePurposeReceiveAddPage from "./pages/FinancePage/PurposeReceive/Add/index.tsx";
 import FinancePurposeHistoryPage from "./pages/FinancePage/History/index.tsx";
+import FinancePurposeStatisticPage from "./pages/FinancePage/Statistics/index.tsx";
 const theme: MantineThemeOverride = {
   fontFamily: "MyFont, sans-serif",
   primaryColor: "brand",
@@ -803,6 +804,10 @@ const ROUTES = [
   <Route
     path={PATH.FINANCE_PURPOSE_RECEIVE_ADD}
     element={<FinancePurposeReceiveAddPage />}
+  />,
+  <Route
+    path={PATH.FINANCE_PURPOSE_STATISTIC}
+    element={<FinancePurposeStatisticPage />}
   />,
   <Route
     path={PATH.FINANCE_PURPOSE_HISTORY}

@@ -8,43 +8,49 @@ import {
 } from "@tabler/icons-react";
 import Table from "../../../components/Table";
 import type { MRT_ColumnDef } from "mantine-react-table";
-type FundRecord = {
+import { useNavigate } from "react-router-dom";
+import { PATH } from "../../../constants/path.constants";
+type ExpenseRecord = {
   fundName: string; // Tên quỹ
   documentNumber: string; // Số chứng từ
   title: string; // Tiêu đề nội dung
-  paymentMethod: string; // Hình thức thu (tiền mặt, chuyển khoản)
+  paymentMethod: string; // Hình thức chi (tiền mặt, chuyển khoản)
   bankInfo?: {
     bankName: string; // Tên ngân hàng
     accountNumber: string; // Số tài khoản
   } | null; // Thông tin ngân hàng (nếu có)
   amount: number; // Số tiền
-  date: string; // Ngày thu
+  date: string; // Ngày chi
+  note?: string; // Ghi chú
 };
-const fundRecords: FundRecord[] = [
+const expenseRecords: ExpenseRecord[] = [
   {
     fundName: "Quỹ tiền mặt",
-    documentNumber: "CT001",
-    title: "Thu tiền hợp đồng số 12345",
+    documentNumber: "CT003",
+    title: "Chi tiền mua văn phòng phẩm",
     paymentMethod: "Tiền mặt",
     bankInfo: null,
-    amount: 5000000,
+    amount: 2000000,
     date: "2025-08-06",
+    note: "Mua văn phòng phẩm cho công ty",
   },
   {
     fundName: "Quỹ chuyển khoản",
-    documentNumber: "CT002",
-    title: "Thu tiền hợp đồng số 67890",
+    documentNumber: "CT004",
+    title: "Chi tiền thuê văn phòng",
     paymentMethod: "Chuyển khoản",
     bankInfo: {
-      bankName: "Ngân hàng XYZ",
-      accountNumber: "123456789",
+      bankName: "Ngân hàng ABC",
+      accountNumber: "987654321",
     },
-    amount: 10000000,
+    amount: 15000000,
     date: "2025-08-06",
+    note: "Thanh toán tiền thuê văn phòng tháng 8",
   },
 ];
 const FinancePurposeExpensePage = () => {
-  const fundColumns: MRT_ColumnDef<FundRecord>[] = [
+  const navigate = useNavigate();
+  const expenseColumns: MRT_ColumnDef<ExpenseRecord>[] = [
     {
       header: "Tên quỹ",
       accessorKey: "fundName",
@@ -58,7 +64,7 @@ const FinancePurposeExpensePage = () => {
       accessorKey: "title",
     },
     {
-      header: "Hình thức thu",
+      header: "Hình thức chi",
       accessorKey: "paymentMethod",
     },
     {
@@ -75,10 +81,15 @@ const FinancePurposeExpensePage = () => {
       Cell: ({ row }) => `${row.original.amount.toLocaleString()} VND`,
     },
     {
-      header: "Ngày thu",
+      header: "Ngày chi",
       accessorKey: "date",
       Cell: ({ row }) =>
         new Date(row.original.date).toLocaleDateString("vi-VN"),
+    },
+    {
+      header: "Ghi chú",
+      accessorKey: "note",
+      Cell: ({ row }) => row.original.note || "Không có",
     },
     {
       accessorKey: "actions",
@@ -108,21 +119,26 @@ const FinancePurposeExpensePage = () => {
       ),
     },
   ];
+  const handleAddExpese = () => {
+    navigate(PATH.FINANCE_PURPOSE_EXPENSE_ADD);
+  };
   return (
     <Stack gap="lg">
       <Group justify="space-between" px={"sm"}>
         <Title flex={1} order={2}>
-          Quản lý đích thu
+          Quản lý chi
         </Title>
         <Group>
           <Button variant="outline" radius={4} leftSection={<IconFileExcel />}>
             Xuất File
           </Button>
-          <Button radius={4}>Thêm mới</Button>
+          <Button radius={4} onClick={handleAddExpese}>
+            Thêm mới
+          </Button>
         </Group>
       </Group>
 
-      <Table columns={fundColumns} data={fundRecords} />
+      <Table columns={expenseColumns} data={expenseRecords} />
     </Stack>
   );
 };

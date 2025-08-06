@@ -320,10 +320,10 @@ export const NAV_BAR = [
         label: "Thống kê",
         link: PATH.FINANCE_PURPOSE_STATISTIC,
       },
-      {
-        label: "Lịch sử",
-        link: PATH.FINANCE_PURPOSE_HISTORY,
-      },
+      // {
+      //   label: "Lịch sử",
+      //   link: PATH.FINANCE_PURPOSE_HISTORY,
+      // },
     ],
   },
   {

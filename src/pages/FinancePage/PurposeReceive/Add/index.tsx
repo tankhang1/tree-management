@@ -17,6 +17,7 @@ import {
   Divider,
 } from "@mantine/core";
 import {
+  IconArrowLeft,
   IconBuilding,
   IconBuildingStore,
   IconHeartHandshake,
@@ -24,6 +25,7 @@ import {
 import { useState } from "react";
 import { SelectableEnterpriseCards } from "../../../StockManagementPage/Delivery/Add/components/SelectableEnterpriseCards";
 import Scrollable from "../../../../components/Scrollable";
+import { useNavigate } from "react-router-dom";
 const BANKS = [
   {
     bank: "Techcombank (TCB)",
@@ -45,6 +47,7 @@ const BANKS = [
   },
 ];
 const FinancePurposeReceiveAddPage = () => {
+  const navigate = useNavigate();
   const [activeStep, setActiveStep] = useState(0);
   const [selectedBank, setSelectedBank] = useState<string>();
   const nextStep = () => setActiveStep((current) => Math.min(current + 1, 2));
@@ -69,7 +72,17 @@ const FinancePurposeReceiveAddPage = () => {
 
   return (
     <Stack gap="lg">
-      <Title order={2}>Thêm mới mục đích thu</Title>
+      <Group mb="xs">
+        <Button
+          variant="subtle"
+          radius={4}
+          leftSection={<IconArrowLeft size={18} />}
+          onClick={() => navigate(-1)}
+        >
+          Quay lại
+        </Button>
+        <Title order={3}>Thêm mới mục đích thu</Title>
+      </Group>
 
       <Stepper active={activeStep} onStepClick={setActiveStep}>
         {/* Bước 1: Thông tin định danh */}

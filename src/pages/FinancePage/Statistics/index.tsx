@@ -1,128 +1,159 @@
-import { ActionIcon, Button, Group, Menu, Stack, Title } from "@mantine/core";
 import {
-  IconDotsVertical,
-  IconEdit,
-  IconEye,
-  IconFileExcel,
-  IconTrash,
-} from "@tabler/icons-react";
+  Button,
+  Card,
+  Group,
+  Stack,
+  Title,
+  Divider,
+  Text,
+  Badge,
+} from "@mantine/core";
+import { IconFileExcel } from "@tabler/icons-react";
 import Table from "../../../components/Table";
 import type { MRT_ColumnDef } from "mantine-react-table";
-type FundRecord = {
-  fundName: string; // Tên quỹ
-  documentNumber: string; // Số chứng từ
-  title: string; // Tiêu đề nội dung
-  paymentMethod: string; // Hình thức thu (tiền mặt, chuyển khoản)
-  bankInfo?: {
-    bankName: string; // Tên ngân hàng
-    accountNumber: string; // Số tài khoản
-  } | null; // Thông tin ngân hàng (nếu có)
-  amount: number; // Số tiền
-  date: string; // Ngày thu
+import {
+  Bar,
+  BarChart,
+  CartesianGrid,
+  Legend,
+  ResponsiveContainer,
+  XAxis,
+  YAxis,
+  Tooltip,
+} from "recharts";
+
+type Record = {
+  date: string;
+  type: "Thu" | "Chi";
+  amount: number;
+  description: string;
 };
-const fundRecords: FundRecord[] = [
+
+const records: Record[] = [
   {
-    fundName: "Quỹ tiền mặt",
-    documentNumber: "CT001",
-    title: "Thu tiền hợp đồng số 12345",
-    paymentMethod: "Tiền mặt",
-    bankInfo: null,
+    date: "2025-08-01",
+    type: "Thu",
     amount: 5000000,
-    date: "2025-08-06",
+    description: "Thu tiền hợp đồng số 12345",
   },
   {
-    fundName: "Quỹ chuyển khoản",
-    documentNumber: "CT002",
-    title: "Thu tiền hợp đồng số 67890",
-    paymentMethod: "Chuyển khoản",
-    bankInfo: {
-      bankName: "Ngân hàng XYZ",
-      accountNumber: "123456789",
-    },
+    date: "2025-08-02",
+    type: "Chi",
+    amount: 2000000,
+    description: "Chi tiền mua văn phòng phẩm",
+  },
+  {
+    date: "2025-08-03",
+    type: "Thu",
     amount: 10000000,
+    description: "Thu tiền hợp đồng số 67890",
+  },
+  {
+    date: "2025-08-04",
+    type: "Chi",
+    amount: 15000000,
+    description: "Chi tiền thuê văn phòng",
+  },
+  {
+    date: "2025-08-05",
+    type: "Thu",
+    amount: 7000000,
+    description: "Thu từ đầu tư cổ tức quý II",
+  },
+  {
     date: "2025-08-06",
+    type: "Chi",
+    amount: 3000000,
+    description: "Chi bảo trì thiết bị",
   },
 ];
-const FinancePurposeStatisticPage = () => {
-  const fundColumns: MRT_ColumnDef<FundRecord>[] = [
-    {
-      header: "Tên quỹ",
-      accessorKey: "fundName",
-    },
-    {
-      header: "Số chứng từ",
-      accessorKey: "documentNumber",
-    },
-    {
-      header: "Tiêu đề nội dung",
-      accessorKey: "title",
-    },
-    {
-      header: "Hình thức thu",
-      accessorKey: "paymentMethod",
-    },
-    {
-      header: "Thông tin ngân hàng",
-      accessorKey: "bankInfo",
-      Cell: ({ row }) =>
-        row.original.bankInfo
-          ? `${row.original.bankInfo.bankName} - ${row.original.bankInfo.accountNumber}`
-          : "N/A",
-    },
-    {
-      header: "Số tiền",
-      accessorKey: "amount",
-      Cell: ({ row }) => `${row.original.amount.toLocaleString()} VND`,
-    },
-    {
-      header: "Ngày thu",
-      accessorKey: "date",
-      Cell: ({ row }) =>
-        new Date(row.original.date).toLocaleDateString("vi-VN"),
-    },
-    {
-      accessorKey: "actions",
-      header: "Tuỳ chọn",
-      enableColumnActions: false,
-      size: 10,
-      Cell: () => (
-        <Menu shadow="md">
-          <Menu.Target>
-            <ActionIcon variant="transparent" c={"gray"}>
-              <IconDotsVertical />
-            </ActionIcon>
-          </Menu.Target>
 
-          <Menu.Dropdown>
-            <Menu.Item leftSection={<IconEye size={18} color="gray" />}>
-              Chi tiết
-            </Menu.Item>
-            <Menu.Item leftSection={<IconEdit size={18} color="green" />}>
-              Chỉnh sửa
-            </Menu.Item>
-            <Menu.Item leftSection={<IconTrash size={18} />} color="red">
-              Xoá
-            </Menu.Item>
-          </Menu.Dropdown>
-        </Menu>
-      ),
-    },
-  ];
+const data = [
+  { month: "Tháng 1", income: 5000000, expense: 3000000 },
+  { month: "Tháng 2", income: 7000000, expense: 4000000 },
+  { month: "Tháng 3", income: 8000000, expense: 5000000 },
+  { month: "Tháng 4", income: 6000000, expense: 2000000 },
+  { month: "Tháng 5", income: 9000000, expense: 7000000 },
+  { month: "Tháng 6", income: 10000000, expense: 8000000 },
+  { month: "Tháng 7", income: 11000000, expense: 6500000 },
+  { month: "Tháng 8", income: 12000000, expense: 9500000 },
+];
+
+const columns: MRT_ColumnDef<Record>[] = [
+  {
+    header: "Ngày giao dịch",
+    accessorKey: "date",
+    Cell: ({ row }) => new Date(row.original.date).toLocaleDateString("vi-VN"),
+  },
+  {
+    header: "Loại giao dịch",
+    accessorKey: "type",
+    Cell: ({ row }) => (
+      <Badge
+        color={row.original.type === "Thu" ? "green" : "red"}
+        variant="light"
+      >
+        {row.original.type}
+      </Badge>
+    ),
+  },
+  {
+    header: "Số tiền (VND)",
+    accessorKey: "amount",
+    Cell: ({ row }) => (
+      <Text color={row.original.type === "Thu" ? "green" : "red"} fw={500}>
+        {row.original.amount.toLocaleString("vi-VN")} VND
+      </Text>
+    ),
+  },
+  {
+    header: "Mô tả",
+    accessorKey: "description",
+  },
+];
+
+const FinancePurposeStatisticPage = () => {
   return (
     <Stack gap="lg">
-      <Group justify="space-between" px={"sm"}>
-        <Title flex={1} order={2}>
-          Quản lý đích thu
-        </Title>
-        <Group>
-          <Button variant="outline" radius={4} leftSection={<IconFileExcel />}>
-            Xuất File
-          </Button>
-          <Button radius={4}>Thêm mới</Button>
-        </Group>
+      <Group justify="space-between" px="sm">
+        <Stack gap={2}>
+          <Title order={2}>Thống kê thu chi</Title>
+          <Text size="sm" color="dimmed">
+            Biểu đồ trực quan và danh sách chi tiết các giao dịch thu/chi
+          </Text>
+        </Stack>
+        <Button variant="outline" radius={4} leftSection={<IconFileExcel />}>
+          Xuất Excel
+        </Button>
       </Group>
 
-      <Table columns={fundColumns} data={fundRecords} />
+      <Card withBorder radius={4} padding="lg" shadow="sm">
+        <Title order={5} mb="xs">
+          Biểu đồ thu chi theo tháng
+        </Title>
+        <ResponsiveContainer width="100%" height={400}>
+          <BarChart
+            data={data}
+            margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
+          >
+            <CartesianGrid strokeDasharray="3 3" />
+            <XAxis dataKey="month" />
+            <YAxis />
+            <Tooltip formatter={(value) => `${value.toLocaleString()} VND`} />
+            <Legend />
+            <Bar dataKey="income" fill="#82ca9d" name="Thu nhập" />
+            <Bar dataKey="expense" fill="#ff6b6b" name="Chi phí" />
+          </BarChart>
+        </ResponsiveContainer>
+      </Card>
+
+      <Card shadow="sm" padding="lg" radius={4} withBorder>
+        <Title order={5} ta="center">
+          Danh sách giao dịch chi tiết
+        </Title>
+        <Divider my="sm" />
+        <Table columns={columns} data={records} />
+      </Card>
     </Stack>
   );
 };
