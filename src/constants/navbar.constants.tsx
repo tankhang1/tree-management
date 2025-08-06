@@ -22,6 +22,7 @@ import {
   IconLayersIntersect,
   IconCashBanknote,
   IconSettings,
+  IconCashRegister,
 } from "@tabler/icons-react";
 import { PATH } from "./path.constants";
 
@@ -300,6 +301,29 @@ export const NAV_BAR = [
       { label: "Sản phẩm kinh doanh", link: PATH.PURCHASE_MANAGEMENT_PRODUCT },
       { label: "Nguyên vật liệu", link: PATH.PURCHASE_MANAGEMENT_RAW_MATERIAL },
       { label: "Lịch sử", link: PATH.PURCHASE_MANAGEMENT_HISTORY },
+    ],
+  },
+  {
+    label: "Mục đích Thu - Chi",
+    icon: IconCashRegister,
+    link: PATH.FINANCE_PURPOSE_EXPENSE,
+    children: [
+      {
+        label: "Thu",
+        link: PATH.FINANCE_PURPOSE_RECEIVE,
+      },
+      {
+        label: "Chi",
+        link: PATH.FINANCE_PURPOSE_EXPENSE,
+      },
+      {
+        label: "Thống kê",
+        link: PATH.FINANCE_PURPOSE_STATISTIC,
+      },
+      {
+        label: "Lịch sử",
+        link: PATH.FINANCE_PURPOSE_HISTORY,
+      },
     ],
   },
   {

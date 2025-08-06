@@ -195,6 +195,11 @@ import OrderManagementCreatePage from "./pages/OrderManagementPage/Create/index.
 import CompanyAddressPage from "./pages/CompanyPage/Address/index.tsx";
 import CompanyAddressAddPage from "./pages/CompanyPage/Address/Add/index.tsx";
 import BankManagementPage from "./pages/BankManagementPage/index.tsx";
+import FinancePurposeExpensePage from "./pages/FinancePage/PurposeExpense/index.tsx";
+import FinancePurposeExpenseAddPage from "./pages/FinancePage/PurposeExpense/Add/index.tsx";
+import FinancePurposeReceivePage from "./pages/FinancePage/PurposeReceive/index.tsx";
+import FinancePurposeReceiveAddPage from "./pages/FinancePage/PurposeReceive/Add/index.tsx";
+import FinancePurposeHistoryPage from "./pages/FinancePage/History/index.tsx";
 const theme: MantineThemeOverride = {
   fontFamily: "MyFont, sans-serif",
   primaryColor: "brand",
@@ -782,6 +787,26 @@ const ROUTES = [
   <Route
     path={PATH.ORDER_MANAGEMENT_HISTORY}
     element={<AreaManagementHistoryPage />}
+  />,
+  <Route
+    path={PATH.FINANCE_PURPOSE_EXPENSE}
+    element={<FinancePurposeExpensePage />}
+  />,
+  <Route
+    path={PATH.FINANCE_PURPOSE_EXPENSE_ADD}
+    element={<FinancePurposeExpenseAddPage />}
+  />,
+  <Route
+    path={PATH.FINANCE_PURPOSE_RECEIVE}
+    element={<FinancePurposeReceivePage />}
+  />,
+  <Route
+    path={PATH.FINANCE_PURPOSE_RECEIVE_ADD}
+    element={<FinancePurposeReceiveAddPage />}
+  />,
+  <Route
+    path={PATH.FINANCE_PURPOSE_HISTORY}
+    element={<FinancePurposeHistoryPage />}
   />,
 ];
 

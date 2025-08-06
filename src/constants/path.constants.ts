@@ -261,4 +261,12 @@ export const PATH = {
   // Bank Management
   BANK_MANAGEMENT: "/bank-management",
   SETTINGS: "/settings",
+
+  // Finance Management
+  FINANCE_PURPOSE_EXPENSE: "/finance/purpose-expense",
+  FINANCE_PURPOSE_EXPENSE_ADD: "/finance/purpose-expense/add",
+  FINANCE_PURPOSE_RECEIVE: "/finance/purpose-receive",
+  FINANCE_PURPOSE_RECEIVE_ADD: "/finance/purpose-receive/add",
+  FINANCE_PURPOSE_STATISTIC: "/finance/purpose-statistic",
+  FINANCE_PURPOSE_HISTORY: "/finance/purpose-history",
 };
