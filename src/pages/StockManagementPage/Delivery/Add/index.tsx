@@ -255,13 +255,13 @@ export default function StockManagementAddDeliveryPage() {
           <form onSubmit={form.onSubmit(() => setActive(1))}>
             <Stack gap="xs">
               <TextInput
-                label="Doanh nghiệp / nông hộ (chọn một)"
+                label="Doanh nghiệp / nông hộ"
                 placeholder="Tìm kiếm doanh nghiệp"
                 leftSection={<IconSearch size={18} />}
               />
               <SelectableEnterpriseCards isCheckbox={false} isMulti={false} />
               <Text fw={500} fz={15}>
-                Khu vực (chọn một)
+                Khu vực
               </Text>
               <Grid>
                 {areaGroups.map((group) => (
@@ -308,7 +308,7 @@ export default function StockManagementAddDeliveryPage() {
               </Grid>
               <Stack gap={"xs"}>
                 <Text fw={500} fz={15}>
-                  Khu vực phụ (chọn một)
+                  Khu vực phụ
                 </Text>
                 <Stack>
                   <Group>

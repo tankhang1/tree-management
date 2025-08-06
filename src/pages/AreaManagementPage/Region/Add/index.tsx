@@ -620,7 +620,7 @@ const AreaManagementAddRegionPage = () => {
                         />
                         <Group>
                           <Text fw={"500"} fz={15}>
-                            Danh sách cây trồng (chọn một)
+                            Danh sách cây trồng
                           </Text>
                           <Button radius={4}>Thêm mới</Button>
                         </Group>

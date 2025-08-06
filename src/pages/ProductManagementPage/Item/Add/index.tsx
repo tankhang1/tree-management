@@ -211,7 +211,7 @@ const ProductManagementItemAddPage = () => {
                 />
                 <TextInput
                   placeholder="Loại sản phẩm"
-                  label="Loại sản phẩm (chọn một)"
+                  label="Loại sản phẩm"
                   leftSection={<IconSearch size={18} />}
                   radius={4}
                 />
@@ -354,7 +354,7 @@ const ProductManagementItemAddPage = () => {
                     <Stack gap={"xs"}>
                       <TextInput
                         placeholder="Loại sản phẩm"
-                        label="Loại sản phẩm (chọn một)"
+                        label="Loại sản phẩm"
                         leftSection={<IconSearch size={18} />}
                         radius={4}
                       />
@@ -392,7 +392,7 @@ const ProductManagementItemAddPage = () => {
                     </Stack>
                   ) : (
                     <Select
-                      label="Loại nguyên vật liệu (chọn một)"
+                      label="Loại nguyên vật liệu"
                       placeholder="Loại nguyên vật liệu"
                       radius={4}
                       data={[
@@ -409,7 +409,7 @@ const ProductManagementItemAddPage = () => {
                     <Stack gap={"xs"}>
                       <TextInput
                         placeholder="Sản phẩm"
-                        label="Sản phẩm (chọn một)"
+                        label="Sản phẩm"
                         leftSection={<IconSearch size={18} />}
                         radius={4}
                       />
@@ -471,7 +471,7 @@ const ProductManagementItemAddPage = () => {
                     <Stack gap={"xs"}>
                       <TextInput
                         placeholder="Nguyên vật liệu"
-                        label="Nguyên vật liệu (chọn một)"
+                        label="Nguyên vật liệu"
                         leftSection={<IconSearch size={18} />}
                         radius={4}
                       />

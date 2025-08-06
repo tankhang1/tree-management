@@ -1,4 +1,12 @@
-import { Card, Stack, Text, Group, Image, Badge } from "@mantine/core";
+import {
+  Card,
+  Stack,
+  Text,
+  Group,
+  Image,
+  Badge,
+  Checkbox,
+} from "@mantine/core";
 import type { CropOption } from "..";
 import Scrollable from "../../../../../components/Scrollable";
 import { useState } from "react";
@@ -9,7 +17,13 @@ interface PlantCardSelectorProps {
   onSelect: (code: string) => void;
 }
 
-const CropCards: React.FC<PlantCardSelectorProps> = ({ plants }) => {
+type CropCardsProps = {
+  isCheckbox?: boolean;
+};
+const CropCards: React.FC<PlantCardSelectorProps & CropCardsProps> = ({
+  plants,
+  isCheckbox = true,
+}) => {
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
   const onSelect = (code: string) => {
     setSelectedIds((prev) =>
@@ -49,7 +63,15 @@ const CropCards: React.FC<PlantCardSelectorProps> = ({ plants }) => {
               />
               <Group justify="space-between">
                 <Text fw={500}>{plant.name}</Text>
-                <Badge color="gray">{plant.code}</Badge>
+                <Group>
+                  <Badge color="gray">{plant.code}</Badge>
+                  {isCheckbox && (
+                    <Checkbox
+                      radius={4}
+                      checked={selectedIds.includes(plant.code)}
+                    />
+                  )}
+                </Group>
               </Group>
               <Text size="sm">
                 <strong>Hạt giống:</strong> {plant.seed}

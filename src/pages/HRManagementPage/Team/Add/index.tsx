@@ -73,7 +73,7 @@ const HRManagementTeamAddPage = () => {
                 radius={4}
               />
               <TextInput
-                label="Phòng ban (chọn nhiều)"
+                label="Phòng ban"
                 placeholder="Tìm kiếm phòng ban liên quan"
                 {...form.getInputProps("departments")}
                 leftSection={<IconSearch size={16} />}
@@ -93,13 +93,13 @@ const HRManagementTeamAddPage = () => {
           <Stepper.Step label="Bước 2" description="Thành viên nhóm">
             <Stack gap={"xs"}>
               <TextInput
-                label="Nhân viên (chọn nhiều)"
+                label="Nhân viên"
                 placeholder="Chọn thành viên từ nhân sự"
                 leftSection={<IconSearch size={16} />}
                 {...form.getInputProps("members")}
                 radius={4}
               />
-              <EmployeeCardList />
+              <EmployeeCardList isMultiple />
             </Stack>
           </Stepper.Step>
           <Stepper.Step label="Bước 3" description="Xác nhận">
@@ -121,11 +121,11 @@ const HRManagementTeamAddPage = () => {
                 <Title order={5} mt="md">
                   Danh sách phòng ban
                 </Title>
-                <DepartmentCardList />
+                <DepartmentCardList isCheckbox={false} />
                 <Title order={5} mt="md">
                   Danh sách nhân sự
                 </Title>
-                <EmployeeCardList />
+                <EmployeeCardList isMultiple={false} />
               </Stack>
             </Card>
           </Stepper.Step>

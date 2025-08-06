@@ -315,7 +315,7 @@ const PurchaseManagementMaterialAddPage = () => {
               radius={4}
             />
             <Text fw={500} fz={15}>
-              Khu vực (chọn một)
+              Khu vực
             </Text>
             <Grid>
               {areaGroups.map((group, index) => (
@@ -363,7 +363,7 @@ const PurchaseManagementMaterialAddPage = () => {
             </Grid>
             <Stack gap={"xs"}>
               <Text fw={500} fz={15}>
-                Khu vực phụ (chọn một)
+                Khu vực phụ
               </Text>
               <Stack>
                 <Group>
@@ -458,7 +458,7 @@ const PurchaseManagementMaterialAddPage = () => {
             {segment === "Kho" && (
               <Stack gap={"xs"}>
                 <Text fw={500} fz={15}>
-                  Kho (chọn một)
+                  Kho
                 </Text>
                 <Stack>
                   <Group>
@@ -518,7 +518,7 @@ const PurchaseManagementMaterialAddPage = () => {
                 <TextInput
                   radius={4}
                   placeholder="Chọn nhà cung cấp"
-                  label="Danh sách nhà cung cấp (Chọn nhiều)"
+                  label="Danh sách nhà cung cấp"
                   leftSection={<IconSearch size={18} />}
                 />
                 <SelectableSupplierCards isCheckbox={true} />
@@ -565,7 +565,7 @@ const PurchaseManagementMaterialAddPage = () => {
                   ]}
                 />
                 <TextInput
-                  label="Máy móc thiết bị (chọn một)"
+                  label="Máy móc thiết bị"
                   placeholder="Tìm kiếm máy móc thiết bị"
                   radius={4}
                   leftSection={<IconSearch size={18} />}
@@ -967,7 +967,7 @@ const PurchaseManagementMaterialAddPage = () => {
             </>
           )}
           <TextInput
-            label="Tìm kiếm nhân viên (chọn nhiều)"
+            label="Tìm kiếm nhân viên"
             placeholder="Chọn thành viên từ nhân sự"
             leftSection={<IconSearch size={16} />}
             radius={4}

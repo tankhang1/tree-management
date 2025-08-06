@@ -362,13 +362,13 @@ const PlanManagementUnplannedAddPage = () => {
             </>
           )}
           <TextInput
-            label="Tìm kiếm nhân viên (chọn nhiều)"
+            label="Tìm kiếm nhân viên"
             placeholder="Chọn thành viên từ nhân sự"
             leftSection={<IconSearch size={16} />}
             {...form.getInputProps("members")}
             radius={4}
           />
-          <EmployeeCardList />
+          <EmployeeCardList isMultiple />
         </Stack>
 
         <Group mt="md" justify="flex-end">

@@ -159,7 +159,7 @@ const HRManagementEmployeeAddPage = () => {
                 data={["Ban tài chính", "Ban kĩ thuật", "Ban kế hoạch"]}
               />
               <TextInput
-                label="Đội nhóm (chọn nhiều)"
+                label="Đội nhóm"
                 placeholder="Tìm kiếm đội nhóm"
                 leftSection={<IconSearch size={18} />}
                 radius={4}

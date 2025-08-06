@@ -115,7 +115,11 @@ export function SelectableTeamCards({
           >
             <Group justify="apart" mb="xs">
               {isCheckbox && (
-                <Checkbox checked={selected.includes(team.name)} readOnly />
+                <Checkbox
+                  radius={4}
+                  checked={selected.includes(team.name)}
+                  readOnly
+                />
               )}
               <Text fw={600}>{team.name}</Text>
             </Group>

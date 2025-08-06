@@ -141,7 +141,7 @@ const PurchaseManagementProductAddPage = () => {
               radius={4}
             />
             <TextInput
-              label="Doanh nghiệp / nông hộ (chọn một)"
+              label="Doanh nghiệp / nông hộ"
               placeholder="Tìm kiếm doanh nghiệp"
               radius={4}
               leftSection={<IconSearch size={18} />}
@@ -191,7 +191,7 @@ const PurchaseManagementProductAddPage = () => {
             {segment === "Kho" && (
               <Stack gap={"xs"}>
                 <Text fw={500} fz={15}>
-                  Kho (chọn một)
+                  Kho
                 </Text>
                 <Stack>
                   <Group>
@@ -251,7 +251,7 @@ const PurchaseManagementProductAddPage = () => {
                 <TextInput
                   radius={4}
                   placeholder="Chọn nhà cung cấp"
-                  label="Danh sách nhà cung cấp (Chọn nhiều)"
+                  label="Danh sách nhà cung cấp"
                   leftSection={<IconSearch size={18} />}
                 />
                 <SelectableSupplierCards isCheckbox={true} />
@@ -298,7 +298,7 @@ const PurchaseManagementProductAddPage = () => {
                   ]}
                 />
                 <TextInput
-                  label="Máy móc thiết bị (chọn một)"
+                  label="Máy móc thiết bị"
                   placeholder="Tìm kiếm máy móc thiết bị"
                   radius={4}
                   leftSection={<IconSearch size={18} />}
@@ -710,7 +710,7 @@ const PurchaseManagementProductAddPage = () => {
             </>
           )}
           <TextInput
-            label="Tìm kiếm nhân viên (chọn nhiều)"
+            label="Tìm kiếm nhân viên"
             placeholder="Chọn thành viên từ nhân sự"
             leftSection={<IconSearch size={16} />}
             radius={4}

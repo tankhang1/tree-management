@@ -1,4 +1,12 @@
-import { Card, Stack, Text, Group, Badge, Title } from "@mantine/core";
+import {
+  Card,
+  Stack,
+  Text,
+  Group,
+  Badge,
+  Title,
+  Checkbox,
+} from "@mantine/core";
 import Scrollable from "../../../../../components/Scrollable";
 import { useState } from "react";
 
@@ -75,7 +83,10 @@ const departments = [
   },
 ];
 
-export function DepartmentCardList() {
+type DepartmentProps = {
+  isCheckbox?: boolean;
+};
+export function DepartmentCardList({ isCheckbox = true }: DepartmentProps) {
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
 
   const toggleSelection = (code: string) => {
@@ -111,9 +122,17 @@ export function DepartmentCardList() {
             <Stack gap="xs">
               <Group justify="space-between">
                 <Title order={5}>{dept.name}</Title>
-                <Badge variant="light" color="gray">
-                  {dept.code}
-                </Badge>
+                <Group gap={"xs"}>
+                  <Badge variant="light" color="gray">
+                    {dept.code}
+                  </Badge>
+                  {isCheckbox && (
+                    <Checkbox
+                      radius={4}
+                      checked={selectedIds.includes(dept.code)}
+                    />
+                  )}
+                </Group>
               </Group>
               <Text size="sm" c="dimmed">
                 {dept.description}

@@ -7,7 +7,7 @@ const CatalogList = () => {
   return (
     <Stack gap={"xs"}>
       <Text fw={500} fz={15}>
-        Loại cây trồng (chọn một)
+        Loại cây trồng
       </Text>
       <TextInput
         leftSection={<IconSearch size={18} />}

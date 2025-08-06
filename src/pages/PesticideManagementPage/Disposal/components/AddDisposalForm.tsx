@@ -267,12 +267,12 @@ const AddDisposalForm = () => {
           )}
 
           <TextInput
-            label="Tìm kiếm nhân viên (chọn nhiều)"
+            label="Tìm kiếm nhân viên"
             placeholder="Chọn nhân sự"
             leftSection={<IconSearch size={16} />}
             radius={4}
           />
-          <EmployeeCardList />
+          <EmployeeCardList isMultiple />
         </Stack>
 
         <Group justify="flex-end" mt="md">

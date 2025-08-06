@@ -17,12 +17,11 @@ import { useForm } from "@mantine/form";
 import { IconArrowLeft, IconSearch } from "@tabler/icons-react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import SeedCard from "./components/SeedCard";
 import CropCards from "./components/CropCards";
 import SeedCards from "./components/SeedCards";
 import ConfirmStep from "./components/ConfirmStep";
-import Scrollable from "../../../../components/Scrollable";
 import { cropOptions, seedOptions } from "../../../AreaManagementPage/Row/Add";
+import SeedDetailCards from "../../../AreaManagementPage/Region/Add/components/SeedDetailCards";
 
 const growthCycleOptions = [
   { value: "cycle1", label: "Chu kỳ A" },
@@ -64,7 +63,6 @@ const SeasonManagementGrowthAddPage = () => {
   const navigate = useNavigate();
   const [activeStep, setActiveStep] = useState(0);
   const [cycleStageList, setCycleStageList] = useState<CycleStage[]>([]);
-  const [selectedSeeds, setSelectedSeeds] = useState<string[]>([]);
 
   const form = useForm({
     initialValues: {
@@ -162,127 +160,30 @@ const SeasonManagementGrowthAddPage = () => {
               {...form.getInputProps("estimatedDuration")}
             />
             <Select label="Nhóm cây" radius={4} />
-            <Text fw={500} fz={15}>
-              Loại cây trồng (chọn nhiều)
-            </Text>
+
             <TextInput
+              label="Loại cây trồng"
               leftSection={<IconSearch size={18} />}
               placeholder="Tìm kiếm loại cây trồng"
               radius={4}
             />
             <CropCards selected="" plants={cropOptions} onSelect={() => {}} />
-            <Text fw={500} fz={15}>
-              Giống cây trồng (chọn nhiều)
-            </Text>
+
             <TextInput
+              label="Giống cây trồng"
               leftSection={<IconSearch size={18} />}
               placeholder="Tìm kiếm giống cây trồng"
               radius={4}
             />
             <SeedCards selected="" seeds={seedOptions} onSelect={() => {}} />
-            <Text fw={500} fz={15}>
-              Hạt giống (chọn nhiều)
-            </Text>
+
             <TextInput
+              label="Hạt giống"
               leftSection={<IconSearch size={18} />}
               placeholder="Tìm kiếm hạt giống"
               radius={4}
             />
-            <Scrollable h={450}>
-              <Group wrap="nowrap" align="flex-start" p={"xs"}>
-                <SeedCard
-                  backgroundImage="https://food-map.s3.ap-southeast-1.amazonaws.com/news/2021/03/sau-rieng-ri6-3.jpg"
-                  seedCode="SR-RI6"
-                  name="Hạt giống RI6"
-                  provider="Công ty giống cây trồng"
-                  origin="Việt Nam"
-                  germinationRate={85}
-                  yield={25}
-                  description="Giống RI6 cho năng suất cao, cơm vàng đậm, vị ngọt thơm"
-                  onClick={() => {
-                    setSelectedSeeds((prev) =>
-                      prev.includes("SR-RI6")
-                        ? prev.filter((s) => s !== "SR-RI6")
-                        : [...prev, "SR-RI6"]
-                    );
-                  }}
-                  isActive={selectedSeeds.includes("SR-RI6")}
-                />
-                <SeedCard
-                  backgroundImage="https://food-map.s3.ap-southeast-1.amazonaws.com/news/2021/03/sau-rieng-ri6-3.jpg"
-                  seedCode="SR-RI4"
-                  name="Hạt giống RI4"
-                  provider="Công ty giống cây trồng"
-                  origin="Việt Nam"
-                  germinationRate={85}
-                  yield={25}
-                  description="Giống RI6 cho năng suất cao, cơm vàng đậm, vị ngọt thơm"
-                  onClick={() => {
-                    setSelectedSeeds((prev) =>
-                      prev.includes("SR-RI2")
-                        ? prev.filter((s) => s !== "SR-RI2")
-                        : [...prev, "SR-RI2"]
-                    );
-                  }}
-                  isActive={selectedSeeds.includes("SR-RI2")}
-                />
-
-                <SeedCard
-                  backgroundImage="https://food-map.s3.ap-southeast-1.amazonaws.com/news/2021/03/sau-rieng-ri6-3.jpg"
-                  seedCode="SR-RI3"
-                  name="Hạt giống RI3"
-                  provider="Công ty giống cây trồng"
-                  origin="Việt Nam"
-                  germinationRate={85}
-                  yield={25}
-                  description="Giống RI6 cho năng suất cao, cơm vàng đậm, vị ngọt thơm"
-                  onClick={() => {
-                    setSelectedSeeds((prev) =>
-                      prev.includes("SR-RI3")
-                        ? prev.filter((s) => s !== "SR-RI3")
-                        : [...prev, "SR-RI3"]
-                    );
-                  }}
-                  isActive={selectedSeeds.includes("SR-RI3")}
-                />
-                <SeedCard
-                  backgroundImage="https://food-map.s3.ap-southeast-1.amazonaws.com/news/2021/03/sau-rieng-ri6-3.jpg"
-                  seedCode="SR-RI3"
-                  name="Hạt giống RI3"
-                  provider="Công ty giống cây trồng"
-                  origin="Việt Nam"
-                  germinationRate={85}
-                  yield={25}
-                  description="Giống RI6 cho năng suất cao, cơm vàng đậm, vị ngọt thơm"
-                  onClick={() => {
-                    setSelectedSeeds((prev) =>
-                      prev.includes("SR-RI4")
-                        ? prev.filter((s) => s !== "SR-RI4")
-                        : [...prev, "SR-RI4"]
-                    );
-                  }}
-                  isActive={selectedSeeds.includes("SR-RI4")}
-                />
-                <SeedCard
-                  backgroundImage="https://food-map.s3.ap-southeast-1.amazonaws.com/news/2021/03/sau-rieng-ri6-3.jpg"
-                  seedCode="SR-RI3"
-                  name="Hạt giống RI3"
-                  provider="Công ty giống cây trồng"
-                  origin="Việt Nam"
-                  germinationRate={85}
-                  yield={25}
-                  description="Giống RI6 cho năng suất cao, cơm vàng đậm, vị ngọt thơm"
-                  onClick={() => {
-                    setSelectedSeeds((prev) =>
-                      prev.includes("SR-RI5")
-                        ? prev.filter((s) => s !== "SR-RI5")
-                        : [...prev, "SR-RI5"]
-                    );
-                  }}
-                  isActive={selectedSeeds.includes("SR-RI5")}
-                />
-              </Group>
-            </Scrollable>
+            <SeedDetailCards isMultiple />
           </Stack>
         )}
 

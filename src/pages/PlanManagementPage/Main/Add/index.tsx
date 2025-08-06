@@ -489,7 +489,7 @@ const PlanManagementMainAddPage = () => {
           <Stack>
             <TextInput
               radius={4}
-              label="Vùng trồng (chọn một)"
+              label="Vùng trồng"
               placeholder="Tìm kiếm vùng trồng"
               leftSection={<IconMapPin size={16} />}
               {...form.getInputProps("zone")}
@@ -511,7 +511,7 @@ const PlanManagementMainAddPage = () => {
             </Scrollable>
             <TextInput
               radius={4}
-              label="Khu vực (chọn một)"
+              label="Khu vực"
               placeholder="Tìm kiếm khu vực"
               leftSection={<IconMapPin size={16} />}
               {...form.getInputProps("area")}
@@ -533,7 +533,7 @@ const PlanManagementMainAddPage = () => {
             </Scrollable>
             <TextInput
               radius={4}
-              label="Lô (chọn một)"
+              label="Lô"
               placeholder="Tìm kiếm lô"
               leftSection={<IconMapPin size={16} />}
               {...form.getInputProps("plot")}
@@ -555,7 +555,7 @@ const PlanManagementMainAddPage = () => {
         {active === 2 && (
           <Stack gap={"xs"}>
             <Text fw={500} fz={15}>
-              Loại cây trồng (chọn một)
+              Loại cây trồng
             </Text>
             <TextInput
               placeholder="Tìm kiếm loại cây"
@@ -564,7 +564,7 @@ const PlanManagementMainAddPage = () => {
             />
             <CropCards selected="" plants={cropOptions} onSelect={() => {}} />
             <Text fw={500} fz={15}>
-              Cây trồng (chọn một)
+              Cây trồng
             </Text>
             <TextInput
               placeholder="Tìm kiếm cây trồng"

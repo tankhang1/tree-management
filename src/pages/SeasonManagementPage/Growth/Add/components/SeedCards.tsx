@@ -1,4 +1,12 @@
-import { Card, Group, Stack, Text, Image, Badge } from "@mantine/core";
+import {
+  Card,
+  Group,
+  Stack,
+  Text,
+  Image,
+  Badge,
+  Checkbox,
+} from "@mantine/core";
 import Scrollable from "../../../../../components/Scrollable";
 import { useState } from "react";
 
@@ -13,10 +21,14 @@ interface SeedOption {
 interface SeedCardSelectorProps {
   seeds: SeedOption[];
   selected: string;
+  isCheckbox?: boolean;
   onSelect: (code: string) => void;
 }
 
-const SeedCards: React.FC<SeedCardSelectorProps> = ({ seeds }) => {
+const SeedCards: React.FC<SeedCardSelectorProps> = ({
+  seeds,
+  isCheckbox = true,
+}) => {
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
   const onSelect = (code: string) => {
     setSelectedIds((prev) =>
@@ -56,7 +68,16 @@ const SeedCards: React.FC<SeedCardSelectorProps> = ({ seeds }) => {
               />
               <Group justify="space-between">
                 <Text fw={500}>{seed.seedName}</Text>
-                <Badge color="gray">{seed.code}</Badge>
+                <Group gap={"xs"}>
+                  <Badge color="gray">{seed.code}</Badge>
+                  {isCheckbox && (
+                    <Checkbox
+                      checked={selectedIds.includes(seed.code)}
+                      onChange={() => onSelect(seed.code)}
+                      radius={4}
+                    />
+                  )}
+                </Group>
               </Group>
               <Text size="sm">
                 <strong>Loại cây:</strong> {seed.cropName}

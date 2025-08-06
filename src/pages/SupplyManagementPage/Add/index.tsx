@@ -223,7 +223,7 @@ export default function SupplyManagementPage() {
               <TextInput
                 radius={4}
                 placeholder="Chọn nhà cung cấp"
-                label="Danh sách nhà cung cấp (Chọn một)"
+                label="Danh sách nhà cung cấp"
                 leftSection={<IconSearch size={18} />}
               />
               <SelectableSupplierCards isMultiple={false} isCheckbox={false} />

@@ -78,7 +78,7 @@ const DebtManagementReceivableAddPage = () => {
                     radius={4}
                     onClick={() => setSelectedCategory("partner")}
                   >
-                    Đối tác (chọn một)
+                    Đối tác
                   </Button>
                 </Group>
               </Input.Wrapper>

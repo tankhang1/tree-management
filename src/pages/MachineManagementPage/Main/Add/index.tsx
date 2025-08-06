@@ -226,7 +226,7 @@ const MachineManagementMainAddPage = () => {
             <Card withBorder radius={4} p="md">
               <Stack gap={"xs"}>
                 <TextInput
-                  label="Nhà cung cấp (chọn một)"
+                  label="Nhà cung cấp"
                   radius={4}
                   placeholder="Chọn nhà cung cấp"
                   {...form.getInputProps("suppliers")}

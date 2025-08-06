@@ -121,7 +121,7 @@ const MapManagementPlotAddPage = () => {
           <Stack mt="md">
             <Stack gap={"xs"}>
               <Text fw={500} fz={15}>
-                Vùng Trồng (chọn một)
+                Vùng Trồng
               </Text>
               <TextInput
                 placeholder="Tìm kiếm vùng trồng"
@@ -136,7 +136,7 @@ const MapManagementPlotAddPage = () => {
             </Stack>
             <Stack gap={"xs"}>
               <Text fw={500} fz={15}>
-                Khu vực (chọn một)
+                Khu vực
               </Text>
               <TextInput
                 placeholder="Tìm kiếm khu vực"

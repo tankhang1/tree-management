@@ -91,7 +91,7 @@ export function CompanyList() {
   return (
     <Stack gap={"xs"}>
       <Text fw={500} fz={15}>
-        Doanh nghiệp/ Nông hộ (chọn một)
+        Doanh nghiệp/ Nông hộ
       </Text>
       <Autocomplete
         placeholder="Tìm doanh nghiệp/ nông hộ"

@@ -119,7 +119,7 @@ const PlantManagementTreeAddPage = () => {
                 ]}
               />
               <Text fw={500} fz={15}>
-                Loại cây trồng (chọn một)
+                Loại cây trồng
               </Text>
               <TextInput
                 placeholder="Tìm kiếm loại cây"
@@ -133,7 +133,7 @@ const PlantManagementTreeAddPage = () => {
                 onSelect={() => {}}
               />
               <Text fw={500} fz={15}>
-                Giống cây trồng (chọn một)
+                Giống cây trồng
               </Text>
               <TextInput
                 leftSection={<IconSearch size={18} />}
@@ -203,7 +203,7 @@ const PlantManagementTreeAddPage = () => {
         {activeStep === 1 && (
           <Stack mt={"md"}>
             <Select
-              label="Hạt giống cây (chọn một)"
+              label="Hạt giống cây"
               placeholder="Chọn giống cây"
               radius={4}
             />

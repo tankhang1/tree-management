@@ -124,7 +124,7 @@ const DebtManagementPayableAddPage = () => {
                     ? "Nhà cung cấp"
                     : selectedCategory === "bank"
                     ? "Ngân hàng"
-                    : "Phân loại" + " (chọn một)"
+                    : "Phân loại" + ""
                 }
                 rightSection={
                   <IconSearch size={18} style={{ cursor: "pointer" }} />

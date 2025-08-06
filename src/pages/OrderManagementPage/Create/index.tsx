@@ -242,7 +242,7 @@ const OrderManagementCreatePage = () => {
                     : formData.customerType === "partner"
                     ? "Chọn đối tác"
                     : "Chọn nhà cung cấp"
-                } (chọn một)`}
+                }`}
                 radius={4}
                 placeholder="Chọn nhà cung cấp"
               />
@@ -285,7 +285,7 @@ const OrderManagementCreatePage = () => {
                     <Stack gap={"xs"}>
                       <TextInput
                         placeholder="Loại sản phẩm"
-                        label="Loại sản phẩm (chọn một)"
+                        label="Loại sản phẩm"
                         leftSection={<IconSearch size={18} />}
                         radius={4}
                       />
@@ -352,7 +352,7 @@ const OrderManagementCreatePage = () => {
                     <Stack gap={"xs"}>
                       <TextInput
                         placeholder="Sản phẩm"
-                        label="Sản phẩm (chọn một)"
+                        label="Sản phẩm"
                         leftSection={<IconSearch size={18} />}
                         radius={4}
                       />
@@ -415,7 +415,7 @@ const OrderManagementCreatePage = () => {
                     <Stack gap={"xs"}>
                       <TextInput
                         placeholder="Nguyên vật liệu"
-                        label="Nguyên vật liệu (chọn một)"
+                        label="Nguyên vật liệu"
                         leftSection={<IconSearch size={18} />}
                         radius={4}
                       />
@@ -641,7 +641,7 @@ const OrderManagementCreatePage = () => {
             <Stack gap="md">
               <Stack>
                 <Select
-                  label="Hợp đồng liên quan (chọn một)"
+                  label="Hợp đồng liên quan"
                   searchable
                   placeholder="(Tuỳ chọn)"
                   radius={4}
@@ -817,7 +817,7 @@ const OrderManagementCreatePage = () => {
                 </Stack>
               </RadioGroup>
               {formData.method !== "cash" && (
-                <Input.Wrapper label="Ngân hàng hưởng thụ (chọn một)">
+                <Input.Wrapper label="Ngân hàng hưởng thụ">
                   <Group>
                     {bankList.map((bank) => (
                       <Card
@@ -846,7 +846,7 @@ const OrderManagementCreatePage = () => {
                   </Group>
                 </Input.Wrapper>
               )}
-              <Input.Wrapper label="Địa chỉ nhận hàng (chọn một)">
+              <Input.Wrapper label="Địa chỉ nhận hàng">
                 <Scrollable h={150}>
                   <Group align="flex-start" wrap="nowrap" gap="md">
                     {addressList.map((address) => (
