@@ -20,6 +20,7 @@ import {
   MultiSelect,
   Image,
   Textarea,
+  SegmentedControl,
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { IconArrowLeft, IconSearch, IconUser } from "@tabler/icons-react";
@@ -258,6 +259,10 @@ type CropInfo = {
   cropGroup: string;
   cropCode: string;
   seedCode: string;
+  cropName: string;
+  cultivar: string;
+  seedName: string;
+  image: string;
 };
 
 type PlotType = {
@@ -302,6 +307,7 @@ const AreaManagementAddRegionPage = () => {
   ] = useDisclosure(false);
   const [selectedLot, setSelectedLot] = useState<string[]>([]);
   const [mode, setMode] = useState<"group" | "dept">("group");
+  const [type, setType] = useState<"region" | "area" | "plot">("region");
   const [active, setActive] = useState(0);
   const [opened, setOpened] = useState(false);
   const [selectedLots, setSelectedLots] = useState<string[]>([]);
@@ -377,7 +383,46 @@ const AreaManagementAddRegionPage = () => {
           employee: "Nguyễn Văn A",
           cultivationMethod: "Hữu cơ",
           crops: [
-            { cropGroup: "Trái cây", cropCode: "SR001", seedCode: "HatSR-A1" },
+            {
+              cropGroup: "Trái cây",
+              cropCode: "SR001",
+              cropName: "Cây sầu riêng",
+              cultivar: "Sầu riêng Ri6",
+              seedCode: "HatSR-A1",
+              seedName: "Hạt giống Ri6 F1",
+              image:
+                "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQiewLxKYlUogAMvIFZH-d7Zk2ILXPRtmWlXA&s",
+            },
+            {
+              cropGroup: "Trái cây",
+              cropCode: "SR002",
+              cropName: "Cây sầu riêng",
+              cultivar: "Sầu riêng Monthong",
+              seedCode: "HatSR-B2",
+              seedName: "Hạt giống Monthong Thái Lan",
+              image:
+                "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQiewLxKYlUogAMvIFZH-d7Zk2ILXPRtmWlXA&s",
+            },
+            {
+              cropGroup: "Trái cây",
+              cropCode: "XM001",
+              cropName: "Cây xoài",
+              cultivar: "Xoài cát Hòa Lộc",
+              seedCode: "HatXM-A1",
+              seedName: "Hạt giống Hòa Lộc F1",
+              image:
+                "https://caylaygo.com/wp-content/uploads/2022/05/cay-xoai-cat-3.jpg",
+            },
+            {
+              cropGroup: "Trái cây",
+              cropCode: "XM002",
+              cropName: "Cây xoài",
+              cultivar: "Xoài keo",
+              seedCode: "HatXM-B2",
+              seedName: "Hạt giống xoài keo giống chuẩn",
+              image:
+                "https://caylaygo.com/wp-content/uploads/2022/05/cay-xoai-cat-3.jpg",
+            },
           ],
         },
         {
@@ -387,8 +432,46 @@ const AreaManagementAddRegionPage = () => {
           employee: "Nguyễn Văn A",
           cultivationMethod: "Hữu cơ",
           crops: [
-            { cropGroup: "Rau củ", cropCode: "RAU001", seedCode: "HatRAU-A2" },
-            { cropGroup: "Gia vị", cropCode: "GIA001", seedCode: "HatGIA-A2" },
+            {
+              cropGroup: "Trái cây",
+              cropCode: "SR001",
+              cropName: "Cây sầu riêng",
+              cultivar: "Sầu riêng Ri6",
+              seedCode: "HatSR-A1",
+              seedName: "Hạt giống Ri6 F1",
+              image:
+                "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQiewLxKYlUogAMvIFZH-d7Zk2ILXPRtmWlXA&s",
+            },
+            {
+              cropGroup: "Trái cây",
+              cropCode: "SR002",
+              cropName: "Cây sầu riêng",
+              cultivar: "Sầu riêng Monthong",
+              seedCode: "HatSR-B2",
+              seedName: "Hạt giống Monthong Thái Lan",
+              image:
+                "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQiewLxKYlUogAMvIFZH-d7Zk2ILXPRtmWlXA&s",
+            },
+            {
+              cropGroup: "Trái cây",
+              cropCode: "XM001",
+              cropName: "Cây xoài",
+              cultivar: "Xoài cát Hòa Lộc",
+              seedCode: "HatXM-A1",
+              seedName: "Hạt giống Hòa Lộc F1",
+              image:
+                "https://caylaygo.com/wp-content/uploads/2022/05/cay-xoai-cat-3.jpg",
+            },
+            {
+              cropGroup: "Trái cây",
+              cropCode: "XM002",
+              cropName: "Cây xoài",
+              cultivar: "Xoài keo",
+              seedCode: "HatXM-B2",
+              seedName: "Hạt giống xoài keo giống chuẩn",
+              image:
+                "https://caylaygo.com/wp-content/uploads/2022/05/cay-xoai-cat-3.jpg",
+            },
           ],
         },
         {
@@ -408,7 +491,26 @@ const AreaManagementAddRegionPage = () => {
           employee: "Trần Thị B",
           cultivationMethod: "Thủy canh",
           crops: [
-            { cropGroup: "Rau củ", cropCode: "RAU002", seedCode: "HatRAU-B1" },
+            {
+              cropGroup: "Trái cây",
+              cropCode: "SR001",
+              cropName: "Cây sầu riêng",
+              cultivar: "Sầu riêng Ri6",
+              seedCode: "HatSR-A1",
+              seedName: "Hạt giống Ri6 F1",
+              image:
+                "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQiewLxKYlUogAMvIFZH-d7Zk2ILXPRtmWlXA&s",
+            },
+            {
+              cropGroup: "Trái cây",
+              cropCode: "SR002",
+              cropName: "Cây sầu riêng",
+              cultivar: "Sầu riêng Monthong",
+              seedCode: "HatSR-B2",
+              seedName: "Hạt giống Monthong Thái Lan",
+              image:
+                "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQiewLxKYlUogAMvIFZH-d7Zk2ILXPRtmWlXA&s",
+            },
           ],
         },
         {
@@ -420,8 +522,23 @@ const AreaManagementAddRegionPage = () => {
           crops: [
             {
               cropGroup: "Trái cây",
-              cropCode: "DUA003",
-              seedCode: "HatDUA-B2",
+              cropCode: "XM001",
+              cropName: "Cây xoài",
+              cultivar: "Xoài cát Hòa Lộc",
+              seedCode: "HatXM-A1",
+              seedName: "Hạt giống Hòa Lộc F1",
+              image:
+                "https://caylaygo.com/wp-content/uploads/2022/05/cay-xoai-cat-3.jpg",
+            },
+            {
+              cropGroup: "Trái cây",
+              cropCode: "XM002",
+              cropName: "Cây xoài",
+              cultivar: "Xoài keo",
+              seedCode: "HatXM-B2",
+              seedName: "Hạt giống xoài keo giống chuẩn",
+              image:
+                "https://caylaygo.com/wp-content/uploads/2022/05/cay-xoai-cat-3.jpg",
             },
           ],
         },
@@ -441,13 +558,7 @@ const AreaManagementAddRegionPage = () => {
           name: "Lô C1",
           employee: "Phạm Văn C",
           cultivationMethod: "Tưới nhỏ giọt",
-          crops: [
-            {
-              cropGroup: "Cây gia vị",
-              cropCode: "GIA002",
-              seedCode: "HatGIA-C1",
-            },
-          ],
+          crops: [],
         },
         {
           id: "plot-008",
@@ -457,9 +568,14 @@ const AreaManagementAddRegionPage = () => {
           cultivationMethod: "Canh tác hữu cơ",
           crops: [
             {
-              cropGroup: "Cây lấy củ",
-              cropCode: "CU002",
-              seedCode: "HatCU-C2",
+              cropGroup: "Trái cây",
+              cropCode: "SR001",
+              cropName: "Cây sầu riêng",
+              cultivar: "Sầu riêng Ri6",
+              seedCode: "HatSR-A1",
+              seedName: "Hạt giống Ri6 F1",
+              image:
+                "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQiewLxKYlUogAMvIFZH-d7Zk2ILXPRtmWlXA&s",
             },
           ],
         },
@@ -478,7 +594,36 @@ const AreaManagementAddRegionPage = () => {
           employee: "Phạm Văn C",
           cultivationMethod: "Thủy canh",
           crops: [
-            { cropGroup: "Rau", cropCode: "RAU004", seedCode: "HatRAU-C4" },
+            {
+              cropGroup: "Trái cây",
+              cropCode: "SR001",
+              cropName: "Cây sầu riêng",
+              cultivar: "Sầu riêng Ri6",
+              seedCode: "HatSR-A1",
+              seedName: "Hạt giống Ri6 F1",
+              image:
+                "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQiewLxKYlUogAMvIFZH-d7Zk2ILXPRtmWlXA&s",
+            },
+            {
+              cropGroup: "Trái cây",
+              cropCode: "SR002",
+              cropName: "Cây sầu riêng",
+              cultivar: "Sầu riêng Monthong",
+              seedCode: "HatSR-B2",
+              seedName: "Hạt giống Monthong Thái Lan",
+              image:
+                "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQiewLxKYlUogAMvIFZH-d7Zk2ILXPRtmWlXA&s",
+            },
+            {
+              cropGroup: "Trái cây",
+              cropCode: "XM001",
+              cropName: "Cây xoài",
+              cultivar: "Xoài cát Hòa Lộc",
+              seedCode: "HatXM-A1",
+              seedName: "Hạt giống Hòa Lộc F1",
+              image:
+                "https://caylaygo.com/wp-content/uploads/2022/05/cay-xoai-cat-3.jpg",
+            },
           ],
         },
 
@@ -489,13 +634,7 @@ const AreaManagementAddRegionPage = () => {
           name: "Lô D1",
           employee: "Nguyễn Thị D",
           cultivationMethod: "Tưới phun mưa",
-          crops: [
-            {
-              cropGroup: "Trái cây",
-              cropCode: "TAO001",
-              seedCode: "HatTAO-D1",
-            },
-          ],
+          crops: [],
         },
         {
           id: "plot-012",
@@ -504,7 +643,16 @@ const AreaManagementAddRegionPage = () => {
           employee: "Nguyễn Thị D",
           cultivationMethod: "Hữu cơ",
           crops: [
-            { cropGroup: "Rau cải", cropCode: "RAU005", seedCode: "HatRAU-D2" },
+            {
+              cropGroup: "Trái cây",
+              cropCode: "SR001",
+              cropName: "Cây sầu riêng",
+              cultivar: "Sầu riêng Ri6",
+              seedCode: "HatSR-A1",
+              seedName: "Hạt giống Ri6 F1",
+              image:
+                "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQiewLxKYlUogAMvIFZH-d7Zk2ILXPRtmWlXA&s",
+            },
           ],
         },
         {
@@ -576,15 +724,25 @@ const AreaManagementAddRegionPage = () => {
         {active === 0 && (
           <Stack mt="md">
             <Stack gap={"xs"}>
+              <SegmentedControl
+                data={[
+                  { label: "Thiết lập theo vùng", value: "region" },
+                  { label: "Thiết lập theo khu vực", value: "area" },
+                  { label: "Thiết lập theo lô", value: "plot" },
+                ]}
+                value={type}
+                onChange={(value) =>
+                  setType(value as "region" | "area" | "plot")
+                }
+                radius={4}
+              />
               <TextInput
                 radius={4}
                 label="Khu vực canh tác"
                 placeholder="Nhập khu vực canh tác"
               />
-              <Text fw={500} fz={15}>
-                Vùng trồng
-              </Text>
               <Autocomplete
+                label="Vùng trồng"
                 placeholder="Tìm kiếm vùng trồng"
                 leftSection={<IconSearch size={18} />}
                 radius={4}
@@ -597,53 +755,55 @@ const AreaManagementAddRegionPage = () => {
                 }
               />
             </Stack>
-            <Stack gap={"xs"}>
-              <Text fw={500} fz={15}>
-                Khu vực trồng
-              </Text>
-              <Autocomplete
-                placeholder="Tìm kiếm khu vực"
-                leftSection={<IconSearch size={18} />}
-                radius={4}
-              />
-              <RegionCardSelector
-                isMultiSelect
-                regions={areaOptions}
-                selected={""}
-                onSelect={() => {
-                  setOpened(!opened);
-                }}
-              />
-            </Stack>
-            <Stack gap={"xs"}>
-              <Text fw={500} fz={15}>
-                Lô trồng
-              </Text>
-              <Card withBorder>
-                <Stack>
-                  <Text fw={"bold"}>Khu vực phía Bắc</Text>
+            {type !== "region" && (
+              <Stack gap={"xs"}>
+                <Autocomplete
+                  label="Khu vực trồng"
+                  placeholder="Tìm kiếm khu vực"
+                  leftSection={<IconSearch size={18} />}
+                  radius={4}
+                />
+                <RegionCardSelector
+                  isMultiSelect
+                  regions={areaOptions}
+                  selected={""}
+                  onSelect={() => {
+                    setOpened(!opened);
+                  }}
+                />
+              </Stack>
+            )}
+            {type === "plot" && (
+              <Stack gap={"xs"}>
+                <Text fw={500} fz={15}>
+                  Lô trồng
+                </Text>
+                <Card withBorder>
                   <Stack>
-                    <Group>
-                      {lotOptions.map((lot) => (
-                        <LotCard
-                          key={lot.code}
-                          lotCode={lot.code}
-                          lotName={lot.name}
-                          area={lot.area}
-                          elevationInfo={lot.description}
-                          selected={selectedLot.includes(lot.code)}
-                          onToggle={() => {
-                            toggleSelectedLot(lot.code);
-                          }}
-                          closable={false}
-                          isCheckbox={true}
-                        />
-                      ))}
-                    </Group>
+                    <Text fw={"bold"}>Khu vực phía Bắc</Text>
+                    <Stack>
+                      <Group>
+                        {lotOptions.map((lot) => (
+                          <LotCard
+                            key={lot.code}
+                            lotCode={lot.code}
+                            lotName={lot.name}
+                            area={lot.area}
+                            elevationInfo={lot.description}
+                            selected={selectedLot.includes(lot.code)}
+                            onToggle={() => {
+                              toggleSelectedLot(lot.code);
+                            }}
+                            closable={false}
+                            isCheckbox={true}
+                          />
+                        ))}
+                      </Group>
+                    </Stack>
                   </Stack>
-                </Stack>
-              </Card>
-            </Stack>
+                </Card>
+              </Stack>
+            )}
             {/* <NumberInput
               label="Diện tích vùng trồng (m²)"
               placeholder="Nhập diện tích"
@@ -674,8 +834,35 @@ const AreaManagementAddRegionPage = () => {
             />
           </Stack>
         )}
-
         {active === 1 && (
+          <Stack mt={"md"}>
+            <SegmentedControl
+              data={[
+                { label: "Thiết lập theo vùng", value: "region" },
+                { label: "Thiết lập theo khu vực", value: "area" },
+                { label: "Thiết lập theo lô", value: "plot" },
+              ]}
+              value={type}
+              onChange={(value) => setType(value as "region" | "area" | "plot")}
+              radius={4}
+            />
+          </Stack>
+        )}
+        {active === 2 && (
+          <Stack mt={"md"}>
+            <SegmentedControl
+              data={[
+                { label: "Thiết lập theo vùng", value: "region" },
+                { label: "Thiết lập theo khu vực", value: "area" },
+                { label: "Thiết lập theo lô", value: "plot" },
+              ]}
+              value={type}
+              onChange={(value) => setType(value as "region" | "area" | "plot")}
+              radius={4}
+            />
+          </Stack>
+        )}
+        {active === 1 && type === "plot" && (
           <Stack mt="md" gap="md">
             <Title order={5}>🧱 Thiết lập thông tin các lô</Title>
             <Card>
@@ -806,7 +993,108 @@ const AreaManagementAddRegionPage = () => {
             </Card>
           </Stack>
         )}
+        {active === 1 && type === "area" && (
+          <Stack mt="md" gap="md">
+            <Card withBorder radius="md" shadow="sm" p="md">
+              <Stack>
+                <Text fw={"bold"} fz={"h4"}>
+                  Khu vực Nam Trung Bộ
+                </Text>
+                <Divider />
+                <Stack gap="xs">
+                  {/* Phương pháp canh tác */}
+                  <Select
+                    label="Phương pháp canh tác"
+                    data={["Xen canh", "Truyền thống", "Công nghệ cao"]}
+                    radius={4}
+                    value={"Truyền thống"}
+                  />
+                  <Select
+                    label="Phương pháp tưới tiêu"
+                    data={["Tưới nhỏ giọt", "Tưới phun mưa", "Tưới tràn"]}
+                    radius={4}
+                  />
+                  <Group>
+                    <Text fw={"500"} fz={14}>
+                      Giống cây trồng
+                    </Text>
+                    <Button
+                      radius={4}
+                      variant="outline"
+                      onClick={() => setOpenedFilterTree(true)}
+                    >
+                      Tìm kiếm
+                    </Button>
+                  </Group>
+                  <SeedCards
+                    selected=""
+                    seeds={seedOptions}
+                    onSelect={() => {}}
+                    isTouchable={false}
+                  />
 
+                  {/* Danh sách cây trồng */}
+
+                  <TextInput
+                    label="Hạt giống"
+                    leftSection={<IconSearch size={18} />}
+                    radius={4}
+                    placeholder="Tìm kiếm hạt giống"
+                  />
+                  <SeedDetailCards />
+                </Stack>
+              </Stack>
+            </Card>
+          </Stack>
+        )}
+        {active === 1 && type === "region" && (
+          <Stack mt="md" gap="md">
+            <Card withBorder radius="md" shadow="sm" p="md">
+              <Stack gap="xs">
+                {/* Phương pháp canh tác */}
+                <Select
+                  label="Phương pháp canh tác"
+                  data={["Xen canh", "Truyền thống", "Công nghệ cao"]}
+                  radius={4}
+                  value={"Truyền thống"}
+                />
+                <Select
+                  label="Phương pháp tưới tiêu"
+                  data={["Tưới nhỏ giọt", "Tưới phun mưa", "Tưới tràn"]}
+                  radius={4}
+                />
+                <Group>
+                  <Text fw={"500"} fz={14}>
+                    Giống cây trồng
+                  </Text>
+                  <Button
+                    radius={4}
+                    variant="outline"
+                    onClick={() => setOpenedFilterTree(true)}
+                  >
+                    Tìm kiếm
+                  </Button>
+                </Group>
+                <SeedCards
+                  selected=""
+                  seeds={seedOptions}
+                  onSelect={() => {}}
+                  isTouchable={false}
+                />
+
+                {/* Danh sách cây trồng */}
+
+                <TextInput
+                  label="Hạt giống"
+                  leftSection={<IconSearch size={18} />}
+                  radius={4}
+                  placeholder="Tìm kiếm hạt giống"
+                />
+                <SeedDetailCards />
+              </Stack>
+            </Card>
+          </Stack>
+        )}
         {active === 2 && (
           <Stack mt="md" gap="lg">
             <Card withBorder radius="md" shadow="sm" p="md">
@@ -853,122 +1141,264 @@ const AreaManagementAddRegionPage = () => {
                 isTouchable={false}
               />
             </Card>
-
-            <Card withBorder radius={4} shadow="sm" p="md">
-              <Title order={5} mb="xs">
-                🌱 Thông tin các lô cây trồng theo khu vực
-              </Title>
-              <Stack gap="md">
-                {areaOptions.map((area) => {
-                  const plotsInArea = form.values.plots.filter(
-                    (plot) => plot.areaCode === area.code
-                  );
-                  if (plotsInArea.length === 0) return null;
-
-                  return (
-                    <Box key={area.code}>
-                      <Card
-                        withBorder
-                        radius="sm"
-                        shadow="xs"
-                        p="sm"
-                        mb="xs"
-                        bg="gray.0"
-                      >
-                        <Group justify="space-between" align="flex-start">
-                          <Box>
-                            <Title order={6}>
-                              📦 Khu vực: {area.name} (Mã: {area.code})
-                            </Title>
-                            <Text size="sm">
-                              <strong>Diện tích:</strong> {area.area}
-                            </Text>
-                            <Text size="sm">
-                              <strong>Loại đất:</strong> {area.soilType}
-                            </Text>
-                            <Text size="sm">
-                              <strong>Địa hình:</strong>{" "}
-                              {area.terrain.join(", ")}
-                            </Text>
-                          </Box>
-                          <Badge variant="light" color="green" size="lg">
-                            {plotsInArea.length} lô cây
-                          </Badge>
-                        </Group>
-                      </Card>
-
-                      <Scrollable h={220}>
-                        <Group wrap="nowrap" gap="md">
-                          {plotsInArea.map((plot) => (
-                            <Card
-                              key={plot.id}
-                              withBorder
-                              radius="sm"
-                              shadow="xs"
-                              p="sm"
-                              w={450}
-                              h={220}
-                              style={{
-                                display: "flex",
-                                flexDirection: "column",
-                                justifyContent: "space-between",
-                              }}
-                            >
-                              <Group justify="space-between">
-                                <Box>
-                                  <Text fw={600}>{plot.name}</Text>
-                                  <Badge color="gray" variant="light" mt={4}>
-                                    Mã khu vực: {plot.areaCode}
-                                  </Badge>
-                                </Box>
-                                <Text size="sm" c="dimmed">
-                                  {plot.cultivationMethod}
-                                </Text>
-                              </Group>
-
-                              <Box mt="xs" style={{ flexGrow: 1 }}>
-                                {plot.crops.length > 0 ? (
-                                  <Group wrap="nowrap" gap="sm">
-                                    {plot.crops.map((crop, i) => (
-                                      <Card
-                                        key={i}
-                                        withBorder
-                                        radius="sm"
-                                        shadow="xs"
-                                        p="xs"
-                                        miw={180}
-                                        style={{ flexShrink: 0 }}
-                                      >
-                                        <Text size="xs" fw={500} mb={4}>
-                                          🌾 Giống #{i + 1}
-                                        </Text>
-                                        <Text size="xs">
-                                          • Nhóm: {crop.cropGroup}
-                                        </Text>
-                                        <Text size="xs">
-                                          • Cây: {crop.cropCode}
-                                        </Text>
-                                        <Text size="xs">
-                                          • Hạt: {crop.seedCode}
-                                        </Text>
-                                      </Card>
-                                    ))}
+            {type === "region" && (
+              <Card withBorder radius={4} shadow="sm" p="md">
+                <Stack gap={"xs"}>
+                  <Title order={5} mb="xs">
+                    🌱 Danh sách hạt giống
+                  </Title>
+                  <Scrollable h={300}>
+                    <Group wrap="nowrap" gap="md" align="flex-start">
+                      {areaOptions.map((area) => {
+                        const plotsInArea = form.values.plots.filter(
+                          (plot) => plot.areaCode === area.code
+                        );
+                        return plotsInArea.map((plot) => (
+                          <Group wrap="nowrap" gap="sm">
+                            {plot.crops.map((crop, i) => (
+                              <Card
+                                key={i}
+                                withBorder
+                                radius="sm"
+                                h={300}
+                                w={200}
+                                shadow="xs"
+                                p="xs"
+                              >
+                                <Stack gap="xs" mt="sm">
+                                  <Image
+                                    src={crop.image}
+                                    alt={crop.cropName}
+                                    height={100}
+                                    fit="contain"
+                                  />
+                                  <Group justify="space-between">
+                                    <Title order={5}>{crop.cropName}</Title>
+                                    <Group gap={"xs"}>
+                                      <Badge color="gray" variant="light">
+                                        {crop.cropGroup}
+                                      </Badge>
+                                    </Group>
                                   </Group>
-                                ) : (
+
                                   <Text size="sm" c="dimmed">
-                                    Chưa có cây trồng nào được thêm vào lô này.
+                                    Giống: {crop.seedName}
                                   </Text>
-                                )}
-                              </Box>
-                            </Card>
-                          ))}
-                        </Group>
-                      </Scrollable>
-                    </Box>
-                  );
-                })}
-              </Stack>
-            </Card>
+                                  <Text size="sm" c="dimmed">
+                                    Mã giống: {crop.seedCode}
+                                  </Text>
+                                  <Text size="sm" c="dimmed">
+                                    Tên giống: {crop.cropName}
+                                  </Text>
+                                </Stack>
+                              </Card>
+                            ))}
+                          </Group>
+                        ));
+                      })}
+                    </Group>
+                  </Scrollable>
+                </Stack>
+              </Card>
+            )}
+            {type !== "region" && (
+              <Card withBorder radius={4} shadow="sm" p="md">
+                <Title order={5} mb="xs">
+                  🌱 Thông tin các lô cây trồng theo khu vực
+                </Title>
+                <Stack gap="md">
+                  {areaOptions.map((area) => {
+                    const plotsInArea = form.values.plots.filter(
+                      (plot) => plot.areaCode === area.code
+                    );
+                    if (plotsInArea.length === 0) return null;
+
+                    return (
+                      <Box key={area.code}>
+                        <Card
+                          withBorder
+                          radius="sm"
+                          shadow="xs"
+                          p="sm"
+                          mb="xs"
+                          bg="gray.0"
+                        >
+                          <Group justify="space-between" align="flex-start">
+                            <Box>
+                              <Title order={6}>
+                                📦 Khu vực: {area.name} (Mã: {area.code})
+                              </Title>
+                              <Text size="sm">
+                                <strong>Diện tích:</strong> {area.area}
+                              </Text>
+                              <Text size="sm">
+                                <strong>Loại đất:</strong> {area.soilType}
+                              </Text>
+                              <Text size="sm">
+                                <strong>Địa hình:</strong>{" "}
+                                {area.terrain.join(", ")}
+                              </Text>
+                            </Box>
+                            <Badge variant="light" color="green" size="lg">
+                              {plotsInArea.length} lô cây
+                            </Badge>
+                          </Group>
+                        </Card>
+
+                        {type === "plot" && (
+                          <Scrollable h={400}>
+                            <Group wrap="nowrap" gap="md" align="flex-start">
+                              {plotsInArea.map((plot) => (
+                                <Card
+                                  key={plot.id}
+                                  withBorder
+                                  radius="sm"
+                                  shadow="xs"
+                                  p="sm"
+                                  w={450}
+                                  style={{
+                                    display: "flex",
+                                    flexDirection: "column",
+                                    justifyContent: "space-between",
+                                  }}
+                                >
+                                  <Group justify="space-between">
+                                    <Box>
+                                      <Text fw={600}>{plot.name}</Text>
+                                      <Badge
+                                        color="gray"
+                                        variant="light"
+                                        mt={4}
+                                      >
+                                        Mã khu vực: {plot.areaCode}
+                                      </Badge>
+                                    </Box>
+                                    <Text size="sm" c="dimmed">
+                                      {plot.cultivationMethod}
+                                    </Text>
+                                  </Group>
+
+                                  <Box
+                                    mt="xs"
+                                    style={{
+                                      flexGrow: 1,
+                                      height: 320, // hoặc bất kỳ chiều cao phù hợp
+                                      overflowY: "auto",
+                                    }}
+                                  >
+                                    {plot.crops.length > 0 ? (
+                                      <SimpleGrid cols={2} spacing="sm">
+                                        {plot.crops.map((crop, i) => (
+                                          <Card
+                                            key={i}
+                                            withBorder
+                                            radius="sm"
+                                            h={300}
+                                            shadow="xs"
+                                            p="xs"
+                                          >
+                                            <Stack gap="xs" mt="sm">
+                                              <Image
+                                                src={crop.image}
+                                                alt={crop.cropName}
+                                                height={100}
+                                                fit="contain"
+                                              />
+                                              <Group justify="space-between">
+                                                <Title order={5}>
+                                                  {crop.cropName}
+                                                </Title>
+                                                <Group gap={"xs"}>
+                                                  <Badge
+                                                    color="gray"
+                                                    variant="light"
+                                                  >
+                                                    {crop.cropGroup}
+                                                  </Badge>
+                                                </Group>
+                                              </Group>
+
+                                              <Text size="sm" c="dimmed">
+                                                Giống: {crop.seedName}
+                                              </Text>
+                                              <Text size="sm" c="dimmed">
+                                                Mã giống: {crop.seedCode}
+                                              </Text>
+                                              <Text size="sm" c="dimmed">
+                                                Tên giống: {crop.cropName}
+                                              </Text>
+                                            </Stack>
+                                          </Card>
+                                        ))}
+                                      </SimpleGrid>
+                                    ) : (
+                                      <Text size="sm" c="dimmed">
+                                        Chưa có cây trồng nào được thêm vào lô
+                                        này.
+                                      </Text>
+                                    )}
+                                  </Box>
+                                </Card>
+                              ))}
+                            </Group>
+                          </Scrollable>
+                        )}
+                        {type === "area" && (
+                          <Scrollable h={300}>
+                            <Group wrap="nowrap" gap="md" align="flex-start">
+                              {plotsInArea.map((plot) => (
+                                <Group wrap="nowrap" gap="sm">
+                                  {plot.crops.map((crop, i) => (
+                                    <Card
+                                      key={i}
+                                      withBorder
+                                      radius="sm"
+                                      h={300}
+                                      w={200}
+                                      shadow="xs"
+                                      p="xs"
+                                    >
+                                      <Stack gap="xs" mt="sm">
+                                        <Image
+                                          src={crop.image}
+                                          alt={crop.cropName}
+                                          height={100}
+                                          fit="contain"
+                                        />
+                                        <Group justify="space-between">
+                                          <Title order={5}>
+                                            {crop.cropName}
+                                          </Title>
+                                          <Group gap={"xs"}>
+                                            <Badge color="gray" variant="light">
+                                              {crop.cropGroup}
+                                            </Badge>
+                                          </Group>
+                                        </Group>
+
+                                        <Text size="sm" c="dimmed">
+                                          Giống: {crop.seedName}
+                                        </Text>
+                                        <Text size="sm" c="dimmed">
+                                          Mã giống: {crop.seedCode}
+                                        </Text>
+                                        <Text size="sm" c="dimmed">
+                                          Tên giống: {crop.cropName}
+                                        </Text>
+                                      </Stack>
+                                    </Card>
+                                  ))}
+                                </Group>
+                              ))}
+                            </Group>
+                          </Scrollable>
+                        )}
+                      </Box>
+                    );
+                  })}
+                </Stack>
+              </Card>
+            )}
           </Stack>
         )}
         {active < 3 && (

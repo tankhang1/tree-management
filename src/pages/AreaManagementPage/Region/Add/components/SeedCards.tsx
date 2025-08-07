@@ -36,12 +36,12 @@ const SeedCards: React.FC<SeedCardSelectorProps> = ({
     }
   };
   return (
-    <Scrollable h={340}>
+    <Scrollable h={250}>
       <Group gap="md" wrap="nowrap" align="flex-start" p={"xs"}>
         {seeds.map((seed) => (
           <Card
             w={300}
-            h={340}
+            h={250}
             key={seed.code}
             withBorder
             radius="md"
@@ -79,9 +79,9 @@ const SeedCards: React.FC<SeedCardSelectorProps> = ({
               <Text size="sm">
                 <strong>Loại cây:</strong> {seed.cropName}
               </Text>
-              <Text size="sm" c="dimmed">
+              {/* <Text size="sm" c="dimmed">
                 {seed.description}
-              </Text>
+              </Text> */}
             </Stack>
           </Card>
         ))}

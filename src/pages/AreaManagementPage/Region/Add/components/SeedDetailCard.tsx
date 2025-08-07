@@ -3,13 +3,11 @@ import {
   Text,
   Group,
   Badge,
-  Button,
   Stack,
   Title,
   Image,
   Checkbox,
 } from "@mantine/core";
-import { IconSeedling } from "@tabler/icons-react";
 
 interface SeedDetailCardProps {
   imageUrl: string;
@@ -45,6 +43,7 @@ const SeedDetailCard = ({
       withBorder
       padding="md"
       w={300}
+      h={400}
       style={{
         position: "relative",
         transition: "transform 0.2s ease",
@@ -88,14 +87,14 @@ const SeedDetailCard = ({
           Năng suất: <b>{yieldPerHectare}</b>
         </Text>
 
-        <Button
+        {/* <Button
           variant="light"
           color="green"
           fullWidth
           rightSection={<IconSeedling size={16} />}
         >
           Xem chi tiết
-        </Button>
+        </Button> */}
       </Stack>
     </Card>
   );
