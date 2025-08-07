@@ -37,7 +37,7 @@ type Allocation = {
 };
 const allocationData: Allocation[] = [
   {
-    allocationId: "ĐPB-001",
+    allocationId: "1",
     recordedAt: new Date("2025-08-01"),
     crop: "Sầu riêng Ri6",
     region: "Vùng A",
@@ -46,7 +46,7 @@ const allocationData: Allocation[] = [
     cultivationZone: "Khu vực canh tác Đồng Nai",
   },
   {
-    allocationId: "ĐPB-002",
+    allocationId: "2",
     recordedAt: new Date("2025-08-02"),
     crop: "Sầu riêng Monthong",
     region: "Vùng A",
@@ -55,7 +55,7 @@ const allocationData: Allocation[] = [
     cultivationZone: "Khu vực canh tác Đồng Nai",
   },
   {
-    allocationId: "ĐPB-003",
+    allocationId: "3",
     recordedAt: new Date("2025-08-03"),
     crop: "Mít Thái",
     region: "Vùng B",
@@ -64,7 +64,7 @@ const allocationData: Allocation[] = [
     cultivationZone: "Khu vực canh tác Tây Nguyên",
   },
   {
-    allocationId: "ĐPB-004",
+    allocationId: "4",
     recordedAt: new Date("2025-08-04"),
     crop: "Xoài Cát Hòa Lộc",
     region: "Vùng B",

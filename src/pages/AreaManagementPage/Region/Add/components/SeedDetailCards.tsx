@@ -29,9 +29,9 @@ const SeedDetailCards = ({ isMultiple }: SeedDetailCardsProps) => {
           supplier="Công ty Nông sản Việt"
           origin="Việt Nam"
           germinationRate={85}
-          isMultiple={isMultiple}
           uniformityRate={60}
           yieldPerHectare="25 tấn/ha"
+          isMultiple={isMultiple}
           isActive={selectedSeeds.includes("SR-RI6")}
           onClick={() => {
             onSelectSeed("SR-RI6");
@@ -40,32 +40,33 @@ const SeedDetailCards = ({ isMultiple }: SeedDetailCardsProps) => {
 
         <SeedDetailCard
           imageUrl="https://encrypted-tbn1.gstatic.com/shopping?q=tbn:ANd9GcQiblfqVQqly5tgtaoImJtTPktkWocNp-AVL8o3-CrzhjHitexomf2LMeZwPxSzq0nOITwjGJ8GNa5Z_UHajdb9pFYug4NqfXN0fGVOvQM"
-          seedCode="SR-MS"
-          seedName="Giống Musan"
-          supplier="Công ty Nông sản Việt"
-          origin="Việt Nam"
-          germinationRate={85}
+          seedCode="SR-RI6-2"
+          seedName="Giống Ri6"
+          supplier="Trung tâm Giống cây trồng Tây Nguyên"
+          origin="Lào"
+          germinationRate={90}
+          uniformityRate={70}
+          yieldPerHectare="27 tấn/ha"
           isMultiple={isMultiple}
-          uniformityRate={60}
-          yieldPerHectare="25 tấn/ha"
-          isActive={selectedSeeds.includes("SR-MS")}
+          isActive={selectedSeeds.includes("SR-RI6-2")}
           onClick={() => {
-            onSelectSeed("SR-MS");
+            onSelectSeed("SR-RI6-2");
           }}
         />
+
         <SeedDetailCard
           imageUrl="https://encrypted-tbn0.gstatic.com/shopping?q=tbn:ANd9GcQiblfqVQqly5tgtaoImJtTPktkWocNp-AVL8o3-CrzhjHitexomf2LMeZwPxSzq0nOITwjGJ8GNa5Z_UHajdb9pFYug4NqfXN0fGVOvQM"
-          seedCode="SR-TH"
-          seedName="Giống Thái"
-          supplier="Công ty Nông sản Việt"
-          origin="Việt Nam"
+          seedCode="SR-RI6-3"
+          seedName="Giống Ri6"
+          supplier="Viện Nghiên cứu cây ăn quả miền Nam"
+          origin="Thái Lan"
+          germinationRate={92}
+          uniformityRate={75}
+          yieldPerHectare="30 tấn/ha"
           isMultiple={isMultiple}
-          germinationRate={85}
-          uniformityRate={60}
-          yieldPerHectare="25 tấn/ha"
-          isActive={selectedSeeds.includes("SR-TH")}
+          isActive={selectedSeeds.includes("SR-RI6-3")}
           onClick={() => {
-            onSelectSeed("SR-TH");
+            onSelectSeed("SR-RI6-3");
           }}
         />
       </Group>

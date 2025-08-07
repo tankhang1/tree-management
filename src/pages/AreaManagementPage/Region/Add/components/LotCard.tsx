@@ -36,7 +36,7 @@ const LotCard = ({
       shadow={selected ? "md" : "xs"}
       radius="md"
       padding="md"
-      bg={selected ? "green.0" : "white"}
+      bg={"white"}
       onClick={onToggle}
       style={{
         cursor: "pointer",

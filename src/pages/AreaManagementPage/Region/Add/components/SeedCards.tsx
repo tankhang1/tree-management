@@ -16,14 +16,17 @@ interface SeedCardSelectorProps {
   selected: string;
   onSelect: (code: string) => void;
   isMultiple?: boolean;
+  isTouchable?: boolean;
 }
 
 const SeedCards: React.FC<SeedCardSelectorProps> = ({
   seeds,
   isMultiple = false,
+  isTouchable = true,
 }) => {
   const [selected, setSelected] = useState<string[]>([]);
   const onSelect = (code: string) => {
+    if (!isTouchable) return;
     if (isMultiple) {
       setSelected((prev) =>
         prev.includes(code) ? prev.filter((id) => id !== code) : [...prev, code]

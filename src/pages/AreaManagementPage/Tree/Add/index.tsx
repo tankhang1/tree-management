@@ -2,28 +2,26 @@ import {
   Stepper,
   Button,
   Group,
-  Select,
   Stack,
   TextInput,
   ActionIcon,
   Card,
   Title,
   Text,
-  ThemeIcon,
   NumberInput,
   Modal,
   Image,
   Radio,
+  SegmentedControl,
+  Divider,
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import {
   IconArrowLeft,
-  IconLeaf,
-  IconPlant,
   IconPlus,
   IconSearch,
-  IconSeeding,
   IconTrash,
+  IconX,
 } from "@tabler/icons-react";
 import { useState } from "react";
 import { MapContainer, Polygon, TileLayer } from "react-leaflet";
@@ -161,221 +159,138 @@ const AreaManagementTreeAddPage = () => {
           {/* STEP 2: XEM THÔNG TIN */}
           <Stepper.Step label="Bước 2" description="Cây trồng">
             <Stack>
-              <Card withBorder radius={4}>
-                <Stack>
-                  <Text fw={"500"} fz={14}>
-                    Danh sách cây trồng
-                  </Text>
+              <Text fw={"500"} fz={14}>
+                Danh sách cây trồng
+              </Text>
 
-                  <Group>
-                    <Card
-                      w={200}
-                      radius="md"
-                      withBorder
-                      shadow="sm"
-                      padding="lg"
-                      style={{
-                        transition:
-                          "box-shadow 0.25s ease, transform 0.25s ease",
-                        cursor: "default",
-                        borderColor: treeId === 1 ? "green" : undefined,
-                      }}
-                      onMouseEnter={(e) => {
-                        e.currentTarget.style.boxShadow =
-                          "0 8px 24px rgba(0,0,0,0.08)";
-                        e.currentTarget.style.transform = "translateY(-3px)";
-                      }}
-                      onMouseLeave={(e) => {
-                        e.currentTarget.style.boxShadow =
-                          "var(--mantine-shadow-sm)";
-                        e.currentTarget.style.transform = "none";
-                      }}
-                      onClick={() => handleSelectTree(1)}
-                    >
-                      <Stack gap="sm">
-                        <Group align="flex-start">
-                          <ThemeIcon
-                            variant="light"
-                            color="green"
-                            size="lg"
-                            radius="xl"
-                          >
-                            <IconPlant size={20} />
-                          </ThemeIcon>
-                          <Stack gap={0} style={{ flex: 1 }}>
-                            <Text size="sm" c="dimmed">
-                              Loại cây trồng
-                            </Text>
-                            <Text fw={500}>Cây sầu riêng</Text>
-                          </Stack>
-                        </Group>
+              <SegmentedControl
+                data={["Cây sầu riêng Ri6", "Cây xoài cát"]}
+                radius={4}
+                fullWidth
+                size="md"
+              />
 
-                        <Group align="flex-start">
-                          <ThemeIcon
-                            variant="light"
-                            color="green"
-                            size="lg"
-                            radius="xl"
-                          >
-                            <IconLeaf size={20} />
-                          </ThemeIcon>
-                          <Stack gap={0} style={{ flex: 1 }}>
-                            <Text size="sm" c="dimmed">
-                              Giống cây
-                            </Text>
-                            <Text fw={500}>Sầu riêng Ri6</Text>
-                          </Stack>
-                        </Group>
+              <Card withBorder radius={4} mt="md" p="md" shadow="sm">
+                <Stack gap="sm">
+                  <Title order={5} c="teal.7">
+                    Thông tin cây trồng
+                  </Title>
 
-                        <Group align="flex-start">
-                          <ThemeIcon
-                            variant="light"
-                            color="lime"
-                            size="lg"
-                            radius="xl"
-                          >
-                            <IconSeeding size={20} />
-                          </ThemeIcon>
-                          <Stack gap={0} style={{ flex: 1 }}>
-                            <Text size="sm" c="dimmed">
-                              Hạt giống
-                            </Text>
-                            <Text fw={500}>Hạt giống Ri6 F1</Text>
-                          </Stack>
-                        </Group>
-                      </Stack>
-                    </Card>
-                    <Card
-                      radius="md"
-                      withBorder
-                      shadow="sm"
-                      padding="lg"
-                      style={{
-                        transition:
-                          "box-shadow 0.25s ease, transform 0.25s ease",
-                        cursor: "default",
-                        borderColor: treeId === 2 ? "green" : undefined,
-                      }}
-                      onMouseEnter={(e) => {
-                        e.currentTarget.style.boxShadow =
-                          "0 8px 24px rgba(0,0,0,0.08)";
-                        e.currentTarget.style.transform = "translateY(-3px)";
-                      }}
-                      onMouseLeave={(e) => {
-                        e.currentTarget.style.boxShadow =
-                          "var(--mantine-shadow-sm)";
-                        e.currentTarget.style.transform = "none";
-                      }}
-                      w={200}
-                      onClick={() => handleSelectTree(2)}
-                    >
-                      <Stack gap="sm">
-                        <Group align="flex-start">
-                          <ThemeIcon
-                            variant="light"
-                            color="green"
-                            size="lg"
-                            radius="xl"
-                          >
-                            <IconPlant size={20} />
-                          </ThemeIcon>
-                          <Stack gap={0} style={{ flex: 1 }}>
-                            <Text size="sm" c="dimmed">
-                              Loại cây trồng
-                            </Text>
-                            <Text fw={500}>Cây cà phê</Text>
-                          </Stack>
-                        </Group>
-
-                        <Group align="flex-start">
-                          <ThemeIcon
-                            variant="light"
-                            color="green"
-                            size="lg"
-                            radius="xl"
-                          >
-                            <IconLeaf size={20} />
-                          </ThemeIcon>
-                          <Stack gap={0} style={{ flex: 1 }}>
-                            <Text size="sm" c="dimmed">
-                              Giống cây
-                            </Text>
-                            <Text fw={500}>Cà phê</Text>
-                          </Stack>
-                        </Group>
-
-                        <Group align="flex-start">
-                          <ThemeIcon
-                            variant="light"
-                            color="lime"
-                            size="lg"
-                            radius="xl"
-                          >
-                            <IconSeeding size={20} />
-                          </ThemeIcon>
-                          <Stack gap={0} style={{ flex: 1 }}>
-                            <Text size="sm" c="dimmed">
-                              Hạt giống
-                            </Text>
-                            <Text fw={500}>Hạt giống F1</Text>
-                          </Stack>
-                        </Group>
-                      </Stack>
-                    </Card>
+                  <Group justify="space-between">
+                    <Text fw={500} fz="sm">
+                      Loại cây trồng:
+                    </Text>
+                    <Text fz="sm" c="gray.7">
+                      Cây sầu riêng
+                    </Text>
                   </Group>
-                  <Radio.Group label="Phân bổ cây trồng" mt="md">
-                    <Stack mt={"xs"}>
+
+                  <Group justify="space-between">
+                    <Text fw={500} fz="sm">
+                      Giống cây:
+                    </Text>
+                    <Text fz="sm" c="gray.7">
+                      Sầu riêng Ri6
+                    </Text>
+                  </Group>
+
+                  <Group justify="space-between">
+                    <Text fw={500} fz="sm">
+                      Hạt giống:
+                    </Text>
+                    <Text fz="sm" c="gray.7">
+                      Hạt giống Ri6 F1
+                    </Text>
+                  </Group>
+
+                  <Group justify="space-between">
+                    <Text fw={500} fz="sm">
+                      Phương pháp tưới tiêu:
+                    </Text>
+                    <Text fz="sm" c="gray.7">
+                      Tưới nhỏ giọt
+                    </Text>
+                  </Group>
+
+                  <Divider
+                    my="sm"
+                    label="Phân bổ cây trồng"
+                    labelPosition="center"
+                  />
+
+                  <Radio.Group value={form.values.selectType}>
+                    <Stack gap="xs">
                       <Radio
                         value="plot"
-                        label="Phân bổ theo lô"
-                        checked={form.values.selectType === "plot"}
+                        label={
+                          <Text fz={14} fw={"500"}>
+                            Phân bổ theo lô
+                          </Text>
+                        }
                         onChange={() =>
                           form.setFieldValue("selectType", "plot")
                         }
                       />
                       <Radio
                         value="row"
-                        label="Phân bổ theo hàng"
-                        checked={form.values.selectType === "row"}
+                        label={
+                          <Group>
+                            <Text fz={14} fw={"500"}>
+                              Phân bổ theo hàng
+                            </Text>
+                            <Button
+                              size={"compact-xs"}
+                              variant="light"
+                              radius={4}
+                            >
+                              Thêm hàng
+                            </Button>
+                          </Group>
+                        }
                         onChange={() => form.setFieldValue("selectType", "row")}
                       />
                     </Stack>
                   </Radio.Group>
+
                   {form.values.selectType === "row" && (
-                    <TextInput
-                      label="Hàng"
-                      placeholder="Nhập tên hàng"
+                    <Card w={200} withBorder radius={4} p="md">
+                      <Stack align="flex-end" gap="xs">
+                        <Group
+                          align="center"
+                          justify="space-between"
+                          w={"100%"}
+                        >
+                          <Text fw={"bold"}>Hàng 1</Text>
+                          <ActionIcon
+                            variant="light"
+                            color={"red"}
+                            radius={4}
+                            size={"xs"}
+                          >
+                            <IconTrash />
+                          </ActionIcon>
+                        </Group>
+                        <NumberInput
+                          flex={1}
+                          label="Số lượng cây"
+                          placeholder="Nhập số lượng"
+                          radius={4}
+                          {...form.getInputProps("treeCount")}
+                        />
+                      </Stack>
+                    </Card>
+                  )}
+                  {form.values.selectType !== "row" && (
+                    <NumberInput
+                      label="Số lượng cây"
+                      placeholder="Nhập số lượng"
                       radius={4}
-                      {...form.getInputProps("row")}
-                      flex={1}
+                      {...form.getInputProps("treeCount")}
                     />
                   )}
-                  <Select
-                    label="Phương pháp canh tác"
-                    radius={4}
-                    value={"line_3m"}
-                    data={[
-                      { value: "hole_6m", label: "Xen canh" },
-                      { value: "line_3m", label: "Truyền thống" },
-                    ]}
-                  />
-                  <Select
-                    label="Phương pháp tưới tiêu"
-                    radius={4}
-                    value={"random"}
-                    data={[{ value: "random", label: "Tưới nhỏ giọt" }]}
-                  />
-
-                  <NumberInput label="Số lượng cây" radius={4} />
                 </Stack>
               </Card>
-              <Button
-                radius={4}
-                variant="outline"
-                leftSection={<IconPlus size={16} />}
-              >
-                Thêm cây trồng
-              </Button>
+
               <Group justify="space-between" mt="md">
                 <Button variant="default" onClick={prevStep}>
                   Quay lại

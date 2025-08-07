@@ -1,6 +1,5 @@
 import {
   ActionIcon,
-  Badge,
   Button,
   Group,
   Menu,
@@ -38,6 +37,7 @@ type AreaZone = {
   gps: string;
   numberOfLots: number;
   cultivationZone: string;
+  tree: string;
 };
 const areaZoneData: AreaZone[] = [
   {
@@ -47,6 +47,8 @@ const areaZoneData: AreaZone[] = [
     regionName: "Vùng Trồng A",
     employee: "Nguyễn Văn A",
     area: 10000,
+    tree: "Sầu riêng",
+
     soilType: "Đất thịt",
     terrain: ["Cao", "Dốc"],
     mainCrop: "Sầu riêng",
@@ -61,6 +63,8 @@ const areaZoneData: AreaZone[] = [
     regionName: "Vùng Trồng B",
     employee: "Trần Thị B",
     area: 8500,
+    tree: "Sầu riêng",
+
     soilType: "Đất phù sa",
     terrain: ["Thấp", "Trũng"],
     mainCrop: "Xoài",
@@ -72,6 +76,8 @@ const areaZoneData: AreaZone[] = [
     id: "V003",
     code: "V-C1",
     name: "Khu vực C1",
+    tree: "Sầu riêng",
+
     regionName: "Vùng Trồng C",
     employee: "Lê Văn C",
     area: 6000,
@@ -85,6 +91,8 @@ const areaZoneData: AreaZone[] = [
   {
     id: "V004",
     code: "V-D3",
+    tree: "Sầu riêng",
+
     name: "Khu vực D3",
     regionName: "Vùng Trồng D",
     employee: "Phạm Thị D",
@@ -99,6 +107,8 @@ const areaZoneData: AreaZone[] = [
   {
     id: "V005",
     code: "V-E4",
+    tree: "Sầu riêng",
+
     name: "Khu vực E4",
     regionName: "Vùng Trồng E",
     employee: "Nguyễn Văn E",
@@ -119,6 +129,7 @@ const areaZoneData: AreaZone[] = [
     employee: "Hoàng Thị F",
     area: 7000,
     soilType: "Đất phù sa",
+    tree: "Bưởi",
     terrain: ["Trũng"],
     mainCrop: "Bưởi",
     gps: "17.8901,83.4567 17.8902,83.4568 17.8903,83.4569 17.8904,83.4570",
@@ -134,6 +145,7 @@ const areaZoneData: AreaZone[] = [
     regionName: "Vùng Trồng G",
     employee: "Vũ Văn G",
     area: 11000,
+    tree: "Sầu riêng",
     soilType: "Đất thịt",
     terrain: ["Cao", "Dốc"],
     mainCrop: "Cam",
@@ -148,6 +160,8 @@ const areaZoneData: AreaZone[] = [
     regionName: "Vùng Trồng H",
     employee: "Trần Văn H",
     area: 8000,
+    tree: "Sầu riêng",
+
     soilType: "Đất đỏ bazan",
     terrain: ["Bằng phẳng"],
     mainCrop: "Dừa",
@@ -193,26 +207,12 @@ const AreaManagementRegionPage = () => {
       Cell: ({ row }) => <Text>{row.original.area.toLocaleString()} m²</Text>,
     },
     {
+      accessorKey: "tree",
+      header: "Cây trồng",
+    },
+    {
       accessorKey: "employee",
       header: "Người quản lý",
-    },
-
-    {
-      accessorKey: "soilType",
-      header: "Loại đất",
-    },
-    {
-      accessorKey: "terrain",
-      header: "Địa hình",
-      Cell: ({ row }) => (
-        <Group gap="xs">
-          {row.original.terrain.map((item, i) => (
-            <Badge key={i} size="xs" color="gray">
-              {item}
-            </Badge>
-          ))}
-        </Group>
-      ),
     },
 
     {
