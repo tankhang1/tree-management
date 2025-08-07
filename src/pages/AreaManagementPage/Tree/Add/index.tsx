@@ -14,6 +14,7 @@ import {
   Radio,
   SegmentedControl,
   Divider,
+  Accordion,
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import {
@@ -21,7 +22,6 @@ import {
   IconPlus,
   IconSearch,
   IconTrash,
-  IconX,
 } from "@tabler/icons-react";
 import { useState } from "react";
 import { MapContainer, Polygon, TileLayer } from "react-leaflet";
@@ -32,11 +32,55 @@ import { regionOptions } from "../../Block/Add";
 import AreaCards from "../../Zone/Add/components/AreaCards";
 import { areaOptions, plotOptions } from "../../Row/Add";
 import PlotCardSelector from "../../Row/Add/components/PlotCards";
+import { DatePickerInput } from "@mantine/dates";
 
 type LatLng = [number, number];
+type TreeRow = {
+  name: string; // Hàng 1, Hàng 2...
+  coords: [number, number][];
+};
 
+type CropGroup = {
+  cropName: string; // Ví dụ: "Cây sầu riêng Ri6"
+  rows: TreeRow[];
+};
+const cropGroups: CropGroup[] = [
+  {
+    cropName: "Cây sầu riêng Ri6",
+    rows: [
+      {
+        name: "Hàng 1",
+        coords: [
+          [10.762622, 106.660172],
+          [10.7628, 106.6603],
+        ],
+      },
+      {
+        name: "Hàng 2",
+        coords: [
+          [10.7629, 106.660172],
+          [10.763, 106.6603],
+        ],
+      },
+    ],
+  },
+  {
+    cropName: "Cây xoài cát",
+    rows: [
+      {
+        name: "Hàng 1",
+        coords: [
+          [10.7632, 106.6605],
+          [10.7633, 106.66065],
+        ],
+      },
+    ],
+  },
+];
 const AreaManagementTreeAddPage = () => {
-  const [treeId, setTreeId] = useState<number>();
+  const [selectedCrop, setSelectedCrop] = useState<string>(
+    cropGroups[0].cropName
+  );
   const navigate = useNavigate();
   const [active, setActive] = useState(0);
   const [lat, setLat] = useState<string>("");
@@ -69,9 +113,7 @@ const AreaManagementTreeAddPage = () => {
       setLng("");
     }
   };
-  const handleSelectTree = (id: number) => {
-    setTreeId(id);
-  };
+
   const handleRemove = (index: number) => {
     setCoords((prev) => prev.filter((_, i) => i !== index));
   };
@@ -304,210 +346,109 @@ const AreaManagementTreeAddPage = () => {
 
           {/* STEP 3: NHẬP TOẠ ĐỘ */}
           <Stepper.Step label="Bước 3" description="Định vị GPS">
-            <Stack mt="md" gap={"xs"}>
-              <Stack>
-                <Card withBorder>
-                  <Text fw={"600"}>Hàng 1</Text>
-                  <Group mt={"md"} align="flex-end">
-                    <TextInput
-                      label="Latitude"
-                      value={lat}
-                      onChange={(e) => setLat(e.currentTarget.value)}
-                      placeholder="10.762622"
-                      radius={4}
-                      flex={1}
-                    />
-                    <TextInput
-                      label="Longitude"
-                      value={lng}
-                      onChange={(e) => setLng(e.currentTarget.value)}
-                      placeholder="106.660172"
-                      radius={4}
-                      flex={1}
-                    />
-                  </Group>
-                  <Group mt={"md"} align="flex-end">
-                    <TextInput
-                      label="Latitude"
-                      value={lat}
-                      onChange={(e) => setLat(e.currentTarget.value)}
-                      placeholder="10.762622"
-                      radius={4}
-                      flex={1}
-                    />
-                    <TextInput
-                      label="Longitude"
-                      value={lng}
-                      onChange={(e) => setLng(e.currentTarget.value)}
-                      placeholder="106.660172"
-                      radius={4}
-                      flex={1}
-                    />
-                  </Group>
-                  <Button
-                    mt={"md"}
-                    onClick={handleAddPoint}
+            <Stack>
+              <SegmentedControl
+                data={cropGroups.map((g) => g.cropName)}
+                value={selectedCrop}
+                onChange={setSelectedCrop}
+                fullWidth
+                size="md"
+                radius={4}
+              />
+
+              {/* Accordion theo nhóm cây được chọn */}
+              {cropGroups
+                .filter((group) => group.cropName === selectedCrop)
+                .map((group) => (
+                  <Accordion
+                    key={group.cropName}
+                    variant="contained"
                     radius={4}
-                    variant="light"
-                    leftSection={<IconPlus size={16} />}
+                    multiple
+                    defaultValue={[]}
                   >
-                    Thêm
-                  </Button>
-                  <Stack mt={"md"}>
-                    <MapContainer
-                      center={
-                        coords.length >= 1 ? coords[0] : [10.762622, 106.660172]
-                      }
-                      zoom={16}
-                      style={{
-                        height: "300px",
-                        width: "100%",
-                        borderRadius: 8,
-                      }}
-                    >
-                      <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
-                      <Polygon positions={coords} color="green" />
-                    </MapContainer>
-                  </Stack>
-                </Card>
-                <Card withBorder>
-                  <Text fw={"600"}>Hàng 2</Text>
-                  <Group mt={"md"} align="flex-end">
-                    <TextInput
-                      label="Latitude"
-                      value={lat}
-                      onChange={(e) => setLat(e.currentTarget.value)}
-                      placeholder="10.762622"
-                      radius={4}
-                      flex={1}
-                    />
-                    <TextInput
-                      label="Longitude"
-                      value={lng}
-                      onChange={(e) => setLng(e.currentTarget.value)}
-                      placeholder="106.660172"
-                      radius={4}
-                      flex={1}
-                    />
-                  </Group>
-                  <Group mt={"md"} align="flex-end">
-                    <TextInput
-                      label="Latitude"
-                      value={lat}
-                      onChange={(e) => setLat(e.currentTarget.value)}
-                      placeholder="10.762622"
-                      radius={4}
-                      flex={1}
-                    />
-                    <TextInput
-                      label="Longitude"
-                      value={lng}
-                      onChange={(e) => setLng(e.currentTarget.value)}
-                      placeholder="106.660172"
-                      radius={4}
-                      flex={1}
-                    />
-                  </Group>
-                  <Button
-                    mt={"md"}
-                    onClick={handleAddPoint}
-                    radius={4}
-                    variant="light"
-                    leftSection={<IconPlus size={16} />}
-                  >
-                    Thêm
-                  </Button>
-                  <Stack mt={"md"}>
-                    <MapContainer
-                      center={
-                        coords.length >= 1 ? coords[0] : [10.762622, 106.660172]
-                      }
-                      zoom={16}
-                      style={{
-                        height: "300px",
-                        width: "100%",
-                        borderRadius: 8,
-                      }}
-                    >
-                      <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
-                      <Polygon positions={coords} color="green" />
-                    </MapContainer>
-                  </Stack>
-                </Card>
-              </Stack>
-              <Card withBorder>
-                <Group mt={"md"} align="flex-end">
-                  <TextInput
-                    label="Latitude"
-                    value={lat}
-                    onChange={(e) => setLat(e.currentTarget.value)}
-                    placeholder="10.762622"
-                    radius={4}
-                    flex={1}
-                  />
-                  <TextInput
-                    label="Longitude"
-                    value={lng}
-                    onChange={(e) => setLng(e.currentTarget.value)}
-                    placeholder="106.660172"
-                    radius={4}
-                    flex={1}
-                  />
-                </Group>
-                <Group mt={"md"} align="flex-end">
-                  <TextInput
-                    label="Latitude"
-                    value={lat}
-                    onChange={(e) => setLat(e.currentTarget.value)}
-                    placeholder="10.762622"
-                    radius={4}
-                    flex={1}
-                  />
-                  <TextInput
-                    label="Longitude"
-                    value={lng}
-                    onChange={(e) => setLng(e.currentTarget.value)}
-                    placeholder="106.660172"
-                    radius={4}
-                    flex={1}
-                  />
-                </Group>
-                <Button
-                  mt={"md"}
-                  onClick={handleAddPoint}
-                  radius={4}
-                  variant="light"
-                  leftSection={<IconPlus size={16} />}
-                >
-                  Thêm
-                </Button>
-                <Stack mt={"md"}>
-                  <MapContainer
-                    center={
-                      coords.length >= 1 ? coords[0] : [10.762622, 106.660172]
-                    }
-                    zoom={16}
-                    style={{
-                      height: "300px",
-                      width: "100%",
-                      borderRadius: 8,
-                    }}
-                  >
-                    <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
-                    <Polygon positions={coords} color="green" />
-                  </MapContainer>
-                </Stack>
-              </Card>
+                    {group.rows.map((row, rowIndex) => (
+                      <Accordion.Item value={`row-${rowIndex}`} key={rowIndex}>
+                        <Accordion.Control>
+                          <Text fw={600}>{row.name}</Text>
+                        </Accordion.Control>
+                        <Accordion.Panel>
+                          <Card
+                            withBorder
+                            radius="sm"
+                            shadow="xs"
+                            style={{ position: "relative", zIndex: 1 }}
+                          >
+                            <Group mt="md" align="flex-end">
+                              <TextInput
+                                label="Mã cây trồng"
+                                radius={4}
+                                flex={1}
+                                placeholder="T001"
+                              />
+                              <TextInput
+                                label="Latitude"
+                                placeholder="10.762622"
+                                radius={4}
+                                flex={1}
+                              />
+                              <TextInput
+                                label="Longitude"
+                                placeholder="106.660172"
+                                radius={4}
+                                flex={1}
+                              />
+
+                              <DatePickerInput
+                                radius={4}
+                                label="Thời gian trồng"
+                                placeholder="Chọn ngày trồng"
+                                locale="vi"
+                                clearable
+                                flex={1}
+                                popoverProps={{ withinPortal: true }}
+                              />
+                              <Button
+                                variant="light"
+                                leftSection={<IconPlus size={16} />}
+                                radius={4}
+                              >
+                                Thêm
+                              </Button>
+                            </Group>
+
+                            <Stack mt="md">
+                              <MapContainer
+                                center={
+                                  row.coords[0] || [10.762622, 106.660172]
+                                }
+                                zoom={16}
+                                style={{
+                                  height: "250px",
+                                  width: "100%",
+                                  borderRadius: 8,
+                                }}
+                              >
+                                <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
+                                <Polygon positions={row.coords} color="green" />
+                              </MapContainer>
+                            </Stack>
+                          </Card>
+                        </Accordion.Panel>
+                      </Accordion.Item>
+                    ))}
+                  </Accordion>
+                ))}
+
               <Group justify="space-between" mt="md">
-                <Button variant="default" onClick={prevStep} radius={4}>
+                <Button variant="default" radius={4}>
                   Quay lại
                 </Button>
-                <Button onClick={nextStep} radius={4}>
-                  Tiếp theo
-                </Button>
+                <Button radius={4}>Tiếp theo</Button>
               </Group>
             </Stack>
           </Stepper.Step>
+
           <Stepper.Step label="Bước 4" description="Xác nhận">
             <ConfirmStep
               area="Vùng Tây Nguyên"
