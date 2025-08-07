@@ -480,7 +480,18 @@ const AreaManagementAddRegionPage = () => {
           name: "Lô A3",
           employee: "Lê Văn C",
           cultivationMethod: "Tưới nhỏ giọt",
-          crops: [],
+          crops: [
+            {
+              cropGroup: "Trái cây",
+              cropCode: "SR001",
+              cropName: "Cây sầu riêng",
+              cultivar: "Sầu riêng Ri6",
+              seedCode: "HatSR-A1",
+              seedName: "Hạt giống Ri6 F1",
+              image:
+                "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQiewLxKYlUogAMvIFZH-d7Zk2ILXPRtmWlXA&s",
+            },
+          ],
         },
 
         // Khu vực phía Nam
@@ -548,7 +559,18 @@ const AreaManagementAddRegionPage = () => {
           name: "Lô B3",
           employee: "Trần Thị B",
           cultivationMethod: "Hữu cơ",
-          crops: [],
+          crops: [
+            {
+              cropGroup: "Trái cây",
+              cropCode: "SR001",
+              cropName: "Cây sầu riêng",
+              cultivar: "Sầu riêng Ri6",
+              seedCode: "HatSR-A1",
+              seedName: "Hạt giống Ri6 F1",
+              image:
+                "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQiewLxKYlUogAMvIFZH-d7Zk2ILXPRtmWlXA&s",
+            },
+          ],
         },
 
         // Khu vực phía Tây
@@ -558,7 +580,18 @@ const AreaManagementAddRegionPage = () => {
           name: "Lô C1",
           employee: "Phạm Văn C",
           cultivationMethod: "Tưới nhỏ giọt",
-          crops: [],
+          crops: [
+            {
+              cropGroup: "Trái cây",
+              cropCode: "SR001",
+              cropName: "Cây sầu riêng",
+              cultivar: "Sầu riêng Ri6",
+              seedCode: "HatSR-A1",
+              seedName: "Hạt giống Ri6 F1",
+              image:
+                "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQiewLxKYlUogAMvIFZH-d7Zk2ILXPRtmWlXA&s",
+            },
+          ],
         },
         {
           id: "plot-008",
@@ -585,7 +618,18 @@ const AreaManagementAddRegionPage = () => {
           name: "Lô C3",
           employee: "Phạm Văn C",
           cultivationMethod: "Tưới phun mưa",
-          crops: [],
+          crops: [
+            {
+              cropGroup: "Trái cây",
+              cropCode: "SR001",
+              cropName: "Cây sầu riêng",
+              cultivar: "Sầu riêng Ri6",
+              seedCode: "HatSR-A1",
+              seedName: "Hạt giống Ri6 F1",
+              image:
+                "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQiewLxKYlUogAMvIFZH-d7Zk2ILXPRtmWlXA&s",
+            },
+          ],
         },
         {
           id: "plot-010",
@@ -634,7 +678,18 @@ const AreaManagementAddRegionPage = () => {
           name: "Lô D1",
           employee: "Nguyễn Thị D",
           cultivationMethod: "Tưới phun mưa",
-          crops: [],
+          crops: [
+            {
+              cropGroup: "Trái cây",
+              cropCode: "SR001",
+              cropName: "Cây sầu riêng",
+              cultivar: "Sầu riêng Ri6",
+              seedCode: "HatSR-A1",
+              seedName: "Hạt giống Ri6 F1",
+              image:
+                "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQiewLxKYlUogAMvIFZH-d7Zk2ILXPRtmWlXA&s",
+            },
+          ],
         },
         {
           id: "plot-012",
@@ -661,7 +716,18 @@ const AreaManagementAddRegionPage = () => {
           name: "Lô D3",
           employee: "Nguyễn Thị D",
           cultivationMethod: "Tưới nhỏ giọt",
-          crops: [],
+          crops: [
+            {
+              cropGroup: "Trái cây",
+              cropCode: "SR001",
+              cropName: "Cây sầu riêng",
+              cultivar: "Sầu riêng Ri6",
+              seedCode: "HatSR-A1",
+              seedName: "Hạt giống Ri6 F1",
+              image:
+                "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQiewLxKYlUogAMvIFZH-d7Zk2ILXPRtmWlXA&s",
+            },
+          ],
         },
       ],
     },
@@ -864,8 +930,7 @@ const AreaManagementAddRegionPage = () => {
         )}
         {active === 1 && type === "plot" && (
           <Stack mt="md" gap="md">
-            <Title order={5}>🧱 Thiết lập thông tin các lô</Title>
-            <Card>
+            <Card withBorder radius={4} shadow="sm" p="md">
               <Stack>
                 <Text fw={"bold"} fz={"h4"}>
                   Khu vực Nam Trung Bộ
@@ -994,57 +1059,108 @@ const AreaManagementAddRegionPage = () => {
           </Stack>
         )}
         {active === 1 && type === "area" && (
-          <Stack mt="md" gap="md">
-            <Card withBorder radius="md" shadow="sm" p="md">
-              <Stack>
-                <Text fw={"bold"} fz={"h4"}>
-                  Khu vực Nam Trung Bộ
-                </Text>
-                <Divider />
-                <Stack gap="xs">
-                  {/* Phương pháp canh tác */}
-                  <Select
-                    label="Phương pháp canh tác"
-                    data={["Xen canh", "Truyền thống", "Công nghệ cao"]}
-                    radius={4}
-                    value={"Truyền thống"}
-                  />
-                  <Select
-                    label="Phương pháp tưới tiêu"
-                    data={["Tưới nhỏ giọt", "Tưới phun mưa", "Tưới tràn"]}
-                    radius={4}
-                  />
-                  <Group>
-                    <Text fw={"500"} fz={14}>
-                      Giống cây trồng
-                    </Text>
-                    <Button
+          <Stack mt={"md"}>
+            <Accordion
+              variant="contained"
+              multiple
+              defaultValue={["ntb", "dbscl"]}
+            >
+              <Accordion.Item key="ntb" value="ntb">
+                <Accordion.Control bg={"white"}>
+                  <Text fw={"bold"} fz={"h4"}>
+                    Khu vực Nam Trung Bộ
+                  </Text>
+                </Accordion.Control>
+                <Accordion.Panel>
+                  <Stack gap="xs" mt="sm">
+                    <Select
+                      label="Phương pháp canh tác"
+                      data={["Xen canh", "Truyền thống", "Công nghệ cao"]}
                       radius={4}
-                      variant="outline"
-                      onClick={() => setOpenedFilterTree(true)}
-                    >
-                      Tìm kiếm
-                    </Button>
-                  </Group>
-                  <SeedCards
-                    selected=""
-                    seeds={seedOptions}
-                    onSelect={() => {}}
-                    isTouchable={false}
-                  />
+                      value="Truyền thống"
+                    />
+                    <Select
+                      label="Phương pháp tưới tiêu"
+                      data={["Tưới nhỏ giọt", "Tưới phun mưa", "Tưới tràn"]}
+                      radius={4}
+                    />
+                    <Group>
+                      <Text fw={500} fz={14}>
+                        Giống cây trồng
+                      </Text>
+                      <Button
+                        radius={4}
+                        variant="outline"
+                        onClick={() => setOpenedFilterTree(true)}
+                      >
+                        Tìm kiếm
+                      </Button>
+                    </Group>
+                    <SeedCards
+                      selected=""
+                      seeds={seedOptions}
+                      onSelect={() => {}}
+                      isTouchable={false}
+                    />
+                    <TextInput
+                      label="Hạt giống"
+                      leftSection={<IconSearch size={18} />}
+                      radius={4}
+                      placeholder="Tìm kiếm hạt giống"
+                    />
+                    <SeedDetailCards />
+                  </Stack>
+                </Accordion.Panel>
+              </Accordion.Item>
 
-                  {/* Danh sách cây trồng */}
-
-                  <TextInput
-                    label="Hạt giống"
-                    leftSection={<IconSearch size={18} />}
-                    radius={4}
-                    placeholder="Tìm kiếm hạt giống"
-                  />
-                  <SeedDetailCards />
-                </Stack>
-              </Stack>
-            </Card>
+              <Accordion.Item key="dbscl" value="dbscl">
+                <Accordion.Control bg={"white"}>
+                  <Text fw={"bold"} fz={"h4"}>
+                    Khu vực Đồng Bằng Sông Cửu Long
+                  </Text>
+                </Accordion.Control>
+                <Accordion.Panel>
+                  <Stack gap="xs" mt="sm">
+                    <Select
+                      label="Phương pháp canh tác"
+                      data={["Xen canh", "Truyền thống", "Công nghệ cao"]}
+                      radius={4}
+                      value="Truyền thống"
+                    />
+                    <Select
+                      label="Phương pháp tưới tiêu"
+                      data={["Tưới nhỏ giọt", "Tưới phun mưa", "Tưới tràn"]}
+                      radius={4}
+                    />
+                    <Group>
+                      <Text fw={500} fz={14}>
+                        Giống cây trồng
+                      </Text>
+                      <Button
+                        radius={4}
+                        variant="outline"
+                        onClick={() => setOpenedFilterTree(true)}
+                      >
+                        Tìm kiếm
+                      </Button>
+                    </Group>
+                    <SeedCards
+                      selected=""
+                      seeds={seedOptions}
+                      onSelect={() => {}}
+                      isTouchable={false}
+                    />
+                    <TextInput
+                      label="Hạt giống"
+                      leftSection={<IconSearch size={18} />}
+                      radius={4}
+                      placeholder="Tìm kiếm hạt giống"
+                    />
+                    <SeedDetailCards />
+                  </Stack>
+                </Accordion.Panel>
+              </Accordion.Item>
+            </Accordion>
           </Stack>
         )}
         {active === 1 && type === "region" && (
@@ -1145,7 +1261,7 @@ const AreaManagementAddRegionPage = () => {
               <Card withBorder radius={4} shadow="sm" p="md">
                 <Stack gap={"xs"}>
                   <Title order={5} mb="xs">
-                    🌱 Danh sách hạt giống
+                    🌱 Danh sách cây trồng
                   </Title>
                   <Scrollable h={350}>
                     <Group wrap="nowrap" gap="xs" align="flex-start">
@@ -1157,38 +1273,39 @@ const AreaManagementAddRegionPage = () => {
                           <Group wrap="nowrap" gap="xs">
                             {plot.crops.map((crop, i) => (
                               <Card
+                                w={300}
+                                h={350}
                                 key={i}
                                 withBorder
                                 radius="sm"
-                                h={350}
-                                w={200}
                                 shadow="xs"
-                                p="xs"
+                                p={0}
                               >
-                                <Stack gap="xs" mt="sm">
-                                  <Image
-                                    src={crop.image}
-                                    alt={crop.cropName}
-                                    height={100}
-                                    fit="contain"
-                                  />
+                                <Image
+                                  src={crop.image}
+                                  alt={crop.cropName}
+                                  w={"100%"}
+                                  h={150}
+                                  fit="cover"
+                                />
+                                <Stack gap="xs" mt="sm" px={"xs"}>
                                   <Group justify="space-between">
-                                    <Title order={5}>{crop.seedName}</Title>
+                                    <Title order={5}>{crop.cultivar}</Title>
                                     <Group gap={"xs"}>
                                       <Badge color="gray" variant="light">
-                                        {crop.cropGroup}
+                                        {crop.cropCode}
                                       </Badge>
                                     </Group>
                                   </Group>
 
                                   <Text size="sm" c="dimmed">
-                                    Giống: {crop.seedName}
+                                    Cây trồng: {crop.cropName}
                                   </Text>
                                   <Text size="sm" c="dimmed">
-                                    Mã giống: {crop.seedCode}
+                                    Mã hạt giống: {crop.seedCode}
                                   </Text>
                                   <Text size="sm" c="dimmed">
-                                    Tên giống: {crop.cropName}
+                                    Hạt giống: {crop.seedName}
                                   </Text>
                                 </Stack>
                               </Card>
@@ -1290,42 +1407,44 @@ const AreaManagementAddRegionPage = () => {
                                       <SimpleGrid cols={2} spacing="sm">
                                         {plot.crops.map((crop, i) => (
                                           <Card
+                                            w={"100%"}
+                                            h={350}
                                             key={i}
                                             withBorder
                                             radius="sm"
-                                            h={350}
                                             shadow="xs"
-                                            p="xs"
+                                            p={0}
                                           >
-                                            <Stack gap="xs" mt="sm">
-                                              <Image
-                                                src={crop.image}
-                                                alt={crop.cropName}
-                                                height={100}
-                                                fit="contain"
-                                              />
+                                            <Image
+                                              src={crop.image}
+                                              alt={crop.cropName}
+                                              w={"100%"}
+                                              h={150}
+                                              fit="cover"
+                                            />
+                                            <Stack gap="xs" mt="sm" px={"xs"}>
                                               <Group justify="space-between">
                                                 <Title order={5}>
-                                                  {crop.seedName}
+                                                  {crop.cultivar}
                                                 </Title>
                                                 <Group gap={"xs"}>
                                                   <Badge
                                                     color="gray"
                                                     variant="light"
                                                   >
-                                                    {crop.cropGroup}
+                                                    {crop.cropCode}
                                                   </Badge>
                                                 </Group>
                                               </Group>
 
                                               <Text size="sm" c="dimmed">
-                                                Giống: {crop.seedName}
+                                                Cây trồng: {crop.cropName}
                                               </Text>
                                               <Text size="sm" c="dimmed">
-                                                Mã giống: {crop.seedCode}
+                                                Mã hạt giống: {crop.seedCode}
                                               </Text>
                                               <Text size="sm" c="dimmed">
-                                                Tên giống: {crop.cropName}
+                                                Hạt giống: {crop.seedName}
                                               </Text>
                                             </Stack>
                                           </Card>
@@ -1350,40 +1469,41 @@ const AreaManagementAddRegionPage = () => {
                                 <Group wrap="nowrap" gap="xs">
                                   {plot.crops.map((crop, i) => (
                                     <Card
+                                      w={300}
+                                      h={350}
                                       key={i}
                                       withBorder
                                       radius="sm"
-                                      h={350}
-                                      w={200}
                                       shadow="xs"
-                                      p="xs"
+                                      p={0}
                                     >
-                                      <Stack gap="xs" mt="sm">
-                                        <Image
-                                          src={crop.image}
-                                          alt={crop.cropName}
-                                          height={100}
-                                          fit="contain"
-                                        />
+                                      <Image
+                                        src={crop.image}
+                                        alt={crop.cropName}
+                                        w={"100%"}
+                                        h={150}
+                                        fit="cover"
+                                      />
+                                      <Stack gap="xs" mt="sm" px={"xs"}>
                                         <Group justify="space-between">
                                           <Title order={5}>
-                                            {crop.seedName}
+                                            {crop.cultivar}
                                           </Title>
                                           <Group gap={"xs"}>
                                             <Badge color="gray" variant="light">
-                                              {crop.cropGroup}
+                                              {crop.cropCode}
                                             </Badge>
                                           </Group>
                                         </Group>
 
                                         <Text size="sm" c="dimmed">
-                                          Giống: {crop.seedName}
+                                          Cây trồng: {crop.cropName}
                                         </Text>
                                         <Text size="sm" c="dimmed">
-                                          Mã giống: {crop.seedCode}
+                                          Mã hạt giống: {crop.seedCode}
                                         </Text>
                                         <Text size="sm" c="dimmed">
-                                          Tên giống: {crop.cropName}
+                                          Hạt giống: {crop.seedName}
                                         </Text>
                                       </Stack>
                                     </Card>

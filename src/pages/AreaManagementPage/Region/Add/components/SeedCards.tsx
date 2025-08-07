@@ -36,13 +36,14 @@ const SeedCards: React.FC<SeedCardSelectorProps> = ({
     }
   };
   return (
-    <Scrollable h={250}>
+    <Scrollable h={300}>
       <Group gap="md" wrap="nowrap" align="flex-start" p={"xs"}>
         {seeds.map((seed) => (
           <Card
             w={300}
-            h={250}
+            h={300}
             key={seed.code}
+            p={0}
             withBorder
             radius="md"
             style={{
@@ -61,24 +62,26 @@ const SeedCards: React.FC<SeedCardSelectorProps> = ({
               <Image
                 src={seed.image}
                 alt={seed.seedName}
-                height={140}
-                radius="md"
+                height={200}
+                fit="cover"
               />
-              <Group justify="space-between">
-                <Text fw={500}>{seed.seedName}</Text>
-                <Group gap={"xs"}>
-                  <Badge color="gray">{seed.code}</Badge>
-                  {isMultiple && (
-                    <Checkbox
-                      radius={4}
-                      checked={selected.includes(seed.code)}
-                    />
-                  )}
+              <Stack gap={"xs"} p={"xs"}>
+                <Group justify="space-between">
+                  <Text fw={500}>{seed.seedName}</Text>
+                  <Group gap={"xs"}>
+                    <Badge color="gray">{seed.code}</Badge>
+                    {isMultiple && (
+                      <Checkbox
+                        radius={4}
+                        checked={selected.includes(seed.code)}
+                      />
+                    )}
+                  </Group>
                 </Group>
-              </Group>
-              <Text size="sm">
-                <strong>Loại cây:</strong> {seed.cropName}
-              </Text>
+                <Text size="sm">
+                  <strong>Loại cây:</strong> {seed.cropName}
+                </Text>
+              </Stack>
               {/* <Text size="sm" c="dimmed">
                 {seed.description}
               </Text> */}

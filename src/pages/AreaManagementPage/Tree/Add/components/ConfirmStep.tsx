@@ -1,5 +1,41 @@
-import { Stack, Card, Group, Text, Title, Divider, Badge } from "@mantine/core";
-import { MapContainer, Polygon, TileLayer } from "react-leaflet";
+import {
+  Stack,
+  Card,
+  Group,
+  Text,
+  Title,
+  Divider,
+  Badge,
+  SegmentedControl,
+  Autocomplete,
+  ScrollAreaAutosize,
+  Menu,
+  ThemeIcon,
+  Tooltip,
+  ActionIcon,
+  Select,
+  Button,
+} from "@mantine/core";
+import { useState } from "react";
+
+import {
+  DndContext,
+  closestCenter,
+  PointerSensor,
+  useSensor,
+  useSensors,
+  type DragEndEvent,
+} from "@dnd-kit/core";
+import {
+  SortableContext,
+  useSortable,
+  arrayMove,
+  horizontalListSortingStrategy,
+} from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
+import { MapContainer, Marker, Polyline, TileLayer } from "react-leaflet";
+import L from "leaflet";
+import { IconExchange, IconSearch, IconTree } from "@tabler/icons-react";
 
 type GPS = { lat: number; lng: number };
 
@@ -58,6 +94,34 @@ export const treeDataList = [
   },
 ];
 
+interface Tree {
+  id: string;
+  code: string; // Mã cây
+  plantedAt: string; // Ngày trồng (ISO string)
+  ageInMonths?: number; // Tuổi cây (có thể tính runtime)
+  species?: string; // (tuỳ chọn) giống cây
+  status?: "alive" | "dead" | "removed"; // (tuỳ chọn) trạng thái
+  gps: [number, number];
+}
+const SortableItem: React.FC<{ id: string; children: React.ReactNode }> = ({
+  id,
+  children,
+}) => {
+  const { attributes, listeners, setNodeRef, transform, transition } =
+    useSortable({ id });
+
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+    cursor: "grab",
+  };
+
+  return (
+    <div ref={setNodeRef} {...attributes} {...listeners} style={style}>
+      {children}
+    </div>
+  );
+};
 const ConfirmStep = ({
   area,
   zone,
@@ -65,6 +129,179 @@ const ConfirmStep = ({
   row,
   plantingDate,
 }: ConfirmPlantingProps) => {
+  const [selectedTreeId, setSelectedTreeId] = useState<string | null>(null);
+
+  const [trees, setTrees] = useState<Tree[]>([
+    {
+      id: "T01",
+      code: "Cây-001",
+      plantedAt: "2023-01-01",
+      species: "Cây sầu riêng Ri6",
+      status: "alive",
+      gps: [107.1301, 11.5562],
+    },
+    {
+      id: "T02",
+      code: "Cây-002",
+      plantedAt: "2023-01-10",
+      species: "Cây sầu riêng Ri6",
+      status: "alive",
+      gps: [107.1302, 11.5562],
+    },
+    {
+      id: "T03",
+      code: "Cây-003",
+      plantedAt: "2023-01-20",
+      species: "Cây sầu riêng Ri6",
+      status: "alive",
+      gps: [107.1303, 11.5562],
+    },
+    {
+      id: "T04",
+      code: "Cây-004",
+      plantedAt: "2023-02-01",
+      species: "Cây sầu riêng Ri6",
+      status: "alive",
+      gps: [107.1304, 11.5562],
+    },
+    {
+      id: "T05",
+      code: "Cây-005",
+      plantedAt: "2023-02-10",
+      species: "Cây xoài cát",
+      status: "dead",
+      gps: [107.1305, 11.5562],
+    },
+    {
+      id: "T06",
+      code: "Cây-006",
+      plantedAt: "2023-02-20",
+      species: "Cây xoài cát",
+      status: "alive",
+      gps: [107.1306, 11.5562],
+    },
+    {
+      id: "T07",
+      code: "Cây-007",
+      plantedAt: "2023-03-01",
+      species: "Cây xoài cát",
+      status: "removed",
+      gps: [107.1307, 11.5562],
+    },
+    {
+      id: "T08",
+      code: "Cây-008",
+      plantedAt: "2023-03-10",
+      species: "Cây xoài cát",
+      status: "alive",
+      gps: [107.1308, 11.5562],
+    },
+    {
+      id: "T09",
+      code: "Cây-009",
+      plantedAt: "2023-03-20",
+      species: "Cây xoài cát",
+      status: "alive",
+      gps: [107.1309, 11.5562],
+    },
+    {
+      id: "T10",
+      code: "Cây-010",
+      plantedAt: "2023-04-01",
+      species: "Cây xoài cát",
+      status: "alive",
+      gps: [107.131, 11.5562],
+    },
+    {
+      id: "T11",
+      code: "Cây-011",
+      plantedAt: "2023-04-10",
+      species: "Cây xoài cát",
+      status: "dead",
+      gps: [107.1311, 11.5562],
+    },
+    {
+      id: "T12",
+      code: "Cây-012",
+      plantedAt: "2023-04-20",
+      species: "Cây xoài cát",
+      status: "alive",
+      gps: [107.1312, 11.5562],
+    },
+    {
+      id: "T13",
+      code: "Cây-013",
+      plantedAt: "2023-05-01",
+      species: "Cây xoài cát",
+      status: "alive",
+      gps: [107.1313, 11.5562],
+    },
+    {
+      id: "T14",
+      code: "Cây-014",
+      plantedAt: "2023-05-10",
+      species: "Cây xoài cát",
+      status: "alive",
+      gps: [107.1314, 11.5562],
+    },
+    {
+      id: "T15",
+      code: "Cây-015",
+      plantedAt: "2023-05-20",
+      species: "Cây xoài cát",
+      status: "removed",
+      gps: [107.1315, 11.5562],
+    },
+    {
+      id: "T16",
+      code: "Cây-016",
+      plantedAt: "2023-06-01",
+      species: "Cây xoài cát",
+      status: "alive",
+      gps: [107.1316, 11.5562],
+    },
+    {
+      id: "T17",
+      code: "Cây-017",
+      plantedAt: "2023-06-10",
+      species: "Cây xoài cát",
+      status: "alive",
+      gps: [107.1317, 11.5562],
+    },
+    {
+      id: "T18",
+      code: "Cây-018",
+      plantedAt: "2023-06-20",
+      species: "Cây xoài cát",
+      status: "alive",
+      gps: [107.1318, 11.5562],
+    },
+    {
+      id: "T19",
+      code: "Cây-019",
+      plantedAt: "2023-07-01",
+      species: "Cây xoài cát",
+      status: "alive",
+      gps: [107.1319, 11.5562],
+    },
+  ]);
+
+  const sensors = useSensors(useSensor(PointerSensor));
+
+  const [selectedCrop, setSelectedCrop] = useState<string>("Cây sầu riêng Ri6");
+  const handleDragEnd = (event: DragEndEvent) => {
+    const { active, over } = event;
+    if (active.id !== over?.id) {
+      const oldIndex = trees.findIndex((t) => t.id === active.id);
+      const newIndex = trees.findIndex((t) => t.id === over?.id);
+      setTrees(arrayMove(trees, oldIndex, newIndex));
+    }
+  };
+  const position: [number, number] = [trees[0].gps[1], trees[0].gps[0]]; // [lat, lng]
+  const rowPoints: [number, number][] = trees
+    .filter((item) => item.species === selectedCrop)
+    .map((t) => [t.gps[1], t.gps[0]]);
+
   return (
     <Stack gap="xl" mt={"md"}>
       <Title order={3}>Xác nhận thông tin trồng cây</Title>
@@ -102,48 +339,146 @@ const ConfirmStep = ({
       </Card>
       <Divider label="Danh sách cây trồng" labelPosition="center" />
 
-      <Group wrap="wrap" align="flex-start" gap="md" p="xs">
-        {treeDataList.map((tree, index) => (
-          <Card key={index} miw={400} h={400} withBorder shadow="sm" radius={4}>
-            <Group gap="xs" align="flex-start">
-              <Stack gap="xs" style={{ flex: 1 }}>
-                <Group justify="apart">
-                  <Text fw={500}>Loại cây trồng:</Text>
-                  <Text>{tree.type}</Text>
-                </Group>
-                <Group justify="apart">
-                  <Text fw={500}>Giống cây:</Text>
-                  <Text>{tree.variety}</Text>
-                </Group>
-                <Group justify="apart">
-                  <Text fw={500}>Hạt giống:</Text>
-                  <Text>{tree.seed}</Text>
-                </Group>
-                <Group justify="apart">
-                  <Text fw={500}>Số lượng cây:</Text>
-                  <Text>{tree.locations.length}</Text>
-                </Group>
-              </Stack>
-              <MapContainer
-                //@ts-expect-error no check
-                center={
-                  tree.locations.length >= 1
-                    ? tree.locations[0]
-                    : [10.762622, 106.660172]
-                }
-                zoom={16}
-                style={{ height: "230px", width: "100%", borderRadius: 8 }}
-              >
-                <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
-                <Polygon
-                  //@ts-expect-error no check
-                  positions={tree?.locations || []}
-                  color="green"
+      <SegmentedControl
+        data={["Cây sầu riêng Ri6", "Cây xoài cát"]}
+        value={selectedCrop}
+        onChange={setSelectedCrop}
+        fullWidth
+        size="md"
+        radius={4}
+      />
+      <Group justify="space-between" align="flex-start">
+        <Stack flex={1}>
+          <Text fw={"bold"} fz={"h4"}>
+            Danh sách cây trồng
+          </Text>
+          <Autocomplete
+            radius={4}
+            placeholder="Tìm kiếm cây trồng"
+            leftSection={<IconSearch size={18} />}
+          />
+          <DndContext
+            sensors={sensors}
+            collisionDetection={closestCenter}
+            onDragEnd={handleDragEnd}
+          >
+            <SortableContext
+              items={trees
+                .filter((item) => item.species === selectedCrop)
+                .map((t) => t.id)}
+              strategy={horizontalListSortingStrategy}
+            >
+              <ScrollAreaAutosize mah={300}>
+                <Stack justify="center" mt="xl">
+                  {trees
+                    .filter((item) => item.species === selectedCrop)
+                    .map((tree, index) => (
+                      <SortableItem key={tree.id} id={tree.id}>
+                        <Group justify="space-between" gap={"xs"} pr="md">
+                          <Group gap={"xs"}>
+                            <Text>{index}.</Text>
+                            <Tooltip label={tree.code}>
+                              <ThemeIcon
+                                size={50}
+                                radius="xl"
+                                color={
+                                  selectedTreeId === tree.id ? "blue" : "gray"
+                                }
+                              >
+                                <IconTree />
+                              </ThemeIcon>
+                            </Tooltip>
+                            <Stack gap={0}>
+                              <Text fw={"bold"}>{tree.code}</Text>
+                              <Text c={"gray"}>{tree.species}</Text>
+                            </Stack>
+                          </Group>
+                          <Menu
+                            width={200}
+                            withinPortal
+                            withArrow
+                            position="bottom-end"
+                          >
+                            <Menu.Target>
+                              <ActionIcon
+                                onPointerDown={(e) => e.stopPropagation()}
+                                variant="outline"
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                }}
+                              >
+                                <IconExchange size={18} />
+                              </ActionIcon>
+                            </Menu.Target>
+                            <Menu.Dropdown>
+                              <Stack gap="xs">
+                                <Select
+                                  placeholder="Cây trồng"
+                                  label="Cây trồng"
+                                  data={trees.map((tree) => tree.code)}
+                                  radius={4}
+                                  searchable
+                                  scrollAreaProps={{ mah: 300 }}
+                                />
+                                <Button variant="outline" fullWidth radius={4}>
+                                  Đổi
+                                </Button>
+                              </Stack>
+                            </Menu.Dropdown>
+                          </Menu>
+                        </Group>
+                      </SortableItem>
+                    ))}
+                </Stack>
+              </ScrollAreaAutosize>
+            </SortableContext>
+          </DndContext>
+        </Stack>
+        <MapContainer
+          center={position}
+          zoom={20}
+          style={{ height: "400px", width: "80%" }}
+          scrollWheelZoom={false}
+        >
+          <TileLayer url="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}" />
+
+          <Polyline positions={rowPoints} color="blue" />
+          {trees
+            .filter((item) => item.species === selectedCrop)
+            .map((tree, index) => {
+              const icon = L.divIcon({
+                className: "custom-tree-point",
+                html: `<div style="
+      width: 14px;
+      height: 14px;
+      background-color: ${selectedTreeId === tree.id ? "#1c7ed6" : "#74c0fc"};
+      border-radius: 4px;
+      border: 1px solid #ffffff;
+      box-shadow: 0 0 2px rgba(0,0,0,0.3);
+    " title="${tree.code}"></div>`,
+                iconSize: [14, 14],
+                iconAnchor: [7, 7], // center the point
+              });
+
+              return (
+                <Marker
+                  key={tree.id}
+                  draggable
+                  position={[tree.gps[1], tree.gps[0]]}
+                  icon={icon}
+                  eventHandlers={{
+                    dragend: (e) => {
+                      const latLng = e.target.getLatLng();
+                      const newTrees = [...trees];
+                      newTrees[index].gps = [latLng.lng, latLng.lat];
+                      setTrees(newTrees);
+                    },
+                    click: () => setSelectedTreeId(tree.id),
+                  }}
                 />
-              </MapContainer>
-            </Group>
-          </Card>
-        ))}
+              );
+            })}
+        </MapContainer>
       </Group>
     </Stack>
   );

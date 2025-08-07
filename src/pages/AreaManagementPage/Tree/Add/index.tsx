@@ -314,8 +314,7 @@ const AreaManagementTreeAddPage = () => {
                         </Group>
                         <NumberInput
                           flex={1}
-                          label="Số lượng cây"
-                          placeholder="Nhập số lượng"
+                          placeholder="Số lượng cây"
                           radius={4}
                           {...form.getInputProps("treeCount")}
                         />
