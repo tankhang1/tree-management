@@ -1147,20 +1147,20 @@ const AreaManagementAddRegionPage = () => {
                   <Title order={5} mb="xs">
                     🌱 Danh sách hạt giống
                   </Title>
-                  <Scrollable h={300}>
-                    <Group wrap="nowrap" gap="md" align="flex-start">
+                  <Scrollable h={350}>
+                    <Group wrap="nowrap" gap="xs" align="flex-start">
                       {areaOptions.map((area) => {
                         const plotsInArea = form.values.plots.filter(
                           (plot) => plot.areaCode === area.code
                         );
                         return plotsInArea.map((plot) => (
-                          <Group wrap="nowrap" gap="sm">
+                          <Group wrap="nowrap" gap="xs">
                             {plot.crops.map((crop, i) => (
                               <Card
                                 key={i}
                                 withBorder
                                 radius="sm"
-                                h={300}
+                                h={350}
                                 w={200}
                                 shadow="xs"
                                 p="xs"
@@ -1173,7 +1173,7 @@ const AreaManagementAddRegionPage = () => {
                                     fit="contain"
                                   />
                                   <Group justify="space-between">
-                                    <Title order={5}>{crop.cropName}</Title>
+                                    <Title order={5}>{crop.seedName}</Title>
                                     <Group gap={"xs"}>
                                       <Badge color="gray" variant="light">
                                         {crop.cropGroup}
@@ -1282,7 +1282,7 @@ const AreaManagementAddRegionPage = () => {
                                     mt="xs"
                                     style={{
                                       flexGrow: 1,
-                                      height: 320, // hoặc bất kỳ chiều cao phù hợp
+                                      height: 350, // hoặc bất kỳ chiều cao phù hợp
                                       overflowY: "auto",
                                     }}
                                   >
@@ -1293,7 +1293,7 @@ const AreaManagementAddRegionPage = () => {
                                             key={i}
                                             withBorder
                                             radius="sm"
-                                            h={300}
+                                            h={350}
                                             shadow="xs"
                                             p="xs"
                                           >
@@ -1306,7 +1306,7 @@ const AreaManagementAddRegionPage = () => {
                                               />
                                               <Group justify="space-between">
                                                 <Title order={5}>
-                                                  {crop.cropName}
+                                                  {crop.seedName}
                                                 </Title>
                                                 <Group gap={"xs"}>
                                                   <Badge
@@ -1344,16 +1344,16 @@ const AreaManagementAddRegionPage = () => {
                           </Scrollable>
                         )}
                         {type === "area" && (
-                          <Scrollable h={300}>
-                            <Group wrap="nowrap" gap="md" align="flex-start">
+                          <Scrollable h={350}>
+                            <Group wrap="nowrap" gap="xs" align="flex-start">
                               {plotsInArea.map((plot) => (
-                                <Group wrap="nowrap" gap="sm">
+                                <Group wrap="nowrap" gap="xs">
                                   {plot.crops.map((crop, i) => (
                                     <Card
                                       key={i}
                                       withBorder
                                       radius="sm"
-                                      h={300}
+                                      h={350}
                                       w={200}
                                       shadow="xs"
                                       p="xs"
@@ -1367,7 +1367,7 @@ const AreaManagementAddRegionPage = () => {
                                         />
                                         <Group justify="space-between">
                                           <Title order={5}>
-                                            {crop.cropName}
+                                            {crop.seedName}
                                           </Title>
                                           <Group gap={"xs"}>
                                             <Badge color="gray" variant="light">
