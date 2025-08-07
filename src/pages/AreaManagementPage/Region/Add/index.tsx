@@ -928,34 +928,32 @@ const AreaManagementAddRegionPage = () => {
 
                               <Box mt="xs" style={{ flexGrow: 1 }}>
                                 {plot.crops.length > 0 ? (
-                                  <Scrollable h={120}>
-                                    <Group wrap="nowrap" gap="sm">
-                                      {plot.crops.map((crop, i) => (
-                                        <Card
-                                          key={i}
-                                          withBorder
-                                          radius="sm"
-                                          shadow="xs"
-                                          p="xs"
-                                          miw={180}
-                                          style={{ flexShrink: 0 }}
-                                        >
-                                          <Text size="xs" fw={500} mb={4}>
-                                            🌾 Giống #{i + 1}
-                                          </Text>
-                                          <Text size="xs">
-                                            • Nhóm: {crop.cropGroup}
-                                          </Text>
-                                          <Text size="xs">
-                                            • Cây: {crop.cropCode}
-                                          </Text>
-                                          <Text size="xs">
-                                            • Hạt: {crop.seedCode}
-                                          </Text>
-                                        </Card>
-                                      ))}
-                                    </Group>
-                                  </Scrollable>
+                                  <Group wrap="nowrap" gap="sm">
+                                    {plot.crops.map((crop, i) => (
+                                      <Card
+                                        key={i}
+                                        withBorder
+                                        radius="sm"
+                                        shadow="xs"
+                                        p="xs"
+                                        miw={180}
+                                        style={{ flexShrink: 0 }}
+                                      >
+                                        <Text size="xs" fw={500} mb={4}>
+                                          🌾 Giống #{i + 1}
+                                        </Text>
+                                        <Text size="xs">
+                                          • Nhóm: {crop.cropGroup}
+                                        </Text>
+                                        <Text size="xs">
+                                          • Cây: {crop.cropCode}
+                                        </Text>
+                                        <Text size="xs">
+                                          • Hạt: {crop.seedCode}
+                                        </Text>
+                                      </Card>
+                                    ))}
+                                  </Group>
                                 ) : (
                                   <Text size="sm" c="dimmed">
                                     Chưa có cây trồng nào được thêm vào lô này.

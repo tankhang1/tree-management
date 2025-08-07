@@ -441,10 +441,12 @@ const AreaManagementTreeAddPage = () => {
                 ))}
 
               <Group justify="space-between" mt="md">
-                <Button variant="default" radius={4}>
+                <Button variant="default" radius={4} onClick={prevStep}>
                   Quay lại
                 </Button>
-                <Button radius={4}>Tiếp theo</Button>
+                <Button radius={4} onClick={nextStep}>
+                  Tiếp theo
+                </Button>
               </Group>
             </Stack>
           </Stepper.Step>
