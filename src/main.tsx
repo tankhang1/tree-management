@@ -1,231 +1,52 @@
-import { StrictMode } from "react";
+// index.tsx (hoặc main.tsx)
+import { StrictMode, Suspense, lazy, type ComponentType } from "react";
 import { createRoot } from "react-dom/client";
 import "./index.css";
-import App from "./App.tsx";
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
-import HomePage from "./pages/HomePage/index.tsx";
-import { PATH } from "./constants/path.constants.ts";
-import "@mantine/dates/styles.css"; //if using mantine date picker features
-import "mantine-react-table/styles.css"; //import MRT styles
+
+import "@mantine/dates/styles.css"; // if using mantine date picker features
+import "mantine-react-table/styles.css"; // import MRT styles
 import "@mantine/core/styles.css";
 import "@mantine/dropzone/styles.css";
 import "dayjs/locale/vi";
 import "leaflet/dist/leaflet.css";
 import "suneditor/dist/css/suneditor.min.css";
-import { MantineProvider, type MantineThemeOverride } from "@mantine/core";
+
+import {
+  Image,
+  MantineProvider,
+  Stack,
+  type MantineThemeOverride,
+} from "@mantine/core";
 import { ModalsProvider } from "@mantine/modals";
-import AuthPage from "./pages/AuthPage/index.tsx";
-import AreaManagementPage from "./pages/AreaManagementPage/index.tsx";
-import AreaManagementRegionPage from "./pages/AreaManagementPage/Region/index.tsx";
-import AreaManagementZonePage from "./pages/AreaManagementPage/Zone/index.tsx";
-import AreaManagementBlockPage from "./pages/AreaManagementPage/Block/index.tsx";
-import AreaManagementRowPage from "./pages/AreaManagementPage/Row/index.tsx";
-import AreaManagementTreePage from "./pages/AreaManagementPage/Tree/index.tsx";
-import AreaManagementMapPage from "./pages/AreaManagementPage/Map/index.tsx";
-import AreaManagementSoilTypePage from "./pages/AreaManagementPage/SoilType/index.tsx";
-import AreaManagementTerrainPage from "./pages/AreaManagementPage/Terrain/index.tsx";
-import AreaManagementCultivationMethodPage from "./pages/AreaManagementPage/CultivationMethod/index.tsx";
-import AreaManagementHistoryPage from "./pages/AreaManagementPage/History/index.tsx";
-import PlantManagementPage from "./pages/PlantManagementPage/index.tsx";
-import PlantManagementTreePage from "./pages/PlantManagementPage/Tree/index.tsx";
-import PlantManagementGroupPage from "./pages/PlantManagementPage/Group/index.tsx";
-import PlantManagementVarietyPage from "./pages/PlantManagementPage/Variety/index.tsx";
-import PlantManagementSeedPage from "./pages/PlantManagementPage/Seed/index.tsx";
-import PlantManagementTechnicalDocPage from "./pages/PlantManagementPage/TechnicalDoc/index.tsx";
-import SeasonManagementPage from "./pages/SeasonManagementPage/index.tsx";
-import SeasonManagementGrowthPage from "./pages/SeasonManagementPage/Growth/index.tsx";
-import SeasonManagementCyclePage from "./pages/SeasonManagementPage/Cycle/index.tsx";
-import PlanManagementPage from "./pages/PlanManagementPage/index.tsx";
-import PlanManagementMainPage from "./pages/PlanManagementPage/Main/index.tsx";
-import PlanManagementAssignPage from "./pages/PlanManagementPage/Assign/index.tsx";
-import PlanManagementUnplannedPage from "./pages/PlanManagementPage/Unplanned/index.tsx";
-import PlanManagementHistoryPage from "./pages/PlanManagementPage/History/index.tsx";
-import TaskManagementPage from "./pages/TaskManagementPage/index.tsx";
-import TaskManagementMainPage from "./pages/TaskManagementPage/Main/index.tsx";
-import TaskManagementBatmanPage from "./pages/TaskManagementPage/Batman/index.tsx";
-import HarvestManagementPage from "./pages/HarvestManagementPage/index.tsx";
-import HarvestManagementReportPage from "./pages/HarvestManagementPage/Report/index.tsx";
-import HarvestManagementQueryMapPage from "./pages/HarvestManagementPage/QueryMap/index.tsx";
-import ProductManagementPage from "./pages/ProductManagementPage/index.tsx";
-import ProductManagementItemPage from "./pages/ProductManagementPage/Item/index.tsx";
-import ProductManagementBOMPage from "./pages/ProductManagementPage/BOM/index.tsx";
-import ProductManagementRawMaterialPage from "./pages/ProductManagementPage/RawMaterial/index.tsx";
-import ContractManagementPage from "./pages/ContractManagementPage/index.tsx";
-import HRManagementPage from "./pages/HRManagementPage/index.tsx";
-import HRManagementDepartmentPage from "./pages/HRManagementPage/Department/index.tsx";
-import HRManagementPositionPage from "./pages/HRManagementPage/Position/index.tsx";
-import HRManagementTeamPage from "./pages/HRManagementPage/Team/index.tsx";
-import HRManagementEmployeePage from "./pages/HRManagementPage/Employee/index.tsx";
-import FactoryManagementPage from "./pages/FactoryManagementPage/index.tsx";
-import FactoryManagementMainPage from "./pages/FactoryManagementPage/Main/index.tsx";
-import FactoryManagementHistoryPage from "./pages/FactoryManagementPage/History/index.tsx";
-import MachineManagementPage from "./pages/MachineManagementPage/index.tsx";
-import MachineManagementMainPage from "./pages/MachineManagementPage/Main/index.tsx";
-import MachineManagementUsageHistoryPage from "./pages/MachineManagementPage/UsageHistory/index.tsx";
-import MachineManagementMaintenanceHistoryPage from "./pages/MachineManagementPage/MaintenanceHistory/index.tsx";
-import PesticideManagementPage from "./pages/PesticideManagementPage/index.tsx";
-import PesticideManagementMainPage from "./pages/PesticideManagementPage/Main/index.tsx";
-import PesticideManagementCategoryPage from "./pages/PesticideManagementPage/Category/index.tsx";
-import SupplyManagementPage from "./pages/SupplyManagementPage/index.tsx";
-import StockManagementPage from "./pages/StockManagementPage/index.tsx";
-import StockManagementSupplyPage from "./pages/StockManagementPage/Supply/index.tsx";
-import StockManagementPesticidePage from "./pages/StockManagementPage/Pesticide/index.tsx";
-import StockManagementMachinePage from "./pages/StockManagementPage/Machine/index.tsx";
-import StockManagementSeedPage from "./pages/StockManagementPage/Seed/index.tsx";
-import FarmingFormEmployeeEvaluationPage from "./pages/FarmingFormPage/Employee-Evaluation/index.tsx";
-import FarmingFormHistoryPage from "./pages/FarmingFormPage/History/index.tsx";
-import FarmingFormBatmanPage from "./pages/FarmingFormPage/Batman/index.tsx";
-import FarmingFormUnPlannedPage from "./pages/FarmingFormPage/UnPlanned/index.tsx";
-import SchedulePage from "./pages/SchedulePage/index.tsx";
-import ScheduleAddPage from "./pages/SchedulePage/Add/index.tsx";
-import GardenManagementPage from "./pages/GardenManagementPage/index.tsx";
-import GardenManagementTypePage from "./pages/GardenManagementPage/Type/index.tsx";
-import GardenManagementTypeDetailPage from "./pages/GardenManagementPage/Type/Detail/index.tsx";
-import GardenManagementAreaPage from "./pages/GardenManagementPage/Area/index.tsx";
-import GardenManagementAreaDetailPage from "./pages/GardenManagementPage/Area/Detail/index.tsx";
-import GardenManagementMapPage from "./pages/GardenManagementPage/Map/index.tsx";
-import FarmingManagementPage from "./pages/FarmingManagementPage/index.tsx";
-import FarmingManagementPlanPage from "./pages/FarmingManagementPage/Plan/index.tsx";
-import FarmingManagementTaskByPlanPage from "./pages/FarmingManagementPage/TaskByPlan/index.tsx";
-import FarmingManagementUnPlannedTaskPage from "./pages/FarmingManagementPage/UnPlannedTask/index.tsx";
-import FarmingManagementBatmanPlanPage from "./pages/FarmingManagementPage/BatmanPlan/index.tsx";
-import FarmingManagementYieldForecastPage from "./pages/FarmingManagementPage/YieldForecast/index.tsx";
-import FarmingFormPlanPage from "./pages/FarmingFormPage/Plan/index.tsx";
-import PurchasePage from "./pages/PurchasePage/index.tsx";
-import SellPage from "./pages/SellPage/index.tsx";
-import FinanceAccountPage from "./pages/FinanceAccountPage/index.tsx";
-import AreaManagementAddRegionPage from "./pages/AreaManagementPage/Region/Add/index.tsx";
-import AreaManagementRegionDetailPage from "./pages/AreaManagementPage/Region/Detail/index.tsx";
-import AreaManagementAddZonePage from "./pages/AreaManagementPage/Zone/Add/index.tsx";
-import AreaManagementZoneDetailPage from "./pages/AreaManagementPage/Zone/Detail/index.tsx";
-import AreaManagementBlockDetailPage from "./pages/AreaManagementPage/Block/Detail/index.tsx";
-import AreaManagementBlockAddPage from "./pages/AreaManagementPage/Block/Add/index.tsx";
-import PlantManagementTreeAddPage from "./pages/PlantManagementPage/Tree/Add/index.tsx";
-import PlantManagementTreeDetailPage from "./pages/PlantManagementPage/Tree/Detail/index.tsx";
-import PlantManagementCatalogPage from "./pages/PlantManagementPage/Catalog/index.tsx";
-import SeasonManagementCycleDetailPage from "./pages/SeasonManagementPage/Cycle/Detail/index.tsx";
-import SeasonManagementCycleAddPage from "./pages/SeasonManagementPage/Cycle/Add/index.tsx";
-import PlanManagementMainDetailPage from "./pages/PlanManagementPage/Main/Detail/index.tsx";
-import PlanManagementMainAddPage from "./pages/PlanManagementPage/Main/Add/index.tsx";
-import PlanManagementAssignDetailPage from "./pages/PlanManagementPage/Assign/Detail/index.tsx";
-import PlanManagementAssignAddPage from "./pages/PlanManagementPage/Assign/Add/index.tsx";
-import PlanManagementUnplannedDetailPage from "./pages/PlanManagementPage/Unplanned/Detail/index.tsx";
-import PlanManagementUnplannedAddPage from "./pages/PlanManagementPage/Unplanned/Add/index.tsx";
-import TaskManagementMainDetailPage from "./pages/TaskManagementPage/Main/Detail/index.tsx";
-import ProductManagementItemAddPage from "./pages/ProductManagementPage/Item/Add/index.tsx";
-import ContractManagementDetailPage from "./pages/ContractManagementPage/Detail/index.tsx";
-import ContractManagementAddPage from "./pages/ContractManagementPage/Add/index.tsx";
-import HRManagementTeamDetailPage from "./pages/HRManagementPage/Team/Detail/index.tsx";
-import HRManagementTeamAddPage from "./pages/HRManagementPage/Team/Add/index.tsx";
-import AreaManagementRowDetailPage from "./pages/AreaManagementPage/Row/Detail/index.tsx";
-import AreaManagementCultivationMethodAddPage from "./pages/AreaManagementPage/CultivationMethod/Add/index.tsx";
-import FactoryManagementMainAddPage from "./pages/FactoryManagementPage/Main/Add/index.tsx";
-import FactoryManagementMainDetailPage from "./pages/FactoryManagementPage/Main/Detail/index.tsx";
-import MachineManagementMainDetailPage from "./pages/MachineManagementPage/Main/Detail/index.tsx";
-import MachineManagementMainAddPage from "./pages/MachineManagementPage/Main/Add/index.tsx";
-import PesticideManagementMainDetailPage from "./pages/PesticideManagementPage/Main/Detail/index.tsx";
-import PesticideManagementMainAddPage from "./pages/PesticideManagementPage/Main/Add/index.tsx";
-import SeasonManagementGrowthDetailPage from "./pages/SeasonManagementPage/Growth/Detail/index.tsx";
-import SeasonManagementGrowthAddPage from "./pages/SeasonManagementPage/Growth/Add/index.tsx";
-import AreaManagementRowAddPage from "./pages/AreaManagementPage/Row/Add/index.tsx";
-import AreaManagementTreeAddPage from "./pages/AreaManagementPage/Tree/Add/index.tsx";
-import PlantManagementSeedAddPage from "./pages/PlantManagementPage/Seed/Add/index.tsx";
-import PlantManagementTechnicalDocDetailPage from "./pages/PlantManagementPage/TechnicalDoc/Detail/index.tsx";
-import PlantManagementTechnicalDocAddPage from "./pages/PlantManagementPage/TechnicalDoc/Add/index.tsx";
-import MapManagementAreaPage from "./pages/MapManagementPage/Area/index.tsx";
-import MapManagementPlotPage from "./pages/MapManagementPage/Plot/index.tsx";
-import MapManagementMapPage from "./pages/MapManagementPage/Map/index.tsx";
-import MapManagementTerrainPage from "./pages/MapManagementPage/Terrain/index.tsx";
-import MapManagementRegionPage from "./pages/MapManagementPage/Region/index.tsx";
-import MapManagementAddRegionPage from "./pages/MapManagementPage/Region/Add/index.tsx";
-import MapManagementRegionDetailPage from "./pages/MapManagementPage/Region/Detail/index.tsx";
-import MapManagementAddAreaPage from "./pages/MapManagementPage/Area/Add/index.tsx";
-import MapManagementAreaDetailPage from "./pages/MapManagementPage/Area/Detail/index.tsx";
-import MapManagementPlotAddPage from "./pages/MapManagementPage/Plot/Add/index.tsx";
-import MapManagementDetailPlotPage from "./pages/MapManagementPage/Plot/Detail/index.tsx";
-import StockManagementAreaPage from "./pages/StockManagementPage/Area/index.tsx";
-import StockManagementAddAreaPage from "./pages/StockManagementPage/Area/Add/index.tsx";
-import StockManagementAreaDetailPage from "./pages/StockManagementPage/Area/Detail/index.tsx";
-import StockManagementFertilizerPage from "./pages/StockManagementPage/Fertilizer/index.tsx";
-import FertilizerManagementTypePage from "./pages/FertilizerManagementPage/Type/index.tsx";
-import FertilizerManagementMainPage from "./pages/FertilizerManagementPage/Main/index.tsx";
-import StockManagementDeliveryPage from "./pages/StockManagementPage/Delivery/index.tsx";
-import StockManagementAddDeliveryPage from "./pages/StockManagementPage/Delivery/Add/index.tsx";
-import StockManagementDeliveryDetailPage from "./pages/StockManagementPage/Delivery/Detail/index.tsx";
-import CompanyPage from "./pages/CompanyPage/index.tsx";
-import VendorPage from "./pages/VendorPage/index.tsx";
-import CompanyDetailPage from "./pages/CompanyPage/Detail/index.tsx";
-import { CompanyAddPage } from "./pages/CompanyPage/Add/index.tsx";
-import HRManagementEmployeeAddPage from "./pages/HRManagementPage/Employee/Add/index.tsx";
-import HRManagementEmployeeDetailPage from "./pages/HRManagementPage/Employee/Detail/index.tsx";
-import SupplyManagementAddPage from "./pages/SupplyManagementPage/Add/index.tsx";
-import FertilizerManagementMainAddPage from "./pages/FertilizerManagementPage/Main/Add/index.tsx";
-import StockManagementIOPage from "./pages/StockManagementPage/Supply/Add/index.tsx";
-import SupplyManagementCategoryPage from "./pages/SupplyManagementPage/Type/index.tsx";
-import MachineManagementCategoryPage from "./pages/MachineManagementPage/Type/index.tsx";
-import PesticideUsageHistoryPage from "./pages/PesticideManagementPage/MaintenanceHistory/index.tsx";
-import SupplyManagementUsageHistoryPage from "./pages/SupplyManagementPage/UsageHistory/index.tsx";
-import FertilizerManagementUsageHistoryPage from "./pages/FertilizerManagementPage/UsageHistory/index.tsx";
-import MachineManagementDisposalHistoryPage from "./pages/MachineManagementPage/Disposal/index.tsx";
-import PesticideManagementDisposalPage from "./pages/PesticideManagementPage/Disposal/index.tsx";
-import SupplyManagementDisposalPage from "./pages/SupplyManagementPage/Disposal/index.tsx";
-import FertilizerManagementDisposalPage from "./pages/FertilizerManagementPage/Disposal/index.tsx";
-import ProductManagementTypePage from "./pages/ProductManagementPage/Type/index.tsx";
-import ProductManagementRawMaterialTypePage from "./pages/ProductManagementPage/RawMaterial/Type/index.tsx";
-import ProductManagementRawMaterialAddPage from "./pages/ProductManagementPage/RawMaterial/Add/index.tsx";
-import PurchaseManagementProductPage from "./pages/PurchaseManagementPage/Product/index.tsx";
-import PurchaseManagementMaterialPage from "./pages/PurchaseManagementPage/Material/index.tsx";
-import PurchaseManagementProductAddPage from "./pages/PurchaseManagementPage/Product/Add/index.tsx";
-import PurchaseManagementMaterialAddPage from "./pages/PurchaseManagementPage/Material/Add/index.tsx";
-import OrderManagememtQuickPage from "./pages/OrderManagementPage/Quick/index.tsx";
-import OrderManagementAddressPage from "./pages/OrderManagementPage/Address/index.tsx";
-import BillManagementUserPage from "./pages/BillManagementPage/User/index.tsx";
-import BillManagementUserDetailPage from "./pages/BillManagementPage/User/Detail/index.tsx";
-import BillManagementCompanyPage from "./pages/BillManagementPage/Company/index.tsx";
-import BillManagementCompanyDetailPage from "./pages/BillManagementPage/Company/Detail/index.tsx";
-import DebtManagementReceivablePage from "./pages/DebtManagementPage/Receivable/index.tsx";
-import DebtManagementReceivableAddPage from "./pages/DebtManagementPage/Receivable/Add/index.tsx";
-import DebtManagementReceivableDetailPage from "./pages/DebtManagementPage/Receivable/Detail/index.tsx";
-import DebtManagementPayablePage from "./pages/DebtManagementPage/Payable/index.tsx";
-import DebtManagementPayableAddPage from "./pages/DebtManagementPage/Payable/Add/index.tsx";
-import DebtManagementPayableDetailPage from "./pages/DebtManagementPage/Payable/Detail/index.tsx";
-import PackagingSpecificationPage from "./pages/PackagingSpecificationPage/index.tsx";
-import BillManagementCompanyAddPage from "./pages/BillManagementPage/Company/Add/index.tsx";
-import OrderManagementCreatePage from "./pages/OrderManagementPage/Create/index.tsx";
-import CompanyAddressPage from "./pages/CompanyPage/Address/index.tsx";
-import CompanyAddressAddPage from "./pages/CompanyPage/Address/Add/index.tsx";
-import BankManagementPage from "./pages/BankManagementPage/index.tsx";
-import FinancePurposeExpensePage from "./pages/FinancePage/PurposeExpense/index.tsx";
-import FinancePurposeExpenseAddPage from "./pages/FinancePage/PurposeExpense/Add/index.tsx";
-import FinancePurposeReceivePage from "./pages/FinancePage/PurposeReceive/index.tsx";
-import FinancePurposeReceiveAddPage from "./pages/FinancePage/PurposeReceive/Add/index.tsx";
-import FinancePurposeHistoryPage from "./pages/FinancePage/History/index.tsx";
-import FinancePurposeStatisticPage from "./pages/FinancePage/Statistics/index.tsx";
-import FinancePurposeManagementPage from "./pages/FinancePage/Purpose/index.tsx";
-import ContactPage from "./pages/ContactPage/index.tsx";
+import { PATH } from "./constants/path.constants";
+import Loading from "./assets/loading.svg";
+// =============================
+// Theme (giữ nguyên như bạn có)
+// =============================
 const theme: MantineThemeOverride = {
   fontFamily: "MyFont, sans-serif",
   primaryColor: "brand",
   colors: {
     brand: [
-      "#E6F4EC", // brand[0] - lightest
+      "#E6F4EC",
       "#C1E4D1",
       "#9CD4B7",
       "#76C59C",
       "#51B581",
-      "#4CAF50", // brand[5] - main leaf green
+      "#4CAF50",
       "#3D9E45",
       "#2E873A",
       "#1F7030",
-      "#1A5013", // brand[9] - dark green
+      "#1A5013",
     ],
     accent: [
       "#FFF3E0",
       "#FFE0B2",
       "#FFCC80",
       "#FFB74D",
-      "#FFA726", // main yellow-orange
-      "#FB8C00", // hover/active orange
+      "#FFA726",
+      "#FB8C00",
       "#EF6C00",
       "#E65100",
       "#BF360C",
@@ -238,590 +59,1730 @@ const theme: MantineThemeOverride = {
         root: {
           transition: "all 0.2s ease",
           "&:hover": {
-            backgroundColor: "#E8F5E9", // light green background
-            color: "#388E3C", // darker green
+            backgroundColor: "#E8F5E9",
+            color: "#388E3C",
             borderColor: "#388E3C",
           },
         },
       }),
     },
   },
-  headings: {
-    fontFamily: "MyFont, sans-serif",
-  },
-
+  headings: { fontFamily: "MyFont, sans-serif" },
   defaultRadius: "md",
 };
+
+// =============================
+// Helpers
+// =============================
+function PageLoader() {
+  return (
+    <Stack justify="center" align="center" style={{ height: "100vh" }}>
+      <Image src={Loading} w={100} h={100} />
+    </Stack>
+  );
+}
+
+const withSuspense = (node: React.ReactNode) => (
+  <Suspense fallback={<PageLoader />}>{node}</Suspense>
+);
+
+// Generic lazy helper (để có type tốt với TS)
+const L = <T extends ComponentType<unknown>>(
+  imp: () => Promise<{ default: T }>
+) => lazy(imp);
+
+// =============================
+// Lazy imports (toàn bộ pages)
+// =============================
+
+// Shell
+const App = L(() => import("./App"));
+
+// Top-level
+const AuthPage = L(() => import("./pages/AuthPage"));
+const HomePage = L(() => import("./pages/HomePage"));
+const SchedulePage = L(() => import("./pages/SchedulePage"));
+const ScheduleAddPage = L(() => import("./pages/SchedulePage/Add"));
+const ContactPage = L(() => import("./pages/ContactPage"));
+
+// Area Management
+const AreaManagementPage = L(() => import("./pages/AreaManagementPage"));
+const AreaManagementRegionPage = L(
+  () => import("./pages/AreaManagementPage/Region")
+);
+const AreaManagementZonePage = L(
+  () => import("./pages/AreaManagementPage/Zone")
+);
+const AreaManagementBlockPage = L(
+  () => import("./pages/AreaManagementPage/Block")
+);
+const AreaManagementRowPage = L(() => import("./pages/AreaManagementPage/Row"));
+const AreaManagementTreePage = L(
+  () => import("./pages/AreaManagementPage/Tree")
+);
+const AreaManagementMapPage = L(() => import("./pages/AreaManagementPage/Map"));
+const AreaManagementSoilTypePage = L(
+  () => import("./pages/AreaManagementPage/SoilType")
+);
+const AreaManagementTerrainPage = L(
+  () => import("./pages/AreaManagementPage/Terrain")
+);
+const AreaManagementCultivationMethodPage = L(
+  () => import("./pages/AreaManagementPage/CultivationMethod")
+);
+const AreaManagementHistoryPage = L(
+  () => import("./pages/AreaManagementPage/History")
+);
+const AreaManagementAddRegionPage = L(
+  () => import("./pages/AreaManagementPage/Region/Add")
+);
+const AreaManagementRegionDetailPage = L(
+  () => import("./pages/AreaManagementPage/Region/Detail")
+);
+const AreaManagementAddZonePage = L(
+  () => import("./pages/AreaManagementPage/Zone/Add")
+);
+const AreaManagementZoneDetailPage = L(
+  () => import("./pages/AreaManagementPage/Zone/Detail")
+);
+const AreaManagementBlockDetailPage = L(
+  () => import("./pages/AreaManagementPage/Block/Detail")
+);
+const AreaManagementBlockAddPage = L(
+  () => import("./pages/AreaManagementPage/Block/Add")
+);
+const AreaManagementRowDetailPage = L(
+  () => import("./pages/AreaManagementPage/Row/Detail")
+);
+const AreaManagementRowAddPage = L(
+  () => import("./pages/AreaManagementPage/Row/Add")
+);
+const AreaManagementTreeAddPage = L(
+  () => import("./pages/AreaManagementPage/Tree/Add")
+);
+const AreaManagementCultivationMethodAddPage = L(
+  () => import("./pages/AreaManagementPage/CultivationMethod/Add")
+);
+
+// Plant Management
+const PlantManagementPage = L(() => import("./pages/PlantManagementPage"));
+const PlantManagementTreePage = L(
+  () => import("./pages/PlantManagementPage/Tree")
+);
+const PlantManagementGroupPage = L(
+  () => import("./pages/PlantManagementPage/Group")
+);
+const PlantManagementVarietyPage = L(
+  () => import("./pages/PlantManagementPage/Variety")
+);
+const PlantManagementSeedPage = L(
+  () => import("./pages/PlantManagementPage/Seed")
+);
+const PlantManagementTechnicalDocPage = L(
+  () => import("./pages/PlantManagementPage/TechnicalDoc")
+);
+const PlantManagementTreeAddPage = L(
+  () => import("./pages/PlantManagementPage/Tree/Add")
+);
+const PlantManagementTreeDetailPage = L(
+  () => import("./pages/PlantManagementPage/Tree/Detail")
+);
+const PlantManagementCatalogPage = L(
+  () => import("./pages/PlantManagementPage/Catalog")
+);
+const PlantManagementSeedAddPage = L(
+  () => import("./pages/PlantManagementPage/Seed/Add")
+);
+const PlantManagementTechnicalDocDetailPage = L(
+  () => import("./pages/PlantManagementPage/TechnicalDoc/Detail")
+);
+const PlantManagementTechnicalDocAddPage = L(
+  () => import("./pages/PlantManagementPage/TechnicalDoc/Add")
+);
+
+// Season Management
+const SeasonManagementPage = L(() => import("./pages/SeasonManagementPage"));
+const SeasonManagementGrowthPage = L(
+  () => import("./pages/SeasonManagementPage/Growth")
+);
+const SeasonManagementCyclePage = L(
+  () => import("./pages/SeasonManagementPage/Cycle")
+);
+const SeasonManagementGrowthDetailPage = L(
+  () => import("./pages/SeasonManagementPage/Growth/Detail")
+);
+const SeasonManagementGrowthAddPage = L(
+  () => import("./pages/SeasonManagementPage/Growth/Add")
+);
+const SeasonManagementCycleDetailPage = L(
+  () => import("./pages/SeasonManagementPage/Cycle/Detail")
+);
+const SeasonManagementCycleAddPage = L(
+  () => import("./pages/SeasonManagementPage/Cycle/Add")
+);
+
+// Plan Management
+const PlanManagementPage = L(() => import("./pages/PlanManagementPage"));
+const PlanManagementMainPage = L(
+  () => import("./pages/PlanManagementPage/Main")
+);
+const PlanManagementAssignPage = L(
+  () => import("./pages/PlanManagementPage/Assign")
+);
+const PlanManagementUnplannedPage = L(
+  () => import("./pages/PlanManagementPage/Unplanned")
+);
+const PlanManagementHistoryPage = L(
+  () => import("./pages/PlanManagementPage/History")
+);
+const PlanManagementMainDetailPage = L(
+  () => import("./pages/PlanManagementPage/Main/Detail")
+);
+const PlanManagementMainAddPage = L(
+  () => import("./pages/PlanManagementPage/Main/Add")
+);
+const PlanManagementAssignDetailPage = L(
+  () => import("./pages/PlanManagementPage/Assign/Detail")
+);
+const PlanManagementAssignAddPage = L(
+  () => import("./pages/PlanManagementPage/Assign/Add")
+);
+const PlanManagementUnplannedDetailPage = L(
+  () => import("./pages/PlanManagementPage/Unplanned/Detail")
+);
+const PlanManagementUnplannedAddPage = L(
+  () => import("./pages/PlanManagementPage/Unplanned/Add")
+);
+
+// Task Management
+const TaskManagementPage = L(() => import("./pages/TaskManagementPage"));
+const TaskManagementMainPage = L(
+  () => import("./pages/TaskManagementPage/Main")
+);
+const TaskManagementBatmanPage = L(
+  () => import("./pages/TaskManagementPage/Batman")
+);
+const TaskManagementMainDetailPage = L(
+  () => import("./pages/TaskManagementPage/Main/Detail")
+);
+
+// Harvest Management
+const HarvestManagementPage = L(() => import("./pages/HarvestManagementPage"));
+const HarvestManagementReportPage = L(
+  () => import("./pages/HarvestManagementPage/Report")
+);
+const HarvestManagementQueryMapPage = L(
+  () => import("./pages/HarvestManagementPage/QueryMap")
+);
+
+// Product Management
+const ProductManagementPage = L(() => import("./pages/ProductManagementPage"));
+const ProductManagementItemPage = L(
+  () => import("./pages/ProductManagementPage/Item")
+);
+const ProductManagementBOMPage = L(
+  () => import("./pages/ProductManagementPage/BOM")
+);
+const ProductManagementRawMaterialPage = L(
+  () => import("./pages/ProductManagementPage/RawMaterial")
+);
+const ProductManagementItemAddPage = L(
+  () => import("./pages/ProductManagementPage/Item/Add")
+);
+const ProductManagementRawMaterialTypePage = L(
+  () => import("./pages/ProductManagementPage/RawMaterial/Type")
+);
+const ProductManagementRawMaterialAddPage = L(
+  () => import("./pages/ProductManagementPage/RawMaterial/Add")
+);
+const ProductManagementTypePage = L(
+  () => import("./pages/ProductManagementPage/Type")
+);
+
+// Contract Management
+const ContractManagementPage = L(
+  () => import("./pages/ContractManagementPage")
+);
+const ContractManagementDetailPage = L(
+  () => import("./pages/ContractManagementPage/Detail")
+);
+const ContractManagementAddPage = L(
+  () => import("./pages/ContractManagementPage/Add")
+);
+
+// HR Management
+const HRManagementPage = L(() => import("./pages/HRManagementPage"));
+const HRManagementDepartmentPage = L(
+  () => import("./pages/HRManagementPage/Department")
+);
+const HRManagementPositionPage = L(
+  () => import("./pages/HRManagementPage/Position")
+);
+const HRManagementTeamPage = L(() => import("./pages/HRManagementPage/Team"));
+const HRManagementEmployeePage = L(
+  () => import("./pages/HRManagementPage/Employee")
+);
+const HRManagementTeamDetailPage = L(
+  () => import("./pages/HRManagementPage/Team/Detail")
+);
+const HRManagementTeamAddPage = L(
+  () => import("./pages/HRManagementPage/Team/Add")
+);
+const HRManagementEmployeeAddPage = L(
+  () => import("./pages/HRManagementPage/Employee/Add")
+);
+const HRManagementEmployeeDetailPage = L(
+  () => import("./pages/HRManagementPage/Employee/Detail")
+);
+
+// Factory Management
+const FactoryManagementPage = L(() => import("./pages/FactoryManagementPage"));
+const FactoryManagementMainPage = L(
+  () => import("./pages/FactoryManagementPage/Main")
+);
+const FactoryManagementHistoryPage = L(
+  () => import("./pages/FactoryManagementPage/History")
+);
+const FactoryManagementMainAddPage = L(
+  () => import("./pages/FactoryManagementPage/Main/Add")
+);
+const FactoryManagementMainDetailPage = L(
+  () => import("./pages/FactoryManagementPage/Main/Detail")
+);
+
+// Machine Management
+const MachineManagementPage = L(() => import("./pages/MachineManagementPage"));
+const MachineManagementMainPage = L(
+  () => import("./pages/MachineManagementPage/Main")
+);
+const MachineManagementUsageHistoryPage = L(
+  () => import("./pages/MachineManagementPage/UsageHistory")
+);
+const MachineManagementMaintenanceHistoryPage = L(
+  () => import("./pages/MachineManagementPage/MaintenanceHistory")
+);
+const MachineManagementDisposalHistoryPage = L(
+  () => import("./pages/MachineManagementPage/Disposal")
+);
+const MachineManagementMainDetailPage = L(
+  () => import("./pages/MachineManagementPage/Main/Detail")
+);
+const MachineManagementMainAddPage = L(
+  () => import("./pages/MachineManagementPage/Main/Add")
+);
+const MachineManagementCategoryPage = L(
+  () => import("./pages/MachineManagementPage/Type")
+);
+
+// Pesticide Management
+const PesticideManagementPage = L(
+  () => import("./pages/PesticideManagementPage")
+);
+const PesticideManagementMainPage = L(
+  () => import("./pages/PesticideManagementPage/Main")
+);
+const PesticideManagementCategoryPage = L(
+  () => import("./pages/PesticideManagementPage/Category")
+);
+const PesticideManagementMainDetailPage = L(
+  () => import("./pages/PesticideManagementPage/Main/Detail")
+);
+const PesticideManagementMainAddPage = L(
+  () => import("./pages/PesticideManagementPage/Main/Add")
+);
+const PesticideManagementDisposalPage = L(
+  () => import("./pages/PesticideManagementPage/Disposal")
+);
+const PesticideUsageHistoryPage = L(
+  () => import("./pages/PesticideManagementPage/MaintenanceHistory")
+);
+
+// Supply / Stock / Fertilizer
+const SupplyManagementPage = L(() => import("./pages/SupplyManagementPage"));
+const StockManagementPage = L(() => import("./pages/StockManagementPage"));
+const StockManagementSupplyPage = L(
+  () => import("./pages/StockManagementPage/Supply")
+);
+const StockManagementPesticidePage = L(
+  () => import("./pages/StockManagementPage/Pesticide")
+);
+const StockManagementMachinePage = L(
+  () => import("./pages/StockManagementPage/Machine")
+);
+const StockManagementSeedPage = L(
+  () => import("./pages/StockManagementPage/Seed")
+);
+const FarmingFormEmployeeEvaluationPage = L(
+  () => import("./pages/FarmingFormPage/Employee-Evaluation")
+);
+const FarmingFormHistoryPage = L(
+  () => import("./pages/FarmingFormPage/History")
+);
+const FarmingFormBatmanPage = L(() => import("./pages/FarmingFormPage/Batman"));
+const FarmingFormUnPlannedPage = L(
+  () => import("./pages/FarmingFormPage/UnPlanned")
+);
+const StockManagementAreaPage = L(
+  () => import("./pages/StockManagementPage/Area")
+);
+const StockManagementAddAreaPage = L(
+  () => import("./pages/StockManagementPage/Area/Add")
+);
+const StockManagementAreaDetailPage = L(
+  () => import("./pages/StockManagementPage/Area/Detail")
+);
+const StockManagementFertilizerPage = L(
+  () => import("./pages/StockManagementPage/Fertilizer")
+);
+const FertilizerManagementTypePage = L(
+  () => import("./pages/FertilizerManagementPage/Type")
+);
+const FertilizerManagementMainPage = L(
+  () => import("./pages/FertilizerManagementPage/Main")
+);
+const StockManagementDeliveryPage = L(
+  () => import("./pages/StockManagementPage/Delivery")
+);
+const StockManagementAddDeliveryPage = L(
+  () => import("./pages/StockManagementPage/Delivery/Add")
+);
+const StockManagementDeliveryDetailPage = L(
+  () => import("./pages/StockManagementPage/Delivery/Detail")
+);
+const FertilizerManagementMainAddPage = L(
+  () => import("./pages/FertilizerManagementPage/Main/Add")
+);
+const StockManagementIOPage = L(
+  () => import("./pages/StockManagementPage/Supply/Add")
+);
+const SupplyManagementCategoryPage = L(
+  () => import("./pages/SupplyManagementPage/Type")
+);
+const SupplyManagementUsageHistoryPage = L(
+  () => import("./pages/SupplyManagementPage/UsageHistory")
+);
+const FertilizerManagementUsageHistoryPage = L(
+  () => import("./pages/FertilizerManagementPage/UsageHistory")
+);
+const SupplyManagementDisposalPage = L(
+  () => import("./pages/SupplyManagementPage/Disposal")
+);
+const FertilizerManagementDisposalPage = L(
+  () => import("./pages/FertilizerManagementPage/Disposal")
+);
+
+// Garden Management
+const GardenManagementPage = L(() => import("./pages/GardenManagementPage"));
+const GardenManagementTypePage = L(
+  () => import("./pages/GardenManagementPage/Type")
+);
+const GardenManagementTypeDetailPage = L(
+  () => import("./pages/GardenManagementPage/Type/Detail")
+);
+const GardenManagementAreaPage = L(
+  () => import("./pages/GardenManagementPage/Area")
+);
+const GardenManagementAreaDetailPage = L(
+  () => import("./pages/GardenManagementPage/Area/Detail")
+);
+const GardenManagementMapPage = L(
+  () => import("./pages/GardenManagementPage/Map")
+);
+
+// Farming Management
+const FarmingManagementPage = L(() => import("./pages/FarmingManagementPage"));
+const FarmingManagementPlanPage = L(
+  () => import("./pages/FarmingManagementPage/Plan")
+);
+const FarmingManagementTaskByPlanPage = L(
+  () => import("./pages/FarmingManagementPage/TaskByPlan")
+);
+const FarmingManagementUnPlannedTaskPage = L(
+  () => import("./pages/FarmingManagementPage/UnPlannedTask")
+);
+const FarmingManagementBatmanPlanPage = L(
+  () => import("./pages/FarmingManagementPage/BatmanPlan")
+);
+const FarmingManagementYieldForecastPage = L(
+  () => import("./pages/FarmingManagementPage/YieldForecast")
+);
+
+// Farming Form by Plan
+const FarmingFormPlanPage = L(() => import("./pages/FarmingFormPage/Plan"));
+
+// Map Management
+const MapManagementAreaPage = L(() => import("./pages/MapManagementPage/Area"));
+const MapManagementPlotPage = L(() => import("./pages/MapManagementPage/Plot"));
+const MapManagementMapPage = L(() => import("./pages/MapManagementPage/Map"));
+const MapManagementTerrainPage = L(
+  () => import("./pages/MapManagementPage/Terrain")
+);
+const MapManagementRegionPage = L(
+  () => import("./pages/MapManagementPage/Region")
+);
+const MapManagementAddRegionPage = L(
+  () => import("./pages/MapManagementPage/Region/Add")
+);
+const MapManagementRegionDetailPage = L(
+  () => import("./pages/MapManagementPage/Region/Detail")
+);
+const MapManagementAddAreaPage = L(
+  () => import("./pages/MapManagementPage/Area/Add")
+);
+const MapManagementAreaDetailPage = L(
+  () => import("./pages/MapManagementPage/Area/Detail")
+);
+const MapManagementPlotAddPage = L(
+  () => import("./pages/MapManagementPage/Plot/Add")
+);
+const MapManagementDetailPlotPage = L(
+  () => import("./pages/MapManagementPage/Plot/Detail")
+);
+
+// Purchase / Sell / Finance
+const PurchasePage = L(() => import("./pages/PurchasePage"));
+const SellPage = L(() => import("./pages/SellPage"));
+const FinanceAccountPage = L(() => import("./pages/FinanceAccountPage"));
+const FinancePurposeExpensePage = L(
+  () => import("./pages/FinancePage/PurposeExpense")
+);
+const FinancePurposeExpenseAddPage = L(
+  () => import("./pages/FinancePage/PurposeExpense/Add")
+);
+const FinancePurposeReceivePage = L(
+  () => import("./pages/FinancePage/PurposeReceive")
+);
+const FinancePurposeReceiveAddPage = L(
+  () => import("./pages/FinancePage/PurposeReceive/Add")
+);
+const FinancePurposeHistoryPage = L(
+  () => import("./pages/FinancePage/History")
+);
+const FinancePurposeStatisticPage = L(
+  () => import("./pages/FinancePage/Statistics")
+);
+const FinancePurposeManagementPage = L(
+  () => import("./pages/FinancePage/Purpose")
+);
+
+// Company / Vendor / Order / Bill / Debt / Packaging
+const CompanyPage = L(() => import("./pages/CompanyPage"));
+const VendorPage = L(() => import("./pages/VendorPage"));
+const CompanyDetailPage = L(() => import("./pages/CompanyPage/Detail"));
+const CompanyAddPage = L(() => import("./pages/CompanyPage/Add"));
+const HRManagementEmployeeAddPage2 = HRManagementEmployeeAddPage; // alias tránh nhầm tên
+const HRManagementEmployeeDetailPage2 = HRManagementEmployeeDetailPage; // alias
+const SupplyManagementAddPage = L(
+  () => import("./pages/SupplyManagementPage/Add")
+);
+const PurchaseManagementProductPage = L(
+  () => import("./pages/PurchaseManagementPage/Product")
+);
+const PurchaseManagementMaterialPage = L(
+  () => import("./pages/PurchaseManagementPage/Material")
+);
+const PurchaseManagementProductAddPage = L(
+  () => import("./pages/PurchaseManagementPage/Product/Add")
+);
+const PurchaseManagementMaterialAddPage = L(
+  () => import("./pages/PurchaseManagementPage/Material/Add")
+);
+const OrderManagememtQuickPage = L(
+  () => import("./pages/OrderManagementPage/Quick")
+);
+const OrderManagementAddressPage = L(
+  () => import("./pages/OrderManagementPage/Address")
+);
+const BillManagementUserPage = L(
+  () => import("./pages/BillManagementPage/User")
+);
+const BillManagementUserDetailPage = L(
+  () => import("./pages/BillManagementPage/User/Detail")
+);
+const BillManagementCompanyPage = L(
+  () => import("./pages/BillManagementPage/Company")
+);
+const BillManagementCompanyDetailPage = L(
+  () => import("./pages/BillManagementPage/Company/Detail")
+);
+const DebtManagementReceivablePage = L(
+  () => import("./pages/DebtManagementPage/Receivable")
+);
+const DebtManagementReceivableAddPage = L(
+  () => import("./pages/DebtManagementPage/Receivable/Add")
+);
+const DebtManagementReceivableDetailPage = L(
+  () => import("./pages/DebtManagementPage/Receivable/Detail")
+);
+const DebtManagementPayablePage = L(
+  () => import("./pages/DebtManagementPage/Payable")
+);
+const DebtManagementPayableAddPage = L(
+  () => import("./pages/DebtManagementPage/Payable/Add")
+);
+const DebtManagementPayableDetailPage = L(
+  () => import("./pages/DebtManagementPage/Payable/Detail")
+);
+const PackagingSpecificationPage = L(
+  () => import("./pages/PackagingSpecificationPage")
+);
+const BillManagementCompanyAddPage = L(
+  () => import("./pages/BillManagementPage/Company/Add")
+);
+const OrderManagementCreatePage = L(
+  () => import("./pages/OrderManagementPage/Create")
+);
+const CompanyAddressPage = L(() => import("./pages/CompanyPage/Address"));
+const CompanyAddressAddPage = L(
+  () => import("./pages/CompanyPage/Address/Add")
+);
+const BankManagementPage = L(() => import("./pages/BankManagementPage"));
+const CompanyAddPage2 = CompanyAddPage; // alias giữ tên cũ
+
+// Map/Season/Plan History aliases (trong code gốc đều dùng AreaManagementHistoryPage)
+const MapHistoryPage = AreaManagementHistoryPage;
+const SeasonHistoryPage = AreaManagementHistoryPage;
+const PlanHistoryPageAlias = AreaManagementHistoryPage;
+const TaskHistoryPage = AreaManagementHistoryPage;
+const ProductHistoryPage = AreaManagementHistoryPage;
+const FertilizerHistoryAlias = AreaManagementHistoryPage;
+const PesticideHistoryAlias = AreaManagementHistoryPage;
+const SupplyHistoryPage = AreaManagementHistoryPage;
+const CompanyHistoryPage = AreaManagementHistoryPage;
+const HRHistoryPage = AreaManagementHistoryPage;
+const ContractHistoryPage = AreaManagementHistoryPage;
+const PurchaseManagementHistoryPage = AreaManagementHistoryPage;
+const OrderManagementHistoryPage = AreaManagementHistoryPage;
+
+// Finance Purpose (đã import ở trên)
+
+// =============================
+// ROUTES
+// =============================
 const ROUTES = [
-  <Route path={PATH.AUTH} element={<AuthPage />} />,
-  <Route path={PATH.HOME} element={<HomePage />} />,
-  <Route path={PATH.SCHEDULE} element={<SchedulePage />} />,
-  <Route path={PATH.SCHEDULE_ADD} element={<ScheduleAddPage />} />,
+  <Route key="auth" path={PATH.AUTH} element={withSuspense(<AuthPage />)} />,
 
-  <Route path={PATH.GARDEN_MANAGEMENT} element={<GardenManagementPage />} />,
+  <Route key="home" path={PATH.HOME} element={withSuspense(<HomePage />)} />,
+
   <Route
+    key="schedule"
+    path={PATH.SCHEDULE}
+    element={withSuspense(<SchedulePage />)}
+  />,
+  <Route
+    key="schedule_add"
+    path={PATH.SCHEDULE_ADD}
+    element={withSuspense(<ScheduleAddPage />)}
+  />,
+
+  <Route
+    key="garden_mgmt"
+    path={PATH.GARDEN_MANAGEMENT}
+    element={withSuspense(<GardenManagementPage />)}
+  />,
+  <Route
+    key="garden_type"
     path={PATH.GARDEN_MANAGEMENT_TYPE}
-    element={<GardenManagementTypePage />}
+    element={withSuspense(<GardenManagementTypePage />)}
   />,
   <Route
+    key="garden_type_detail"
     path={PATH.GARDEN_MANAGEMENT_TYPE_DETAIL}
-    element={<GardenManagementTypeDetailPage />}
+    element={withSuspense(<GardenManagementTypeDetailPage />)}
   />,
   <Route
+    key="garden_area"
     path={PATH.GARDEN_MANAGEMENT_AREA}
-    element={<GardenManagementAreaPage />}
+    element={withSuspense(<GardenManagementAreaPage />)}
   />,
   <Route
+    key="garden_area_detail"
     path={PATH.GARDEN_MANAGEMENT_AREA_DETAIL}
-    element={<GardenManagementAreaDetailPage />}
+    element={withSuspense(<GardenManagementAreaDetailPage />)}
   />,
   <Route
+    key="garden_map"
     path={PATH.GARDEN_MANAGEMENT_MAP}
-    element={<GardenManagementMapPage />}
+    element={withSuspense(<GardenManagementMapPage />)}
   />,
 
-  <Route path={PATH.FARMING_MANAGEMENT} element={<FarmingManagementPage />} />,
-  <Route path={PATH.FARMING_PLAN} element={<FarmingManagementPlanPage />} />,
   <Route
+    key="farming_mgmt"
+    path={PATH.FARMING_MANAGEMENT}
+    element={withSuspense(<FarmingManagementPage />)}
+  />,
+  <Route
+    key="farming_plan"
+    path={PATH.FARMING_PLAN}
+    element={withSuspense(<FarmingManagementPlanPage />)}
+  />,
+  <Route
+    key="farming_task_by_plan"
     path={PATH.FARMING_TASK_BY_PLAN}
-    element={<FarmingManagementTaskByPlanPage />}
+    element={withSuspense(<FarmingManagementTaskByPlanPage />)}
   />,
   <Route
+    key="farming_unplanned_task"
     path={PATH.FARMING_UNPLANNED_TASK}
-    element={<FarmingManagementUnPlannedTaskPage />}
+    element={withSuspense(<FarmingManagementUnPlannedTaskPage />)}
   />,
   <Route
+    key="farming_batman_plan"
     path={PATH.FARMING_BATMAN_PLAN}
-    element={<FarmingManagementBatmanPlanPage />}
+    element={withSuspense(<FarmingManagementBatmanPlanPage />)}
   />,
   <Route
+    key="farming_yield"
     path={PATH.FARMING_YIELD_FORECAST}
-    element={<FarmingManagementYieldForecastPage />}
+    element={withSuspense(<FarmingManagementYieldForecastPage />)}
   />,
-  <Route path={PATH.FARMING_FORM_BY_PLAN} element={<FarmingFormPlanPage />} />,
+
   <Route
+    key="farming_form_by_plan"
+    path={PATH.FARMING_FORM_BY_PLAN}
+    element={withSuspense(<FarmingFormPlanPage />)}
+  />,
+  <Route
+    key="farming_form_unplanned"
     path={PATH.FARMING_FORM_UNPLANNED}
-    element={<FarmingFormUnPlannedPage />}
+    element={withSuspense(<FarmingFormUnPlannedPage />)}
   />,
-  <Route path={PATH.FARMING_FORM_BATMAN} element={<FarmingFormBatmanPage />} />,
   <Route
+    key="farming_form_batman"
+    path={PATH.FARMING_FORM_BATMAN}
+    element={withSuspense(<FarmingFormBatmanPage />)}
+  />,
+  <Route
+    key="farming_form_history"
     path={PATH.FARMING_FORM_HISTORY}
-    element={<FarmingFormHistoryPage />}
+    element={withSuspense(<FarmingFormHistoryPage />)}
   />,
   <Route
+    key="farming_form_employee_evaluation"
     path={PATH.FARMING_FORM_EMPLOYEE_EVALUATION}
-    element={<FarmingFormEmployeeEvaluationPage />}
+    element={withSuspense(<FarmingFormEmployeeEvaluationPage />)}
   />,
 
-  <Route path={PATH.AREA_MANAGEMENT} element={<AreaManagementPage />} />,
-  <Route path={PATH.AREA_REGION} element={<AreaManagementRegionPage />} />,
   <Route
+    key="area_mgmt"
+    path={PATH.AREA_MANAGEMENT}
+    element={withSuspense(<AreaManagementPage />)}
+  />,
+  <Route
+    key="area_region"
+    path={PATH.AREA_REGION}
+    element={withSuspense(<AreaManagementRegionPage />)}
+  />,
+  <Route
+    key="area_add_region"
     path={PATH.AREA_ADD_REGION}
-    element={<AreaManagementAddRegionPage />}
+    element={withSuspense(<AreaManagementAddRegionPage />)}
   />,
   <Route
+    key="area_region_detail"
     path={PATH.AREA_REGION_DETAIL}
-    element={<AreaManagementRegionDetailPage />}
+    element={withSuspense(<AreaManagementRegionDetailPage />)}
   />,
-  <Route path={PATH.AREA_ZONE} element={<AreaManagementZonePage />} />,
-  <Route path={PATH.AREA_ADD_ZONE} element={<AreaManagementAddZonePage />} />,
   <Route
+    key="area_zone"
+    path={PATH.AREA_ZONE}
+    element={withSuspense(<AreaManagementZonePage />)}
+  />,
+  <Route
+    key="area_add_zone"
+    path={PATH.AREA_ADD_ZONE}
+    element={withSuspense(<AreaManagementAddZonePage />)}
+  />,
+  <Route
+    key="area_zone_detail"
     path={PATH.AREA_ZONE_DETAIL}
-    element={<AreaManagementZoneDetailPage />}
+    element={withSuspense(<AreaManagementZoneDetailPage />)}
   />,
-  <Route path={PATH.AREA_BLOCK} element={<AreaManagementBlockPage />} />,
-  <Route path={PATH.AREA_ADD_BLOCK} element={<AreaManagementBlockAddPage />} />,
   <Route
+    key="area_block"
+    path={PATH.AREA_BLOCK}
+    element={withSuspense(<AreaManagementBlockPage />)}
+  />,
+  <Route
+    key="area_add_block"
+    path={PATH.AREA_ADD_BLOCK}
+    element={withSuspense(<AreaManagementBlockAddPage />)}
+  />,
+  <Route
+    key="area_block_detail"
     path={PATH.AREA_BLOCK_DETAIL}
-    element={<AreaManagementBlockDetailPage />}
+    element={withSuspense(<AreaManagementBlockDetailPage />)}
   />,
-  <Route path={PATH.AREA_ROW} element={<AreaManagementRowPage />} />,
   <Route
+    key="area_row"
+    path={PATH.AREA_ROW}
+    element={withSuspense(<AreaManagementRowPage />)}
+  />,
+  <Route
+    key="area_row_detail"
     path={PATH.AREA_ROW_DETAIL}
-    element={<AreaManagementRowDetailPage />}
+    element={withSuspense(<AreaManagementRowDetailPage />)}
   />,
-  <Route path={PATH.AREA_ADD_ROW} element={<AreaManagementRowAddPage />} />,
-  <Route path={PATH.AREA_TREE} element={<AreaManagementTreePage />} />,
-  <Route path={PATH.AREA_ADD_TREE} element={<AreaManagementTreeAddPage />} />,
-  <Route path={PATH.AREA_MAP} element={<AreaManagementMapPage />} />,
-  <Route path={PATH.AREA_SOIL} element={<AreaManagementSoilTypePage />} />,
-  <Route path={PATH.AREA_TERRAIN} element={<AreaManagementTerrainPage />} />,
   <Route
+    key="area_add_row"
+    path={PATH.AREA_ADD_ROW}
+    element={withSuspense(<AreaManagementRowAddPage />)}
+  />,
+  <Route
+    key="area_tree"
+    path={PATH.AREA_TREE}
+    element={withSuspense(<AreaManagementTreePage />)}
+  />,
+  <Route
+    key="area_add_tree"
+    path={PATH.AREA_ADD_TREE}
+    element={withSuspense(<AreaManagementTreeAddPage />)}
+  />,
+  <Route
+    key="area_map"
+    path={PATH.AREA_MAP}
+    element={withSuspense(<AreaManagementMapPage />)}
+  />,
+  <Route
+    key="area_soil"
+    path={PATH.AREA_SOIL}
+    element={withSuspense(<AreaManagementSoilTypePage />)}
+  />,
+  <Route
+    key="area_terrain"
+    path={PATH.AREA_TERRAIN}
+    element={withSuspense(<AreaManagementTerrainPage />)}
+  />,
+  <Route
+    key="area_cultivation_method"
     path={PATH.AREA_CULTIVATION_METHOD}
-    element={<AreaManagementCultivationMethodPage />}
+    element={withSuspense(<AreaManagementCultivationMethodPage />)}
   />,
   <Route
+    key="area_add_cultivation_method"
     path={PATH.AREA_ADD_CULTIVATION_METHOD}
-    element={<AreaManagementCultivationMethodAddPage />}
+    element={withSuspense(<AreaManagementCultivationMethodAddPage />)}
   />,
-  <Route path={PATH.AREA_HISTORY} element={<AreaManagementHistoryPage />} />,
-  <Route path={PATH.MAP_AREA} element={<MapManagementAreaPage />} />,
-  <Route path={PATH.MAP_ADD_AREA} element={<MapManagementAddAreaPage />} />,
   <Route
+    key="area_history"
+    path={PATH.AREA_HISTORY}
+    element={withSuspense(<AreaManagementHistoryPage />)}
+  />,
+
+  // Map Management
+  <Route
+    key="map_area"
+    path={PATH.MAP_AREA}
+    element={withSuspense(<MapManagementAreaPage />)}
+  />,
+  <Route
+    key="map_add_area"
+    path={PATH.MAP_ADD_AREA}
+    element={withSuspense(<MapManagementAddAreaPage />)}
+  />,
+  <Route
+    key="map_area_detail"
     path={PATH.MAP_AREA_DETAIL}
-    element={<MapManagementAreaDetailPage />}
+    element={withSuspense(<MapManagementAreaDetailPage />)}
   />,
-  <Route path={PATH.MAP_PLOT} element={<MapManagementPlotPage />} />,
-  <Route path={PATH.MAP_ADD_PLOT} element={<MapManagementPlotAddPage />} />,
   <Route
+    key="map_plot"
+    path={PATH.MAP_PLOT}
+    element={withSuspense(<MapManagementPlotPage />)}
+  />,
+  <Route
+    key="map_add_plot"
+    path={PATH.MAP_ADD_PLOT}
+    element={withSuspense(<MapManagementPlotAddPage />)}
+  />,
+  <Route
+    key="map_plot_detail"
     path={PATH.MAP_PLOT_DETAIL}
-    element={<MapManagementDetailPlotPage />}
+    element={withSuspense(<MapManagementDetailPlotPage />)}
   />,
-  <Route path={PATH.MAP_MAP} element={<MapManagementMapPage />} />,
-  <Route path={PATH.MAP_TERRAIN} element={<MapManagementTerrainPage />} />,
-  <Route path={PATH.MAP_REGION} element={<MapManagementRegionPage />} />,
-  <Route path={PATH.MAP_ADD_REGION} element={<MapManagementAddRegionPage />} />,
   <Route
+    key="map_map"
+    path={PATH.MAP_MAP}
+    element={withSuspense(<MapManagementMapPage />)}
+  />,
+  <Route
+    key="map_terrain"
+    path={PATH.MAP_TERRAIN}
+    element={withSuspense(<MapManagementTerrainPage />)}
+  />,
+  <Route
+    key="map_region"
+    path={PATH.MAP_REGION}
+    element={withSuspense(<MapManagementRegionPage />)}
+  />,
+  <Route
+    key="map_add_region"
+    path={PATH.MAP_ADD_REGION}
+    element={withSuspense(<MapManagementAddRegionPage />)}
+  />,
+  <Route
+    key="map_region_detail"
     path={PATH.MAP_REGION_DETAIL}
-    element={<MapManagementRegionDetailPage />}
+    element={withSuspense(<MapManagementRegionDetailPage />)}
   />,
 
-  <Route path={PATH.PLANT_MANAGEMENT} element={<PlantManagementPage />} />,
-  <Route path={PATH.PLANT_TREE} element={<PlantManagementTreePage />} />,
-  <Route path={PATH.PLANT_ADD_TREE} element={<PlantManagementTreeAddPage />} />,
+  // Plant Management
   <Route
+    key="plant_mgmt"
+    path={PATH.PLANT_MANAGEMENT}
+    element={withSuspense(<PlantManagementPage />)}
+  />,
+  <Route
+    key="plant_tree"
+    path={PATH.PLANT_TREE}
+    element={withSuspense(<PlantManagementTreePage />)}
+  />,
+  <Route
+    key="plant_add_tree"
+    path={PATH.PLANT_ADD_TREE}
+    element={withSuspense(<PlantManagementTreeAddPage />)}
+  />,
+  <Route
+    key="plant_tree_detail"
     path={PATH.PLANT_TREE_DETAIL}
-    element={<PlantManagementTreeDetailPage />}
+    element={withSuspense(<PlantManagementTreeDetailPage />)}
   />,
-  <Route path={PATH.PLANT_GROUP} element={<PlantManagementGroupPage />} />,
-  <Route path={PATH.PLANT_VARIETY} element={<PlantManagementVarietyPage />} />,
-  <Route path={PATH.PLANT_SEED} element={<PlantManagementSeedPage />} />,
-  <Route path={PATH.PLANT_ADD_SEED} element={<PlantManagementSeedAddPage />} />,
-  <Route path={PATH.PLANT_CATALOG} element={<PlantManagementCatalogPage />} />,
   <Route
+    key="plant_group"
+    path={PATH.PLANT_GROUP}
+    element={withSuspense(<PlantManagementGroupPage />)}
+  />,
+  <Route
+    key="plant_variety"
+    path={PATH.PLANT_VARIETY}
+    element={withSuspense(<PlantManagementVarietyPage />)}
+  />,
+  <Route
+    key="plant_seed"
+    path={PATH.PLANT_SEED}
+    element={withSuspense(<PlantManagementSeedPage />)}
+  />,
+  <Route
+    key="plant_add_seed"
+    path={PATH.PLANT_ADD_SEED}
+    element={withSuspense(<PlantManagementSeedAddPage />)}
+  />,
+  <Route
+    key="plant_catalog"
+    path={PATH.PLANT_CATALOG}
+    element={withSuspense(<PlantManagementCatalogPage />)}
+  />,
+  <Route
+    key="plant_tech_doc"
     path={PATH.PLANT_TECHNICAL_DOC}
-    element={<PlantManagementTechnicalDocPage />}
+    element={withSuspense(<PlantManagementTechnicalDocPage />)}
   />,
   <Route
+    key="plant_tech_doc_detail"
     path={PATH.PLANT_TECHNICAL_DOC_DETAIL}
-    element={<PlantManagementTechnicalDocDetailPage />}
+    element={withSuspense(<PlantManagementTechnicalDocDetailPage />)}
   />,
   <Route
+    key="plant_add_tech_doc"
     path={PATH.PLANT_ADD_TECHNICAL_DOC}
-    element={<PlantManagementTechnicalDocAddPage />}
+    element={withSuspense(<PlantManagementTechnicalDocAddPage />)}
   />,
-  <Route path={PATH.SEASON_MANAGEMENT} element={<SeasonManagementPage />} />,
-  <Route path={PATH.SEASON_GROWTH} element={<SeasonManagementGrowthPage />} />,
+
+  // Season Management
   <Route
+    key="season_mgmt"
+    path={PATH.SEASON_MANAGEMENT}
+    element={withSuspense(<SeasonManagementPage />)}
+  />,
+  <Route
+    key="season_growth"
+    path={PATH.SEASON_GROWTH}
+    element={withSuspense(<SeasonManagementGrowthPage />)}
+  />,
+  <Route
+    key="season_growth_detail"
     path={PATH.SEASON_GROWTH_DETAIL}
-    element={<SeasonManagementGrowthDetailPage />}
+    element={withSuspense(<SeasonManagementGrowthDetailPage />)}
   />,
   <Route
+    key="season_add_growth"
     path={PATH.SEASON_ADD_GROWTH}
-    element={<SeasonManagementGrowthAddPage />}
+    element={withSuspense(<SeasonManagementGrowthAddPage />)}
   />,
-  <Route path={PATH.SEASON_CYCLE} element={<SeasonManagementCyclePage />} />,
   <Route
+    key="season_cycle"
+    path={PATH.SEASON_CYCLE}
+    element={withSuspense(<SeasonManagementCyclePage />)}
+  />,
+  <Route
+    key="season_cycle_detail"
     path={PATH.SEASON_CYCLE_DETAIL}
-    element={<SeasonManagementCycleDetailPage />}
+    element={withSuspense(<SeasonManagementCycleDetailPage />)}
   />,
   <Route
+    key="season_add_cycle"
     path={PATH.SEASON_ADD_CYCLE}
-    element={<SeasonManagementCycleAddPage />}
+    element={withSuspense(<SeasonManagementCycleAddPage />)}
   />,
 
-  <Route path={PATH.PLAN_MANAGEMENT} element={<PlanManagementPage />} />,
-  <Route path={PATH.PLAN_MAIN} element={<PlanManagementMainPage />} />,
+  // Plan Management
   <Route
+    key="plan_mgmt"
+    path={PATH.PLAN_MANAGEMENT}
+    element={withSuspense(<PlanManagementPage />)}
+  />,
+  <Route
+    key="plan_main"
+    path={PATH.PLAN_MAIN}
+    element={withSuspense(<PlanManagementMainPage />)}
+  />,
+  <Route
+    key="plan_main_detail"
     path={PATH.PLAN_MAIN_DETAIL}
-    element={<PlanManagementMainDetailPage />}
+    element={withSuspense(<PlanManagementMainDetailPage />)}
   />,
-  <Route path={PATH.PLAN_ADD_MAIN} element={<PlanManagementMainAddPage />} />,
-  <Route path={PATH.PLAN_ASSIGN} element={<PlanManagementAssignPage />} />,
   <Route
+    key="plan_add_main"
+    path={PATH.PLAN_ADD_MAIN}
+    element={withSuspense(<PlanManagementMainAddPage />)}
+  />,
+  <Route
+    key="plan_assign"
+    path={PATH.PLAN_ASSIGN}
+    element={withSuspense(<PlanManagementAssignPage />)}
+  />,
+  <Route
+    key="plan_assign_detail"
     path={PATH.PLAN_ASSIGN_DETAIL}
-    element={<PlanManagementAssignDetailPage />}
+    element={withSuspense(<PlanManagementAssignDetailPage />)}
   />,
   <Route
+    key="plan_add_assign"
     path={PATH.PLAN_ADD_ASSIGN}
-    element={<PlanManagementAssignAddPage />}
+    element={withSuspense(<PlanManagementAssignAddPage />)}
   />,
   <Route
+    key="plan_unplanned"
     path={PATH.PLAN_UNPLANNED}
-    element={<PlanManagementUnplannedPage />}
+    element={withSuspense(<PlanManagementUnplannedPage />)}
   />,
   <Route
+    key="plan_unplanned_detail"
     path={PATH.PLAN_UNPLANNED_DETAIL}
-    element={<PlanManagementUnplannedDetailPage />}
+    element={withSuspense(<PlanManagementUnplannedDetailPage />)}
   />,
   <Route
+    key="plan_add_unplanned"
     path={PATH.PLAN_ADD_UNPLANNED}
-    element={<PlanManagementUnplannedAddPage />}
+    element={withSuspense(<PlanManagementUnplannedAddPage />)}
   />,
-  <Route path={PATH.PLAN_HISTORY} element={<PlanManagementHistoryPage />} />,
-
-  <Route path={PATH.TASK_MANAGEMENT} element={<TaskManagementPage />} />,
-  <Route path={PATH.TASK_MAIN} element={<TaskManagementMainPage />} />,
   <Route
+    key="plan_history"
+    path={PATH.PLAN_HISTORY}
+    element={withSuspense(<PlanManagementHistoryPage />)}
+  />,
+
+  // Task
+  <Route
+    key="task_mgmt"
+    path={PATH.TASK_MANAGEMENT}
+    element={withSuspense(<TaskManagementPage />)}
+  />,
+  <Route
+    key="task_main"
+    path={PATH.TASK_MAIN}
+    element={withSuspense(<TaskManagementMainPage />)}
+  />,
+  <Route
+    key="task_main_detail"
     path={PATH.TASK_MAIN_DETAIL}
-    element={<TaskManagementMainDetailPage />}
+    element={withSuspense(<TaskManagementMainDetailPage />)}
   />,
-  <Route path={PATH.TASK_BATMAN} element={<TaskManagementBatmanPage />} />,
-
-  <Route path={PATH.HARVEST_MANAGEMENT} element={<HarvestManagementPage />} />,
   <Route
+    key="task_batman"
+    path={PATH.TASK_BATMAN}
+    element={withSuspense(<TaskManagementBatmanPage />)}
+  />,
+
+  // Harvest
+  <Route
+    key="harvest_mgmt"
+    path={PATH.HARVEST_MANAGEMENT}
+    element={withSuspense(<HarvestManagementPage />)}
+  />,
+  <Route
+    key="harvest_report"
     path={PATH.HARVEST_REPORT}
-    element={<HarvestManagementReportPage />}
+    element={withSuspense(<HarvestManagementReportPage />)}
   />,
   <Route
+    key="harvest_query"
     path={PATH.HARVEST_QUERY}
-    element={<HarvestManagementQueryMapPage />}
+    element={withSuspense(<HarvestManagementQueryMapPage />)}
   />,
 
-  <Route path={PATH.PRODUCT_MANAGEMENT} element={<ProductManagementPage />} />,
-  <Route path={PATH.PRODUCT_ITEM} element={<ProductManagementItemPage />} />,
+  // Product
   <Route
+    key="product_mgmt"
+    path={PATH.PRODUCT_MANAGEMENT}
+    element={withSuspense(<ProductManagementPage />)}
+  />,
+  <Route
+    key="product_item"
+    path={PATH.PRODUCT_ITEM}
+    element={withSuspense(<ProductManagementItemPage />)}
+  />,
+  <Route
+    key="product_add_item"
     path={PATH.PRODUCT_ADD_ITEM}
-    element={<ProductManagementItemAddPage />}
+    element={withSuspense(<ProductManagementItemAddPage />)}
   />,
-  <Route path={PATH.PRODUCT_BOM} element={<ProductManagementBOMPage />} />,
   <Route
+    key="product_bom"
+    path={PATH.PRODUCT_BOM}
+    element={withSuspense(<ProductManagementBOMPage />)}
+  />,
+  <Route
+    key="product_raw"
     path={PATH.PRODUCT_RAW_MATERIAL}
-    element={<ProductManagementRawMaterialPage />}
+    element={withSuspense(<ProductManagementRawMaterialPage />)}
   />,
   <Route
+    key="product_raw_add"
     path={PATH.PRODUCT_RAW_MATERIAL_ADD}
-    element={<ProductManagementRawMaterialAddPage />}
+    element={withSuspense(<ProductManagementRawMaterialAddPage />)}
   />,
   <Route
+    key="product_raw_type"
     path={PATH.PRODUCT_RAW_MATERIAL_TYPE}
-    element={<ProductManagementRawMaterialTypePage />}
+    element={withSuspense(<ProductManagementRawMaterialTypePage />)}
   />,
-  <Route path={PATH.PRODUCT_TYPE} element={<ProductManagementTypePage />} />,
+  <Route
+    key="product_type"
+    path={PATH.PRODUCT_TYPE}
+    element={withSuspense(<ProductManagementTypePage />)}
+  />,
 
+  // Contract
   <Route
-    path={PATH.CONTRACT_MANAGEMENT}
-    element={<ContractManagementPage />}
+    key="contract_sale"
+    path={PATH.CONTRACT_SALE}
+    element={withSuspense(<ContractManagementPage />)}
   />,
-  <Route path={PATH.CONTRACT_SALE} element={<ContractManagementPage />} />,
-  <Route path={PATH.CONTRACT_EXCHANGE} element={<ContractManagementPage />} />,
-  <Route path={PATH.CONTRACT_GIFT} element={<ContractManagementPage />} />,
-  <Route path={PATH.CONTRACT_LOAN} element={<ContractManagementPage />} />,
-  <Route path={PATH.CONTRACT_RENT} element={<ContractManagementPage />} />,
-  <Route path={PATH.CONTRACT_BORROW} element={<ContractManagementPage />} />,
-  <Route path={PATH.CONTRACT_SERVICE} element={<ContractManagementPage />} />,
-  <Route path={PATH.CONTRACT_TRANSPORT} element={<ContractManagementPage />} />,
   <Route
+    key="contract_exchange"
+    path={PATH.CONTRACT_EXCHANGE}
+    element={withSuspense(<ContractManagementPage />)}
+  />,
+  <Route
+    key="contract_gift"
+    path={PATH.CONTRACT_GIFT}
+    element={withSuspense(<ContractManagementPage />)}
+  />,
+  <Route
+    key="contract_loan"
+    path={PATH.CONTRACT_LOAN}
+    element={withSuspense(<ContractManagementPage />)}
+  />,
+  <Route
+    key="contract_rent"
+    path={PATH.CONTRACT_RENT}
+    element={withSuspense(<ContractManagementPage />)}
+  />,
+  <Route
+    key="contract_borrow"
+    path={PATH.CONTRACT_BORROW}
+    element={withSuspense(<ContractManagementPage />)}
+  />,
+  <Route
+    key="contract_service"
+    path={PATH.CONTRACT_SERVICE}
+    element={withSuspense(<ContractManagementPage />)}
+  />,
+  <Route
+    key="contract_transport"
+    path={PATH.CONTRACT_TRANSPORT}
+    element={withSuspense(<ContractManagementPage />)}
+  />,
+  <Route
+    key="contract_processing"
     path={PATH.CONTRACT_PROCESSING}
-    element={<ContractManagementPage />}
+    element={withSuspense(<ContractManagementPage />)}
   />,
-  <Route path={PATH.CONTRACT_STORAGE} element={<ContractManagementPage />} />,
   <Route
+    key="contract_storage"
+    path={PATH.CONTRACT_STORAGE}
+    element={withSuspense(<ContractManagementPage />)}
+  />,
+  <Route
+    key="contract_authorization"
     path={PATH.CONTRACT_AUTHORIZATION}
-    element={<ContractManagementPage />}
+    element={withSuspense(<ContractManagementPage />)}
   />,
   <Route
+    key="contract_partnership"
     path={PATH.CONTRACT_PARTNERSHIP}
-    element={<ContractManagementPage />}
+    element={withSuspense(<ContractManagementPage />)}
   />,
-
   <Route
+    key="contract_detail"
     path={PATH.CONTRACT_MANAGEMENT_DETAIL}
-    element={<ContractManagementDetailPage />}
+    element={withSuspense(<ContractManagementDetailPage />)}
   />,
   <Route
+    key="contract_add"
     path={PATH.CONTRACT_ADD_MANAGEMENT}
-    element={<ContractManagementAddPage />}
+    element={withSuspense(<ContractManagementAddPage />)}
   />,
 
-  <Route path={PATH.HR_MANAGEMENT} element={<HRManagementPage />} />,
-  <Route path={PATH.HR_DEPARTMENT} element={<HRManagementDepartmentPage />} />,
-  <Route path={PATH.HR_POSITION} element={<HRManagementPositionPage />} />,
-  <Route path={PATH.HR_TEAM} element={<HRManagementTeamPage />} />,
-  <Route path={PATH.HR_TEAM_DETAIL} element={<HRManagementTeamDetailPage />} />,
-  <Route path={PATH.HR_ADD_TEAM} element={<HRManagementTeamAddPage />} />,
-  <Route path={PATH.HR_EMPLOYEE} element={<HRManagementEmployeePage />} />,
+  // HR
   <Route
+    key="hr_mgmt"
+    path={PATH.HR_MANAGEMENT}
+    element={withSuspense(<HRManagementPage />)}
+  />,
+  <Route
+    key="hr_dept"
+    path={PATH.HR_DEPARTMENT}
+    element={withSuspense(<HRManagementDepartmentPage />)}
+  />,
+  <Route
+    key="hr_position"
+    path={PATH.HR_POSITION}
+    element={withSuspense(<HRManagementPositionPage />)}
+  />,
+  <Route
+    key="hr_team"
+    path={PATH.HR_TEAM}
+    element={withSuspense(<HRManagementTeamPage />)}
+  />,
+  <Route
+    key="hr_team_detail"
+    path={PATH.HR_TEAM_DETAIL}
+    element={withSuspense(<HRManagementTeamDetailPage />)}
+  />,
+  <Route
+    key="hr_add_team"
+    path={PATH.HR_ADD_TEAM}
+    element={withSuspense(<HRManagementTeamAddPage />)}
+  />,
+  <Route
+    key="hr_employee"
+    path={PATH.HR_EMPLOYEE}
+    element={withSuspense(<HRManagementEmployeePage />)}
+  />,
+  <Route
+    key="hr_add_employee"
     path={PATH.HR_ADD_EMPLOYEE}
-    element={<HRManagementEmployeeAddPage />}
+    element={withSuspense(<HRManagementEmployeeAddPage2 />)}
   />,
   <Route
+    key="hr_employee_detail"
     path={PATH.HR_EMPLOYEE_DETAIL}
-    element={<HRManagementEmployeeDetailPage />}
+    element={withSuspense(<HRManagementEmployeeDetailPage2 />)}
   />,
 
-  <Route path={PATH.FACTORY_MANAGEMENT} element={<FactoryManagementPage />} />,
-  <Route path={PATH.FACTORY_MAIN} element={<FactoryManagementMainPage />} />,
+  // Factory
   <Route
+    key="factory_mgmt"
+    path={PATH.FACTORY_MANAGEMENT}
+    element={withSuspense(<FactoryManagementPage />)}
+  />,
+  <Route
+    key="factory_main"
+    path={PATH.FACTORY_MAIN}
+    element={withSuspense(<FactoryManagementMainPage />)}
+  />,
+  <Route
+    key="factory_add_main"
     path={PATH.FACTORY_ADD_MAIN}
-    element={<FactoryManagementMainAddPage />}
+    element={withSuspense(<FactoryManagementMainAddPage />)}
   />,
   <Route
+    key="factory_main_detail"
     path={PATH.FACTORY_MAIN_DETAIL}
-    element={<FactoryManagementMainDetailPage />}
+    element={withSuspense(<FactoryManagementMainDetailPage />)}
   />,
   <Route
+    key="factory_history"
     path={PATH.FACTORY_HISTORY}
-    element={<FactoryManagementHistoryPage />}
+    element={withSuspense(<FactoryManagementHistoryPage />)}
   />,
 
-  <Route path={PATH.MACHINE_MANAGEMENT} element={<MachineManagementPage />} />,
-  <Route path={PATH.MACHINE_MAIN} element={<MachineManagementMainPage />} />,
+  // Machine
   <Route
+    key="machine_mgmt"
+    path={PATH.MACHINE_MANAGEMENT}
+    element={withSuspense(<MachineManagementPage />)}
+  />,
+  <Route
+    key="machine_main"
+    path={PATH.MACHINE_MAIN}
+    element={withSuspense(<MachineManagementMainPage />)}
+  />,
+  <Route
+    key="machine_main_detail"
     path={PATH.MACHINE_MAIN_DETAIL}
-    element={<MachineManagementMainDetailPage />}
+    element={withSuspense(<MachineManagementMainDetailPage />)}
   />,
   <Route
+    key="machine_add_main"
     path={PATH.MACHINE_ADD_MAIN}
-    element={<MachineManagementMainAddPage />}
+    element={withSuspense(<MachineManagementMainAddPage />)}
   />,
   <Route
+    key="machine_type"
     path={PATH.MACHINE_TYPE}
-    element={<MachineManagementCategoryPage />}
+    element={withSuspense(<MachineManagementCategoryPage />)}
   />,
   <Route
+    key="machine_usage_history"
     path={PATH.MACHINE_USAGE_HISTORY}
-    element={<MachineManagementUsageHistoryPage />}
+    element={withSuspense(<MachineManagementUsageHistoryPage />)}
   />,
   <Route
+    key="machine_maintenance_history"
     path={PATH.MACHINE_MAINTENANCE_HISTORY}
-    element={<MachineManagementMaintenanceHistoryPage />}
+    element={withSuspense(<MachineManagementMaintenanceHistoryPage />)}
   />,
   <Route
+    key="machine_disposal_history"
     path={PATH.MACHINE_DISPOSAL_HISTORY}
-    element={<MachineManagementDisposalHistoryPage />}
+    element={withSuspense(<MachineManagementDisposalHistoryPage />)}
   />,
+
+  // Pesticide
   <Route
+    key="pesticide_mgmt"
     path={PATH.PESTICIDE_MANAGEMENT}
-    element={<PesticideManagementPage />}
+    element={withSuspense(<PesticideManagementPage />)}
   />,
   <Route
+    key="pesticide_history"
     path={PATH.PESTICIDE_HISTORY}
-    element={<PesticideUsageHistoryPage />}
+    element={withSuspense(<PesticideUsageHistoryPage />)}
   />,
   <Route
+    key="pesticide_main"
     path={PATH.PESTICIDE_MAIN}
-    element={<PesticideManagementMainPage />}
+    element={withSuspense(<PesticideManagementMainPage />)}
   />,
   <Route
+    key="pesticide_main_detail"
     path={PATH.PESTICIDE_MAIN_DETAIL}
-    element={<PesticideManagementMainDetailPage />}
+    element={withSuspense(<PesticideManagementMainDetailPage />)}
   />,
   <Route
+    key="pesticide_add_main"
     path={PATH.PESTICIDE_ADD_MAIN}
-    element={<PesticideManagementMainAddPage />}
+    element={withSuspense(<PesticideManagementMainAddPage />)}
   />,
   <Route
+    key="pesticide_category"
     path={PATH.PESTICIDE_CATEGORY}
-    element={<PesticideManagementCategoryPage />}
+    element={withSuspense(<PesticideManagementCategoryPage />)}
   />,
   <Route
+    key="pesticide_disposal_history"
     path={PATH.PESTICIDE_DISPOSAL_HISTORY}
-    element={<PesticideManagementDisposalPage />}
+    element={withSuspense(<PesticideManagementDisposalPage />)}
   />,
 
-  <Route path={PATH.SUPPLY_MAIN} element={<SupplyManagementPage />} />,
-  <Route path={PATH.SUPPLY_ADD_MAIN} element={<SupplyManagementAddPage />} />,
-  <Route path={PATH.SUPPLY_TYPE} element={<SupplyManagementCategoryPage />} />,
+  // Supply / Stock / Fertilizer
   <Route
+    key="supply_main"
+    path={PATH.SUPPLY_MAIN}
+    element={withSuspense(<SupplyManagementPage />)}
+  />,
+  <Route
+    key="supply_add_main"
+    path={PATH.SUPPLY_ADD_MAIN}
+    element={withSuspense(<SupplyManagementAddPage />)}
+  />,
+  <Route
+    key="supply_type"
+    path={PATH.SUPPLY_TYPE}
+    element={withSuspense(<SupplyManagementCategoryPage />)}
+  />,
+  <Route
+    key="supply_disposal_history"
     path={PATH.SUPPLY_DISPOSAL_HISTORY}
-    element={<SupplyManagementDisposalPage />}
+    element={withSuspense(<SupplyManagementDisposalPage />)}
   />,
   <Route
+    key="supply_history"
     path={PATH.SUPPLY_HISTORY}
-    element={<SupplyManagementUsageHistoryPage />}
+    element={withSuspense(<SupplyManagementUsageHistoryPage />)}
   />,
-  <Route path={PATH.STOCK_AREA} element={<StockManagementAreaPage />} />,
-  <Route path={PATH.STOCK_ADD_AREA} element={<StockManagementAddAreaPage />} />,
+
   <Route
+    key="stock_area"
+    path={PATH.STOCK_AREA}
+    element={withSuspense(<StockManagementAreaPage />)}
+  />,
+  <Route
+    key="stock_add_area"
+    path={PATH.STOCK_ADD_AREA}
+    element={withSuspense(<StockManagementAddAreaPage />)}
+  />,
+  <Route
+    key="stock_area_detail"
     path={PATH.STOCK_AREA_DETAIL}
-    element={<StockManagementAreaDetailPage />}
+    element={withSuspense(<StockManagementAreaDetailPage />)}
   />,
-
-  <Route path={PATH.STOCK_MANAGEMENT} element={<StockManagementPage />} />,
-  <Route path={PATH.STOCK_SUPPLY} element={<StockManagementSupplyPage />} />,
-  <Route path={PATH.STOCK_MANAGEMENT_IO} element={<StockManagementIOPage />} />,
   <Route
+    key="stock_management"
+    path={PATH.STOCK_MANAGEMENT}
+    element={withSuspense(<StockManagementPage />)}
+  />,
+  <Route
+    key="stock_supply"
+    path={PATH.STOCK_SUPPLY}
+    element={withSuspense(<StockManagementSupplyPage />)}
+  />,
+  <Route
+    key="stock_management_io"
+    path={PATH.STOCK_MANAGEMENT_IO}
+    element={withSuspense(<StockManagementIOPage />)}
+  />,
+  <Route
+    key="stock_pesticide"
     path={PATH.STOCK_PESTICIDE}
-    element={<StockManagementPesticidePage />}
+    element={withSuspense(<StockManagementPesticidePage />)}
   />,
   <Route
+    key="stock_fertilizer"
     path={PATH.STOCK_FERTILIZER}
-    element={<StockManagementFertilizerPage />}
+    element={withSuspense(<StockManagementFertilizerPage />)}
+  />,
+  <Route
+    key="stock_machine"
+    path={PATH.STOCK_MACHINE}
+    element={withSuspense(<StockManagementMachinePage />)}
+  />,
+  <Route
+    key="stock_seed"
+    path={PATH.STOCK_SEED}
+    element={withSuspense(<StockManagementSeedPage />)}
   />,
 
-  <Route path={PATH.STOCK_MACHINE} element={<StockManagementMachinePage />} />,
-  <Route path={PATH.STOCK_SEED} element={<StockManagementSeedPage />} />,
-
-  <Route path={PATH.PURCHASE} element={<PurchasePage />} />,
-  <Route path={PATH.SELL} element={<SellPage />} />,
-
-  <Route path={PATH.FINANCE_ACCOUNT} element={<FinanceAccountPage />} />,
+  // Purchase / Sell / Finance
   <Route
+    key="purchase"
+    path={PATH.PURCHASE}
+    element={withSuspense(<PurchasePage />)}
+  />,
+  <Route key="sell" path={PATH.SELL} element={withSuspense(<SellPage />)} />,
+  <Route
+    key="finance_account"
+    path={PATH.FINANCE_ACCOUNT}
+    element={withSuspense(<FinanceAccountPage />)}
+  />,
+
+  <Route
+    key="fertilizer_type"
     path={PATH.FERTILIZER_TYPE}
-    element={<FertilizerManagementTypePage />}
+    element={withSuspense(<FertilizerManagementTypePage />)}
   />,
   <Route
+    key="fertilizer_main"
     path={PATH.FERTILIZER_MAIN}
-    element={<FertilizerManagementMainPage />}
+    element={withSuspense(<FertilizerManagementMainPage />)}
   />,
   <Route
+    key="fertilizer_main_add"
     path={PATH.FERTILIZER_MAIN_ADD}
-    element={<FertilizerManagementMainAddPage />}
+    element={withSuspense(<FertilizerManagementMainAddPage />)}
   />,
   <Route
+    key="fertilizer_usage_history"
     path={PATH.FERTILIZER_HISTORY}
-    element={<FertilizerManagementUsageHistoryPage />}
+    element={withSuspense(<FertilizerManagementUsageHistoryPage />)}
   />,
   <Route
+    key="fertilizer_disposal_history"
     path={PATH.FERTILIZER_DISPOSAL_HISTORY}
-    element={<FertilizerManagementDisposalPage />}
+    element={withSuspense(<FertilizerManagementDisposalPage />)}
   />,
+
   <Route
+    key="stock_delivery"
     path={PATH.STOCK_DELIVERY}
-    element={<StockManagementDeliveryPage />}
+    element={withSuspense(<StockManagementDeliveryPage />)}
   />,
   <Route
+    key="stock_add_delivery"
     path={PATH.STOCK_ADD_DELIVERY}
-    element={<StockManagementAddDeliveryPage />}
+    element={withSuspense(<StockManagementAddDeliveryPage />)}
   />,
   <Route
+    key="stock_delivery_detail"
     path={PATH.STOCK_DELIVERY_DETAIL}
-    element={<StockManagementDeliveryDetailPage />}
+    element={withSuspense(<StockManagementDeliveryDetailPage />)}
   />,
-  <Route path={PATH.COMPANY} element={<CompanyPage />} />,
-  <Route path={PATH.COMPANY_ADDRESS} element={<CompanyAddressPage />} />,
-  <Route path={PATH.COMPANY_ADDRESS_ADD} element={<CompanyAddressAddPage />} />,
-  <Route path={PATH.COMPANY_CUSTOMER} element={<CompanyPage />} />,
-  <Route path={PATH.COMPANY_PARTNER} element={<CompanyPage />} />,
 
-  <Route path={PATH.COMPANY_DETAIL} element={<CompanyDetailPage />} />,
-  <Route path={PATH.COMPANY_ADD} element={<CompanyAddPage />} />,
-  <Route path={PATH.VENDOR} element={<VendorPage />} />,
+  // Company / Vendor / Order / Bill / Debt / Packaging
   <Route
+    key="company"
+    path={PATH.COMPANY}
+    element={withSuspense(<CompanyPage />)}
+  />,
+  <Route
+    key="company_address"
+    path={PATH.COMPANY_ADDRESS}
+    element={withSuspense(<CompanyAddressPage />)}
+  />,
+  <Route
+    key="company_address_add"
+    path={PATH.COMPANY_ADDRESS_ADD}
+    element={withSuspense(<CompanyAddressAddPage />)}
+  />,
+  <Route
+    key="company_customer"
+    path={PATH.COMPANY_CUSTOMER}
+    element={withSuspense(<CompanyPage />)}
+  />,
+  <Route
+    key="company_partner"
+    path={PATH.COMPANY_PARTNER}
+    element={withSuspense(<CompanyPage />)}
+  />,
+  <Route
+    key="company_detail"
+    path={PATH.COMPANY_DETAIL}
+    element={withSuspense(<CompanyDetailPage />)}
+  />,
+  <Route
+    key="company_add"
+    path={PATH.COMPANY_ADD}
+    element={withSuspense(<CompanyAddPage2 />)}
+  />,
+  <Route
+    key="vendor"
+    path={PATH.VENDOR}
+    element={withSuspense(<VendorPage />)}
+  />,
+  <Route
+    key="purchase_mgmt_product"
     path={PATH.PURCHASE_MANAGEMENT_PRODUCT}
-    element={<PurchaseManagementProductPage />}
+    element={withSuspense(<PurchaseManagementProductPage />)}
   />,
   <Route
+    key="purchase_mgmt_product_add"
     path={PATH.PURCHASE_MANAGEMENT_PRODUCT_ADD}
-    element={<PurchaseManagementProductAddPage />}
+    element={withSuspense(<PurchaseManagementProductAddPage />)}
   />,
   <Route
+    key="purchase_mgmt_material"
     path={PATH.PURCHASE_MANAGEMENT_RAW_MATERIAL}
-    element={<PurchaseManagementMaterialPage />}
+    element={withSuspense(<PurchaseManagementMaterialPage />)}
   />,
   <Route
+    key="purchase_mgmt_material_add"
     path={PATH.PURCHASE_MANAGEMENT_RAW_MATERIAL_ADD}
-    element={<PurchaseManagementMaterialAddPage />}
+    element={withSuspense(<PurchaseManagementMaterialAddPage />)}
   />,
   <Route
+    key="order_mgmt_quick"
     path={PATH.ORDER_MANAGEMENT_QUICK}
-    element={<OrderManagememtQuickPage />}
+    element={withSuspense(<OrderManagememtQuickPage />)}
   />,
   <Route
+    key="order_mgmt_create"
     path={PATH.ORDER_MANAGEMENT_CREATE}
-    element={<OrderManagementCreatePage />}
+    element={withSuspense(<OrderManagementCreatePage />)}
   />,
   <Route
+    key="order_mgmt_address"
     path={PATH.ORDER_MANAGEMENT_ADDRESS}
-    element={<OrderManagementAddressPage />}
-  />,
-  <Route
-    path={PATH.BILL_MANAGEMENT_USER}
-    element={<BillManagementUserPage />}
-  />,
-  <Route
-    path={PATH.BILL_MANAGEMENT_USER_DETAIL}
-    element={<BillManagementUserDetailPage />}
-  />,
-  <Route
-    path={PATH.BILL_MANAGEMENT_COMPANY}
-    element={<BillManagementCompanyPage />}
-  />,
-  <Route
-    path={PATH.BILL_MANAGEMENT_COMPANY_DETAIL}
-    element={<BillManagementCompanyDetailPage />}
-  />,
-  <Route
-    path={PATH.BILL_MANAGEMENT_COMPANY_ADD}
-    element={<BillManagementCompanyAddPage />}
-  />,
-  <Route
-    path={PATH.DEBT_RECEIVABLE}
-    element={<DebtManagementReceivablePage />}
-  />,
-  <Route
-    path={PATH.DEBT_RECEIVABLE_ADD}
-    element={<DebtManagementReceivableAddPage />}
-  />,
-  <Route
-    path={PATH.DEBT_RECEIVABLE_DETAIL}
-    element={<DebtManagementReceivableDetailPage />}
+    element={withSuspense(<OrderManagementAddressPage />)}
   />,
 
-  <Route path={PATH.DEBT_PAYABLE} element={<DebtManagementPayablePage />} />,
   <Route
+    key="bill_user"
+    path={PATH.BILL_MANAGEMENT_USER}
+    element={withSuspense(<BillManagementUserPage />)}
+  />,
+  <Route
+    key="bill_user_detail"
+    path={PATH.BILL_MANAGEMENT_USER_DETAIL}
+    element={withSuspense(<BillManagementUserDetailPage />)}
+  />,
+  <Route
+    key="bill_company"
+    path={PATH.BILL_MANAGEMENT_COMPANY}
+    element={withSuspense(<BillManagementCompanyPage />)}
+  />,
+  <Route
+    key="bill_company_detail"
+    path={PATH.BILL_MANAGEMENT_COMPANY_DETAIL}
+    element={withSuspense(<BillManagementCompanyDetailPage />)}
+  />,
+  <Route
+    key="bill_company_add"
+    path={PATH.BILL_MANAGEMENT_COMPANY_ADD}
+    element={withSuspense(<BillManagementCompanyAddPage />)}
+  />,
+
+  <Route
+    key="debt_receivable"
+    path={PATH.DEBT_RECEIVABLE}
+    element={withSuspense(<DebtManagementReceivablePage />)}
+  />,
+  <Route
+    key="debt_receivable_add"
+    path={PATH.DEBT_RECEIVABLE_ADD}
+    element={withSuspense(<DebtManagementReceivableAddPage />)}
+  />,
+  <Route
+    key="debt_receivable_detail"
+    path={PATH.DEBT_RECEIVABLE_DETAIL}
+    element={withSuspense(<DebtManagementReceivableDetailPage />)}
+  />,
+  <Route
+    key="debt_payable"
+    path={PATH.DEBT_PAYABLE}
+    element={withSuspense(<DebtManagementPayablePage />)}
+  />,
+  <Route
+    key="debt_payable_add"
     path={PATH.DEBT_PAYABLE_ADD}
-    element={<DebtManagementPayableAddPage />}
+    element={withSuspense(<DebtManagementPayableAddPage />)}
   />,
   <Route
+    key="debt_payable_detail"
     path={PATH.DEBT_PAYABLE_DETAIL}
-    element={<DebtManagementPayableDetailPage />}
+    element={withSuspense(<DebtManagementPayableDetailPage />)}
   />,
+
   <Route
+    key="packaging_spec"
     path={PATH.PACKAGING_SPECIFICATION}
-    element={<PackagingSpecificationPage />}
+    element={withSuspense(<PackagingSpecificationPage />)}
   />,
-  <Route path={PATH.BANK_MANAGEMENT} element={<BankManagementPage />} />,
-  <Route path={PATH.MAP_HISTORY} element={<AreaManagementHistoryPage />} />,
-  <Route path={PATH.SEASON_HISTORY} element={<AreaManagementHistoryPage />} />,
-  <Route path={PATH.PLAN_HISTORY} element={<AreaManagementHistoryPage />} />,
-  <Route path={PATH.TASK_HISTORY} element={<AreaManagementHistoryPage />} />,
-  <Route path={PATH.PRODUCT_HISTORY} element={<AreaManagementHistoryPage />} />,
+
+  // Bank
   <Route
+    key="bank_mgmt"
+    path={PATH.BANK_MANAGEMENT}
+    element={withSuspense(<BankManagementPage />)}
+  />,
+
+  // History aliases mapping to AreaManagementHistoryPage
+  <Route
+    key="map_history"
+    path={PATH.MAP_HISTORY}
+    element={withSuspense(<MapHistoryPage />)}
+  />,
+  <Route
+    key="season_history_alias"
+    path={PATH.SEASON_HISTORY}
+    element={withSuspense(<SeasonHistoryPage />)}
+  />,
+  <Route
+    key="plan_history_alias"
+    path={PATH.PLAN_HISTORY}
+    element={withSuspense(<PlanHistoryPageAlias />)}
+  />,
+  <Route
+    key="task_history"
+    path={PATH.TASK_HISTORY}
+    element={withSuspense(<TaskHistoryPage />)}
+  />,
+  <Route
+    key="product_history"
+    path={PATH.PRODUCT_HISTORY}
+    element={withSuspense(<ProductHistoryPage />)}
+  />,
+  <Route
+    key="fertilizer_history_alias"
     path={PATH.FERTILIZER_HISTORY}
-    element={<AreaManagementHistoryPage />}
+    element={withSuspense(<FertilizerHistoryAlias />)}
   />,
   <Route
+    key="pesticide_history_alias"
     path={PATH.PESTICIDE_HISTORY}
-    element={<AreaManagementHistoryPage />}
+    element={withSuspense(<PesticideHistoryAlias />)}
   />,
-  <Route path={PATH.SUPPLY_HISTORY} element={<AreaManagementHistoryPage />} />,
-  <Route path={PATH.COMPANY_HISTORY} element={<AreaManagementHistoryPage />} />,
-  <Route path={PATH.HR_HISTORY} element={<AreaManagementHistoryPage />} />,
   <Route
+    key="supply_history_alias"
+    path={PATH.SUPPLY_HISTORY}
+    element={withSuspense(<SupplyHistoryPage />)}
+  />,
+  <Route
+    key="company_history"
+    path={PATH.COMPANY_HISTORY}
+    element={withSuspense(<CompanyHistoryPage />)}
+  />,
+  <Route
+    key="hr_history"
+    path={PATH.HR_HISTORY}
+    element={withSuspense(<HRHistoryPage />)}
+  />,
+  <Route
+    key="contract_history"
     path={PATH.CONTRACT_HISTORY}
-    element={<AreaManagementHistoryPage />}
+    element={withSuspense(<ContractHistoryPage />)}
   />,
   <Route
+    key="purchase_mgmt_history"
     path={PATH.PURCHASE_MANAGEMENT_HISTORY}
-    element={<AreaManagementHistoryPage />}
+    element={withSuspense(<PurchaseManagementHistoryPage />)}
   />,
   <Route
+    key="order_mgmt_history"
     path={PATH.ORDER_MANAGEMENT_HISTORY}
-    element={<AreaManagementHistoryPage />}
+    element={withSuspense(<OrderManagementHistoryPage />)}
   />,
+
+  // Finance purpose pages
   <Route
+    key="finance_purpose_expense"
     path={PATH.FINANCE_PURPOSE_EXPENSE}
-    element={<FinancePurposeExpensePage />}
+    element={withSuspense(<FinancePurposeExpensePage />)}
   />,
   <Route
+    key="finance_purpose_expense_add"
     path={PATH.FINANCE_PURPOSE_EXPENSE_ADD}
-    element={<FinancePurposeExpenseAddPage />}
+    element={withSuspense(<FinancePurposeExpenseAddPage />)}
   />,
   <Route
+    key="finance_purpose_receive"
     path={PATH.FINANCE_PURPOSE_RECEIVE}
-    element={<FinancePurposeReceivePage />}
+    element={withSuspense(<FinancePurposeReceivePage />)}
   />,
   <Route
+    key="finance_purpose_receive_add"
     path={PATH.FINANCE_PURPOSE_RECEIVE_ADD}
-    element={<FinancePurposeReceiveAddPage />}
+    element={withSuspense(<FinancePurposeReceiveAddPage />)}
   />,
   <Route
+    key="finance_purpose_statistic"
     path={PATH.FINANCE_PURPOSE_STATISTIC}
-    element={<FinancePurposeStatisticPage />}
+    element={withSuspense(<FinancePurposeStatisticPage />)}
   />,
   <Route
+    key="finance_purpose_history"
     path={PATH.FINANCE_PURPOSE_HISTORY}
-    element={<FinancePurposeHistoryPage />}
+    element={withSuspense(<FinancePurposeHistoryPage />)}
   />,
   <Route
+    key="finance_purpose_mgmt"
     path={PATH.FINANCE_PURPOSE_MANAGEMENT}
-    element={<FinancePurposeManagementPage />}
+    element={withSuspense(<FinancePurposeManagementPage />)}
   />,
-  <Route path={PATH.CONTACT_LIST} element={<ContactPage />} />,
+
+  // Contact
+  <Route
+    key="contact_list"
+    path={PATH.CONTACT_LIST}
+    element={withSuspense(<ContactPage />)}
+  />,
 ];
 
+// =============================
+// Render
+// =============================
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <BrowserRouter>
@@ -832,13 +1793,23 @@ createRoot(document.getElementById("root")!).render(
         withStaticClasses
       >
         <ModalsProvider>
-          <Routes>
-            <Route index path={PATH.AUTH} element={<AuthPage />} />
-            <Route path={"/"} element={<App />}>
-              <Route path="*" element={<Navigate to={PATH.HOME} replace />} />
-              {ROUTES.map((item) => item)}
-            </Route>
-          </Routes>
+          {/* Fallback chung cho toàn bộ route */}
+          <Suspense fallback={<PageLoader />}>
+            <Routes>
+              {/* index route */}
+              <Route
+                index
+                path={PATH.AUTH}
+                element={withSuspense(<AuthPage />)}
+              />
+
+              {/* Shell */}
+              <Route path="/" element={withSuspense(<App />)}>
+                <Route path="*" element={<Navigate to={PATH.HOME} replace />} />
+                {ROUTES.map((item) => item)}
+              </Route>
+            </Routes>
+          </Suspense>
         </ModalsProvider>
       </MantineProvider>
     </BrowserRouter>

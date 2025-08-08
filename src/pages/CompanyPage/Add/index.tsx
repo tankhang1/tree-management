@@ -10,7 +10,6 @@ import {
   Title,
   Text,
   Paper,
-  SimpleGrid,
   MultiSelect,
   Input,
   Modal,
@@ -42,7 +41,7 @@ import { addressList } from "../../OrderManagementPage/Create";
 import Scrollable from "../../../components/Scrollable";
 import { ContactListCards } from "../../FinancePage/components/ContactListCards";
 
-export function CompanyAddPage() {
+const CompanyAddPage = () => {
   const [openedAddressForm, setOpenedAddressForm] = useState(false);
   const navigate = useNavigate();
   const [selectedCategory, setSelectedCategory] = useState<
@@ -917,4 +916,6 @@ export function CompanyAddPage() {
       </Modal>
     </Paper>
   );
-}
+};
+
+export default CompanyAddPage; // export default để sử dụng trong main.tsx
