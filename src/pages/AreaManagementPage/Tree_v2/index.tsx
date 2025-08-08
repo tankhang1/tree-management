@@ -136,7 +136,7 @@ const AreaManagementTreev2Page = () => {
   const [openedRowForm, { open: openRowForm, close: closeRowForm }] =
     useDisclosure(false);
   const onAddTree = () => {
-    navigate(PATH.AREA_ADD_TREE);
+    navigate(PATH.AREA_ADD_TREE_v2);
   };
   const allocationColumns: MRT_ColumnDef<Allocation>[] = [
     {

@@ -15,6 +15,8 @@ import {
   SegmentedControl,
   Divider,
   Accordion,
+  ScrollAreaAutosize,
+  Badge,
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import {
@@ -24,7 +26,7 @@ import {
   IconTrash,
 } from "@tabler/icons-react";
 import { useState } from "react";
-import { MapContainer, Polygon, TileLayer } from "react-leaflet";
+import { MapContainer, Marker, Polygon, TileLayer } from "react-leaflet";
 import { useNavigate } from "react-router-dom";
 import ConfirmStep from "./components/ConfirmStep";
 import RegionCardSelector from "../../Row/Add/components/RegionCards";
@@ -39,6 +41,15 @@ type TreeRow = {
   name: string; // Hàng 1, Hàng 2...
   coords: [number, number][];
 };
+
+type TreePoint = {
+  code?: string;
+  lat?: number;
+  lng?: number;
+  plantedAt?: Date | null;
+};
+
+const uid = () => Math.random().toString(36).slice(2, 9);
 
 type CropGroup = {
   cropName: string; // Ví dụ: "Cây sầu riêng Ri6"
@@ -77,6 +88,107 @@ const cropGroups: CropGroup[] = [
     ],
   },
 ];
+export const samplePlots = [
+  {
+    id: "LO-A1",
+    code: "LO-A1",
+    name: "Lô A1",
+    mainCrop: "Sầu riêng",
+    areaM2: 1500,
+    rowsCount: 8,
+    irrigation: "Tưới nhỏ giọt",
+    cultivation: "Hữu cơ",
+    terrainLabel: "DỐC NHẸ (48–56M)",
+    treeCount: 50,
+  },
+  {
+    id: "LO-B2",
+    code: "LO-B2",
+    name: "Lô B2",
+    mainCrop: "Mãng cầu",
+    areaM2: 2200,
+    rowsCount: 10,
+    irrigation: "Tưới phun mưa",
+    cultivation: "Truyền thống",
+    terrainLabel: "DỐC TRUNG BÌNH (50–60M)",
+    treeCount: 65,
+  },
+];
+
+// Danh sách hàng
+export const sampleRows = [
+  { id: "row-1", rowId: "H1", rowName: "Hàng 1", treeCount: 12 },
+  { id: "row-2", rowId: "H2", rowName: "Hàng 2", treeCount: 15 },
+  { id: "row-3", rowId: "H3", rowName: "Hàng 3", treeCount: 10 },
+];
+export const sampleGpsData = {
+  byPlot: {
+    "LO-A1": [
+      {
+        code: "A1-001",
+        lat: 10.762622,
+        lng: 106.660172,
+        plantedAt: new Date("2025-08-01"),
+      },
+      {
+        code: "A1-002",
+        lat: 10.7627,
+        lng: 106.66025,
+        plantedAt: new Date("2025-08-02"),
+      },
+    ],
+    "LO-B2": [
+      {
+        code: "B2-001",
+        lat: 10.763,
+        lng: 106.661,
+        plantedAt: new Date("2025-08-03"),
+      },
+      {
+        code: "B2-002",
+        lat: 10.76305,
+        lng: 106.66105,
+        plantedAt: new Date("2025-08-04"),
+      },
+      { code: "B2-003", lat: 10.7631, lng: 106.6611, plantedAt: null }, // chưa nhập ngày
+    ],
+  },
+  byRow: {}, // nếu đang phân bổ theo hàng thì sẽ chứa dữ liệu ở đây
+  inputBuffer: {
+    byPlot: {
+      "LO-A1": { code: "A1-NEW", lat: 10.7628, lng: 106.6603, plantedAt: null },
+    },
+    byRow: {},
+  },
+};
+const sampleGpsDataRow = {
+  byPlot: {},
+  byRow: {
+    "row-1": [
+      {
+        code: "R1-001",
+        lat: 10.764,
+        lng: 106.662,
+        plantedAt: new Date("2025-08-05"),
+      },
+      { code: "R1-002", lat: 10.76405, lng: 106.66205, plantedAt: null },
+    ],
+    "row-2": [
+      {
+        code: "R2-001",
+        lat: 10.765,
+        lng: 106.663,
+        plantedAt: new Date("2025-08-06"),
+      },
+    ],
+  },
+  inputBuffer: {
+    byPlot: {},
+    byRow: {
+      "row-1": { code: "R1-NEW", lat: 10.7641, lng: 106.6621, plantedAt: null },
+    },
+  },
+};
 const AreaManagementTreeAddv2Page = () => {
   const [selectedCrop, setSelectedCrop] = useState<string>(
     cropGroups[0].cropName
@@ -96,6 +208,12 @@ const AreaManagementTreeAddv2Page = () => {
       row: "",
       plantedAt: "",
       trees: [{ gps: "" }],
+      allocation: {
+        type: "plot", // hoặc "row"
+        selectedPlots: samplePlots,
+        rows: sampleRows,
+      },
+      gps: sampleGpsData,
     },
   });
 
@@ -201,164 +319,235 @@ const AreaManagementTreeAddv2Page = () => {
           {/* STEP 2: XEM THÔNG TIN */}
           <Stepper.Step label="Bước 2" description="Cây trồng">
             <Stack>
-              <Text fw={"500"} fz={14}>
-                Danh sách cây trồng
-              </Text>
+              <Title order={5}>Phân bổ cây trồng</Title>
+              <Radio.Group
+                value={form.values.allocation.type}
+                onChange={(v: string) =>
+                  form.setFieldValue("allocation.type", v)
+                }
+              >
+                <Stack gap="xs">
+                  <Radio value="plot" label="Phân bổ theo lô" />
+                  <Radio value="row" label="Phân bổ theo hàng" />
+                </Stack>
+              </Radio.Group>
 
-              <SegmentedControl
-                data={["Cây sầu riêng Ri6", "Cây xoài cát"]}
-                radius={4}
-                fullWidth
-                size="md"
-              />
+              {/* ====== THEO LÔ ====== */}
+              {form.values.allocation.type === "plot" && (
+                <Stack>
+                  {/* Thông tin lô (read-only) */}
+                  <Title order={6}>Thông tin các lô đã chọn</Title>
+                  <ScrollAreaAutosize h={240}>
+                    <Group align="stretch" wrap="wrap">
+                      {form.values.allocation.selectedPlots.map((p) => (
+                        <Card
+                          key={p.id}
+                          withBorder
+                          radius={12}
+                          shadow="sm"
+                          p="md"
+                          w={360}
+                        >
+                          <Stack gap={6}>
+                            <Group justify="space-between">
+                              <Text fw={700}>{p.name}</Text>
+                              <Badge variant="filled" color="gray" radius="sm">
+                                {p.code}
+                              </Badge>
+                            </Group>
+                            <Group gap="xs">
+                              <Text fw={700}>Cây trồng chính:</Text>
+                              <Text>{p.mainCrop}</Text>
+                            </Group>
+                            <Group gap="xl">
+                              <Group gap="xs">
+                                <Text fw={700}>Diện tích:</Text>
+                                <Text>
+                                  {p.areaM2.toLocaleString("vi-VN")} m²
+                                </Text>
+                              </Group>
+                              <Group gap="xs">
+                                <Text fw={700}>Số hàng:</Text>
+                                <Text>{p.rowsCount}</Text>
+                              </Group>
+                            </Group>
+                            <Group gap="xl">
+                              <Group gap="xs">
+                                <Text fw={700}>Tưới:</Text>
+                                <Text>{p.irrigation}</Text>
+                              </Group>
+                              <Group gap="xs">
+                                <Text fw={700}>Canh tác:</Text>
+                                <Text>{p.cultivation}</Text>
+                              </Group>
+                            </Group>
+                            <Group gap="xs">
+                              <Text fw={700}>Địa hình:</Text>
+                              <Badge variant="light" color="green" radius="xl">
+                                {p.terrainLabel}
+                              </Badge>
+                            </Group>
+                          </Stack>
+                        </Card>
+                      ))}
+                    </Group>
+                  </ScrollAreaAutosize>
 
-              <Card withBorder radius={4} mt="md" p="md" shadow="sm">
-                <Stack gap="sm">
-                  <Title order={5} c="teal.7">
-                    Thông tin cây trồng
-                  </Title>
-
-                  <Group justify="space-between">
-                    <Text fw={500} fz="sm">
-                      Loại cây trồng:
-                    </Text>
-                    <Text fz="sm" c="gray.7">
-                      Cây sầu riêng
-                    </Text>
-                  </Group>
-
-                  <Group justify="space-between">
-                    <Text fw={500} fz="sm">
-                      Giống cây:
-                    </Text>
-                    <Text fz="sm" c="gray.7">
-                      Sầu riêng Ri6
-                    </Text>
-                  </Group>
-
-                  <Group justify="space-between">
-                    <Text fw={500} fz="sm">
-                      Hạt giống:
-                    </Text>
-                    <Text fz="sm" c="gray.7">
-                      Hạt giống Ri6 F1
-                    </Text>
-                  </Group>
-
-                  <Group justify="space-between">
-                    <Text fw={500} fz="sm">
-                      Phương pháp tưới tiêu:
-                    </Text>
-                    <Text fz="sm" c="gray.7">
-                      Tưới nhỏ giọt
-                    </Text>
-                  </Group>
-
+                  {/* Nhập số cây theo lô */}
                   <Divider
                     my="sm"
-                    label="Phân bổ cây trồng"
+                    label="Nhập số cây theo lô"
                     labelPosition="center"
                   />
-
-                  <Radio.Group value={form.values.selectType}>
-                    <Stack gap="xs">
-                      <Radio
-                        value="plot"
-                        label={
-                          <Text fz={14} fw={"500"}>
-                            Phân bổ theo lô
+                  <Stack gap="xs">
+                    {form.values.allocation.selectedPlots.map((p, idx) => (
+                      <Group
+                        key={p.id}
+                        justify="space-between"
+                        align="flex-end"
+                      >
+                        <Stack gap={2} w="50%">
+                          <Text fw={600}>
+                            {p.name} ({p.code})
                           </Text>
-                        }
-                        onChange={() =>
-                          form.setFieldValue("selectType", "plot")
-                        }
-                      />
-                      <Radio
-                        value="row"
-                        label={
-                          <Group>
-                            <Text fz={14} fw={"500"}>
-                              Phân bổ theo hàng
-                            </Text>
-                            <Button
-                              size={"compact-xs"}
-                              variant="light"
-                              radius={4}
-                            >
-                              Thêm hàng
-                            </Button>
-                          </Group>
-                        }
-                        onChange={() => form.setFieldValue("selectType", "row")}
-                      />
-                    </Stack>
-                  </Radio.Group>
+                          <Text c="dimmed" fz="sm">
+                            {p.mainCrop} • {p.areaM2.toLocaleString("vi-VN")} m²
+                            • {p.rowsCount} hàng
+                          </Text>
+                        </Stack>
+                        <NumberInput
+                          label="Số cây"
+                          min={0}
+                          radius={4}
+                          value={p.treeCount ?? 0}
+                          onChange={(val) => {
+                            const v = Number(val) || 0;
+                            const next = [
+                              ...form.values.allocation.selectedPlots,
+                            ];
+                            next[idx] = { ...p, treeCount: v };
+                            form.setFieldValue(
+                              "allocation.selectedPlots",
+                              next
+                            );
+                          }}
+                          w={220}
+                        />
+                      </Group>
+                    ))}
+                  </Stack>
 
-                  {form.values.selectType === "row" && (
-                    <Group>
-                      <Card w={200} withBorder radius={4} p="md">
-                        <Stack align="flex-end" gap="xs">
-                          <Group
-                            align="center"
-                            justify="space-between"
-                            w={"100%"}
-                          >
-                            <Text fw={"bold"}>Hàng 1</Text>
-                            <ActionIcon
-                              variant="light"
-                              color={"red"}
-                              radius={4}
-                              size={"xs"}
-                            >
-                              <IconTrash />
-                            </ActionIcon>
-                          </Group>
-                          <NumberInput
-                            flex={1}
-                            placeholder="Số lượng cây"
-                            radius={4}
-                            {...form.getInputProps("treeCount")}
-                          />
-                        </Stack>
-                      </Card>
-                      <Card w={200} withBorder radius={4} p="md">
-                        <Stack align="flex-end" gap="xs">
-                          <Group
-                            align="center"
-                            justify="space-between"
-                            w={"100%"}
-                          >
-                            <Text fw={"bold"}>Hàng 2</Text>
-                            <ActionIcon
-                              variant="light"
-                              color={"red"}
-                              radius={4}
-                              size={"xs"}
-                            >
-                              <IconTrash />
-                            </ActionIcon>
-                          </Group>
-                          <NumberInput
-                            flex={1}
-                            placeholder="Số lượng cây"
-                            radius={4}
-                            {...form.getInputProps("treeCount")}
-                          />
-                        </Stack>
-                      </Card>
-                    </Group>
-                  )}
-                  {form.values.selectType !== "row" && (
-                    <NumberInput
-                      label="Số lượng cây"
-                      placeholder="Nhập số lượng"
-                      radius={4}
-                      {...form.getInputProps("treeCount")}
-                    />
-                  )}
+                  {/* Tổng theo lô */}
+                  <Group justify="space-between" mt="sm">
+                    <Text fw={500}>Tổng số cây</Text>
+                    <Text fw={700} c="green">
+                      {form.values.allocation.selectedPlots
+                        .reduce((s, pl) => s + (Number(pl.treeCount) || 0), 0)
+                        .toLocaleString("vi-VN")}
+                    </Text>
+                  </Group>
                 </Stack>
-              </Card>
+              )}
 
+              {/* ====== THEO HÀNG ====== */}
+              {form.values.allocation.type === "row" && (
+                <Stack>
+                  <Group justify="space-between" align="center">
+                    <Title order={6}>Danh sách hàng</Title>
+                    <Button
+                      size="xs"
+                      variant="light"
+                      radius={4}
+                      onClick={() =>
+                        form.setFieldValue("allocation.rows", [
+                          ...form.values.allocation.rows,
+                          {
+                            id:
+                              crypto.randomUUID?.() ??
+                              Math.random().toString(36).slice(2, 9),
+                            rowId: undefined,
+                            rowName: "",
+                            treeCount: 0,
+                          },
+                        ])
+                      }
+                    >
+                      Thêm hàng
+                    </Button>
+                  </Group>
+
+                  <ScrollAreaAutosize h={320}>
+                    <Group align="stretch" wrap="wrap">
+                      {form.values.allocation.rows.map((r, idx) => (
+                        <Card key={r.id} withBorder radius={12} p="md" w={300}>
+                          <Stack gap="xs">
+                            <Group justify="space-between" align="center">
+                              <Text fw={700}>
+                                {r.rowName || `Hàng ${idx + 1}`}
+                              </Text>
+                              <ActionIcon
+                                variant="light"
+                                color="red"
+                                radius={4}
+                                size="sm"
+                                onClick={() => {
+                                  const next = [...form.values.allocation.rows];
+                                  next.splice(idx, 1);
+                                  form.setFieldValue("allocation.rows", next);
+                                }}
+                              >
+                                <IconTrash size={16} />
+                              </ActionIcon>
+                            </Group>
+
+                            {/* Tuỳ bạn đang chọn hàng từ đâu: Select hay TextInput.
+                      Ở đây mình dùng TextInput để linh hoạt */}
+                            <TextInput
+                              label="Tên hàng"
+                              placeholder="VD: Hàng 1"
+                              radius={4}
+                              value={r.rowName || ""}
+                              onChange={(e) => {
+                                const next = [...form.values.allocation.rows];
+                                next[idx] = {
+                                  ...r,
+                                  rowName: e.currentTarget.value,
+                                };
+                                form.setFieldValue("allocation.rows", next);
+                              }}
+                            />
+
+                            <NumberInput
+                              label="Số cây"
+                              min={0}
+                              radius={4}
+                              value={r.treeCount}
+                              onChange={(val) => {
+                                const v = Number(val) || 0;
+                                const next = [...form.values.allocation.rows];
+                                next[idx] = { ...r, treeCount: v };
+                                form.setFieldValue("allocation.rows", next);
+                              }}
+                            />
+                          </Stack>
+                        </Card>
+                      ))}
+                    </Group>
+                  </ScrollAreaAutosize>
+
+                  {/* Tổng theo hàng */}
+                  <Group justify="space-between" mt="sm">
+                    <Text fw={500}>Tổng số cây</Text>
+                    <Text fw={700} c="green">
+                      {form.values.allocation.rows
+                        .reduce((s, row) => s + (Number(row.treeCount) || 0), 0)
+                        .toLocaleString("vi-VN")}
+                    </Text>
+                  </Group>
+                </Stack>
+              )}
+
+              {/* Actions */}
               <Group justify="space-between" mt="md">
                 <Button variant="default" onClick={prevStep}>
                   Quay lại
@@ -371,100 +560,436 @@ const AreaManagementTreeAddv2Page = () => {
           </Stepper.Step>
 
           {/* STEP 3: NHẬP TOẠ ĐỘ */}
-          <Stepper.Step label="Bước 3" description="Định vị GPS">
-            <Stack>
-              <SegmentedControl
-                data={cropGroups.map((g) => g.cropName)}
-                value={selectedCrop}
-                onChange={setSelectedCrop}
-                fullWidth
-                size="md"
-                radius={4}
-              />
 
-              {/* Accordion theo nhóm cây được chọn */}
-              {cropGroups
-                .filter((group) => group.cropName === selectedCrop)
-                .map((group) => (
-                  <Accordion
-                    key={group.cropName}
-                    variant="contained"
-                    radius={4}
-                    multiple
-                    defaultValue={[]}
-                  >
-                    {group.rows.map((row, rowIndex) => (
-                      <Accordion.Item value={`row-${rowIndex}`} key={rowIndex}>
+          <Stepper.Step label="Bước 3" description="Định vị GPS">
+            <Stack gap="md">
+              <Title order={5}>
+                Định vị GPS theo{" "}
+                {form.values.allocation.type === "plot" ? "Lô" : "Hàng"}
+              </Title>
+
+              {/* ====== THEO LÔ ====== */}
+              {form.values.allocation.type === "plot" && (
+                <Accordion variant="contained" multiple radius={4}>
+                  {form.values.allocation.selectedPlots.map((p) => {
+                    const points = form.values.gps.byPlot[p.id] || [];
+                    // input buffer (tránh ghi trực tiếp): lưu tạm theo plotId
+                    const buf =
+                      form.values.gps.inputBuffer?.byPlot?.[p.id] ??
+                      ({
+                        code: "",
+                        lat: undefined,
+                        lng: undefined,
+                        plantedAt: null,
+                      } as TreePoint);
+
+                    return (
+                      <Accordion.Item key={p.id} value={p.id}>
                         <Accordion.Control>
-                          <Text fw={600}>{row.name}</Text>
+                          <Group justify="space-between">
+                            <Text fw={600}>
+                              {p.name}{" "}
+                              <Text span c="dimmed">
+                                ({p.code})
+                              </Text>
+                            </Text>
+                            <Text c="dimmed" fz="sm">
+                              {p.mainCrop} • {p.areaM2.toLocaleString("vi-VN")}{" "}
+                              m² • {p.rowsCount} hàng
+                            </Text>
+                          </Group>
                         </Accordion.Control>
                         <Accordion.Panel>
                           <Card
                             withBorder
                             radius="sm"
                             shadow="xs"
+                            p="md"
                             style={{ position: "relative", zIndex: 1 }}
                           >
-                            <Group mt="md" align="flex-end">
+                            {/* Form nhập 1 điểm rồi Thêm */}
+                            <Group align="flex-end">
                               <TextInput
-                                label="Mã cây trồng"
-                                radius={4}
-                                flex={1}
+                                label="Mã cây"
                                 placeholder="T001"
+                                radius={4}
+                                value={buf.code || ""}
+                                onChange={(e) => {
+                                  form.setFieldValue("gps.inputBuffer", {
+                                    ...form.values.gps.inputBuffer,
+                                    byPlot: {
+                                      ...(form.values.gps.inputBuffer?.byPlot ??
+                                        {}),
+                                      [p.id]: {
+                                        ...buf,
+                                        code: e.currentTarget.value,
+                                      },
+                                    },
+                                  });
+                                }}
+                                flex={1}
                               />
                               <TextInput
                                 label="Latitude"
                                 placeholder="10.762622"
                                 radius={4}
+                                value={buf.lat ?? ""}
+                                onChange={(e) => {
+                                  const v = e.currentTarget.value;
+                                  form.setFieldValue("gps.inputBuffer", {
+                                    ...form.values.gps.inputBuffer,
+                                    byPlot: {
+                                      ...(form.values.gps.inputBuffer?.byPlot ??
+                                        {}),
+                                      [p.id]: {
+                                        ...buf,
+                                        lat: v === "" ? undefined : Number(v),
+                                      },
+                                    },
+                                  });
+                                }}
                                 flex={1}
                               />
                               <TextInput
                                 label="Longitude"
                                 placeholder="106.660172"
                                 radius={4}
+                                value={buf.lng ?? ""}
+                                onChange={(e) => {
+                                  const v = e.currentTarget.value;
+                                  form.setFieldValue("gps.inputBuffer", {
+                                    ...form.values.gps.inputBuffer,
+                                    byPlot: {
+                                      ...(form.values.gps.inputBuffer?.byPlot ??
+                                        {}),
+                                      [p.id]: {
+                                        ...buf,
+                                        lng: v === "" ? undefined : Number(v),
+                                      },
+                                    },
+                                  });
+                                }}
                                 flex={1}
                               />
-
                               <DatePickerInput
                                 radius={4}
                                 label="Thời gian trồng"
-                                placeholder="Chọn ngày trồng"
+                                placeholder="Chọn ngày"
                                 locale="vi"
                                 clearable
-                                flex={1}
                                 popoverProps={{ withinPortal: true }}
+                                value={buf.plantedAt ?? null}
+                                onChange={(d) => {
+                                  form.setFieldValue("gps.inputBuffer", {
+                                    ...form.values.gps.inputBuffer,
+                                    byPlot: {
+                                      ...(form.values.gps.inputBuffer?.byPlot ??
+                                        {}),
+                                      [p.id]: { ...buf, plantedAt: d ?? null },
+                                    },
+                                  });
+                                }}
+                                flex={1}
                               />
                               <Button
                                 variant="light"
                                 leftSection={<IconPlus size={16} />}
                                 radius={4}
+                                onClick={() => {
+                                  if (!buf.lat || !buf.lng) return; // optional: validate
+                                  const next = [...points, { ...buf }];
+                                  form.setFieldValue(
+                                    `gps.byPlot.${p.id}`,
+                                    next
+                                  );
+                                  // clear buffer
+                                  const allBuf = {
+                                    ...(form.values.gps.inputBuffer?.byPlot ??
+                                      {}),
+                                  };
+                                  delete allBuf[p.id];
+                                  form.setFieldValue("gps.inputBuffer", {
+                                    ...form.values.gps.inputBuffer,
+                                    byPlot: allBuf,
+                                  });
+                                }}
                               >
                                 Thêm
                               </Button>
                             </Group>
 
-                            <Stack mt="md">
+                            {/* Map + list điểm đã thêm */}
+                            <Stack mt="md" gap="xs">
                               <MapContainer
-                                center={
-                                  row.coords[0] || [10.762622, 106.660172]
-                                }
+                                center={[
+                                  points[0]?.lat ?? 10.762622,
+                                  points[0]?.lng ?? 106.660172,
+                                ]}
                                 zoom={16}
                                 style={{
-                                  height: "250px",
+                                  height: 260,
                                   width: "100%",
                                   borderRadius: 8,
                                 }}
                               >
                                 <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
-                                <Polygon positions={row.coords} color="green" />
+                                {/* Nếu bạn có polygon của lô, render Polygon ở đây */}
+                                {points.map((pt, i) =>
+                                  pt.lat && pt.lng ? (
+                                    <Marker
+                                      key={i}
+                                      position={[pt.lat, pt.lng]}
+                                    />
+                                  ) : null
+                                )}
                               </MapContainer>
+
+                              {points.length > 0 && (
+                                <Stack gap={4}>
+                                  {points.map((pt, i) => (
+                                    <Group key={i} justify="space-between">
+                                      <Text fz="sm">
+                                        <b>{pt.code || `Cây ${i + 1}`}</b> —{" "}
+                                        {pt.lat}, {pt.lng} •{" "}
+                                        {pt.plantedAt
+                                          ? new Date(
+                                              pt.plantedAt
+                                            ).toLocaleDateString("vi-VN")
+                                          : "—"}
+                                      </Text>
+                                      <Button
+                                        size="xs"
+                                        variant="subtle"
+                                        color="red"
+                                        onClick={() => {
+                                          const next = [...points];
+                                          next.splice(i, 1);
+                                          form.setFieldValue(
+                                            `gps.byPlot.${p.id}`,
+                                            next
+                                          );
+                                        }}
+                                      >
+                                        Xóa
+                                      </Button>
+                                    </Group>
+                                  ))}
+                                </Stack>
+                              )}
                             </Stack>
                           </Card>
                         </Accordion.Panel>
                       </Accordion.Item>
-                    ))}
-                  </Accordion>
-                ))}
+                    );
+                  })}
+                </Accordion>
+              )}
+
+              {/* ====== THEO HÀNG ====== */}
+              {form.values.allocation.type === "row" && (
+                <Accordion variant="contained" multiple radius={4}>
+                  {form.values.allocation.rows.map((r, idx) => {
+                    const rowKey = r.id; // dùng id duy nhất của hàng
+                    const points = form.values.gps.byRow[rowKey] || [];
+                    const buf =
+                      form.values.gps.inputBuffer?.byRow?.[rowKey] ??
+                      ({
+                        code: "",
+                        lat: undefined,
+                        lng: undefined,
+                        plantedAt: null,
+                      } as TreePoint);
+
+                    return (
+                      <Accordion.Item key={rowKey} value={rowKey}>
+                        <Accordion.Control>
+                          <Text fw={600}>{r.rowName || `Hàng ${idx + 1}`}</Text>
+                        </Accordion.Control>
+                        <Accordion.Panel>
+                          <Card
+                            withBorder
+                            radius="sm"
+                            shadow="xs"
+                            p="md"
+                            style={{ position: "relative", zIndex: 1 }}
+                          >
+                            <Group align="flex-end">
+                              <TextInput
+                                label="Mã cây"
+                                placeholder="R1-001"
+                                radius={4}
+                                value={buf.code || ""}
+                                onChange={(e) => {
+                                  form.setFieldValue("gps.inputBuffer", {
+                                    ...form.values.gps.inputBuffer,
+                                    byRow: {
+                                      ...(form.values.gps.inputBuffer?.byRow ??
+                                        {}),
+                                      [rowKey]: {
+                                        ...buf,
+                                        code: e.currentTarget.value,
+                                      },
+                                    },
+                                  });
+                                }}
+                                flex={1}
+                              />
+                              <TextInput
+                                label="Latitude"
+                                placeholder="10.762622"
+                                radius={4}
+                                value={buf.lat ?? ""}
+                                onChange={(e) => {
+                                  const v = e.currentTarget.value;
+                                  form.setFieldValue("gps.inputBuffer", {
+                                    ...form.values.gps.inputBuffer,
+                                    byRow: {
+                                      ...(form.values.gps.inputBuffer?.byRow ??
+                                        {}),
+                                      [rowKey]: {
+                                        ...buf,
+                                        lat: v === "" ? undefined : Number(v),
+                                      },
+                                    },
+                                  });
+                                }}
+                                flex={1}
+                              />
+                              <TextInput
+                                label="Longitude"
+                                placeholder="106.660172"
+                                radius={4}
+                                value={buf.lng ?? ""}
+                                onChange={(e) => {
+                                  const v = e.currentTarget.value;
+                                  form.setFieldValue("gps.inputBuffer", {
+                                    ...form.values.gps.inputBuffer,
+                                    byRow: {
+                                      ...(form.values.gps.inputBuffer?.byRow ??
+                                        {}),
+                                      [rowKey]: {
+                                        ...buf,
+                                        lng: v === "" ? undefined : Number(v),
+                                      },
+                                    },
+                                  });
+                                }}
+                                flex={1}
+                              />
+                              <DatePickerInput
+                                radius={4}
+                                label="Thời gian trồng"
+                                placeholder="Chọn ngày"
+                                locale="vi"
+                                clearable
+                                popoverProps={{ withinPortal: true }}
+                                value={buf.plantedAt ?? null}
+                                onChange={(d) => {
+                                  form.setFieldValue("gps.inputBuffer", {
+                                    ...form.values.gps.inputBuffer,
+                                    byRow: {
+                                      ...(form.values.gps.inputBuffer?.byRow ??
+                                        {}),
+                                      [rowKey]: {
+                                        ...buf,
+                                        plantedAt: d ?? null,
+                                      },
+                                    },
+                                  });
+                                }}
+                                flex={1}
+                              />
+                              <Button
+                                variant="light"
+                                leftSection={<IconPlus size={16} />}
+                                radius={4}
+                                onClick={() => {
+                                  if (!buf.lat || !buf.lng) return;
+                                  const next = [...points, { ...buf }];
+                                  form.setFieldValue(
+                                    `gps.byRow.${rowKey}`,
+                                    next
+                                  );
+                                  // clear buffer
+                                  const allBuf = {
+                                    ...(form.values.gps.inputBuffer?.byRow ??
+                                      {}),
+                                  };
+                                  delete allBuf[rowKey];
+                                  form.setFieldValue("gps.inputBuffer", {
+                                    ...form.values.gps.inputBuffer,
+                                    byRow: allBuf,
+                                  });
+                                }}
+                              >
+                                Thêm
+                              </Button>
+                            </Group>
+
+                            <Stack mt="md" gap="xs">
+                              <MapContainer
+                                center={[
+                                  points[0]?.lat ?? 10.762622,
+                                  points[0]?.lng ?? 106.660172,
+                                ]}
+                                zoom={16}
+                                style={{
+                                  height: 260,
+                                  width: "100%",
+                                  borderRadius: 8,
+                                }}
+                              >
+                                <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
+                                {points.map((pt, i) =>
+                                  pt.lat && pt.lng ? (
+                                    <Marker
+                                      key={i}
+                                      position={[pt.lat, pt.lng]}
+                                    />
+                                  ) : null
+                                )}
+                              </MapContainer>
+
+                              {points.length > 0 && (
+                                <Stack gap={4}>
+                                  {points.map((pt, i) => (
+                                    <Group key={i} justify="space-between">
+                                      <Text fz="sm">
+                                        <b>{pt.code || `Cây ${i + 1}`}</b> —{" "}
+                                        {pt.lat}, {pt.lng} •{" "}
+                                        {pt.plantedAt
+                                          ? new Date(
+                                              pt.plantedAt
+                                            ).toLocaleDateString("vi-VN")
+                                          : "—"}
+                                      </Text>
+                                      <Button
+                                        size="xs"
+                                        variant="subtle"
+                                        color="red"
+                                        onClick={() => {
+                                          const next = [...points];
+                                          next.splice(i, 1);
+                                          form.setFieldValue(
+                                            `gps.byRow.${rowKey}`,
+                                            next
+                                          );
+                                        }}
+                                      >
+                                        Xóa
+                                      </Button>
+                                    </Group>
+                                  ))}
+                                </Stack>
+                              )}
+                            </Stack>
+                          </Card>
+                        </Accordion.Panel>
+                      </Accordion.Item>
+                    );
+                  })}
+                </Accordion>
+              )}
 
               <Group justify="space-between" mt="md">
                 <Button variant="default" radius={4} onClick={prevStep}>
@@ -476,30 +1001,14 @@ const AreaManagementTreeAddv2Page = () => {
               </Group>
             </Stack>
           </Stepper.Step>
-
           <Stepper.Step label="Bước 4" description="Xác nhận">
             <ConfirmStep
               area="Vùng Tây Nguyên"
               zone="Khu A1"
               block="Lô 05"
+              type={form.values.allocation.type as string}
               row="Hàng 3"
               plantingDate="12/07/2025"
-              farmingMethod="Hữu cơ"
-              irrigation="Tưới nhỏ giọt"
-              tree={{
-                type: "Cây sầu riêng",
-                variety: "Sầu riêng Ri6",
-                seed: "Hạt giống Ri6 F1",
-              }}
-              locations={[
-                { lat: 10.762622, lng: 106.660172 },
-                { lat: 10.7627, lng: 106.66018 },
-                { lat: 10.76275, lng: 106.66022 },
-              ]}
-              imageUrls={[
-                "https://sauriengoi.vn/wp-content/uploads/2023/08/AdobeStock-93Q2EVldRH-e1697079899709.jpg",
-              ]}
-              type={0}
             />
             <Group justify="space-between" mt="md">
               <Button variant="default" onClick={prevStep} radius={4}>

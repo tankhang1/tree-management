@@ -51,7 +51,7 @@ export const PATH = {
   AREA_TREE: "/area-management/tree",
   AREA_TREE_v2: "/area-management/tree-v2",
   AREA_ADD_TREE: "/area-management/tree/add",
-  AREA_ADD_TREE_v2: "/area-management/tree/add",
+  AREA_ADD_TREE_v2: "/area-management/tree-v2/add",
   AREA_MAP: "/area-management/map",
   AREA_SOIL: "/area-management/soil-type",
   AREA_TERRAIN: "/area-management/terrain",
