@@ -57,7 +57,11 @@ const FinancePurposeReceiveAddPage = () => {
   const navigate = useNavigate();
   const [activeStep, setActiveStep] = useState(0);
   const [selectedBank, setSelectedBank] = useState<string>();
-  const [listExplain, setListExplain] = useState<TExplain[]>([]);
+  const [listExplain, setListExplain] = useState<TExplain[]>([
+    { name: "Thu tiền hợp đồng số 12345", price: 50000000 },
+    { name: "Thu tiền đặt cọc khách hàng A", price: 30000000 },
+    { name: "Thu tiền bán hàng tháng 7", price: 20000000 },
+  ]);
   const nextStep = () => setActiveStep((current) => Math.min(current + 1, 2));
   const prevStep = () => setActiveStep((current) => Math.max(current - 1, 0));
   const handleBankSelect = (bank: string) => {
@@ -355,7 +359,6 @@ const FinancePurposeReceiveAddPage = () => {
                       </Scrollable>
                     </Stack>
                   </Group>
-                  
                 </Card>
 
                 {/* Mục đích 2 */}
@@ -551,63 +554,131 @@ const FinancePurposeReceiveAddPage = () => {
                   <Text>Đối tượng thu quan trọng</Text>
                 </Group>
               </Card>
-              <Divider my="sm" />
 
-              {/* Thông tin chứng từ */}
-              <Card shadow="xs" padding="md" radius={4} withBorder>
-                <Title order={5}>Thông ti n chứng từ</Title>
-                <Divider my="sm" />
-                <Group gap="sm">
+              <Card shadow="sm" padding="lg" radius={4} withBorder>
+                <Stack gap="md">
+                  <Title order={4}>Danh sách chứng từ</Title>
+                  {/* Mục đích 1: Thu nợ */}
                   <Card shadow="xs" padding="md" radius={4} withBorder>
-                    <Group justify="apart">
-                      <Text fw={500}>Tiêu đề:</Text>
-                      <Text>Thu tiền hợp đồng số 12345</Text>
-                    </Group>
-                    <Group justify="apart">
-                      <Text fw={500}>Số hiệu chứng từ:</Text>
-                      <Text>CT001</Text>
-                    </Group>
-                    <Group justify="apart">
-                      <Text fw={500}>Hình thức thu:</Text>
-                      <Text>Tiền mặt</Text>
-                    </Group>
-                    <Group justify="apart">
-                      <Text fw={500}>Ngân hàng:</Text>
-                      <Text>Techcombank (TCB)</Text>
-                    </Group>
-                    <Group justify="apart">
-                      <Text fw={500}>Số tiền:</Text>
-                      <Text color="blue" fw={600}>
-                        5,000,000 VND
-                      </Text>
-                    </Group>
+                    <Title order={5}>Thu nợ</Title>
+                    <Divider my="md" />
+
+                    <Stack gap="sm">
+                      <Title order={6}>Danh sách diễn giải</Title>
+                      <Stack>
+                        {listExplain.map((explain, index) => (
+                          <Group key={index} justify="apart">
+                            <Text>{explain.name}</Text>
+                            <Text fw={500} c="green">
+                              {explain.price.toLocaleString("vi-VN", {
+                                style: "currency",
+                                currency: "VND",
+                              })}
+                            </Text>
+                          </Group>
+                        ))}
+                      </Stack>
+
+                      <Group justify="apart" mt="sm">
+                        <Text fw={500}>Tổng tiền thu:</Text>
+                        <Text fz="lg" fw={600} c="green">
+                          {(100000000).toLocaleString("vi-VN", {
+                            style: "currency",
+                            currency: "VND",
+                          })}
+                        </Text>
+                      </Group>
+
+                      <Divider my="sm" />
+
+                      <Stack gap={4}>
+                        <Group justify="apart">
+                          <Text c="dimmed">Tiêu đề:</Text>
+                          <Text>Thu tiền hợp đồng số 12345</Text>
+                        </Group>
+                        <Group justify="apart">
+                          <Text c="dimmed">Số hiệu chứng từ:</Text>
+                          <Text>CT001</Text>
+                        </Group>
+                        <Group justify="apart">
+                          <Text c="dimmed">Ngày tạo chứng từ:</Text>
+                          <Text>08/08/2025 10:30</Text>
+                        </Group>
+                        <Group justify="apart">
+                          <Text c="dimmed">Hình thức thu:</Text>
+                          <Text>Tiền mặt</Text>
+                        </Group>
+                        <Group justify="apart">
+                          <Text c="dimmed">Thông tin ngân hàng:</Text>
+                          <Text>Ngân hàng Vietcombank, CN Hà Nội</Text>
+                        </Group>
+                      </Stack>
+                    </Stack>
                   </Card>
 
+                  {/* Mục đích 2: Thu từ bán hàng */}
                   <Card shadow="xs" padding="md" radius={4} withBorder>
-                    <Group justify="apart">
-                      <Text fw={500}>Tiêu đề:</Text>
-                      <Text>Thu tiền bán hàng tháng 8</Text>
-                    </Group>
-                    <Group justify="apart">
-                      <Text fw={500}>Số hiệu chứng từ:</Text>
-                      <Text>CT002</Text>
-                    </Group>
-                    <Group justify="apart">
-                      <Text fw={500}>Hình thức thu:</Text>
-                      <Text>Chuyển khoản</Text>
-                    </Group>
-                    <Group justify="apart">
-                      <Text fw={500}>Ngân hàng:</Text>
-                      <Text>Vietcombank (VCB)</Text>
-                    </Group>
-                    <Group justify="apart">
-                      <Text fw={500}>Số tiền:</Text>
-                      <Text color="blue" fw={600}>
-                        10,000,000 VND
-                      </Text>
-                    </Group>
+                    <Title order={5}>Thu từ bán hàng</Title>
+                    <Divider my="md" />
+
+                    <Stack gap="sm">
+                      <Title order={6}>Danh sách diễn giải</Title>
+                      <Stack>
+                        {listExplain.map((explain, index) => (
+                          <Group key={index} justify="apart">
+                            <Text>{explain.name}</Text>
+                            <Text fw={500} c="green">
+                              {explain.price.toLocaleString("vi-VN", {
+                                style: "currency",
+                                currency: "VND",
+                              })}
+                            </Text>
+                          </Group>
+                        ))}
+                      </Stack>
+
+                      <Group justify="apart" mt="sm">
+                        <Text fw={500}>Tổng tiền thu:</Text>
+                        <Text fz="lg" fw={600} c="green">
+                          {(100000000).toLocaleString("vi-VN", {
+                            style: "currency",
+                            currency: "VND",
+                          })}
+                        </Text>
+                      </Group>
+
+                      <Divider my="sm" />
+
+                      <Stack gap={4}>
+                        <Group justify="apart">
+                          <Text c="dimmed">Tiêu đề:</Text>
+                          <Text>Thu tiền hợp đồng số 12345</Text>
+                        </Group>
+                        <Group justify="apart">
+                          <Text c="dimmed">Số hiệu chứng từ:</Text>
+                          <Text>CT002</Text>
+                        </Group>
+                        <Group justify="apart">
+                          <Text c="dimmed">Ngày tạo chứng từ:</Text>
+                          <Text>08/08/2025 14:15</Text>
+                        </Group>
+                        <Group justify="apart">
+                          <Text c="dimmed">Hình thức thu:</Text>
+                          <Text>Chuyển khoản</Text>
+                        </Group>
+                        <Group justify="apart">
+                          <Text c="dimmed">Thông tin ngân hàng:</Text>
+                          <Text>Ngân hàng BIDV, CN TP.HCM</Text>
+                        </Group>
+                      </Stack>
+                    </Stack>
                   </Card>
-                </Group>
+
+                  {/* Tổng hợp thông tin */}
+                  <Badge variant="light" size="lg" mt="md">
+                    Tổng số chứng từ: 2 | Tổng tiền: 200,000,000 VND
+                  </Badge>
+                </Stack>
               </Card>
 
               <Divider my="sm" />
@@ -615,12 +686,6 @@ const FinancePurposeReceiveAddPage = () => {
               {/* Tổng hợp */}
               <Card shadow="xs" padding="md" radius={4} withBorder>
                 <Stack gap="sm">
-                  <Group justify="apart">
-                    <Text fw={700}>Tổng số chứng từ:</Text>
-                    <Badge color="blue" variant="filled">
-                      2
-                    </Badge>
-                  </Group>
                   <Group justify="apart">
                     <Text fw={700} size="lg">
                       Tổng tiền:

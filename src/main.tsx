@@ -120,6 +120,12 @@ const AreaManagementRowPage = L(() => import("./pages/AreaManagementPage/Row"));
 const AreaManagementTreePage = L(
   () => import("./pages/AreaManagementPage/Tree")
 );
+const AreaManagementTreev2Page = L(
+  () => import("./pages/AreaManagementPage/Tree_v2")
+);
+const AreaManagementTreeAddv2Page = L(
+  () => import("./pages/AreaManagementPage/Tree_v2/Add")
+);
 const AreaManagementMapPage = L(() => import("./pages/AreaManagementPage/Map"));
 const AreaManagementSoilTypePage = L(
   () => import("./pages/AreaManagementPage/SoilType")
@@ -837,6 +843,16 @@ const ROUTES = [
     key="area_add_tree"
     path={PATH.AREA_ADD_TREE}
     element={withSuspense(<AreaManagementTreeAddPage />)}
+  />,
+  <Route
+    key="area_tree_v2"
+    path={PATH.AREA_TREE_v2}
+    element={withSuspense(<AreaManagementTreev2Page />)}
+  />,
+  <Route
+    key="area_add_tree_v2"
+    path={PATH.AREA_ADD_TREE_v2}
+    element={withSuspense(<AreaManagementTreeAddv2Page />)}
   />,
   <Route
     key="area_map"

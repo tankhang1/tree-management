@@ -59,6 +59,7 @@ export const NAV_BAR = [
       // { label: "Lô canh tác", link: PATH.AREA_BLOCK },
       // { label: "Hàng", link: PATH.AREA_ROW },
       { label: "Chi tiết phân bổ", link: PATH.AREA_TREE },
+      { label: "Chi tiết phân bổ (v2)", link: PATH.AREA_TREE_v2 },
 
       { label: "Lịch sử", link: PATH.AREA_HISTORY },
     ],
