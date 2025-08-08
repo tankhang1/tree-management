@@ -295,31 +295,58 @@ const AreaManagementTreeAddPage = () => {
                   </Radio.Group>
 
                   {form.values.selectType === "row" && (
-                    <Card w={200} withBorder radius={4} p="md">
-                      <Stack align="flex-end" gap="xs">
-                        <Group
-                          align="center"
-                          justify="space-between"
-                          w={"100%"}
-                        >
-                          <Text fw={"bold"}>Hàng 1</Text>
-                          <ActionIcon
-                            variant="light"
-                            color={"red"}
-                            radius={4}
-                            size={"xs"}
+                    <Group>
+                      <Card w={200} withBorder radius={4} p="md">
+                        <Stack align="flex-end" gap="xs">
+                          <Group
+                            align="center"
+                            justify="space-between"
+                            w={"100%"}
                           >
-                            <IconTrash />
-                          </ActionIcon>
-                        </Group>
-                        <NumberInput
-                          flex={1}
-                          placeholder="Số lượng cây"
-                          radius={4}
-                          {...form.getInputProps("treeCount")}
-                        />
-                      </Stack>
-                    </Card>
+                            <Text fw={"bold"}>Hàng 1</Text>
+                            <ActionIcon
+                              variant="light"
+                              color={"red"}
+                              radius={4}
+                              size={"xs"}
+                            >
+                              <IconTrash />
+                            </ActionIcon>
+                          </Group>
+                          <NumberInput
+                            flex={1}
+                            placeholder="Số lượng cây"
+                            radius={4}
+                            {...form.getInputProps("treeCount")}
+                          />
+                        </Stack>
+                      </Card>
+                      <Card w={200} withBorder radius={4} p="md">
+                        <Stack align="flex-end" gap="xs">
+                          <Group
+                            align="center"
+                            justify="space-between"
+                            w={"100%"}
+                          >
+                            <Text fw={"bold"}>Hàng 2</Text>
+                            <ActionIcon
+                              variant="light"
+                              color={"red"}
+                              radius={4}
+                              size={"xs"}
+                            >
+                              <IconTrash />
+                            </ActionIcon>
+                          </Group>
+                          <NumberInput
+                            flex={1}
+                            placeholder="Số lượng cây"
+                            radius={4}
+                            {...form.getInputProps("treeCount")}
+                          />
+                        </Stack>
+                      </Card>
+                    </Group>
                   )}
                   {form.values.selectType !== "row" && (
                     <NumberInput

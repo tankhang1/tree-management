@@ -223,6 +223,8 @@ export const NAV_BAR = [
         label: "Danh sách địa chỉ",
         link: PATH.COMPANY_ADDRESS,
       },
+      // { label: "Danh sách liên hệ", link: PATH.CONTACT_LIST },
+
       { label: "Lịch sử", link: PATH.COMPANY_HISTORY },
     ],
   },
@@ -304,17 +306,21 @@ export const NAV_BAR = [
     ],
   },
   {
-    label: "Mục đích Thu - Chi",
+    label: "Sổ quỹ",
     icon: IconCashRegister,
     link: PATH.FINANCE_PURPOSE_EXPENSE,
     children: [
       {
-        label: "Thu",
+        label: "Phiếu thu",
         link: PATH.FINANCE_PURPOSE_RECEIVE,
       },
       {
-        label: "Chi",
+        label: "Phiếu chi",
         link: PATH.FINANCE_PURPOSE_EXPENSE,
+      },
+      {
+        label: "Mục đích thu - chi",
+        link: PATH.FINANCE_PURPOSE_MANAGEMENT,
       },
       {
         label: "Thống kê",

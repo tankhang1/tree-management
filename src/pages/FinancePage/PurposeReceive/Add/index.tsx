@@ -15,6 +15,7 @@ import {
   Text,
   Image,
   Divider,
+  ScrollAreaAutosize,
 } from "@mantine/core";
 import {
   IconArrowLeft,
@@ -26,6 +27,8 @@ import { useState } from "react";
 import { SelectableEnterpriseCards } from "../../../StockManagementPage/Delivery/Add/components/SelectableEnterpriseCards";
 import Scrollable from "../../../../components/Scrollable";
 import { useNavigate } from "react-router-dom";
+import { ContactListCards } from "../../components/ContactListCards";
+import { DateTimePicker } from "@mantine/dates";
 const BANKS = [
   {
     bank: "Techcombank (TCB)",
@@ -46,10 +49,15 @@ const BANKS = [
       "data:image/jpeg;base64,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",
   },
 ];
+type TExplain = {
+  name: string;
+  price: number;
+};
 const FinancePurposeReceiveAddPage = () => {
   const navigate = useNavigate();
   const [activeStep, setActiveStep] = useState(0);
   const [selectedBank, setSelectedBank] = useState<string>();
+  const [listExplain, setListExplain] = useState<TExplain[]>([]);
   const nextStep = () => setActiveStep((current) => Math.min(current + 1, 2));
   const prevStep = () => setActiveStep((current) => Math.max(current - 1, 0));
   const handleBankSelect = (bank: string) => {
@@ -116,12 +124,12 @@ const FinancePurposeReceiveAddPage = () => {
               </Input.Wrapper>
               <TextInput
                 radius={4}
-                label="Người thu"
-                placeholder="Nhập tên người thu"
+                placeholder="Đối tượng thu"
                 leftSection={<IconBuilding size={18} />}
               />
               <SelectableEnterpriseCards isCheckbox={false} isMulti={false} />
-
+              <TextInput radius={4} label="Người thu" placeholder="Người thu" />
+              <ContactListCards isTouchable={true} />
               <Input.Wrapper label="Đối tượng nộp">
                 <Group gap="md">
                   <Button
@@ -147,13 +155,15 @@ const FinancePurposeReceiveAddPage = () => {
                   </Button>
                 </Group>
               </Input.Wrapper>
+
               <TextInput
                 radius={4}
-                label="Người nộp"
                 placeholder="Chọn người nộp"
                 leftSection={<IconBuilding size={18} />}
               />
               <SelectableEnterpriseCards isCheckbox={false} isMulti={false} />
+              <TextInput radius={4} label="Người nộp" placeholder="Người nộp" />
+              <ContactListCards isTouchable={true} />
               <MultiSelect
                 radius={4}
                 label="Mục đích"
@@ -208,165 +218,288 @@ const FinancePurposeReceiveAddPage = () => {
                 {/* Mục đích 1 */}
                 <Card shadow="xs" padding="md" radius={4} withBorder>
                   <Title order={5}>Thu nợ</Title>
-                  <Stack gap="sm">
-                    <TextInput
-                      label="Tiêu đề nội dung"
-                      placeholder="Nhập tiêu đề"
-                      defaultValue="Thu tiền hợp đồng số 12345"
-                      radius={4}
-                    />
-                    <TextInput
-                      label="Số chứng từ"
-                      placeholder="Nhập số chứng từ"
-                      defaultValue="CT001"
-                      radius={4}
-                    />
-                    <Select
-                      label="Hình thức thu"
-                      placeholder="Chọn hình thức"
-                      data={["Tiền mặt", "Chuyển khoản"]}
-                      defaultValue="Tiền mặt"
-                      radius={4}
-                    />
-                    <TextInput
-                      label="Thông tin ngân hàng"
-                      placeholder="Nhập thông tin ngân hàng (nếu có)"
-                      radius={4}
-                    />
-                    <Scrollable>
+                  <Divider my={"md"} />
+                  <Group gap="sm" align="flex-start">
+                    <Stack flex={1} gap={"xs"}>
                       <Group>
-                        {BANKS.map((b, i) => (
-                          <Card
-                            key={i}
-                            withBorder
-                            radius={4}
-                            p="sm"
-                            onClick={() => handleBankSelect(b.bank)}
-                            style={{
-                              cursor: "pointer",
-                              borderColor:
-                                selectedBank === b.bank ? "green" : undefined,
-                            }}
-                          >
-                            <Stack gap={2}>
-                              <Group gap={"xs"}>
-                                <strong>Ngân hàng:</strong>
-                                <Group>
-                                  <Image src={b.image} w={20} h={20} /> {b.bank}
-                                </Group>
-                              </Group>
-                              <Text size="sm">
-                                <strong>Chủ tài khoản:</strong>{" "}
-                                {b.accountHolder}
-                              </Text>
-                              <Text size="sm">
-                                <strong>Số tài khoản:</strong> {b.accountNumber}
-                              </Text>
-                              <Text size="sm">
-                                <strong>Chi nhánh:</strong> {b.branch}
-                              </Text>
-                              <Text size="sm">
-                                <strong>Ghi chú:</strong> {b.note}
-                              </Text>
-                            </Stack>
-                          </Card>
-                        ))}
+                        <Title order={6}>Danh sách diễn giải</Title>
+                        <Button
+                          variant="light"
+                          color="green"
+                          radius={4}
+                          onClick={() =>
+                            setListExplain((prev) => [
+                              ...prev,
+                              { name: "", price: 0 },
+                            ])
+                          }
+                        >
+                          Thêm diễn giải
+                        </Button>
                       </Group>
-                    </Scrollable>
-                    <NumberInput
-                      label="Số tiền"
-                      placeholder="Nhập số tiền"
-                      min={0}
-                      step={1000}
-                      defaultValue={5000000}
-                      radius={4}
-                    />
-                  </Stack>
+                      <ScrollAreaAutosize h={400}>
+                        <Stack gap={"xs"}>
+                          {listExplain.map((explain, index) => (
+                            <Group key={index} gap="xs" align="flex-end">
+                              <TextInput
+                                label="Nội dung"
+                                placeholder="Số tiền"
+                                defaultValue={explain.name}
+                                radius={4}
+                                flex={1}
+                              />
+                              <NumberInput
+                                label="Số tiền"
+                                placeholder="Số tiền"
+                                defaultValue={explain.price}
+                                radius={4}
+                                flex={1}
+                              />
+                              <Button
+                                variant="light"
+                                radius={4}
+                                color="red"
+                                onClick={() =>
+                                  setListExplain((prev) =>
+                                    prev.filter((_, i) => i !== index)
+                                  )
+                                }
+                              >
+                                Xóa
+                              </Button>
+                            </Group>
+                          ))}
+                        </Stack>
+                      </ScrollAreaAutosize>
+                      <Group align="center">
+                        <Title order={4}>Tổng tiền thu</Title>
+                        <Text fz={"h1"} c={"green"} fw={500}>
+                          {(100000000).toLocaleString("vi-VN", {
+                            style: "currency",
+                            currency: "VND",
+                          })}
+                        </Text>
+                      </Group>
+                    </Stack>
+                    <Stack flex={1} gap={"xs"}>
+                      <TextInput
+                        label="Tiêu đề"
+                        placeholder="Nhập tiêu đề"
+                        defaultValue="Thu tiền hợp đồng số 12345"
+                        radius={4}
+                      />
+                      <TextInput
+                        label="Số hiệu chứng từ"
+                        placeholder="Nhập số hiệu chứng từ"
+                        defaultValue="CT001"
+                        radius={4}
+                      />
+                      <DateTimePicker
+                        label="Ngày tạo chứng từ"
+                        radius={4}
+                        locale="vi"
+                      />
+                      <Select
+                        label="Hình thức thu"
+                        placeholder="Chọn hình thức"
+                        data={["Tiền mặt", "Chuyển khoản"]}
+                        defaultValue="Tiền mặt"
+                        radius={4}
+                      />
+                      <TextInput
+                        label="Thông tin ngân hàng"
+                        placeholder="Nhập thông tin ngân hàng (nếu có)"
+                        radius={4}
+                      />
+                      <Scrollable>
+                        <Group>
+                          {BANKS.map((b, i) => (
+                            <Card
+                              key={i}
+                              withBorder
+                              radius={4}
+                              p="sm"
+                              onClick={() => handleBankSelect(b.bank)}
+                              style={{
+                                cursor: "pointer",
+                                borderColor:
+                                  selectedBank === b.bank ? "green" : undefined,
+                              }}
+                            >
+                              <Stack gap={2}>
+                                <Group gap={"xs"}>
+                                  <strong>Ngân hàng:</strong>
+                                  <Group>
+                                    <Image src={b.image} w={20} h={20} />{" "}
+                                    {b.bank}
+                                  </Group>
+                                </Group>
+                                <Text size="sm">
+                                  <strong>Chủ tài khoản:</strong>{" "}
+                                  {b.accountHolder}
+                                </Text>
+                                <Text size="sm">
+                                  <strong>Số tài khoản:</strong>{" "}
+                                  {b.accountNumber}
+                                </Text>
+                                <Text size="sm">
+                                  <strong>Chi nhánh:</strong> {b.branch}
+                                </Text>
+                                <Text size="sm">
+                                  <strong>Ghi chú:</strong> {b.note}
+                                </Text>
+                              </Stack>
+                            </Card>
+                          ))}
+                        </Group>
+                      </Scrollable>
+                    </Stack>
+                  </Group>
+                  
                 </Card>
 
                 {/* Mục đích 2 */}
                 <Card shadow="xs" padding="md" radius={4} withBorder>
                   <Title order={5}>Thu từ bán hàng</Title>
-                  <Stack gap="sm">
-                    <TextInput
-                      label="Tiêu đề nội dung"
-                      placeholder="Nhập tiêu đề"
-                      defaultValue="Thu tiền bán hàng tháng 8"
-                      radius={4}
-                    />
-                    <TextInput
-                      label="Số chứng từ"
-                      placeholder="Nhập số chứng từ"
-                      defaultValue="CT002"
-                      radius={4}
-                    />
-                    <Select
-                      label="Hình thức thu"
-                      placeholder="Chọn hình thức"
-                      data={["Tiền mặt", "Chuyển khoản"]}
-                      defaultValue="Chuyển khoản"
-                      radius={4}
-                    />
-                    <TextInput
-                      label="Thông tin ngân hàng"
-                      placeholder="Nhập thông tin ngân hàng (nếu có)"
-                      radius={4}
-                    />
-                    <Scrollable>
+                  <Divider my={"md"} />
+                  <Group gap="sm" align="flex-start">
+                    <Stack flex={1} gap={"xs"}>
                       <Group>
-                        {BANKS.map((b, i) => (
-                          <Card
-                            key={i}
-                            withBorder
-                            radius={4}
-                            p="sm"
-                            onClick={() => handleBankSelect(b.bank)}
-                            style={{
-                              cursor: "pointer",
-                              borderColor:
-                                selectedBank === b.bank ? "green" : undefined,
-                            }}
-                          >
-                            <Stack gap={2}>
-                              <Group gap={"xs"}>
-                                <strong>Ngân hàng:</strong>
-                                <Group>
-                                  <Image src={b.image} w={20} h={20} /> {b.bank}
-                                </Group>
-                              </Group>
-                              <Text size="sm">
-                                <strong>Chủ tài khoản:</strong>{" "}
-                                {b.accountHolder}
-                              </Text>
-                              <Text size="sm">
-                                <strong>Số tài khoản:</strong> {b.accountNumber}
-                              </Text>
-                              <Text size="sm">
-                                <strong>Chi nhánh:</strong> {b.branch}
-                              </Text>
-                              <Text size="sm">
-                                <strong>Ghi chú:</strong> {b.note}
-                              </Text>
-                            </Stack>
-                          </Card>
-                        ))}
+                        <Title order={6}>Danh sách diễn giải</Title>
+                        <Button
+                          variant="light"
+                          color="green"
+                          radius={4}
+                          onClick={() =>
+                            setListExplain((prev) => [
+                              ...prev,
+                              { name: "", price: 0 },
+                            ])
+                          }
+                        >
+                          Thêm diễn giải
+                        </Button>
                       </Group>
-                    </Scrollable>
-                    <NumberInput
-                      label="Số tiền"
-                      placeholder="Nhập số tiền"
-                      min={0}
-                      step={1000}
-                      defaultValue={10000000}
-                      radius={4}
-                    />
-                  </Stack>
+                      <ScrollAreaAutosize h={400}>
+                        <Stack gap={"xs"}>
+                          {listExplain.map((explain, index) => (
+                            <Group key={index} gap="xs" align="flex-end">
+                              <TextInput
+                                label="Nội dung"
+                                placeholder="Số tiền"
+                                defaultValue={explain.name}
+                                radius={4}
+                                flex={1}
+                              />
+                              <NumberInput
+                                label="Số tiền"
+                                placeholder="Số tiền"
+                                defaultValue={explain.price}
+                                radius={4}
+                                flex={1}
+                              />
+                              <Button
+                                variant="light"
+                                radius={4}
+                                color="red"
+                                onClick={() =>
+                                  setListExplain((prev) =>
+                                    prev.filter((_, i) => i !== index)
+                                  )
+                                }
+                              >
+                                Xóa
+                              </Button>
+                            </Group>
+                          ))}
+                        </Stack>
+                      </ScrollAreaAutosize>
+                      <Group align="center">
+                        <Title order={4}>Tổng tiền thu</Title>
+                        <Text fz={"h1"} c={"green"} fw={500}>
+                          {(100000000).toLocaleString("vi-VN", {
+                            style: "currency",
+                            currency: "VND",
+                          })}
+                        </Text>
+                      </Group>
+                    </Stack>
+                    <Stack flex={1} gap={"xs"}>
+                      <TextInput
+                        label="Tiêu đề"
+                        placeholder="Nhập tiêu đề"
+                        defaultValue="Thu tiền hợp đồng số 12345"
+                        radius={4}
+                      />
+                      <TextInput
+                        label="Số hiệu chứng từ"
+                        placeholder="Nhập số hiệu chứng từ"
+                        defaultValue="CT001"
+                        radius={4}
+                      />
+                      <DateTimePicker label="Ngày tạo chứng từ" radius={4} />
+                      <Select
+                        label="Hình thức thu"
+                        placeholder="Chọn hình thức"
+                        data={["Tiền mặt", "Chuyển khoản"]}
+                        defaultValue="Tiền mặt"
+                        radius={4}
+                      />
+                      <TextInput
+                        label="Thông tin ngân hàng"
+                        placeholder="Nhập thông tin ngân hàng (nếu có)"
+                        radius={4}
+                      />
+                      <Scrollable>
+                        <Group>
+                          {BANKS.map((b, i) => (
+                            <Card
+                              key={i}
+                              withBorder
+                              radius={4}
+                              p="sm"
+                              onClick={() => handleBankSelect(b.bank)}
+                              style={{
+                                cursor: "pointer",
+                                borderColor:
+                                  selectedBank === b.bank ? "green" : undefined,
+                              }}
+                            >
+                              <Stack gap={2}>
+                                <Group gap={"xs"}>
+                                  <strong>Ngân hàng:</strong>
+                                  <Group>
+                                    <Image src={b.image} w={20} h={20} />{" "}
+                                    {b.bank}
+                                  </Group>
+                                </Group>
+                                <Text size="sm">
+                                  <strong>Chủ tài khoản:</strong>{" "}
+                                  {b.accountHolder}
+                                </Text>
+                                <Text size="sm">
+                                  <strong>Số tài khoản:</strong>{" "}
+                                  {b.accountNumber}
+                                </Text>
+                                <Text size="sm">
+                                  <strong>Chi nhánh:</strong> {b.branch}
+                                </Text>
+                                <Text size="sm">
+                                  <strong>Ghi chú:</strong> {b.note}
+                                </Text>
+                              </Stack>
+                            </Card>
+                          ))}
+                        </Group>
+                      </Scrollable>
+                    </Stack>
+                  </Group>
                 </Card>
               </Stack>
 
               {/* Tổng hợp thông tin */}
               <Badge variant="light" size="lg">
-                Tổng số chứng từ: 2 | Tổng tiền: 15,000,000 VND
+                Tổng số chứng từ: 2 | Tổng tiền: 200,000,000 VND
               </Badge>
             </Stack>
           </Card>
@@ -422,7 +555,7 @@ const FinancePurposeReceiveAddPage = () => {
 
               {/* Thông tin chứng từ */}
               <Card shadow="xs" padding="md" radius={4} withBorder>
-                <Title order={5}>Thông tin chứng từ</Title>
+                <Title order={5}>Thông ti n chứng từ</Title>
                 <Divider my="sm" />
                 <Group gap="sm">
                   <Card shadow="xs" padding="md" radius={4} withBorder>
@@ -431,7 +564,7 @@ const FinancePurposeReceiveAddPage = () => {
                       <Text>Thu tiền hợp đồng số 12345</Text>
                     </Group>
                     <Group justify="apart">
-                      <Text fw={500}>Số chứng từ:</Text>
+                      <Text fw={500}>Số hiệu chứng từ:</Text>
                       <Text>CT001</Text>
                     </Group>
                     <Group justify="apart">
@@ -456,7 +589,7 @@ const FinancePurposeReceiveAddPage = () => {
                       <Text>Thu tiền bán hàng tháng 8</Text>
                     </Group>
                     <Group justify="apart">
-                      <Text fw={500}>Số chứng từ:</Text>
+                      <Text fw={500}>Số hiệu chứng từ:</Text>
                       <Text>CT002</Text>
                     </Group>
                     <Group justify="apart">
@@ -497,14 +630,7 @@ const FinancePurposeReceiveAddPage = () => {
                     </Text>
                   </Group>
                   <Divider my="sm" />
-                  <Group justify="apart">
-                    <Text fw={500} size="md">
-                      Ngày tạo:
-                    </Text>
-                    <Text fw={500} size="md">
-                      06/08/2025
-                    </Text>
-                  </Group>
+
                   <Group justify="apart">
                     <Text fw={500} size="md">
                       Người tạo:

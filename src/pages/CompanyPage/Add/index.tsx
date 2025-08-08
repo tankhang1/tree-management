@@ -40,6 +40,7 @@ import { useNavigate } from "react-router-dom";
 import BankSelect from "../../../components/BankList";
 import { addressList } from "../../OrderManagementPage/Create";
 import Scrollable from "../../../components/Scrollable";
+import { ContactListCards } from "../../FinancePage/components/ContactListCards";
 
 export function CompanyAddPage() {
   const [openedAddressForm, setOpenedAddressForm] = useState(false);
@@ -99,9 +100,28 @@ export function CompanyAddPage() {
       note: "Dùng cho thanh toán nội bộ",
     },
   ]);
-
+  const [contacts, setContacts] = useState([
+    {
+      name: "Nguyễn Văn A",
+      phone: "0909123456",
+      email: "doank@gmail.com",
+      role: "Giám đốc",
+      organization: "Ban kinh doanh",
+      address: "123 Đường Lê Lợi, Quận 1, TP.HCM",
+      note: "Chịu trách nhiệm chính",
+    },
+    {
+      name: "Trần Thị B",
+      phone: "0934567890",
+      email: "doa@gmail.com",
+      role: "Kế toán trưởng",
+      organization: "Phòng kế toán",
+      address: "123 Đường Lê Lợi, Quận 1, TP.HCM",
+      note: "Quản lý tài chính và kế toán",
+    },
+  ]);
   const nextStep = () =>
-    setActive((current) => (current < 4 ? current + 1 : current));
+    setActive((current) => (current < 5 ? current + 1 : current));
   const prevStep = () =>
     setActive((current) => (current > 0 ? current - 1 : current));
 
@@ -577,8 +597,98 @@ export function CompanyAddPage() {
             </Button>
           </Stack>
         </Stepper.Step>
+        <Stepper.Step label="Bước 4" description="Thông tin liên hệ">
+          <Stack gap="xs">
+            {contacts.map((contact, idx) => (
+              <Card key={idx} withBorder radius="md" shadow="sm">
+                <Grid>
+                  <Grid.Col span={6}>
+                    <TextInput label="Họ tên" radius={4} value={contact.name} />
+                  </Grid.Col>
+                  <Grid.Col span={6}>
+                    <TextInput
+                      label="Số điện thoại"
+                      radius={4}
+                      value={contact.phone}
+                    />
+                  </Grid.Col>
+                  <Grid.Col span={6}>
+                    <TextInput label="Email" radius={4} value={contact.email} />
+                  </Grid.Col>
+                  <Grid.Col span={6}>
+                    <TextInput
+                      label="Chức vụ"
+                      radius={4}
+                      value={contact.role}
+                    />
+                  </Grid.Col>
+                  <Grid.Col span={6}>
+                    <TextInput
+                      label="Phòng ban"
+                      radius={4}
+                      value={contact.organization}
+                    />
+                  </Grid.Col>
+                  <Grid.Col span={6}>
+                    <TextInput
+                      label="Địa chỉ"
+                      radius={4}
+                      value={contact.address}
+                    />
+                  </Grid.Col>
+                  <Grid.Col span={12}>
+                    <Textarea
+                      label="Ghi chú"
+                      minRows={2}
+                      radius={4}
+                      value={contact.note}
+                    />
+                  </Grid.Col>
+                  <Grid.Col span={12}>
+                    <Group justify="flex-end">
+                      <Button
+                        color="red"
+                        variant="light"
+                        radius={4}
+                        onClick={() =>
+                          setContacts((prev) =>
+                            prev.filter((_, i) => i !== idx)
+                          )
+                        }
+                      >
+                        Xoá liên hệ
+                      </Button>
+                    </Group>
+                  </Grid.Col>
+                </Grid>
+              </Card>
+            ))}
 
-        <Stepper.Step label="Bước 4" description="Xác nhận thông tin">
+            <Button
+              variant="outline"
+              radius={4}
+              leftSection={<IconPlus />}
+              onClick={() =>
+                setContacts([
+                  ...contacts,
+                  {
+                    name: "",
+                    phone: "",
+                    email: "",
+                    role: "",
+                    organization: "",
+                    address: "",
+                    note: "",
+                  },
+                ])
+              }
+            >
+              Thêm liên hệ
+            </Button>
+          </Stack>
+        </Stepper.Step>
+
+        <Stepper.Step label="Bước 5" description="Xác nhận thông tin">
           <Card withBorder radius="md" shadow="xs" p="lg">
             <Stack gap="md">
               {/* THÔNG TIN CƠ BẢN */}
@@ -651,63 +761,71 @@ export function CompanyAddPage() {
               {/* CHI NHÁNH */}
               <Stack>
                 <Title order={5}>🏢 Chi nhánh</Title>
-                <SimpleGrid cols={{ base: 1, sm: 2, md: 3 }} spacing="md">
-                  {branches.map((b, i) => (
-                    <Card key={i} withBorder radius="md" p="sm">
-                      <Stack gap={2}>
-                        <Text size="sm">
-                          <strong>Tên:</strong> {b.name}
-                        </Text>
-                        <Text size="sm">
-                          <strong>SĐT:</strong> {b.phone}
-                        </Text>
-                        <Text size="sm">
-                          <strong>Email:</strong> {b.email}
-                        </Text>
-                        <Text size="sm">
-                          <strong>Địa chỉ:</strong> {b.address}
-                        </Text>
-                        <Text size="sm">
-                          <strong>MST:</strong> {b.taxCode}
-                        </Text>
-                        <Text size="sm">
-                          <strong>Địa chỉ thuế:</strong> {b.taxAddress}
-                        </Text>
-                        <Text size="sm">
-                          <strong>Ghi chú:</strong> {b.note}
-                        </Text>
-                      </Stack>
-                    </Card>
-                  ))}
-                </SimpleGrid>
+                <Scrollable h={180}>
+                  <Group wrap="nowrap" gap={"xs"}>
+                    {branches.map((b, i) => (
+                      <Card key={i} withBorder radius="md" p="sm">
+                        <Stack gap={2}>
+                          <Text size="sm">
+                            <strong>Tên:</strong> {b.name}
+                          </Text>
+                          <Text size="sm">
+                            <strong>SĐT:</strong> {b.phone}
+                          </Text>
+                          <Text size="sm">
+                            <strong>Email:</strong> {b.email}
+                          </Text>
+                          <Text size="sm">
+                            <strong>Địa chỉ:</strong> {b.address}
+                          </Text>
+                          <Text size="sm">
+                            <strong>MST:</strong> {b.taxCode}
+                          </Text>
+                          <Text size="sm">
+                            <strong>Địa chỉ thuế:</strong> {b.taxAddress}
+                          </Text>
+                          <Text size="sm">
+                            <strong>Ghi chú:</strong> {b.note}
+                          </Text>
+                        </Stack>
+                      </Card>
+                    ))}
+                  </Group>
+                </Scrollable>
               </Stack>
 
               {/* NGÂN HÀNG */}
               <Stack>
                 <Title order={5}>🏦 Ngân hàng</Title>
-                <SimpleGrid cols={{ base: 1, sm: 2, md: 3 }} spacing="md">
-                  {banks.map((b, i) => (
-                    <Card key={i} withBorder radius="md" p="sm">
-                      <Stack gap={2}>
-                        <Text size="sm">
-                          <strong>Ngân hàng:</strong> {b.bank}
-                        </Text>
-                        <Text size="sm">
-                          <strong>Chủ tài khoản:</strong> {b.accountHolder}
-                        </Text>
-                        <Text size="sm">
-                          <strong>Số tài khoản:</strong> {b.accountNumber}
-                        </Text>
-                        <Text size="sm">
-                          <strong>Chi nhánh:</strong> {b.branch}
-                        </Text>
-                        <Text size="sm">
-                          <strong>Ghi chú:</strong> {b.note}
-                        </Text>
-                      </Stack>
-                    </Card>
-                  ))}
-                </SimpleGrid>
+                <Scrollable h={140}>
+                  <Group wrap="nowrap" gap="xs">
+                    {banks.map((b, i) => (
+                      <Card key={i} withBorder radius="md" p="sm">
+                        <Stack gap={2}>
+                          <Text size="sm">
+                            <strong>Ngân hàng:</strong> {b.bank}
+                          </Text>
+                          <Text size="sm">
+                            <strong>Chủ tài khoản:</strong> {b.accountHolder}
+                          </Text>
+                          <Text size="sm">
+                            <strong>Số tài khoản:</strong> {b.accountNumber}
+                          </Text>
+                          <Text size="sm">
+                            <strong>Chi nhánh:</strong> {b.branch}
+                          </Text>
+                          <Text size="sm">
+                            <strong>Ghi chú:</strong> {b.note}
+                          </Text>
+                        </Stack>
+                      </Card>
+                    ))}
+                  </Group>
+                </Scrollable>
+              </Stack>
+              <Stack>
+                <Title order={5}>📞 Thông tin liên hệ</Title>
+                <ContactListCards />
               </Stack>
             </Stack>
           </Card>
@@ -736,7 +854,7 @@ export function CompanyAddPage() {
         </Stepper.Completed>
       </Stepper>
 
-      {active < 4 && (
+      {active < 5 && (
         <Group justify="space-between" mt="xl">
           <Button
             variant="default"
@@ -747,7 +865,7 @@ export function CompanyAddPage() {
             Quay lại
           </Button>
           <Button radius={4} onClick={nextStep}>
-            {active === 3 ? "Hoàn thành" : "Tiếp theo"}
+            {active === 4 ? "Hoàn thành" : "Tiếp theo"}
           </Button>
         </Group>
       )}

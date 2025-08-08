@@ -269,4 +269,7 @@ export const PATH = {
   FINANCE_PURPOSE_RECEIVE_ADD: "/finance/purpose-receive/add",
   FINANCE_PURPOSE_STATISTIC: "/finance/purpose-statistic",
   FINANCE_PURPOSE_HISTORY: "/finance/purpose-history",
+  FINANCE_PURPOSE_MANAGEMENT: "/finance/purpose-management",
+  // Contact List
+  CONTACT_LIST: "/contact-list",
 };

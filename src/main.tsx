@@ -201,6 +201,8 @@ import FinancePurposeReceivePage from "./pages/FinancePage/PurposeReceive/index.
 import FinancePurposeReceiveAddPage from "./pages/FinancePage/PurposeReceive/Add/index.tsx";
 import FinancePurposeHistoryPage from "./pages/FinancePage/History/index.tsx";
 import FinancePurposeStatisticPage from "./pages/FinancePage/Statistics/index.tsx";
+import FinancePurposeManagementPage from "./pages/FinancePage/Purpose/index.tsx";
+import ContactPage from "./pages/ContactPage/index.tsx";
 const theme: MantineThemeOverride = {
   fontFamily: "MyFont, sans-serif",
   primaryColor: "brand",
@@ -813,6 +815,11 @@ const ROUTES = [
     path={PATH.FINANCE_PURPOSE_HISTORY}
     element={<FinancePurposeHistoryPage />}
   />,
+  <Route
+    path={PATH.FINANCE_PURPOSE_MANAGEMENT}
+    element={<FinancePurposeManagementPage />}
+  />,
+  <Route path={PATH.CONTACT_LIST} element={<ContactPage />} />,
 ];
 
 createRoot(document.getElementById("root")!).render(
