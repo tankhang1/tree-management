@@ -9,7 +9,6 @@ import {
   TextInput,
   Title,
   NumberInput,
-  Divider,
   Stepper,
   Grid,
   Modal,
@@ -172,7 +171,7 @@ const PlanManagementAssignAddPage = () => {
                     {...form.getInputProps("startDate")}
                   />
                   <DateInput
-                    label="Hoàn thành dự kiến"
+                    label="Thời gian hoàn thành dự kiến"
                     radius={4}
                     locale="vi"
                     leftSection={<IconCalendar size={16} />}
@@ -264,12 +263,28 @@ const PlanManagementAssignAddPage = () => {
                         <EmployeeCardList isDelete={true} />
                       </Stack>
                     </Stack>
-
-                    <Divider
-                      label="Tài sản cho giai đoạn này"
-                      labelPosition="left"
-                      mt="md"
-                    />
+                    <Group>
+                      <Text fw={"500"} fz={15}>
+                        Hạng mục sử dụng{" "}
+                      </Text>
+                      <Button
+                        variant="light"
+                        leftSection={<IconPlus size={16} />}
+                        radius={4}
+                        mt="xs"
+                        onClick={() => {
+                          const newStages = [...formDataByStage];
+                          newStages[stageIdx].resources.push({
+                            type: "",
+                            amount: 0,
+                            unit: "",
+                          });
+                          setFormDataByStage(newStages);
+                        }}
+                      >
+                        Thêm tài sản
+                      </Button>
+                    </Group>
 
                     {stageData.resources.map((res, i) => (
                       <Group key={i} gap="xs" mt="xs">
@@ -277,13 +292,18 @@ const PlanManagementAssignAddPage = () => {
                           data={["Phân bón", "Thuốc BVTV", "Thiết bị"]}
                           placeholder="Loại tài sản"
                           radius={4}
-                          value={res.type}
+                          value={"Phân bón"}
                           onChange={(val) => {
                             const newStages = [...formDataByStage];
                             newStages[stageIdx].resources[i].type = val || "";
                             setFormDataByStage(newStages);
                           }}
                           w={160}
+                        />
+                        <Select
+                          radius={4}
+                          placeholder="Chọn danh sách phân"
+                          data={["Phân lân", "Phân đạm", "Phân NPK"]}
                         />
                         <NumberInput
                           placeholder="Số lượng"
@@ -329,24 +349,6 @@ const PlanManagementAssignAddPage = () => {
                         />
                       </Group>
                     ))}
-
-                    <Button
-                      variant="light"
-                      leftSection={<IconPlus size={16} />}
-                      radius={4}
-                      mt="xs"
-                      onClick={() => {
-                        const newStages = [...formDataByStage];
-                        newStages[stageIdx].resources.push({
-                          type: "",
-                          amount: 0,
-                          unit: "",
-                        });
-                        setFormDataByStage(newStages);
-                      }}
-                    >
-                      Thêm tài sản
-                    </Button>
                   </Card>
                 ))}
               </Stack>

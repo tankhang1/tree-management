@@ -7,14 +7,24 @@ import {
   Divider,
   Badge,
   Image,
-  Accordion,
+  ThemeIcon,
 } from "@mantine/core";
 import {
   IconMapPin,
   IconClipboardText,
   IconLayersSubtract,
   IconClockHour4,
+  IconPaperclip,
+  IconUser,
+  IconFileText,
+  IconUsers,
+  IconAsset,
+  IconBox,
+  IconTool,
+  IconVaccine,
+  IconCar,
 } from "@tabler/icons-react";
+import Scrollable from "../../../../../components/Scrollable";
 
 const ConfirmStep = () => {
   const data = {
@@ -79,56 +89,65 @@ const ConfirmStep = () => {
       <Title order={3}>Xác nhận kế hoạch canh tác</Title>
 
       <Group grow align="flex-start">
-        <Card withBorder h={300}>
-          <Stack gap={4}>
-            <Group>
-              <Text fw={500}>Tên công việc:</Text>
-              <Text>{data.name}</Text>
-            </Group>
-            <Group>
-              <Text fw={500}>Mùa vụ:</Text>
-              <Text>{data.season}</Text>
-            </Group>
-            <Group>
-              <Text fw={500}>Kế hoạch:</Text>
-              <Text>{data.plan}</Text>
-            </Group>
-            <Group>
-              <Text fw={500}>Người quản lý:</Text>
-              <Text>{data.manager}</Text>
-            </Group>
-            <Group>
-              <Text fw={500}>Người kiểm định chất lượng:</Text>
-              <Text>{data.supervisor}</Text>
-            </Group>
-            <Group>
-              <Text fw={500}>Nhóm cây trồng:</Text>
-              <Text>{data.treeGroup}</Text>
-            </Group>
-            <Group>
-              <Text fw={500}>Loại cây trồng:</Text>
-              <Text>{data.treeCategory}</Text>
-            </Group>
-            <Group>
-              <Text fw={500}>Tên giống cây:</Text>
-              <Text>{data.crop}</Text>
-            </Group>
-            <Group>
-              <Text fw={500}>Thời gian chu kỳ:</Text>
-              <Text>{data.duration} ngày</Text>
-            </Group>
-          </Stack>
+        <Card withBorder h={250}>
+          <Group flex={1} align="flex-start">
+            <Stack flex={1} gap={4}>
+              <Group>
+                <Text fw={500}>Tên công việc:</Text>
+                <Text>{data.name}</Text>
+              </Group>
+              <Group>
+                <Text fw={500}>Mùa vụ:</Text>
+                <Text>{data.season}</Text>
+              </Group>
+              <Group>
+                <Text fw={500}>Kế hoạch:</Text>
+                <Text>{data.plan}</Text>
+              </Group>
+              <Group>
+                <Text fw={500}>Người quản lý:</Text>
+                <Text>{data.manager}</Text>
+              </Group>
+              <Group>
+                <Text fw={500}>Người kiểm định chất lượng:</Text>
+                <Text>{data.supervisor}</Text>
+              </Group>
+
+              <Group>
+                <Text fw={500}>Thời gian thực hiện dự kiến:</Text>
+                <Text>15/2/2025</Text>
+              </Group>
+              <Group>
+                <Text fw={500}>Thời gian hoàn thành dự kiến:</Text>
+                <Text>19/2/2025</Text>
+              </Group>
+            </Stack>
+            <Stack flex={1} gap={"xs"}>
+              <Group>
+                <IconMapPin size={16} />
+                <Text>{data.zone}</Text>
+              </Group>
+              <Group>
+                <IconLayersSubtract size={16} />
+                <Text>{data.area}</Text>
+              </Group>
+              <Group>
+                <IconClipboardText size={16} />
+                <Text>{data.plot}</Text>
+              </Group>
+            </Stack>
+          </Group>
         </Card>
-        <Card withBorder>
+        <Card withBorder h={250}>
           <Group grow align="flex-start">
             <Stack>
               <Group>
-                <Text fw={500}>Mã cây:</Text>
-                <Text>{data.cropCode}</Text>
+                <Text fw={500}>Cây trồng:</Text>
+                <Text>Sầu riêng</Text>
               </Group>
               <Group>
                 <Text fw={500}>Giống cây:</Text>
-                <Text>{data.cropVariety}</Text>
+                <Text>Sầu riêng Ri6</Text>
               </Group>
               <Group>
                 <Text fw={500}>Hạt giống:</Text>
@@ -138,41 +157,16 @@ const ConfirmStep = () => {
                 <Text fw={500}>Đơn vị thu hoạch:</Text>
                 <Text>{data.harvestUnit}</Text>
               </Group>
-
-              <Group align="start">
-                <Text fw={500}>Mô tả:</Text>
-                <Text size="sm" maw={600}>
-                  {data.cropDescription}
-                </Text>
-              </Group>
             </Stack>
             <Image
               src={data.cropImage}
-              flex={1}
+              h={210}
               radius="md"
               alt="Ảnh cây trồng"
             />
           </Group>
         </Card>
       </Group>
-
-      <Divider label="Vị trí canh tác" labelPosition="center" my="md" />
-      <Card withBorder>
-        <Stack gap={4}>
-          <Group>
-            <IconMapPin size={16} />
-            <Text>{data.zone}</Text>
-          </Group>
-          <Group>
-            <IconLayersSubtract size={16} />
-            <Text>{data.area}</Text>
-          </Group>
-          <Group>
-            <IconClipboardText size={16} />
-            <Text>{data.plot}</Text>
-          </Group>
-        </Stack>
-      </Card>
 
       <Divider
         label="Danh sách chu kỳ và giai đoạn"
@@ -181,83 +175,118 @@ const ConfirmStep = () => {
       />
 
       {data.cycles.map((cycle, cycleIdx) => (
-        <Accordion multiple variant="separated" key={cycleIdx}>
-          {cycle.stages.map((stage, stageIdx) => (
-            <Accordion.Item
-              value={`cycle-${cycleIdx}-stage-${stageIdx}`}
-              key={stageIdx}
-            >
-              <Accordion.Control>
-                <Group>
-                  <IconClockHour4 size={16} />
-                  <Text fw={600}>
-                    {cycle.name} – {stage.name} ({stage.duration} ngày)
-                  </Text>
-                </Group>
-              </Accordion.Control>
-              <Accordion.Panel>
+        <Stack key={cycleIdx} gap="lg">
+          <Title order={3}>{cycle.name}</Title>
+
+          <Group>
+            {cycle.stages.map((stage, stageIdx) => (
+              <Card
+                w={400}
+                h={500}
+                key={stageIdx}
+                shadow="sm"
+                withBorder
+                radius="md"
+                p="md"
+              >
                 <Stack gap="xs">
-                  <Text fw={500}>Tài liệu kỹ thuật:</Text>
-                  {stage.documentType === "file" ? (
-                    <Text size="sm">📎 {stage.document}</Text>
-                  ) : (
-                    <Text size="sm">📝 {stage.document}</Text>
-                  )}
+                  {/* Header */}
+                  <Group justify="space-between" align="center">
+                    <Group>
+                      <ThemeIcon color="blue" variant="light" radius="md">
+                        <IconClockHour4 size={18} />
+                      </ThemeIcon>
+                      <Text fw={600}>
+                        {stage.name} ({stage.duration} ngày)
+                      </Text>
+                    </Group>
+                    <Badge variant="light" color="blue">
+                      {cycle.name}
+                    </Badge>
+                  </Group>
 
-                  <Text fw={500}>Trưởng nhóm:</Text>
-                  <Text size="sm">👤 {stage.leader}</Text>
+                  {/* Tài liệu */}
 
-                  <Text fw={500}>Nhân sự:</Text>
-                  <Group gap={4}>
+                  {/* Trưởng nhóm */}
+                  <Divider label="Trưởng nhóm" labelPosition="left" />
+                  <Group>
+                    <ThemeIcon color="teal" variant="light" radius="md">
+                      <IconUser size={16} />
+                    </ThemeIcon>
+                    <Text size="sm">{stage.leader}</Text>
+                  </Group>
+
+                  {/* Nhân sự */}
+                  <Divider label="Nhân sự" labelPosition="left" />
+                  <Group gap={6}>
+                    <ThemeIcon color="indigo" variant="light" radius="md">
+                      <IconUsers size={16} />
+                    </ThemeIcon>
                     {stage.members.map((member, i) => (
-                      <Badge key={i}>{member}</Badge>
+                      <Badge key={i} color="indigo" variant="light">
+                        {member}
+                      </Badge>
                     ))}
                   </Group>
 
-                  <Divider label="Tài sản" labelPosition="left" my="xs" />
-                  {stage.resources.map((res, i) => (
-                    <Text key={i} size="sm">
-                      📌 {res.type}: {res.amount} {res.unit || ""}
-                    </Text>
-                  ))}
+                  {/* Tài sản */}
+                  <Divider label="Hạng mục sử dụng" labelPosition="left" />
 
-                  {stage.materials.length > 0 && (
-                    <>
-                      <Text fw={500}>Vật tư:</Text>
-                      <Stack gap={4}>
-                        {stage.materials.map((m, i) => (
-                          <Badge key={i}>{m}</Badge>
-                        ))}
-                      </Stack>
-                    </>
-                  )}
-
-                  {stage.equipment.length > 0 && (
-                    <>
-                      <Text fw={500}>Thiết bị:</Text>
-                      <Stack gap={4}>
-                        {stage.equipment.map((e, i) => (
-                          <Badge key={i}>{e}</Badge>
-                        ))}
-                      </Stack>
-                    </>
-                  )}
-
-                  {stage.pesticides.length > 0 && (
-                    <>
-                      <Text fw={500}>Thuốc BVTV:</Text>
-                      <Stack gap={4}>
-                        {stage.pesticides.map((p, i) => (
-                          <Badge key={i}>{p}</Badge>
-                        ))}
-                      </Stack>
-                    </>
-                  )}
+                  <Title order={4} size="h6">
+                    Phân bón
+                  </Title>
+                  <Scrollable>
+                    <Group gap={4} wrap="nowrap">
+                      {[
+                        { type: "Phân bón NPK", amount: 100, unit: "kg" },
+                        { type: "Phân bón hữu cơ", amount: 50, unit: "kg" },
+                        { type: "Phân bón lá", amount: 20, unit: "l" },
+                      ].map((res, i) => (
+                        <Card w={210} withBorder radius={4} shadow="sm">
+                          <Group key={i}>
+                            <ThemeIcon color="cyan" variant="light" radius="md">
+                              <IconAsset size={16} />
+                            </ThemeIcon>
+                            <Text size="sm">
+                              {res.type}: {res.amount} {res.unit || ""}
+                            </Text>
+                          </Group>
+                        </Card>
+                      ))}
+                    </Group>
+                  </Scrollable>
+                  <Title order={4} size="h6">
+                    Máy móc
+                  </Title>
+                  <Scrollable>
+                    <Group gap={4} wrap="nowrap">
+                      {[
+                        { type: "Máy cày", amount: 1, unit: "cái" },
+                        { type: "Máy kéo", amount: 1, unit: "cái" },
+                        { type: "Máy phun thuốc", amount: 1, unit: "cái" },
+                      ].map((res, i) => (
+                        <Card w={210} withBorder radius={4} shadow="sm">
+                          <Group key={i}>
+                            <ThemeIcon
+                              color="green"
+                              variant="light"
+                              radius="md"
+                            >
+                              <IconCar size={16} />
+                            </ThemeIcon>
+                            <Text size="sm">
+                              {res.type}: {res.amount} {res.unit || ""}
+                            </Text>
+                          </Group>
+                        </Card>
+                      ))}
+                    </Group>
+                  </Scrollable>
                 </Stack>
-              </Accordion.Panel>
-            </Accordion.Item>
-          ))}
-        </Accordion>
+              </Card>
+            ))}
+          </Group>
+        </Stack>
       ))}
     </Stack>
   );
