@@ -9,9 +9,11 @@ import {
   Tooltip,
   Button,
   Checkbox,
+  ActionIcon,
 } from "@mantine/core";
 import Scrollable from "../../../../../components/Scrollable";
 import { useState } from "react";
+import { IconTrash } from "@tabler/icons-react";
 
 const employees = [
   {
@@ -224,7 +226,7 @@ export function EmployeeCardList({
             </Group>
             {isDelete && (
               <Tooltip label="Xóa nhân sự" position="top" withArrow>
-                <Button
+                <ActionIcon
                   pos="absolute"
                   variant="light"
                   color="red"
@@ -232,8 +234,8 @@ export function EmployeeCardList({
                   bottom={16}
                   radius={4}
                 >
-                  Xoá
-                </Button>
+                  <IconTrash size={16} />
+                </ActionIcon>
               </Tooltip>
             )}
           </Card>

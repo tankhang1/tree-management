@@ -10,6 +10,7 @@ import {
   TextInput,
   Accordion,
   Select,
+  ActionIcon,
 } from "@mantine/core";
 import { DatePickerInput } from "@mantine/dates";
 import { MapContainer, Marker, Polyline, TileLayer } from "react-leaflet";
@@ -298,11 +299,10 @@ const ConfirmStep = (props: ConfirmPlantingProps) => {
                                     )
                                   : "—"}
                               </Text>
-                              <Button
+                              <ActionIcon
                                 size="xs"
                                 variant="subtle"
                                 color="red"
-                                leftSection={<IconTrash size={14} />}
                                 onClick={() => {
                                   const next = [...pts];
                                   next.splice(i, 1);
@@ -312,8 +312,8 @@ const ConfirmStep = (props: ConfirmPlantingProps) => {
                                   );
                                 }}
                               >
-                                Xóa
-                              </Button>
+                                <IconTrash size={16} />
+                              </ActionIcon>
                             </Group>
                           ))}
                         </Stack>
@@ -475,19 +475,18 @@ const ConfirmStep = (props: ConfirmPlantingProps) => {
                                     )
                                   : "—"}
                               </Text>
-                              <Button
+                              <ActionIcon
                                 size="xs"
                                 variant="subtle"
                                 color="red"
-                                leftSection={<IconTrash size={14} />}
                                 onClick={() => {
                                   const next = [...pts];
                                   next.splice(i, 1);
                                   form.setFieldValue(`gps.byRow.${key}`, next);
                                 }}
                               >
-                                Xóa
-                              </Button>
+                                <IconTrash size={16} />
+                              </ActionIcon>
                             </Group>
                           ))}
                         </Stack>

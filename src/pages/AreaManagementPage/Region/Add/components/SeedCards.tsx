@@ -7,10 +7,12 @@ import {
   Badge,
   Checkbox,
   Button,
+  ActionIcon,
 } from "@mantine/core";
 import type { SeedOption } from "..";
 import Scrollable from "../../../../../components/Scrollable";
 import { useState } from "react";
+import { IconTrash } from "@tabler/icons-react";
 
 interface SeedCardSelectorProps {
   seeds: SeedOption[];
@@ -90,7 +92,7 @@ const SeedCards: React.FC<SeedCardSelectorProps> = ({
                 {seed.description}
               </Text> */}
               {isDelete && (
-                <Button
+                <ActionIcon
                   pos={"absolute"}
                   bottom={10}
                   right={10}
@@ -98,8 +100,8 @@ const SeedCards: React.FC<SeedCardSelectorProps> = ({
                   variant="light"
                   radius={4}
                 >
-                  Xóa
-                </Button>
+                  <IconTrash size={16} />
+                </ActionIcon>
               )}
             </Group>
           </Card>

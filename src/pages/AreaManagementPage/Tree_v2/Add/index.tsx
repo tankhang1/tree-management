@@ -598,15 +598,15 @@ const AreaManagementTreeAddv2Page = () => {
                                 radius={4}
                                 label="Số lượng cây"
                               />
-                              <Button
+                              <ActionIcon
                                 variant="light"
                                 color="red"
                                 radius={4}
                                 mt="md"
                                 w={100}
                               >
-                                Xóa
-                              </Button>
+                                <IconTrash size={16} />
+                              </ActionIcon>
                             </Group>
                             <Group align="flex-end" gap={"xs"}>
                               <Select
@@ -850,7 +850,7 @@ const AreaManagementTreeAddv2Page = () => {
                                             ).toLocaleDateString("vi-VN")
                                           : "—"}
                                       </Text>
-                                      <Button
+                                      <ActionIcon
                                         size="xs"
                                         variant="subtle"
                                         color="red"
@@ -863,8 +863,8 @@ const AreaManagementTreeAddv2Page = () => {
                                           );
                                         }}
                                       >
-                                        Xóa
-                                      </Button>
+                                        <IconTrash size={16} />
+                                      </ActionIcon>
                                     </Group>
                                   ))}
                                 </Stack>
@@ -1068,7 +1068,7 @@ const AreaManagementTreeAddv2Page = () => {
                                             ).toLocaleDateString("vi-VN")
                                           : "—"}
                                       </Text>
-                                      <Button
+                                      <ActionIcon
                                         size="xs"
                                         variant="subtle"
                                         color="red"
@@ -1081,8 +1081,8 @@ const AreaManagementTreeAddv2Page = () => {
                                           );
                                         }}
                                       >
-                                        Xóa
-                                      </Button>
+                                        <IconTrash size={16} />
+                                      </ActionIcon>
                                     </Group>
                                   ))}
                                 </Stack>

@@ -16,12 +16,14 @@ import {
   Image,
   Divider,
   ScrollAreaAutosize,
+  ActionIcon,
 } from "@mantine/core";
 import {
   IconArrowLeft,
   IconBuilding,
   IconBuildingStore,
   IconHeartHandshake,
+  IconTrash,
 } from "@tabler/icons-react";
 import { useState } from "react";
 import { SelectableEnterpriseCards } from "../../../StockManagementPage/Delivery/Add/components/SelectableEnterpriseCards";
@@ -259,7 +261,7 @@ const FinancePurposeReceiveAddPage = () => {
                                 radius={4}
                                 flex={1}
                               />
-                              <Button
+                              <ActionIcon
                                 variant="light"
                                 radius={4}
                                 color="red"
@@ -269,8 +271,8 @@ const FinancePurposeReceiveAddPage = () => {
                                   )
                                 }
                               >
-                                Xóa
-                              </Button>
+                                <IconTrash size={16} />
+                              </ActionIcon>
                             </Group>
                           ))}
                         </Stack>
@@ -401,7 +403,7 @@ const FinancePurposeReceiveAddPage = () => {
                                 radius={4}
                                 flex={1}
                               />
-                              <Button
+                              <ActionIcon
                                 variant="light"
                                 radius={4}
                                 color="red"
@@ -411,8 +413,8 @@ const FinancePurposeReceiveAddPage = () => {
                                   )
                                 }
                               >
-                                Xóa
-                              </Button>
+                                <IconTrash size={16} />
+                              </ActionIcon>
                             </Group>
                           ))}
                         </Stack>
