@@ -36,9 +36,6 @@ import AreaCards from "../../Zone/Add/components/AreaCards";
 import { areaOptions, plotOptions } from "../../Row/Add";
 import PlotCardSelector from "../../Row/Add/components/PlotCards";
 import { DatePickerInput } from "@mantine/dates";
-import TreeDetailView from "../components/TreeView";
-import dayjs from "dayjs";
-import SeedCards from "../../Row/Add/components/SeedCards";
 import SeedDetailCards from "../../Region/Add/components/SeedDetailCards";
 
 type LatLng = [number, number];
@@ -54,45 +51,6 @@ type TreePoint = {
   plantedAt?: Date | null;
 };
 
-const uid = () => Math.random().toString(36).slice(2, 9);
-
-type CropGroup = {
-  cropName: string; // Ví dụ: "Cây sầu riêng Ri6"
-  rows: TreeRow[];
-};
-const cropGroups: CropGroup[] = [
-  {
-    cropName: "Cây sầu riêng Ri6",
-    rows: [
-      {
-        name: "Hàng 1",
-        coords: [
-          [10.762622, 106.660172],
-          [10.7628, 106.6603],
-        ],
-      },
-      {
-        name: "Hàng 2",
-        coords: [
-          [10.7629, 106.660172],
-          [10.763, 106.6603],
-        ],
-      },
-    ],
-  },
-  {
-    cropName: "Cây xoài cát",
-    rows: [
-      {
-        name: "Hàng 1",
-        coords: [
-          [10.7632, 106.6605],
-          [10.7633, 106.66065],
-        ],
-      },
-    ],
-  },
-];
 export const samplePlots = [
   {
     id: "LO-A1",
@@ -178,6 +136,7 @@ export const sampleGpsData = {
         lng: 106.66025,
         plantedAt: new Date("2025-08-02"),
       },
+      { code: "A1-003", lat: 10.76275, lng: 106.66028, plantedAt: null },
     ],
     "LO-B2": [
       {
@@ -192,45 +151,201 @@ export const sampleGpsData = {
         lng: 106.66105,
         plantedAt: new Date("2025-08-04"),
       },
-      { code: "B2-003", lat: 10.7631, lng: 106.6611, plantedAt: null }, // chưa nhập ngày
+      { code: "B2-003", lat: 10.7631, lng: 106.6611, plantedAt: null },
     ],
-  },
-  byRow: {}, // nếu đang phân bổ theo hàng thì sẽ chứa dữ liệu ở đây
-  inputBuffer: {
-    byPlot: {
-      "LO-A1": { code: "A1-NEW", lat: 10.7628, lng: 106.6603, plantedAt: null },
-    },
-    byRow: {},
-  },
-};
-const sampleGpsDataRow = {
-  byPlot: {},
-  byRow: {
-    "row-1": [
+    "LO-C3": [
       {
-        code: "R1-001",
+        code: "C3-001",
         lat: 10.764,
         lng: 106.662,
         plantedAt: new Date("2025-08-05"),
       },
-      { code: "R1-002", lat: 10.76405, lng: 106.66205, plantedAt: null },
+      { code: "C3-002", lat: 10.76405, lng: 106.66205, plantedAt: null },
     ],
-    "row-2": [
+  },
+
+  byArea: {
+    "AREA-01": [
       {
-        code: "R2-001",
+        code: "AR1-001",
         lat: 10.765,
-        lng: 106.663,
+        lng: 106.662,
+        plantedAt: new Date("2025-08-05"),
+      },
+      {
+        code: "AR1-002",
+        lat: 10.76505,
+        lng: 106.66205,
         plantedAt: new Date("2025-08-06"),
       },
     ],
+    "AREA-02": [
+      { code: "AR2-001", lat: 10.766, lng: 106.663, plantedAt: null },
+      {
+        code: "AR2-002",
+        lat: 10.76605,
+        lng: 106.66305,
+        plantedAt: new Date("2025-08-09"),
+      },
+    ],
+    "AREA-03": [
+      {
+        code: "AR3-001",
+        lat: 10.767,
+        lng: 106.664,
+        plantedAt: new Date("2025-08-10"),
+      },
+    ],
   },
+
+  byRegion: {
+    "REGION-01": [
+      {
+        code: "RG1-001",
+        lat: 10.768,
+        lng: 106.665,
+        plantedAt: new Date("2025-08-07"),
+      },
+      { code: "RG1-002", lat: 10.76805, lng: 106.66505, plantedAt: null },
+    ],
+    "REGION-02": [
+      {
+        code: "RG2-001",
+        lat: 10.769,
+        lng: 106.666,
+        plantedAt: new Date("2025-08-08"),
+      },
+      { code: "RG2-002", lat: 10.76905, lng: 106.66605, plantedAt: null },
+    ],
+    "REGION-03": [
+      {
+        code: "RG3-001",
+        lat: 10.77,
+        lng: 106.667,
+        plantedAt: new Date("2025-08-11"),
+      },
+    ],
+  },
+
+  byRow: {
+    "ROW-01": [
+      {
+        code: "R1-001",
+        lat: 10.7629,
+        lng: 106.6604,
+        plantedAt: new Date("2025-08-01"),
+      },
+      { code: "R1-002", lat: 10.763, lng: 106.6605, plantedAt: null },
+    ],
+    "ROW-02": [
+      {
+        code: "R2-001",
+        lat: 10.7635,
+        lng: 106.6615,
+        plantedAt: new Date("2025-08-03"),
+      },
+    ],
+  },
+
   inputBuffer: {
-    byPlot: {},
+    byPlot: {
+      "LO-A1": { code: "A1-NEW", lat: 10.7628, lng: 106.6603, plantedAt: null },
+      "LO-B2": { code: "B2-NEW", lat: 10.7632, lng: 106.6612, plantedAt: null },
+    },
+    byArea: {
+      "AREA-01": {
+        code: "AR1-NEW",
+        lat: 10.7651,
+        lng: 106.6621,
+        plantedAt: null,
+      },
+      "AREA-02": {
+        code: "AR2-NEW",
+        lat: 10.7661,
+        lng: 106.6631,
+        plantedAt: null,
+      },
+    },
+    byRegion: {
+      "REGION-01": {
+        code: "RG1-NEW",
+        lat: 10.7681,
+        lng: 106.6651,
+        plantedAt: null,
+      },
+      "REGION-02": {
+        code: "RG2-NEW",
+        lat: 10.7691,
+        lng: 106.6661,
+        plantedAt: null,
+      },
+    },
     byRow: {
-      "row-1": { code: "R1-NEW", lat: 10.7641, lng: 106.6621, plantedAt: null },
+      "ROW-01": {
+        code: "R1-NEW",
+        lat: 10.7631,
+        lng: 106.6606,
+        plantedAt: null,
+      },
     },
   },
 };
+
+export const selectedRegions = [
+  {
+    id: "VT-001",
+    name: "Vùng Trồng Tây Nguyên",
+    areaM2: 50000,
+    soilType: "Đất đỏ bazan",
+    terrain: "Cao, Thoai thoải",
+    seeds: [
+      {
+        code: "SDR-RI6",
+        seedName: "Sầu riêng Ri6 - SR-RI6",
+        cropName: "Sầu riêng",
+        image:
+          "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT_lo7BwRUzpkCiruaT48T5-8HZ8_7_sNxH0w&s",
+        seedType: "Hạt giống",
+      },
+      {
+        code: "SDR-RI6-2",
+        seedName: "Sầu riêng Ri6 - SR-RI6-2",
+        cropName: "Sầu riêng",
+        image:
+          "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT_lo7BwRUzpkCiruaT48T5-8HZ8_7_sNxH0w&s",
+        seedType: "Hạt giống",
+      },
+    ],
+  },
+];
+
+export const selectedAreas = [
+  {
+    id: "KV-001",
+    name: "Khu vực 1 - Tây Nguyên",
+    areaM2: 20000,
+    soilType: "Đất đỏ bazan",
+    terrain: "Thoai thoải",
+    seeds: [
+      {
+        code: "SDR-RI6",
+        seedName: "Sầu riêng Ri6 - SR-RI6",
+        cropName: "Sầu riêng",
+        image:
+          "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT_lo7BwRUzpkCiruaT48T5-8HZ8_7_sNxH0w&s",
+        seedType: "Hạt giống",
+      },
+      {
+        code: "SDR-RI6-2",
+        seedName: "Sầu riêng Ri6 - SR-RI6-2",
+        cropName: "Sầu riêng",
+        image:
+          "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT_lo7BwRUzpkCiruaT48T5-8HZ8_7_sNxH0w&s",
+        seedType: "Hạt giống",
+      },
+    ],
+  },
+];
 const AreaManagementTreeAddv2Page = () => {
   const navigate = useNavigate();
   const [openedTreeList, setOpenedTreeList] = useState(false);
@@ -240,6 +355,7 @@ const AreaManagementTreeAddv2Page = () => {
   const [coords, setCoords] = useState<LatLng[]>([]);
   const [selectedTree, setSelectedTree] = useState<string>("");
   const [openedTreeMap, setOpenTreeMap] = useState(false);
+  const [type, setType] = useState<"region" | "area" | "plot">("region");
   const form = useForm({
     initialValues: {
       selectType: "plot",
@@ -253,6 +369,8 @@ const AreaManagementTreeAddv2Page = () => {
         type: "plot", // hoặc "row"
         selectedPlots: samplePlots,
         rows: sampleRows,
+        selectedRegions: selectedRegions,
+        selectedAreas: selectedAreas,
       },
       gps: sampleGpsData,
     },
@@ -299,6 +417,18 @@ const AreaManagementTreeAddv2Page = () => {
           {/* STEP 1: Lô / HÀNG */}
           <Stepper.Step label="Bước 1" description="Vị trí trồng">
             <Stack>
+              <SegmentedControl
+                radius={4}
+                value={type}
+                onChange={(value) =>
+                  setType(value as "region" | "area" | "plot")
+                }
+                data={[
+                  { label: "Vùng trồng", value: "region" },
+                  { label: "Khu vực", value: "area" },
+                  { label: "Lô", value: "plot" },
+                ]}
+              />
               <Stack gap={"xs"}>
                 <TextInput
                   label="Vùng trồng"
@@ -312,33 +442,37 @@ const AreaManagementTreeAddv2Page = () => {
                   onSelect={() => {}}
                 />
               </Stack>
-              <Stack gap={"xs"}>
-                <TextInput
-                  label="Khu vực"
-                  placeholder="Tìm kiếm khu vực"
-                  radius={4}
-                  leftSection={<IconSearch size={18} />}
-                />
-                <AreaCards
-                  areas={areaOptions}
-                  selected={""}
-                  onSelect={() => {}}
-                />
-              </Stack>
+              {type !== "region" && (
+                <Stack gap={"xs"}>
+                  <TextInput
+                    label="Khu vực"
+                    placeholder="Tìm kiếm khu vực"
+                    radius={4}
+                    leftSection={<IconSearch size={18} />}
+                  />
+                  <AreaCards
+                    areas={areaOptions}
+                    selected={""}
+                    onSelect={() => {}}
+                  />
+                </Stack>
+              )}
 
-              <Stack gap={"xs"}>
-                <TextInput
-                  label="Lô"
-                  placeholder="Tìm kiếm lô"
-                  radius={4}
-                  leftSection={<IconSearch size={18} />}
-                />
-                <PlotCardSelector
-                  lots={plotOptions}
-                  selected={""}
-                  onSelect={() => {}}
-                />
-              </Stack>
+              {type !== "region" && type !== "area" && (
+                <Stack gap={"xs"}>
+                  <TextInput
+                    label="Lô"
+                    placeholder="Tìm kiếm lô"
+                    radius={4}
+                    leftSection={<IconSearch size={18} />}
+                  />
+                  <PlotCardSelector
+                    lots={plotOptions}
+                    selected={""}
+                    onSelect={() => {}}
+                  />
+                </Stack>
+              )}
 
               {/* <Select
                 label="Hàng"
@@ -364,60 +498,139 @@ const AreaManagementTreeAddv2Page = () => {
 
               {/* ====== THEO LÔ ====== */}
               <Stack>
-                {/* Thông tin lô (read-only) */}
-                <Title order={6}>Thông tin các lô đã chọn</Title>
+                <SegmentedControl
+                  radius={4}
+                  value={type}
+                  onChange={(value) =>
+                    setType(value as "region" | "area" | "plot")
+                  }
+                  data={[
+                    { label: "Vùng trồng", value: "region" },
+                    { label: "Khu vực", value: "area" },
+                    { label: "Lô", value: "plot" },
+                  ]}
+                />
+
+                <Title order={6}>
+                  {type === "plot"
+                    ? "Thông tin các lô đã chọn"
+                    : type === "area"
+                    ? "Thông tin các khu vực đã chọn"
+                    : "Thông tin các vùng trồng đã chọn"}
+                </Title>
                 <Group align="stretch" wrap="wrap">
                   <Stack gap="xs">
-                    {form.values.allocation.selectedPlots.map((p) => (
-                      <Card
-                        key={p.id}
-                        withBorder
-                        radius={4}
-                        shadow="sm"
-                        p="md"
-                        w={360}
-                        h={200}
-                      >
-                        <Stack gap={6}>
-                          <Group justify="space-between">
-                            <Text fw={700}>{p.name}</Text>
+                    <Group align="stretch" wrap="wrap">
+                      {(type === "plot"
+                        ? form.values.allocation.selectedPlots
+                        : type === "area"
+                        ? form.values.allocation.selectedAreas
+                        : form.values.allocation.selectedRegions
+                      ).map((item) => (
+                        <Card
+                          key={item.id}
+                          withBorder
+                          radius="md"
+                          shadow="sm"
+                          p="md"
+                          w={300}
+                          style={{ cursor: "pointer" }}
+                        >
+                          <Group justify="space-between" mb="sm">
+                            <Text fw={700}>{item.name}</Text>
                             <Badge variant="filled" color="gray" radius="sm">
-                              {p.code}
+                              {item.id}
                             </Badge>
                           </Group>
-                          <Group gap="xs">
-                            <Text fw={700}>Cây trồng chính:</Text>
-                            <Text>{p.mainCrop}</Text>
-                          </Group>
-                          <Group gap="xl">
-                            <Group gap="xs">
-                              <Text fw={700}>Diện tích:</Text>
-                              <Text>{p.areaM2.toLocaleString("vi-VN")} m²</Text>
-                            </Group>
-                            <Group gap="xs">
-                              <Text fw={700}>Số hàng:</Text>
-                              <Text>{p.rowsCount}</Text>
-                            </Group>
-                          </Group>
-                          <Group gap="xl">
-                            <Group gap="xs">
-                              <Text fw={700}>Tưới:</Text>
-                              <Text>{p.irrigation}</Text>
-                            </Group>
-                            <Group gap="xs">
-                              <Text fw={700}>Canh tác:</Text>
-                              <Text>{p.cultivation}</Text>
-                            </Group>
-                          </Group>
-                          <Group gap="xs">
-                            <Text fw={700}>Địa hình:</Text>
-                            <Badge variant="light" color="green" radius="xl">
-                              {p.terrainLabel}
-                            </Badge>
-                          </Group>
-                        </Stack>
-                      </Card>
-                    ))}
+
+                          {type === "plot" && (
+                            <>
+                              <Group gap="xs">
+                                <Text fw={700}>Cây trồng chính:</Text>
+                                <Text>{item.mainCrop}</Text>
+                              </Group>
+                              <Group gap="xs">
+                                <Text fw={700}>Diện tích:</Text>
+                                <Text>{item.areaM2} m²</Text>
+                              </Group>
+                              <Group gap="xs">
+                                <Text fw={700}>Số hàng:</Text>
+                                <Text>{item.rowsCount}</Text>
+                              </Group>
+                              <Group gap="xs">
+                                <Text fw={700}>Tưới:</Text>
+                                <Text>{item.irrigation}</Text>
+                              </Group>
+                              <Group gap="xs">
+                                <Text fw={700}>Canh tác:</Text>
+                                <Text>{item.cultivation}</Text>
+                              </Group>
+                              <Group gap="xs">
+                                <Text fw={700}>Địa hình:</Text>
+                                <Badge
+                                  variant="light"
+                                  color="green"
+                                  radius="xl"
+                                >
+                                  {item.terrainLabel}
+                                </Badge>
+                              </Group>
+                            </>
+                          )}
+
+                          {type === "area" && (
+                            <>
+                              <Group gap="xs">
+                                <Text fw={700}>Số lô:</Text>
+                                <Text>{item.plotsCount}</Text>
+                              </Group>
+                              <Group gap="xs">
+                                <Text fw={700}>Tổng diện tích:</Text>
+                                <Text>{item.totalAreaM2} m²</Text>
+                              </Group>
+                              {item.soilType && (
+                                <Group gap="xs">
+                                  <Text fw={700}>Loại đất:</Text>
+                                  <Text>{item.soilType}</Text>
+                                </Group>
+                              )}
+                              {item.terrain && (
+                                <Group gap="xs">
+                                  <Text fw={700}>Địa hình:</Text>
+                                  <Text>{item.terrain}</Text>
+                                </Group>
+                              )}
+                            </>
+                          )}
+
+                          {type === "region" && (
+                            <>
+                              <Group gap="xs">
+                                <Text fw={700}>Số khu vực:</Text>
+                                <Text>{item.areasCount}</Text>
+                              </Group>
+                              <Group gap="xs">
+                                <Text fw={700}>Tổng diện tích:</Text>
+                                <Text>{item.totalAreaM2} m²</Text>
+                              </Group>
+                              {item.soilType && (
+                                <Group gap="xs">
+                                  <Text fw={700}>Loại đất:</Text>
+                                  <Text>{item.soilType}</Text>
+                                </Group>
+                              )}
+                              {item.terrain && (
+                                <Group gap="xs">
+                                  <Text fw={700}>Địa hình:</Text>
+                                  <Text>{item.terrain}</Text>
+                                </Group>
+                              )}
+                            </>
+                          )}
+                        </Card>
+                      ))}
+                    </Group>
+
                     <Radio.Group
                       value={form.values.allocation.type}
                       onChange={(v: string) =>
@@ -425,7 +638,16 @@ const AreaManagementTreeAddv2Page = () => {
                       }
                     >
                       <Stack gap="xs">
-                        <Radio value="plot" label="Phân bổ theo lô" />
+                        <Radio
+                          value="plot"
+                          label={
+                            type === "plot"
+                              ? "Phân bổ theo lô"
+                              : type === "area"
+                              ? "Phân bổ theo khu vực"
+                              : "Phân bổ theo vùng trồng"
+                          }
+                        />
                         <Radio value="row" label="Phân bổ theo hàng" />
                       </Stack>
                     </Radio.Group>
@@ -493,7 +715,11 @@ const AreaManagementTreeAddv2Page = () => {
                     <Stack gap={0}>
                       <Group align="center">
                         <Title order={6} mb="xs">
-                          Danh sách cây trồng theo lô
+                          {type === "plot"
+                            ? "Danh sách cây trồng theo lô"
+                            : type === "area"
+                            ? "Danh sách cây trồng theo khu vực"
+                            : "Danh sách cây trồng theo vùng trồng"}
                         </Title>
                         <Button radius={4} variant="light">
                           Thêm mới
@@ -549,9 +775,10 @@ const AreaManagementTreeAddv2Page = () => {
                     <Group mt="sm">
                       <Text fw={500}>Tổng số cây</Text>
                       <Text fw={700} c="green">
-                        {form.values.allocation.selectedPlots
-                          .reduce((s, pl) => s + (Number(pl.treeCount) || 0), 0)
-                          .toLocaleString("vi-VN")}
+                        {form.values.allocation.selectedPlots.reduce(
+                          (s, pl) => s + (Number(pl.treeCount) || 0),
+                          0
+                        )}
                       </Text>
                     </Group>
                   </Stack>
@@ -658,13 +885,33 @@ const AreaManagementTreeAddv2Page = () => {
 
           <Stepper.Step label="Bước 3" description="Định vị GPS">
             <Stack gap="md">
+              <SegmentedControl
+                radius={4}
+                value={type}
+                onChange={(value) =>
+                  setType(value as "region" | "area" | "plot")
+                }
+                data={[
+                  { label: "Vùng trồng", value: "region" },
+                  { label: "Khu vực", value: "area" },
+                  { label: "Lô", value: "plot" },
+                ]}
+              />
               <Title order={5}>
                 Định vị GPS theo{" "}
-                {form.values.allocation.type === "plot" ? "Lô" : "Hàng"}
+                {form.values.allocation.type === "plot"
+                  ? type === "region"
+                    ? "vùng"
+                    : type === "area"
+                    ? "khu vực"
+                    : type === "plot"
+                    ? "lô"
+                    : "hàng"
+                  : "hàng"}
               </Title>
 
               {/* ====== THEO LÔ ====== */}
-              {form.values.allocation.type === "plot" && (
+              {form.values.allocation.type === "plot" && type === "plot" && (
                 <Accordion variant="contained" multiple radius={4}>
                   {form.values.allocation.selectedPlots.map((p) => {
                     const points = form.values.gps.byPlot[p.id] || [];
@@ -689,8 +936,7 @@ const AreaManagementTreeAddv2Page = () => {
                               </Text>
                             </Text>
                             <Text c="dimmed" fz="sm">
-                              {p.mainCrop} • {p.areaM2.toLocaleString("vi-VN")}{" "}
-                              m² • {p.rowsCount} hàng
+                              {p.mainCrop} • {p.areaM2} m² • {p.rowsCount} hàng
                             </Text>
                           </Group>
                         </Accordion.Control>
@@ -1000,6 +1246,447 @@ const AreaManagementTreeAddv2Page = () => {
                                             next.splice(i, 1);
                                             form.setFieldValue(
                                               `gps.byPlot.${p.id}`,
+                                              next
+                                            );
+                                          }}
+                                        >
+                                          <IconTrash size={16} />
+                                        </ActionIcon>
+                                      </Group>
+                                    ))}
+                                  </Stack>
+                                )}
+                              </Stack>
+                            </Group>
+                          </Card>
+                        </Accordion.Panel>
+                      </Accordion.Item>
+                    );
+                  })}
+                </Accordion>
+              )}
+              {form.values.allocation.type === "plot" && type === "area" && (
+                <Accordion variant="contained" multiple radius={4}>
+                  {form.values.allocation.selectedAreas.map((a) => {
+                    const points = form.values.gps.byArea?.[a.id] || [];
+                    const buf =
+                      form.values.gps.inputBuffer?.byArea?.[a.id] ??
+                      ({
+                        code: "",
+                        lat: undefined,
+                        lng: undefined,
+                        plantedAt: null,
+                      } as TreePoint);
+
+                    return (
+                      <Accordion.Item key={a.id} value={a.id}>
+                        <Accordion.Control>
+                          <Group justify="space-between">
+                            <Text fw={600}>
+                              {a.name}{" "}
+                              <Text span c="dimmed">
+                                ({a.id})
+                              </Text>
+                            </Text>
+                            <Text c="dimmed" fz="sm">
+                              {a.areaM2} m²
+                            </Text>
+                          </Group>
+                        </Accordion.Control>
+
+                        <Accordion.Panel>
+                          <Card withBorder radius="sm" shadow="xs" p="md">
+                            <Group align="flex-start">
+                              {/* Input form for new point */}
+                              <Stack gap="xs" flex={2}>
+                                <Group align="flex-end">
+                                  <Select
+                                    label="Hạt giống"
+                                    placeholder="Chọn hạt giống"
+                                    radius={4}
+                                    data={a.seeds.map((seed) => ({
+                                      value: seed.code,
+                                      label: seed.seedName,
+                                    }))}
+                                    disabled
+                                    value={"SDR-RI6"}
+                                    onChange={(v) => {
+                                      form.setFieldValue("gps.inputBuffer", {
+                                        ...form.values.gps.inputBuffer,
+                                        byPlot: {
+                                          ...(form.values.gps.inputBuffer
+                                            ?.byPlot ?? {}),
+                                          [a.id]: {
+                                            ...buf,
+                                            seedCode: v ?? "",
+                                          },
+                                        },
+                                      });
+                                    }}
+                                    flex={1}
+                                  />
+                                  <TextInput
+                                    label="Mã cây"
+                                    placeholder="T001"
+                                    radius={4}
+                                    value={buf.code || ""}
+                                    onChange={(e) => {
+                                      form.setFieldValue("gps.inputBuffer", {
+                                        ...form.values.gps.inputBuffer,
+                                        byArea: {
+                                          ...(form.values.gps.inputBuffer
+                                            ?.byArea ?? {}),
+                                          [a.id]: {
+                                            ...buf,
+                                            code: e.currentTarget.value,
+                                          },
+                                        },
+                                      });
+                                    }}
+                                    flex={1}
+                                  />
+                                  <TextInput
+                                    label="Latitude"
+                                    placeholder="10.762622"
+                                    radius={4}
+                                    value={buf.lat ?? ""}
+                                    onChange={(e) => {
+                                      const v = e.currentTarget.value;
+                                      form.setFieldValue("gps.inputBuffer", {
+                                        ...form.values.gps.inputBuffer,
+                                        byArea: {
+                                          ...(form.values.gps.inputBuffer
+                                            ?.byArea ?? {}),
+                                          [a.id]: {
+                                            ...buf,
+                                            lat:
+                                              v === "" ? undefined : Number(v),
+                                          },
+                                        },
+                                      });
+                                    }}
+                                    flex={1}
+                                  />
+                                  <TextInput
+                                    label="Longitude"
+                                    placeholder="106.660172"
+                                    radius={4}
+                                    value={buf.lng ?? ""}
+                                    onChange={(e) => {
+                                      const v = e.currentTarget.value;
+                                      form.setFieldValue("gps.inputBuffer", {
+                                        ...form.values.gps.inputBuffer,
+                                        byArea: {
+                                          ...(form.values.gps.inputBuffer
+                                            ?.byArea ?? {}),
+                                          [a.id]: {
+                                            ...buf,
+                                            lng:
+                                              v === "" ? undefined : Number(v),
+                                          },
+                                        },
+                                      });
+                                    }}
+                                    flex={1}
+                                  />
+                                  <DatePickerInput
+                                    radius={4}
+                                    label="Thời gian trồng"
+                                    placeholder="Chọn ngày"
+                                    locale="vi"
+                                    clearable
+                                    popoverProps={{ withinPortal: true }}
+                                    value={buf.plantedAt ?? null}
+                                    onChange={(d) => {
+                                      form.setFieldValue("gps.inputBuffer", {
+                                        ...form.values.gps.inputBuffer,
+                                        byArea: {
+                                          ...(form.values.gps.inputBuffer
+                                            ?.byArea ?? {}),
+                                          [a.id]: {
+                                            ...buf,
+                                            plantedAt: d ?? null,
+                                          },
+                                        },
+                                      });
+                                    }}
+                                    flex={1}
+                                  />
+                                </Group>
+
+                                <Button radius={4} variant="outline">
+                                  Thêm mới
+                                </Button>
+                              </Stack>
+
+                              {/* Map + existing points */}
+                              <Stack flex={1} mt="md" gap="xs">
+                                <MapContainer
+                                  center={[
+                                    points[0]?.lat ?? 10.762622,
+                                    points[0]?.lng ?? 106.660172,
+                                  ]}
+                                  zoom={16}
+                                  style={{
+                                    height: 260,
+                                    width: "100%",
+                                    borderRadius: 8,
+                                  }}
+                                >
+                                  <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
+                                  {points.map((pt, i) =>
+                                    pt.lat && pt.lng ? (
+                                      <Marker
+                                        key={i}
+                                        position={[pt.lat, pt.lng]}
+                                      />
+                                    ) : null
+                                  )}
+                                </MapContainer>
+
+                                {points.length > 0 && (
+                                  <Stack gap={4}>
+                                    {points.map((pt, i) => (
+                                      <Group key={i} justify="space-between">
+                                        <Text fz="sm">
+                                          <b>{pt.code || `Cây ${i + 1}`}</b> —{" "}
+                                          {pt.lat}, {pt.lng} •{" "}
+                                          {pt.plantedAt
+                                            ? new Date(
+                                                pt.plantedAt
+                                              ).toLocaleDateString("vi-VN")
+                                            : "—"}
+                                        </Text>
+                                        <ActionIcon
+                                          size="xs"
+                                          variant="subtle"
+                                          color="red"
+                                          onClick={() => {
+                                            const next = [...points];
+                                            next.splice(i, 1);
+                                            form.setFieldValue(
+                                              `gps.byArea.${a.id}`,
+                                              next
+                                            );
+                                          }}
+                                        >
+                                          <IconTrash size={16} />
+                                        </ActionIcon>
+                                      </Group>
+                                    ))}
+                                  </Stack>
+                                )}
+                              </Stack>
+                            </Group>
+                          </Card>
+                        </Accordion.Panel>
+                      </Accordion.Item>
+                    );
+                  })}
+                </Accordion>
+              )}
+
+              {form.values.allocation.type === "plot" && type === "region" && (
+                <Accordion variant="contained" multiple radius={4}>
+                  {form.values.allocation.selectedRegions.map((r) => {
+                    const points = form.values.gps.byRegion?.[r.id] || [];
+                    const buf =
+                      form.values.gps.inputBuffer?.byRegion?.[r.id] ??
+                      ({
+                        code: "",
+                        lat: undefined,
+                        lng: undefined,
+                        plantedAt: null,
+                      } as TreePoint);
+
+                    return (
+                      <Accordion.Item key={r.id} value={r.id}>
+                        <Accordion.Control>
+                          <Group justify="space-between">
+                            <Text fw={600}>
+                              {r.name}{" "}
+                              <Text span c="dimmed">
+                                ({r.id})
+                              </Text>
+                            </Text>
+                            <Text c="dimmed" fz="sm">
+                              {r.areaM2} m²
+                            </Text>
+                          </Group>
+                        </Accordion.Control>
+
+                        <Accordion.Panel>
+                          <Card withBorder radius="sm" shadow="xs" p="md">
+                            <Group align="flex-start">
+                              {/* Input form for new point */}
+                              <Stack gap="xs" flex={2}>
+                                <Group align="flex-end">
+                                  <Select
+                                    label="Hạt giống"
+                                    placeholder="Chọn hạt giống"
+                                    radius={4}
+                                    data={r.seeds.map((seed) => ({
+                                      value: seed.code,
+                                      label: seed.seedName,
+                                    }))}
+                                    disabled
+                                    value={"SDR-RI6"}
+                                    onChange={(v) => {
+                                      form.setFieldValue("gps.inputBuffer", {
+                                        ...form.values.gps.inputBuffer,
+                                        byPlot: {
+                                          ...(form.values.gps.inputBuffer
+                                            ?.byPlot ?? {}),
+                                          [p.id]: {
+                                            ...buf,
+                                            seedCode: v ?? "",
+                                          },
+                                        },
+                                      });
+                                    }}
+                                    flex={1}
+                                  />
+                                  <TextInput
+                                    label="Mã cây"
+                                    placeholder="T001"
+                                    radius={4}
+                                    value={buf.code || ""}
+                                    onChange={(e) => {
+                                      form.setFieldValue("gps.inputBuffer", {
+                                        ...form.values.gps.inputBuffer,
+                                        byArea: {
+                                          ...(form.values.gps.inputBuffer
+                                            ?.byArea ?? {}),
+                                          [a.id]: {
+                                            ...buf,
+                                            code: e.currentTarget.value,
+                                          },
+                                        },
+                                      });
+                                    }}
+                                    flex={1}
+                                  />
+                                  <TextInput
+                                    label="Latitude"
+                                    placeholder="10.762622"
+                                    radius={4}
+                                    value={buf.lat ?? ""}
+                                    onChange={(e) => {
+                                      const v = e.currentTarget.value;
+                                      form.setFieldValue("gps.inputBuffer", {
+                                        ...form.values.gps.inputBuffer,
+                                        byArea: {
+                                          ...(form.values.gps.inputBuffer
+                                            ?.byArea ?? {}),
+                                          [a.id]: {
+                                            ...buf,
+                                            lat:
+                                              v === "" ? undefined : Number(v),
+                                          },
+                                        },
+                                      });
+                                    }}
+                                    flex={1}
+                                  />
+                                  <TextInput
+                                    label="Longitude"
+                                    placeholder="106.660172"
+                                    radius={4}
+                                    value={buf.lng ?? ""}
+                                    onChange={(e) => {
+                                      const v = e.currentTarget.value;
+                                      form.setFieldValue("gps.inputBuffer", {
+                                        ...form.values.gps.inputBuffer,
+                                        byArea: {
+                                          ...(form.values.gps.inputBuffer
+                                            ?.byArea ?? {}),
+                                          [a.id]: {
+                                            ...buf,
+                                            lng:
+                                              v === "" ? undefined : Number(v),
+                                          },
+                                        },
+                                      });
+                                    }}
+                                    flex={1}
+                                  />
+                                  <DatePickerInput
+                                    radius={4}
+                                    label="Thời gian trồng"
+                                    placeholder="Chọn ngày"
+                                    locale="vi"
+                                    clearable
+                                    popoverProps={{ withinPortal: true }}
+                                    value={buf.plantedAt ?? null}
+                                    onChange={(d) => {
+                                      form.setFieldValue("gps.inputBuffer", {
+                                        ...form.values.gps.inputBuffer,
+                                        byArea: {
+                                          ...(form.values.gps.inputBuffer
+                                            ?.byArea ?? {}),
+                                          [a.id]: {
+                                            ...buf,
+                                            plantedAt: d ?? null,
+                                          },
+                                        },
+                                      });
+                                    }}
+                                    flex={1}
+                                  />
+                                </Group>
+
+                                <Button radius={4} variant="outline">
+                                  Thêm mới
+                                </Button>
+                              </Stack>
+
+                              {/* Map + existing points */}
+                              <Stack flex={1} mt="md" gap="xs">
+                                <MapContainer
+                                  center={[
+                                    points[0]?.lat ?? 10.762622,
+                                    points[0]?.lng ?? 106.660172,
+                                  ]}
+                                  zoom={16}
+                                  style={{
+                                    height: 260,
+                                    width: "100%",
+                                    borderRadius: 8,
+                                  }}
+                                >
+                                  <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
+                                  {points.map((pt, i) =>
+                                    pt.lat && pt.lng ? (
+                                      <Marker
+                                        key={i}
+                                        position={[pt.lat, pt.lng]}
+                                      />
+                                    ) : null
+                                  )}
+                                </MapContainer>
+
+                                {points.length > 0 && (
+                                  <Stack gap={4}>
+                                    {points.map((pt, i) => (
+                                      <Group key={i} justify="space-between">
+                                        <Text fz="sm">
+                                          <b>{pt.code || `Cây ${i + 1}`}</b> —{" "}
+                                          {pt.lat}, {pt.lng} •{" "}
+                                          {pt.plantedAt
+                                            ? new Date(
+                                                pt.plantedAt
+                                              ).toLocaleDateString("vi-VN")
+                                            : "—"}
+                                        </Text>
+                                        <ActionIcon
+                                          size="xs"
+                                          variant="subtle"
+                                          color="red"
+                                          onClick={() => {
+                                            const next = [...points];
+                                            next.splice(i, 1);
+                                            form.setFieldValue(
+                                              `gps.byArea.${a.id}`,
                                               next
                                             );
                                           }}
@@ -1402,7 +2089,7 @@ const AreaManagementTreeAddv2Page = () => {
               area="Vùng Tây Nguyên"
               zone="Khu A1"
               block="Lô 05"
-              type={form.values.allocation.type as string}
+              type={form.values.allocation.type as "plot" | "row"}
               row="Hàng 3"
               plantingDate="12/07/2025"
             />
