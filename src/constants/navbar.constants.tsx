@@ -23,6 +23,7 @@ import {
   IconCashBanknote,
   IconSettings,
   IconCashRegister,
+  IconCertificate,
 } from "@tabler/icons-react";
 import { PATH } from "./path.constants";
 
@@ -368,7 +369,11 @@ export const NAV_BAR = [
     icon: IconLayersIntersect,
     link: PATH.PACKAGING_SPECIFICATION,
   },
-
+  {
+    label: "Chứng nhận - chứng chỉ",
+    icon: IconCertificate,
+    link: PATH.CERTIFICATION,
+  },
   // {
   //   label: "Quản lý nhà cung cấp",
   //   icon: IconBuildingWarehouse,

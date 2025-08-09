@@ -274,4 +274,7 @@ export const PATH = {
   FINANCE_PURPOSE_MANAGEMENT: "/finance/purpose-management",
   // Contact List
   CONTACT_LIST: "/contact-list",
+  // Certification
+  CERTIFICATION: "/certification",
+  CERTIFICATION_ADD: "/certification/add",
 };

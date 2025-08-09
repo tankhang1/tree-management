@@ -643,6 +643,10 @@ const CompanyAddressAddPage = L(
   () => import("./pages/CompanyPage/Address/Add")
 );
 const BankManagementPage = L(() => import("./pages/BankManagementPage"));
+
+const CertificatePage = L(() => import("./pages/CertificatePage"));
+const CertificateAddPage = L(() => import("./pages/CertificatePage/Add"));
+
 const CompanyAddPage2 = CompanyAddPage; // alias giữ tên cũ
 
 // Map/Season/Plan History aliases (trong code gốc đều dùng AreaManagementHistoryPage)
@@ -1793,6 +1797,18 @@ const ROUTES = [
     key="contact_list"
     path={PATH.CONTACT_LIST}
     element={withSuspense(<ContactPage />)}
+  />,
+
+  // Certificate
+  <Route
+    key="certificate_list"
+    path={PATH.CERTIFICATION}
+    element={withSuspense(<CertificatePage />)}
+  />,
+  <Route
+    key="certificate_add"
+    path={PATH.CERTIFICATION_ADD}
+    element={withSuspense(<CertificateAddPage />)}
   />,
 ];
 
