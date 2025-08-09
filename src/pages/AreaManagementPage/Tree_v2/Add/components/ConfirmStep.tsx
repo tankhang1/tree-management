@@ -144,181 +144,338 @@ const ConfirmStep = (props: ConfirmPlantingProps) => {
 
       {/* ========= THEO LÔ ========= */}
       {form.values.allocation.type === "plot" && (
-        <Accordion multiple variant="contained" radius={4}>
+        <Accordion variant="contained" multiple radius={4}>
           {form.values.allocation.selectedPlots.map((p) => {
-            const pts = form.values.gps.byPlot[p.id] || [];
-            const buf = form.values.gps.inputBuffer.byPlot[p.id] || {
-              code: "",
-              lat: undefined,
-              lng: undefined,
-              plantedAt: null,
-            };
-            const center: [number, number] =
-              pts[0]?.lat && pts[0]?.lng
-                ? [pts[0].lat!, pts[0].lng!]
-                : defaultCenter;
+            const points = form.values.gps.byPlot[p.id] || [];
+            // input buffer (tránh ghi trực tiếp): lưu tạm theo plotId
+            const buf =
+              form.values.gps.inputBuffer?.byPlot?.[p.id] ??
+              ({
+                code: "",
+                lat: undefined,
+                lng: undefined,
+                plantedAt: null,
+              } as TreePoint);
 
             return (
               <Accordion.Item key={p.id} value={p.id}>
                 <Accordion.Control>
                   <Group justify="space-between">
-                    <Stack gap={2}>
-                      <Title order={5}>
-                        {p.name}{" "}
-                        <Text span c="dimmed">
-                          ({p.code})
-                        </Text>
-                      </Title>
-                      <Text c="dimmed" fz="sm">
-                        {p.mainCrop} • {p.areaM2.toLocaleString("vi-VN")} m² •{" "}
-                        {p.rowsCount} hàng • {p.irrigation} • {p.cultivation}
+                    <Text fw={600}>
+                      {p.name}{" "}
+                      <Text span c="dimmed">
+                        ({p.code})
                       </Text>
-                    </Stack>
-                    <Badge variant="light">{p.terrainLabel}</Badge>
+                    </Text>
+                    <Text c="dimmed" fz="sm">
+                      {p.mainCrop} • {p.areaM2.toLocaleString("vi-VN")} m² •{" "}
+                      {p.rowsCount} hàng
+                    </Text>
                   </Group>
                 </Accordion.Control>
                 <Accordion.Panel>
-                  <Card withBorder radius="sm" shadow="xs" p="md">
-                    {/* Form nhập 1 điểm, bấm Thêm để append */}
-                    <Group align="flex-end" wrap="wrap">
-                      <Select
-                        label="Hạt giống"
-                        placeholder="Chọn hạt giống"
-                        radius={4}
-                        data={p.seeds.map((seed) => ({
-                          value: seed.code,
-                          label: seed.seedName,
-                        }))}
-                        disabled
-                        flex={1}
-                        value={"SDR-RI6"} // Chỉ ví dụ, có thể thay đổi
-                      />
-                      <TextInput
-                        label="Mã cây"
-                        placeholder="A1-001"
-                        value={buf.code || ""}
-                        onChange={(e) =>
-                          form.setFieldValue("gps.inputBuffer.byPlot", {
-                            ...form.values.gps.inputBuffer.byPlot,
-                            [p.id]: { ...buf, code: e.currentTarget.value },
-                          })
-                        }
-                        flex={1}
-                        radius={4}
-                      />
-                      <TextInput
-                        label="Latitude"
-                        placeholder="10.762622"
-                        value={buf.lat ?? ""}
-                        onChange={(e) => {
-                          const v = e.currentTarget.value;
-                          form.setFieldValue("gps.inputBuffer.byPlot", {
-                            ...form.values.gps.inputBuffer.byPlot,
-                            [p.id]: {
-                              ...buf,
-                              lat: v === "" ? undefined : Number(v),
-                            },
-                          });
-                        }}
-                        flex={1}
-                        radius={4}
-                      />
-                      <TextInput
-                        label="Longitude"
-                        placeholder="106.660172"
-                        value={buf.lng ?? ""}
-                        onChange={(e) => {
-                          const v = e.currentTarget.value;
-                          form.setFieldValue("gps.inputBuffer.byPlot", {
-                            ...form.values.gps.inputBuffer.byPlot,
-                            [p.id]: {
-                              ...buf,
-                              lng: v === "" ? undefined : Number(v),
-                            },
-                          });
-                        }}
-                        flex={1}
-                        radius={4}
-                      />
-                      <DatePickerInput
-                        label="Thời gian trồng"
-                        placeholder="Chọn ngày"
-                        value={buf.plantedAt ?? null}
-                        radius={4}
-                        flex={1}
-                      />
-                    </Group>
-
-                    <Stack mt="md" gap="xs">
-                      <MapContainer
-                        center={center}
-                        zoom={18}
-                        style={{ height: 320, width: "100%", borderRadius: 8 }}
-                        scrollWheelZoom={false}
-                      >
-                        <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
-                        {/* Nếu có polygon biên lô, bạn có thể thêm <Polygon positions={...} /> ở đây */}
-                        {pts.map((pt, i) =>
-                          pt.lat && pt.lng ? (
-                            <Marker
-                              key={i}
-                              position={[pt.lat, pt.lng]}
-                              draggable
-                              icon={iconFor(false)}
-                              eventHandlers={{
-                                dragend: (e) => {
-                                  const latLng = e.target.getLatLng();
-                                  const next = [...pts];
-                                  next[i] = {
-                                    ...pt,
-                                    lat: latLng.lat,
-                                    lng: latLng.lng,
-                                  };
-                                  form.setFieldValue(
-                                    `gps.byPlot.${p.id}`,
-                                    next
-                                  );
+                  <Card
+                    withBorder
+                    radius="sm"
+                    shadow="xs"
+                    p="md"
+                    style={{ position: "relative", zIndex: 1 }}
+                  >
+                    <Group align="flex-start">
+                      {/* Form nhập 1 điểm rồi Thêm */}
+                      <Stack gap={"xs"}>
+                        <Group flex={2} align="flex-end">
+                          <Select
+                            label="Hạt giống"
+                            placeholder="Chọn hạt giống"
+                            radius={4}
+                            data={p.seeds.map((seed) => ({
+                              value: seed.code,
+                              label: seed.seedName,
+                            }))}
+                            disabled
+                            value={"SDR-RI6"}
+                            onChange={(v) => {
+                              form.setFieldValue("gps.inputBuffer", {
+                                ...form.values.gps.inputBuffer,
+                                byPlot: {
+                                  ...(form.values.gps.inputBuffer?.byPlot ??
+                                    {}),
+                                  [p.id]: {
+                                    ...buf,
+                                    seedCode: v ?? "",
+                                  },
                                 },
-                              }}
-                            />
-                          ) : null
-                        )}
-                      </MapContainer>
+                              });
+                            }}
+                            flex={1}
+                          />
+                          <TextInput
+                            label="Mã cây"
+                            placeholder="T001"
+                            radius={4}
+                            value={buf.code || ""}
+                            onChange={(e) => {
+                              form.setFieldValue("gps.inputBuffer", {
+                                ...form.values.gps.inputBuffer,
+                                byPlot: {
+                                  ...(form.values.gps.inputBuffer?.byPlot ??
+                                    {}),
+                                  [p.id]: {
+                                    ...buf,
+                                    code: e.currentTarget.value,
+                                  },
+                                },
+                              });
+                            }}
+                            flex={1}
+                          />
+                          <TextInput
+                            label="Latitude"
+                            placeholder="10.762622"
+                            radius={4}
+                            value={buf.lat ?? ""}
+                            onChange={(e) => {
+                              const v = e.currentTarget.value;
+                              form.setFieldValue("gps.inputBuffer", {
+                                ...form.values.gps.inputBuffer,
+                                byPlot: {
+                                  ...(form.values.gps.inputBuffer?.byPlot ??
+                                    {}),
+                                  [p.id]: {
+                                    ...buf,
+                                    lat: v === "" ? undefined : Number(v),
+                                  },
+                                },
+                              });
+                            }}
+                            flex={1}
+                          />
+                          <TextInput
+                            label="Longitude"
+                            placeholder="106.660172"
+                            radius={4}
+                            value={buf.lng ?? ""}
+                            onChange={(e) => {
+                              const v = e.currentTarget.value;
+                              form.setFieldValue("gps.inputBuffer", {
+                                ...form.values.gps.inputBuffer,
+                                byPlot: {
+                                  ...(form.values.gps.inputBuffer?.byPlot ??
+                                    {}),
+                                  [p.id]: {
+                                    ...buf,
+                                    lng: v === "" ? undefined : Number(v),
+                                  },
+                                },
+                              });
+                            }}
+                            flex={1}
+                          />
+                          <DatePickerInput
+                            radius={4}
+                            label="Thời gian trồng"
+                            placeholder="Chọn ngày"
+                            locale="vi"
+                            clearable
+                            popoverProps={{ withinPortal: true }}
+                            value={buf.plantedAt ?? null}
+                            onChange={(d) => {
+                              form.setFieldValue("gps.inputBuffer", {
+                                ...form.values.gps.inputBuffer,
+                                byPlot: {
+                                  ...(form.values.gps.inputBuffer?.byPlot ??
+                                    {}),
+                                  [p.id]: {
+                                    ...buf,
+                                    plantedAt: d ?? null,
+                                  },
+                                },
+                              });
+                            }}
+                            flex={1}
+                          />
+                          <ActionIcon variant="light" color="red" radius={4}>
+                            <IconTrash size={16} />
+                          </ActionIcon>
+                        </Group>
 
-                      {/* Danh sách điểm */}
-                      {pts.length > 0 && (
-                        <Stack gap={6}>
-                          {pts.map((pt, i) => (
-                            <Group key={i} justify="space-between">
-                              <Text fz="sm">
-                                <b>{pt.code || `Cây ${i + 1}`}</b> — {pt.lat},{" "}
-                                {pt.lng} •{" "}
-                                {pt.plantedAt
-                                  ? new Date(pt.plantedAt).toLocaleDateString(
-                                      "vi-VN"
-                                    )
-                                  : "—"}
-                              </Text>
-                              <ActionIcon
-                                size="xs"
-                                variant="subtle"
-                                color="red"
-                                onClick={() => {
-                                  const next = [...pts];
-                                  next.splice(i, 1);
-                                  form.setFieldValue(
-                                    `gps.byPlot.${p.id}`,
-                                    next
-                                  );
-                                }}
-                              >
-                                <IconTrash size={16} />
-                              </ActionIcon>
-                            </Group>
-                          ))}
-                        </Stack>
-                      )}
-                    </Stack>
+                        <Group flex={2} align="flex-end">
+                          <Select
+                            label="Hạt giống"
+                            placeholder="Chọn hạt giống"
+                            radius={4}
+                            data={p.seeds.map((seed) => ({
+                              value: seed.code,
+                              label: seed.seedName,
+                            }))}
+                            disabled
+                            value={"SDR-RI6"}
+                            onChange={(v) => {
+                              form.setFieldValue("gps.inputBuffer", {
+                                ...form.values.gps.inputBuffer,
+                                byPlot: {
+                                  ...(form.values.gps.inputBuffer?.byPlot ??
+                                    {}),
+                                  [p.id]: {
+                                    ...buf,
+                                    seedCode: v ?? "",
+                                  },
+                                },
+                              });
+                            }}
+                            flex={1}
+                          />
+                          <TextInput
+                            label="Mã cây"
+                            placeholder="T001"
+                            radius={4}
+                            value={buf.code || ""}
+                            onChange={(e) => {
+                              form.setFieldValue("gps.inputBuffer", {
+                                ...form.values.gps.inputBuffer,
+                                byPlot: {
+                                  ...(form.values.gps.inputBuffer?.byPlot ??
+                                    {}),
+                                  [p.id]: {
+                                    ...buf,
+                                    code: e.currentTarget.value,
+                                  },
+                                },
+                              });
+                            }}
+                            flex={1}
+                          />
+                          <TextInput
+                            label="Latitude"
+                            placeholder="10.762622"
+                            radius={4}
+                            value={buf.lat ?? ""}
+                            onChange={(e) => {
+                              const v = e.currentTarget.value;
+                              form.setFieldValue("gps.inputBuffer", {
+                                ...form.values.gps.inputBuffer,
+                                byPlot: {
+                                  ...(form.values.gps.inputBuffer?.byPlot ??
+                                    {}),
+                                  [p.id]: {
+                                    ...buf,
+                                    lat: v === "" ? undefined : Number(v),
+                                  },
+                                },
+                              });
+                            }}
+                            flex={1}
+                          />
+                          <TextInput
+                            label="Longitude"
+                            placeholder="106.660172"
+                            radius={4}
+                            value={buf.lng ?? ""}
+                            onChange={(e) => {
+                              const v = e.currentTarget.value;
+                              form.setFieldValue("gps.inputBuffer", {
+                                ...form.values.gps.inputBuffer,
+                                byPlot: {
+                                  ...(form.values.gps.inputBuffer?.byPlot ??
+                                    {}),
+                                  [p.id]: {
+                                    ...buf,
+                                    lng: v === "" ? undefined : Number(v),
+                                  },
+                                },
+                              });
+                            }}
+                            flex={1}
+                          />
+                          <DatePickerInput
+                            radius={4}
+                            label="Thời gian trồng"
+                            placeholder="Chọn ngày"
+                            locale="vi"
+                            clearable
+                            popoverProps={{ withinPortal: true }}
+                            value={buf.plantedAt ?? null}
+                            onChange={(d) => {
+                              form.setFieldValue("gps.inputBuffer", {
+                                ...form.values.gps.inputBuffer,
+                                byPlot: {
+                                  ...(form.values.gps.inputBuffer?.byPlot ??
+                                    {}),
+                                  [p.id]: {
+                                    ...buf,
+                                    plantedAt: d ?? null,
+                                  },
+                                },
+                              });
+                            }}
+                            flex={1}
+                          />
+                          <ActionIcon variant="light" color="red" radius={4}>
+                            <IconTrash size={16} />
+                          </ActionIcon>
+                        </Group>
+                        <Button radius={4} variant="outline">
+                          Thêm mới
+                        </Button>
+                      </Stack>
+                      {/* Map + list điểm đã thêm */}
+                      <Stack flex={1} mt="md" gap="xs">
+                        <MapContainer
+                          center={[
+                            points[0]?.lat ?? 10.762622,
+                            points[0]?.lng ?? 106.660172,
+                          ]}
+                          zoom={16}
+                          style={{
+                            height: 260,
+                            width: "100%",
+                            borderRadius: 8,
+                          }}
+                        >
+                          <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
+                          {/* Nếu bạn có polygon của lô, render Polygon ở đây */}
+                          {points.map((pt, i) =>
+                            pt.lat && pt.lng ? (
+                              <Marker key={i} position={[pt.lat, pt.lng]} />
+                            ) : null
+                          )}
+                        </MapContainer>
+
+                        {points.length > 0 && (
+                          <Stack gap={4}>
+                            {points.map((pt, i) => (
+                              <Group key={i} justify="space-between">
+                                <Text fz="sm">
+                                  <b>{pt.code || `Cây ${i + 1}`}</b> — {pt.lat},{" "}
+                                  {pt.lng} •{" "}
+                                  {pt.plantedAt
+                                    ? new Date(pt.plantedAt).toLocaleDateString(
+                                        "vi-VN"
+                                      )
+                                    : "—"}
+                                </Text>
+                                <ActionIcon
+                                  size="xs"
+                                  variant="subtle"
+                                  color="red"
+                                  onClick={() => {
+                                    const next = [...points];
+                                    next.splice(i, 1);
+                                    form.setFieldValue(
+                                      `gps.byPlot.${p.id}`,
+                                      next
+                                    );
+                                  }}
+                                >
+                                  <IconTrash size={16} />
+                                </ActionIcon>
+                              </Group>
+                            ))}
+                          </Stack>
+                        )}
+                      </Stack>
+                    </Group>
                   </Card>
                 </Accordion.Panel>
               </Accordion.Item>
@@ -329,169 +486,340 @@ const ConfirmStep = (props: ConfirmPlantingProps) => {
 
       {/* ========= THEO HÀNG ========= */}
       {form.values.allocation.type === "row" && (
-        <Accordion multiple variant="contained" radius={4}>
+        <Accordion variant="contained" multiple radius={4}>
           {form.values.allocation.rows.map((r, idx) => {
-            const key = r.id;
-            const pts = form.values.gps.byRow[key] || [];
-            const buf = form.values.gps.inputBuffer.byRow[key] || {
-              code: "",
-              lat: undefined,
-              lng: undefined,
-              plantedAt: null,
-            };
-            const center: [number, number] =
-              pts[0]?.lat && pts[0]?.lng
-                ? [pts[0].lat!, pts[0].lng!]
-                : defaultCenter;
+            const rowKey = r.id; // dùng id duy nhất của hàng
+            const points = form.values.gps.byRow[rowKey] || [];
+            const buf =
+              form.values.gps.inputBuffer?.byRow?.[rowKey] ??
+              ({
+                code: "",
+                lat: undefined,
+                lng: undefined,
+                plantedAt: null,
+              } as TreePoint);
 
             return (
-              <Accordion.Item key={key} value={key}>
+              <Accordion.Item key={rowKey} value={rowKey}>
                 <Accordion.Control>
                   <Text fw={600}>{r.rowName || `Hàng ${idx + 1}`}</Text>
                 </Accordion.Control>
                 <Accordion.Panel>
-                  <Card withBorder radius="sm" shadow="xs" p="md">
-                    <Group align="flex-end" wrap="wrap">
-                      <Select
-                        label="Hạt giống"
-                        placeholder="Chọn hạt giống"
-                        radius={4}
-                        data={samplePlots[0].seeds.map((seed) => ({
-                          value: seed.code,
-                          label: seed.seedName,
-                        }))}
-                        disabled
-                        flex={1}
-                        value={"SDR-RI6"} // Chỉ ví dụ, có thể thay đổi
-                      />
-
-                      <TextInput
-                        label="Mã cây"
-                        placeholder="R1-001"
-                        value={buf.code || ""}
-                        onChange={(e) =>
-                          form.setFieldValue("gps.inputBuffer.byRow", {
-                            ...form.values.gps.inputBuffer.byRow,
-                            [key]: { ...buf, code: e.currentTarget.value },
-                          })
-                        }
-                        flex={1}
-                        radius={4}
-                      />
-                      <TextInput
-                        label="Latitude"
-                        placeholder="10.762622"
-                        value={buf.lat ?? ""}
-                        onChange={(e) => {
-                          const v = e.currentTarget.value;
-                          form.setFieldValue("gps.inputBuffer.byRow", {
-                            ...form.values.gps.inputBuffer.byRow,
-                            [key]: {
-                              ...buf,
-                              lat: v === "" ? undefined : Number(v),
-                            },
-                          });
-                        }}
-                        flex={1}
-                        radius={4}
-                      />
-                      <TextInput
-                        label="Longitude"
-                        placeholder="106.660172"
-                        value={buf.lng ?? ""}
-                        onChange={(e) => {
-                          const v = e.currentTarget.value;
-                          form.setFieldValue("gps.inputBuffer.byRow", {
-                            ...form.values.gps.inputBuffer.byRow,
-                            [key]: {
-                              ...buf,
-                              lng: v === "" ? undefined : Number(v),
-                            },
-                          });
-                        }}
-                        flex={1}
-                        radius={4}
-                      />
-                      <DatePickerInput
-                        label="Thời gian trồng"
-                        placeholder="Chọn ngày"
-                        value={buf.plantedAt ?? null}
-                        radius={4}
-                        flex={1}
-                      />
-                    </Group>
-
-                    <Stack mt="md" gap="xs">
-                      <MapContainer
-                        center={center}
-                        zoom={18}
-                        style={{ height: 320, width: "100%", borderRadius: 8 }}
-                        scrollWheelZoom={false}
-                      >
-                        <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
-                        {/* Nếu có polyline theo hàng, có thể render */}
-                        {pts.length > 1 && (
-                          <Polyline
-                            positions={pts
-                              .filter((p) => p.lat && p.lng)
-                              .map((p) => [p.lat!, p.lng!])}
-                            color="blue"
+                  <Card
+                    withBorder
+                    radius="sm"
+                    shadow="xs"
+                    p="md"
+                    style={{ position: "relative", zIndex: 1 }}
+                  >
+                    <Group gap={"xs"} align="flex-start">
+                      <Stack flex={2} gap={"xs"}>
+                        <Group align="flex-end">
+                          <Select
+                            label="Hạt giống"
+                            placeholder="Chọn hạt giống"
+                            radius={4}
+                            value={"SDR-RI6"}
+                            disabled
+                            data={samplePlots[0].seeds.map((seed) => ({
+                              value: seed.code,
+                              label: seed.seedName,
+                            }))}
+                            flex={1}
                           />
-                        )}
-                        {pts.map((pt, i) =>
-                          pt.lat && pt.lng ? (
-                            <Marker
-                              key={i}
-                              position={[pt.lat, pt.lng]}
-                              draggable
-                              icon={iconFor(false)}
-                              eventHandlers={{
-                                dragend: (e) => {
-                                  const latLng = e.target.getLatLng();
-                                  const next = [...pts];
-                                  next[i] = {
-                                    ...pt,
-                                    lat: latLng.lat,
-                                    lng: latLng.lng,
-                                  };
-                                  form.setFieldValue(`gps.byRow.${key}`, next);
+                          <TextInput
+                            label="Mã cây"
+                            placeholder="R1-001"
+                            radius={4}
+                            value={buf.code || ""}
+                            onChange={(e) => {
+                              form.setFieldValue("gps.inputBuffer", {
+                                ...form.values.gps.inputBuffer,
+                                byRow: {
+                                  ...(form.values.gps.inputBuffer?.byRow ?? {}),
+                                  [rowKey]: {
+                                    ...buf,
+                                    code: e.currentTarget.value,
+                                  },
                                 },
-                              }}
-                            />
-                          ) : null
-                        )}
-                      </MapContainer>
+                              });
+                            }}
+                            flex={1}
+                          />
+                          <TextInput
+                            label="Latitude"
+                            placeholder="10.762622"
+                            radius={4}
+                            value={buf.lat ?? ""}
+                            onChange={(e) => {
+                              const v = e.currentTarget.value;
+                              form.setFieldValue("gps.inputBuffer", {
+                                ...form.values.gps.inputBuffer,
+                                byRow: {
+                                  ...(form.values.gps.inputBuffer?.byRow ?? {}),
+                                  [rowKey]: {
+                                    ...buf,
+                                    lat: v === "" ? undefined : Number(v),
+                                  },
+                                },
+                              });
+                            }}
+                            flex={1}
+                          />
+                          <TextInput
+                            label="Longitude"
+                            placeholder="106.660172"
+                            radius={4}
+                            value={buf.lng ?? ""}
+                            onChange={(e) => {
+                              const v = e.currentTarget.value;
+                              form.setFieldValue("gps.inputBuffer", {
+                                ...form.values.gps.inputBuffer,
+                                byRow: {
+                                  ...(form.values.gps.inputBuffer?.byRow ?? {}),
+                                  [rowKey]: {
+                                    ...buf,
+                                    lng: v === "" ? undefined : Number(v),
+                                  },
+                                },
+                              });
+                            }}
+                            flex={1}
+                          />
+                          <DatePickerInput
+                            radius={4}
+                            label="Thời gian trồng"
+                            placeholder="Chọn ngày"
+                            locale="vi"
+                            clearable
+                            popoverProps={{ withinPortal: true }}
+                            value={buf.plantedAt ?? null}
+                            onChange={(d) => {
+                              form.setFieldValue("gps.inputBuffer", {
+                                ...form.values.gps.inputBuffer,
+                                byRow: {
+                                  ...(form.values.gps.inputBuffer?.byRow ?? {}),
+                                  [rowKey]: {
+                                    ...buf,
+                                    plantedAt: d ?? null,
+                                  },
+                                },
+                              });
+                            }}
+                            flex={1}
+                          />
+                          {/* <Button
+                                      variant="light"
+                                      leftSection={<IconPlus size={16} />}
+                                      radius={4}
+                                      onClick={() => {
+                                        if (!buf.lat || !buf.lng) return;
+                                        const next = [...points, { ...buf }];
+                                        form.setFieldValue(
+                                          `gps.byRow.${rowKey}`,
+                                          next
+                                        );
+                                        // clear buffer
+                                        const allBuf = {
+                                          ...(form.values.gps.inputBuffer?.byRow ??
+                                            {}),
+                                        };
+                                        delete allBuf[rowKey];
+                                        form.setFieldValue("gps.inputBuffer", {
+                                          ...form.values.gps.inputBuffer,
+                                          byRow: allBuf,
+                                        });
+                                      }}
+                                    >
+                                      Thêm
+                                    </Button> */}
+                          <ActionIcon radius={4} variant="light" color="red">
+                            <IconTrash size={16} />
+                          </ActionIcon>
+                        </Group>
+                        <Group align="flex-end">
+                          <Select
+                            label="Hạt giống"
+                            placeholder="Chọn hạt giống"
+                            radius={4}
+                            value={"SDR-RI6"}
+                            disabled
+                            data={samplePlots[0].seeds.map((seed) => ({
+                              value: seed.code,
+                              label: seed.seedName,
+                            }))}
+                            flex={1}
+                          />
+                          <TextInput
+                            label="Mã cây"
+                            placeholder="R1-001"
+                            radius={4}
+                            value={buf.code || ""}
+                            onChange={(e) => {
+                              form.setFieldValue("gps.inputBuffer", {
+                                ...form.values.gps.inputBuffer,
+                                byRow: {
+                                  ...(form.values.gps.inputBuffer?.byRow ?? {}),
+                                  [rowKey]: {
+                                    ...buf,
+                                    code: e.currentTarget.value,
+                                  },
+                                },
+                              });
+                            }}
+                            flex={1}
+                          />
+                          <TextInput
+                            label="Latitude"
+                            placeholder="10.762622"
+                            radius={4}
+                            value={buf.lat ?? ""}
+                            onChange={(e) => {
+                              const v = e.currentTarget.value;
+                              form.setFieldValue("gps.inputBuffer", {
+                                ...form.values.gps.inputBuffer,
+                                byRow: {
+                                  ...(form.values.gps.inputBuffer?.byRow ?? {}),
+                                  [rowKey]: {
+                                    ...buf,
+                                    lat: v === "" ? undefined : Number(v),
+                                  },
+                                },
+                              });
+                            }}
+                            flex={1}
+                          />
+                          <TextInput
+                            label="Longitude"
+                            placeholder="106.660172"
+                            radius={4}
+                            value={buf.lng ?? ""}
+                            onChange={(e) => {
+                              const v = e.currentTarget.value;
+                              form.setFieldValue("gps.inputBuffer", {
+                                ...form.values.gps.inputBuffer,
+                                byRow: {
+                                  ...(form.values.gps.inputBuffer?.byRow ?? {}),
+                                  [rowKey]: {
+                                    ...buf,
+                                    lng: v === "" ? undefined : Number(v),
+                                  },
+                                },
+                              });
+                            }}
+                            flex={1}
+                          />
+                          <DatePickerInput
+                            radius={4}
+                            label="Thời gian trồng"
+                            placeholder="Chọn ngày"
+                            locale="vi"
+                            clearable
+                            popoverProps={{ withinPortal: true }}
+                            value={buf.plantedAt ?? null}
+                            onChange={(d) => {
+                              form.setFieldValue("gps.inputBuffer", {
+                                ...form.values.gps.inputBuffer,
+                                byRow: {
+                                  ...(form.values.gps.inputBuffer?.byRow ?? {}),
+                                  [rowKey]: {
+                                    ...buf,
+                                    plantedAt: d ?? null,
+                                  },
+                                },
+                              });
+                            }}
+                            flex={1}
+                          />
+                          {/* <Button
+                                      variant="light"
+                                      leftSection={<IconPlus size={16} />}
+                                      radius={4}
+                                      onClick={() => {
+                                        if (!buf.lat || !buf.lng) return;
+                                        const next = [...points, { ...buf }];
+                                        form.setFieldValue(
+                                          `gps.byRow.${rowKey}`,
+                                          next
+                                        );
+                                        // clear buffer
+                                        const allBuf = {
+                                          ...(form.values.gps.inputBuffer?.byRow ??
+                                            {}),
+                                        };
+                                        delete allBuf[rowKey];
+                                        form.setFieldValue("gps.inputBuffer", {
+                                          ...form.values.gps.inputBuffer,
+                                          byRow: allBuf,
+                                        });
+                                      }}
+                                    >
+                                      Thêm
+                                    </Button> */}
+                          <ActionIcon radius={4} variant="light" color="red">
+                            <IconTrash size={16} />
+                          </ActionIcon>
+                        </Group>
+                        <Button radius={4} variant="outline">
+                          Thêm mới
+                        </Button>
+                      </Stack>
 
-                      {pts.length > 0 && (
-                        <Stack gap={6}>
-                          {pts.map((pt, i) => (
-                            <Group key={i} justify="space-between">
-                              <Text fz="sm">
-                                <b>{pt.code || `Cây ${i + 1}`}</b> — {pt.lat},{" "}
-                                {pt.lng} •{" "}
-                                {pt.plantedAt
-                                  ? new Date(pt.plantedAt).toLocaleDateString(
-                                      "vi-VN"
-                                    )
-                                  : "—"}
-                              </Text>
-                              <ActionIcon
-                                size="xs"
-                                variant="subtle"
-                                color="red"
-                                onClick={() => {
-                                  const next = [...pts];
-                                  next.splice(i, 1);
-                                  form.setFieldValue(`gps.byRow.${key}`, next);
-                                }}
-                              >
-                                <IconTrash size={16} />
-                              </ActionIcon>
-                            </Group>
-                          ))}
-                        </Stack>
-                      )}
-                    </Stack>
+                      <Stack flex={1} gap="xs">
+                        <MapContainer
+                          center={[
+                            points[0]?.lat ?? 10.762622,
+                            points[0]?.lng ?? 106.660172,
+                          ]}
+                          zoom={16}
+                          style={{
+                            height: 260,
+                            width: "100%",
+                            borderRadius: 8,
+                          }}
+                        >
+                          <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
+                          {points.map((pt, i) =>
+                            pt.lat && pt.lng ? (
+                              <Marker key={i} position={[pt.lat, pt.lng]} />
+                            ) : null
+                          )}
+                        </MapContainer>
+
+                        {points.length > 0 && (
+                          <Stack gap={4}>
+                            {points.map((pt, i) => (
+                              <Group key={i} justify="space-between">
+                                <Text fz="sm">
+                                  <b>{pt.code || `Cây ${i + 1}`}</b> — {pt.lat},{" "}
+                                  {pt.lng} •{" "}
+                                  {pt.plantedAt
+                                    ? new Date(pt.plantedAt).toLocaleDateString(
+                                        "vi-VN"
+                                      )
+                                    : "—"}
+                                </Text>
+                                <ActionIcon
+                                  size="xs"
+                                  variant="subtle"
+                                  color="red"
+                                  onClick={() => {
+                                    const next = [...points];
+                                    next.splice(i, 1);
+                                    form.setFieldValue(
+                                      `gps.byRow.${rowKey}`,
+                                      next
+                                    );
+                                  }}
+                                >
+                                  <IconTrash size={16} />
+                                </ActionIcon>
+                              </Group>
+                            ))}
+                          </Stack>
+                        )}
+                      </Stack>
+                    </Group>
                   </Card>
                 </Accordion.Panel>
               </Accordion.Item>
@@ -499,7 +827,6 @@ const ConfirmStep = (props: ConfirmPlantingProps) => {
           })}
         </Accordion>
       )}
-
       <Group justify="space-between">
         <Text fw={500}>Tổng số điểm GPS</Text>
         <Text fw={700} c="green">

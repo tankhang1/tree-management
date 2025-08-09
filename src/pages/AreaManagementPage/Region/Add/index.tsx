@@ -939,21 +939,20 @@ const AreaManagementAddRegionPage = () => {
                   <Accordion.Item value="A01">
                     <Accordion.Control>Lô A01</Accordion.Control>
                     <Accordion.Panel>
-                      <Stack gap="xs">
-                        {/* Phương pháp canh tác */}
-                        {/* <Select
+                      <Stack gap="xs" mt="sm">
+                        <Select
                           label="Phương pháp canh tác"
                           data={["Xen canh", "Truyền thống", "Công nghệ cao"]}
                           radius={4}
-                          value={"Truyền thống"}
+                          value="Truyền thống"
                         />
                         <Select
                           label="Phương pháp tưới tiêu"
                           data={["Tưới nhỏ giọt", "Tưới phun mưa", "Tưới tràn"]}
                           radius={4}
-                        /> */}
+                        />
                         <Group>
-                          <Text fw={"500"} fz={14}>
+                          <Text fw={500} fz={14}>
                             Giống cây trồng
                           </Text>
                           <Button
@@ -965,22 +964,19 @@ const AreaManagementAddRegionPage = () => {
                           </Button>
                         </Group>
                         <SeedCards
-                          selected=""
                           isDelete
+                          selected=""
                           seeds={seedOptions}
                           onSelect={() => {}}
                           isTouchable={false}
                         />
-
-                        {/* Danh sách cây trồng */}
-
                         {/* <TextInput
-                          label="Hạt giống"
-                          leftSection={<IconSearch size={18} />}
-                          radius={4}
-                          placeholder="Tìm kiếm hạt giống"
-                        />
-                        <SeedDetailCards /> */}
+                      label="Hạt giống"
+                      leftSection={<IconSearch size={18} />}
+                      radius={4}
+                      placeholder="Tìm kiếm hạt giống"
+                    />
+                    <SeedDetailCards /> */}
                       </Stack>
                     </Accordion.Panel>
                   </Accordion.Item>
@@ -1307,7 +1303,7 @@ const AreaManagementAddRegionPage = () => {
                                       Cây trồng: {crop.cropName}
                                     </Text>
                                     <Text size="sm" c="dimmed">
-                                      Mã hạt giống: {crop.seedCode}
+                                      Mã cây trồng: {crop.seedCode}
                                     </Text>
                                   </Stack>
                                 </Group>
@@ -1444,7 +1440,7 @@ const AreaManagementAddRegionPage = () => {
                                                   Cây trồng: {crop.cropName}
                                                 </Text>
                                                 <Text size="sm" c="dimmed">
-                                                  Mã hạt giống: {crop.seedCode}
+                                                  Mã cây trồng: {crop.seedCode}
                                                 </Text>
                                               </Stack>
                                             </Group>
@@ -1505,7 +1501,7 @@ const AreaManagementAddRegionPage = () => {
                                             Cây trồng: {crop.cropName}
                                           </Text>
                                           <Text size="sm" c="dimmed">
-                                            Mã hạt giống: {crop.seedCode}
+                                            Mã cây trồng: {crop.seedCode}
                                           </Text>
                                         </Stack>
                                       </Group>
