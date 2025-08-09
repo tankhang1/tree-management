@@ -5,16 +5,15 @@ import {
   Text,
   Title,
   Divider,
-  Badge,
-  Image,
-  Accordion,
+  SimpleGrid,
 } from "@mantine/core";
 import {
   IconMapPin,
-  IconClockHour4,
   IconClipboardText,
   IconLayersSubtract,
 } from "@tabler/icons-react";
+import SeedDetailCards from "../../../../AreaManagementPage/Region/Add/components/SeedDetailCards";
+import GrowthStageCard from "./GrowthStageCard";
 
 const ConfirmStep = () => {
   const data = {
@@ -60,146 +59,141 @@ const ConfirmStep = () => {
     <Stack>
       <Title order={3}>Xác nhận kế hoạch canh tác</Title>
 
-      <Group align="flex-start" grow>
-        <Stack>
-          <Card withBorder>
-            <Stack gap={4}>
-              <Group>
-                <Text fw={500}>Mùa vụ:</Text>
-                <Text>{data.season}</Text>
-              </Group>
-              <Group>
-                <Text fw={500}>Nhóm cây trồng:</Text>
-                <Text>{data.treeGroup}</Text>
-              </Group>
-              <Group>
-                <Text fw={500}>Loại cây trồng:</Text>
-                <Text>{data.treeCategory}</Text>
-              </Group>
-              <Group>
-                <Text fw={500}>Cây trồng:</Text>
-                <Text>{data.crop}</Text>
-              </Group>
-              <Group>
-                <Text fw={500}>Thời gian chu kỳ:</Text>
-                <Text>{data.duration} ngày</Text>
-              </Group>
-            </Stack>
-          </Card>
-          <Card withBorder>
-            <Stack gap={4}>
-              <Group>
-                <IconMapPin size={16} />
-                <Text>{data.zone}</Text>
-              </Group>
-              <Group>
-                <IconLayersSubtract size={16} />
-                <Text>{data.area}</Text>
-              </Group>
-              <Group>
-                <IconClipboardText size={16} />
-                <Text>{data.plot}</Text>
-              </Group>
-            </Stack>
-          </Card>
-        </Stack>
+      <Group grow>
         <Card withBorder>
-          <Group grow gap={4} align="flex-start">
-            <Stack align="start">
-              <Group>
-                <Text fw={500}>Mã cây:</Text>
-                <Text>{data.cropCode}</Text>
-              </Group>
-              <Group>
-                <Text fw={500}>Giống cây:</Text>
-                <Text>{data.cropVariety}</Text>
-              </Group>
-              <Group>
-                <Text fw={500}>Hạt giống:</Text>
-                <Text>{data.cropSeed}</Text>
-              </Group>
-              <Group>
-                <Text fw={500}>Đơn vị thu hoạch:</Text>
-                <Text>{data.harvestUnit}</Text>
-              </Group>
-              <Group align="start">
-                <Text fw={500}>Mô tả:</Text>
-                <Text size="sm" maw={600}>
-                  {data.cropDescription}
-                </Text>
-              </Group>
-            </Stack>
-            <Stack align="start">
-              <Image
-                src={data.cropImage}
-                flex={1}
-                radius="md"
-                alt="Ảnh cây trồng"
-              />
-            </Stack>
-          </Group>
+          <Stack gap={4}>
+            <Group>
+              <Text fw={500}>Kế hoạch:</Text>
+              <Text>Kế hoạch trồng sầu riêng</Text>
+            </Group>
+            <Group>
+              <Text fw={500}>Mùa vụ:</Text>
+              <Text>{data.season}</Text>
+            </Group>
+
+            <Group>
+              <Text fw={500}>Thời gian chu kỳ:</Text>
+              <Text>{data.duration} ngày</Text>
+            </Group>
+          </Stack>
+        </Card>
+        <Card withBorder>
+          <Stack gap={4}>
+            <Group>
+              <IconMapPin size={16} />
+              <Text>{data.zone}</Text>
+            </Group>
+            <Group>
+              <IconLayersSubtract size={16} />
+              <Text>{data.area}</Text>
+            </Group>
+            <Group>
+              <IconClipboardText size={16} />
+              <Text>{data.plot}</Text>
+            </Group>
+          </Stack>
         </Card>
       </Group>
-
+      <Divider label="Danh sách hạt giống" labelPosition="center" my="md" />
+      <SeedDetailCards isTouchable={false} />
       <Divider label="Danh sách giai đoạn" labelPosition="center" my="md" />
 
-      <Accordion multiple variant="separated">
-        {data.stages.map((stage, idx) => (
-          <Accordion.Item value={`stage-${idx}`} key={idx}>
-            <Accordion.Control>
-              <Group>
-                <IconClockHour4 size={16} />
-                <Text fw={600}>
-                  {stage.name} ({stage.duration} ngày)
-                </Text>
-              </Group>
-            </Accordion.Control>
-            <Accordion.Panel>
-              <Stack gap="xs">
-                <Text fw={500}>Tài liệu kỹ thuật:</Text>
-                {stage.documentType === "file" ? (
-                  <Text size="sm">📎 {stage.document}</Text>
-                ) : (
-                  <Text size="sm">📝 {stage.document}</Text>
-                )}
+      <Card withBorder radius={4} shadow="sm" p="md">
+        <Stack>
+          <Text fw={"bold"}>Chu kì 2</Text>
 
-                {stage.materials.length > 0 && (
-                  <>
-                    <Text fw={500}>Vật tư:</Text>
-                    <Stack gap={4}>
-                      {stage.materials.map((m, i) => (
-                        <Badge key={i}>{m}</Badge>
-                      ))}
-                    </Stack>
-                  </>
-                )}
-
-                {stage.equipment.length > 0 && (
-                  <>
-                    <Text fw={500}>Thiết bị:</Text>
-                    <Stack gap={4}>
-                      {stage.equipment.map((e, i) => (
-                        <Badge key={i}>{e}</Badge>
-                      ))}
-                    </Stack>
-                  </>
-                )}
-
-                {stage.pesticides.length > 0 && (
-                  <>
-                    <Text fw={500}>Thuốc BVTV:</Text>
-                    <Stack gap={4}>
-                      {stage.pesticides.map((p, i) => (
-                        <Badge key={i}>{p}</Badge>
-                      ))}
-                    </Stack>
-                  </>
-                )}
-              </Stack>
-            </Accordion.Panel>
-          </Accordion.Item>
-        ))}
-      </Accordion>
+          <SimpleGrid cols={{ base: 1, sm: 2, md: 3 }} spacing="md">
+            <GrowthStageCard
+              stageName="Giai đoạn Nảy mầm"
+              materials={[
+                {
+                  item: "Phân NPK",
+                  quantity: 50,
+                },
+              ]}
+              equipment={[
+                {
+                  item: "Bình tưới",
+                  quantity: 1,
+                },
+              ]}
+              pesticides={[
+                {
+                  item: "Confidor",
+                  quantity: 1,
+                },
+              ]}
+              mode="view"
+            />
+            <GrowthStageCard
+              stageName="Giai đoạn sinh trưởng"
+              materials={[
+                {
+                  item: "Phân NPK",
+                  quantity: 50,
+                },
+              ]}
+              equipment={[
+                {
+                  item: "Bình tưới",
+                  quantity: 1,
+                },
+              ]}
+              pesticides={[
+                {
+                  item: "Confidor",
+                  quantity: 1,
+                },
+              ]}
+              mode="view"
+            />
+            <GrowthStageCard
+              stageName="Giai đoạn sinh trưởng"
+              materials={[
+                {
+                  item: "Phân NPK",
+                  quantity: 50,
+                },
+              ]}
+              equipment={[
+                {
+                  item: "Bình tưới",
+                  quantity: 1,
+                },
+              ]}
+              pesticides={[
+                {
+                  item: "Confidor",
+                  quantity: 1,
+                },
+              ]}
+              mode="view"
+            />
+            <GrowthStageCard
+              stageName="Giai đoạn sinh trưởng"
+              materials={[
+                {
+                  item: "Phân NPK",
+                  quantity: 50,
+                },
+              ]}
+              equipment={[
+                {
+                  item: "Bình tưới",
+                  quantity: 1,
+                },
+              ]}
+              pesticides={[
+                {
+                  item: "Confidor",
+                  quantity: 1,
+                },
+              ]}
+              mode="view"
+            />
+          </SimpleGrid>
+        </Stack>
+      </Card>
     </Stack>
   );
 };

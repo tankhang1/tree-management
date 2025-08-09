@@ -298,7 +298,6 @@ const PlanManagementAssignAddPage = () => {
                           w={100}
                         />
                         <MultiSelect
-                          label="Quy cách"
                           radius={4}
                           placeholder="Quy cách"
                           data={[

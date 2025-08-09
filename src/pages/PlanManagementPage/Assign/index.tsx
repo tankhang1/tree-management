@@ -40,7 +40,7 @@ const assignmentData: Assignment[] = [
     name: "Tưới nước đợt 1",
     startDate: "2025-07-02",
     endDate: "2025-07-03",
-    departments: ["Chăm sóc cây", "Bảo vệ thực vật"],
+    departments: ["Phòng kỹ thuật", "Phòng vận hành"],
     employees: ["Nguyễn Văn A", "Trần Thị B"],
     supervisor: "Phạm Văn Quản",
     creator: "Lê Thị Điều",

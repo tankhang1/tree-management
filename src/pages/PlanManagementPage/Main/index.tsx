@@ -5,7 +5,6 @@ import {
   Group,
   Menu,
   Stack,
-  Text,
   Title,
 } from "@mantine/core";
 import {
@@ -26,6 +25,7 @@ import { PATH } from "../../../constants/path.constants";
 
 type SeasonPlan = {
   id: string;
+  name: string;
   seasonName: string;
   seasonId: string; // ID mùa vụ
   duration: number;
@@ -41,6 +41,7 @@ type SeasonPlan = {
 const seasonPlans: SeasonPlan[] = [
   {
     id: "SP001",
+    name: "Kế hoạch trồng lúa",
     seasonName: "Mùa vụ Xuân 2025",
     seasonId: "MSV-2025",
     duration: 40,
@@ -63,69 +64,23 @@ const PlanManagementMainPage = () => {
     navigate(PATH.PLAN_ADD_MAIN);
   };
   const seasonPlanColumns: MRT_ColumnDef<SeasonPlan>[] = [
-    { accessorKey: "seasonName", header: "Mùa vụ" },
+    {
+      accessorKey: "name",
+      header: "Kế hoạch",
+    },
 
     {
       accessorKey: "duration",
-      header: "Khoảng thời gian diễn ra",
+      header: "Khoảng gian ước tính (ngày)",
       Cell: ({ row }) => `${row.original.duration} ngày`,
     },
     { accessorKey: "zoneName", header: "Vùng trồng" },
     { accessorKey: "areaName", header: "Khu vực" },
     { accessorKey: "plotName", header: "Lô" },
-    { accessorKey: "rowName", header: "Hàng" },
+    { accessorKey: "seasonName", header: "Mùa vụ" },
+
     { accessorKey: "growthStageName", header: "Giai đoạn" },
-    {
-      accessorKey: "materialEstimate",
-      header: "Vật tư dự kiến",
-      size: 200,
-      Cell: ({ row }) => (
-        <Stack gap={"xs"}>
-          {row.original.materialEstimate
-            .trim()
-            .split(",")
-            .map((item, index) => (
-              <Text>
-                {index + 1}: {item}
-              </Text>
-            ))}
-        </Stack>
-      ),
-    },
-    {
-      accessorKey: "equipmentEstimate",
-      header: "Thiết bị dự kiến",
-      size: 160,
-      Cell: ({ row }) => (
-        <Stack gap={"xs"}>
-          {row.original.equipmentEstimate
-            .trim()
-            .split(",")
-            .map((item, index) => (
-              <Text>
-                {index + 1}: {item}
-              </Text>
-            ))}
-        </Stack>
-      ),
-    },
-    {
-      accessorKey: "pesticideEstimate",
-      header: "Thuốc bảo vệ thực vật",
-      size: 200,
-      Cell: ({ row }) => (
-        <Stack gap={"xs"}>
-          {row.original.pesticideEstimate
-            .trim()
-            .split(",")
-            .map((item, index) => (
-              <Text>
-                {index + 1}: {item}
-              </Text>
-            ))}
-        </Stack>
-      ),
-    },
+
     {
       accessorKey: "actions",
       header: "Tuỳ chọn",

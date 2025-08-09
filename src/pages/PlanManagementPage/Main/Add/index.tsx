@@ -11,6 +11,7 @@ import {
   TextInput,
   SimpleGrid,
   Image,
+  SegmentedControl,
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { useState } from "react";
@@ -28,10 +29,9 @@ import AreaCard from "./components/AreaCard";
 import type { LotCardProps } from "./components/LotCard";
 import LotCard from "./components/LotCard";
 import GrowthStageCard from "./components/GrowthStageCard";
-import CropCards from "./components/CropCards";
 import ConfirmStep from "./components/ConfirmStep";
 import Scrollable from "../../../../components/Scrollable";
-import { cropOptions } from "../../../AreaManagementPage/Row/Add";
+import SeedDetailCards from "../../../AreaManagementPage/Region/Add/components/SeedDetailCards";
 const zoneCards: ZoneCardProps[] = [
   {
     code: "VT-001",
@@ -364,11 +364,13 @@ export interface CropOption {
 const PlanManagementMainAddPage = () => {
   const navigate = useNavigate();
   const [active, setActive] = useState(0);
+  const [type, setType] = useState<"region" | "area" | "plot">("region");
   const [selectedZone, setSelectedZone] = useState<string>("");
   const form = useForm({
     initialValues: {
       seasonId: "",
       startDate: null,
+      name: "",
       endDate: null,
       zone: "",
       area: "",
@@ -399,10 +401,9 @@ const PlanManagementMainAddPage = () => {
       </Group>
       <Stepper active={active} onStepClick={setActive} mb="lg">
         <Stepper.Step label="Bước 1" description="Thông tin mùa vụ" />
-        <Stepper.Step label="Bước 2" description="Vùng Trồng" />
-        <Stepper.Step label="Bước 3" description="Thông tin cây trồng" />
-        <Stepper.Step label="Bước 4" description="Phân bổ giai đoạn & vật tư" />
-        <Stepper.Step label="Bước 5" description="Xác nhận" />
+        <Stepper.Step label="Bước 2" description="Thông tin canh tác" />
+        <Stepper.Step label="Bước 3" description="Phân bổ giai đoạn & vật tư" />
+        <Stepper.Step label="Bước 4" description="Xác nhận" />
         <Stepper.Completed>
           <Stack align="center" justify="center" mt="xl">
             <Image
@@ -430,9 +431,15 @@ const PlanManagementMainAddPage = () => {
       <form onSubmit={form.onSubmit((values) => console.log(values))}>
         {active === 0 && (
           <Stack>
+            <TextInput
+              radius={4}
+              label="Kế hoạch"
+              placeholder="Nhập tên kế hoạch"
+              {...form.getInputProps("name")}
+            />
             <Select
               radius={4}
-              label="Chọn mùa vụ"
+              label="Mùa vụ"
               placeholder="Mùa Xuân 2025"
               data={["Mùa Xuân 2025", "Mùa Hè 2025"]}
               leftSection={<IconChristmasBall size={16} />}
@@ -486,7 +493,17 @@ const PlanManagementMainAddPage = () => {
         )}
 
         {active === 1 && (
-          <Stack>
+          <Stack gap={"xs"}>
+            <SegmentedControl
+              value={type}
+              radius={4}
+              onChange={(value) => setType(value as "region" | "area" | "plot")}
+              data={[
+                { label: "Vùng trồng", value: "region" },
+                { label: "Khu vực", value: "area" },
+                { label: "Lô", value: "plot" },
+              ]}
+            />
             <TextInput
               radius={4}
               label="Vùng trồng"
@@ -509,72 +526,66 @@ const PlanManagementMainAddPage = () => {
                 ))}
               </Group>
             </Scrollable>
+            {(type === "area" || type === "plot") && (
+              <Stack gap={"xs"}>
+                <TextInput
+                  radius={4}
+                  label="Khu vực"
+                  placeholder="Tìm kiếm khu vực"
+                  leftSection={<IconMapPin size={16} />}
+                  {...form.getInputProps("area")}
+                />
+                <Scrollable h={250}>
+                  <Group wrap="nowrap" gap="md" align="flex-start">
+                    {areaCards.map((area) => (
+                      <AreaCard
+                        key={area.code}
+                        {...area}
+                        isActive={selectedZone === area.code}
+                        onClick={() => {
+                          form.setFieldValue("area", area.code);
+                          setSelectedZone(area.code);
+                        }}
+                      />
+                    ))}
+                  </Group>
+                </Scrollable>
+              </Stack>
+            )}
+            {type === "plot" && (
+              <Stack gap={"xs"}>
+                <TextInput
+                  radius={4}
+                  label="Lô"
+                  placeholder="Tìm kiếm lô"
+                  leftSection={<IconMapPin size={16} />}
+                  {...form.getInputProps("plot")}
+                />
+                <Scrollable h={250}>
+                  <Group wrap="nowrap" gap="md" p={"xs"}>
+                    {lotCards.map((area) => (
+                      <LotCard
+                        key={area.code}
+                        isActive={form.values.plot === area.code}
+                        {...area}
+                        onClick={() => form.setFieldValue("plot", area.code)}
+                      />
+                    ))}
+                  </Group>
+                </Scrollable>
+              </Stack>
+            )}
             <TextInput
+              label="Giống cây trồng"
+              leftSection={<IconSearch size={18} />}
               radius={4}
-              label="Khu vực"
-              placeholder="Tìm kiếm khu vực"
-              leftSection={<IconMapPin size={16} />}
-              {...form.getInputProps("area")}
+              placeholder="Tìm kiếm giống cây trồng"
             />
-            <Scrollable h={250}>
-              <Group wrap="nowrap" gap="md" align="flex-start">
-                {areaCards.map((area) => (
-                  <AreaCard
-                    key={area.code}
-                    {...area}
-                    isActive={selectedZone === area.code}
-                    onClick={() => {
-                      form.setFieldValue("area", area.code);
-                      setSelectedZone(area.code);
-                    }}
-                  />
-                ))}
-              </Group>
-            </Scrollable>
-            <TextInput
-              radius={4}
-              label="Lô"
-              placeholder="Tìm kiếm lô"
-              leftSection={<IconMapPin size={16} />}
-              {...form.getInputProps("plot")}
-            />
-            <Scrollable h={250}>
-              <Group wrap="nowrap" gap="md" p={"xs"}>
-                {lotCards.map((area) => (
-                  <LotCard
-                    key={area.code}
-                    isActive={form.values.plot === area.code}
-                    {...area}
-                    onClick={() => form.setFieldValue("plot", area.code)}
-                  />
-                ))}
-              </Group>
-            </Scrollable>
+            <SeedDetailCards isMultiple />
           </Stack>
         )}
+
         {active === 2 && (
-          <Stack gap={"xs"}>
-            <Text fw={500} fz={15}>
-              Loại cây trồng
-            </Text>
-            <TextInput
-              placeholder="Tìm kiếm loại cây"
-              radius={4}
-              leftSection={<IconSearch size={18} />}
-            />
-            <CropCards selected="" plants={cropOptions} onSelect={() => {}} />
-            <Text fw={500} fz={15}>
-              Cây trồng
-            </Text>
-            <TextInput
-              placeholder="Tìm kiếm cây trồng"
-              radius={4}
-              leftSection={<IconSearch size={18} />}
-            />
-            <CropCards selected="1" plants={cropOptions} onSelect={() => {}} />
-          </Stack>
-        )}
-        {active === 3 && (
           <Stack>
             {/* <Stack gap={"xs"}>
               <Select
@@ -1056,8 +1067,8 @@ const PlanManagementMainAddPage = () => {
             </Card>
           </Stack>
         )}
-        {active === 4 && <ConfirmStep />}
-        {active < 5 && (
+        {active === 3 && <ConfirmStep />}
+        {active < 4 && (
           <Group justify="space-between" mt="xl">
             <Button
               radius={4}
@@ -1067,7 +1078,7 @@ const PlanManagementMainAddPage = () => {
             >
               Quay lại
             </Button>
-            {active < 4 ? (
+            {active < 3 ? (
               <Button radius={4} onClick={nextStep}>
                 Tiếp theo
               </Button>
