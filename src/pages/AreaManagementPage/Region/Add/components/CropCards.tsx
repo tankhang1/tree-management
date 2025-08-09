@@ -40,6 +40,7 @@ const CropCards: React.FC<PlantCardSelectorProps> = ({
             h={350}
             key={plant.code}
             withBorder
+            p={0}
             radius="md"
             style={{
               cursor: "pointer",
@@ -57,38 +58,35 @@ const CropCards: React.FC<PlantCardSelectorProps> = ({
             onClick={() => onSelect(plant.code)}
           >
             <Stack gap="xs">
-              <Image
-                src={plant.image}
-                height={140}
-                radius="md"
-                alt={plant.name}
-              />
-              <Group justify="space-between">
-                <Text fw={500}>{plant.name}</Text>
-                <Group gap={"xs"}>
-                  <Badge color="gray">{plant.code}</Badge>
-                  {isMultiple && (
-                    <Checkbox
-                      checked={selectedId.includes(plant.code)}
-                      radius={4}
-                    />
-                  )}
+              <Image src={plant.image} height={140} alt={plant.name} />
+              <Stack gap={"xs"} p={"xs"}>
+                <Group justify="space-between">
+                  <Text fw={500}>{plant.name}</Text>
+                  <Group gap={"xs"}>
+                    <Badge color="gray">{plant.code}</Badge>
+                    {isMultiple && (
+                      <Checkbox
+                        checked={selectedId.includes(plant.code)}
+                        radius={4}
+                      />
+                    )}
+                  </Group>
                 </Group>
-              </Group>
-              <Text size="sm">
-                <strong>Hạt giống:</strong> {plant.seed}
-              </Text>
-              <Text size="sm">
-                <strong>Hình thức thu hoạch:</strong> {plant.harvestMethod}
-              </Text>
-              <Text size="sm">
-                <strong>Chu kỳ sinh trưởng:</strong> {plant.growthCycle}
-              </Text>
-              {plant.note && (
-                <Text size="sm" c="dimmed">
-                  <strong>Ghi chú:</strong> {plant.note}
+                <Text size="sm">
+                  <strong>Hạt giống:</strong> {plant.seed}
                 </Text>
-              )}
+                <Text size="sm">
+                  <strong>Hình thức thu hoạch:</strong> {plant.harvestMethod}
+                </Text>
+                <Text size="sm">
+                  <strong>Chu kỳ sinh trưởng:</strong> {plant.growthCycle}
+                </Text>
+                {plant.note && (
+                  <Text size="sm" c="dimmed">
+                    <strong>Ghi chú:</strong> {plant.note}
+                  </Text>
+                )}
+              </Stack>
             </Stack>
           </Card>
         ))}

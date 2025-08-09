@@ -1263,7 +1263,7 @@ const AreaManagementAddRegionPage = () => {
                   <Title order={5} mb="xs">
                     🌱 Danh sách cây trồng
                   </Title>
-                  <Scrollable h={350}>
+                  <Scrollable h={170}>
                     <Group wrap="nowrap" gap="xs" align="flex-start">
                       {areaOptions.map((area) => {
                         const plotsInArea = form.values.plots.filter(
@@ -1273,41 +1273,43 @@ const AreaManagementAddRegionPage = () => {
                           <Group wrap="nowrap" gap="xs">
                             {plot.crops.map((crop, i) => (
                               <Card
-                                w={300}
-                                h={350}
+                                w={400}
+                                h={170}
                                 key={i}
                                 withBorder
                                 radius="sm"
                                 shadow="xs"
                                 p={0}
                               >
-                                <Image
-                                  src={crop.image}
-                                  alt={crop.cropName}
-                                  w={"100%"}
-                                  h={150}
-                                  fit="cover"
-                                />
-                                <Stack gap="xs" mt="sm" px={"xs"}>
-                                  <Group justify="space-between">
-                                    <Title order={5}>{crop.cultivar}</Title>
-                                    <Group gap={"xs"}>
-                                      <Badge color="gray" variant="light">
-                                        {crop.cropCode}
-                                      </Badge>
+                                <Group align="flex-start">
+                                  <Image
+                                    src={crop.image}
+                                    alt={crop.cropName}
+                                    w={"40%"}
+                                    h={170}
+                                    fit="cover"
+                                  />
+                                  <Stack flex={1} gap="xs" p={"xs"}>
+                                    <Group justify="space-between">
+                                      <Title order={5}>{crop.cultivar}</Title>
+                                      <Group gap={"xs"}>
+                                        <Badge color="gray" variant="light">
+                                          {crop.cropCode}
+                                        </Badge>
+                                      </Group>
                                     </Group>
-                                  </Group>
 
-                                  <Text size="sm" c="dimmed">
-                                    Cây trồng: {crop.cropName}
-                                  </Text>
-                                  <Text size="sm" c="dimmed">
-                                    Mã hạt giống: {crop.seedCode}
-                                  </Text>
-                                  <Text size="sm" c="dimmed">
-                                    Hạt giống: {crop.seedName}
-                                  </Text>
-                                </Stack>
+                                    <Text size="sm" c="dimmed">
+                                      Cây trồng: {crop.cropName}
+                                    </Text>
+                                    <Text size="sm" c="dimmed">
+                                      Mã hạt giống: {crop.seedCode}
+                                    </Text>
+                                    <Text size="sm" c="dimmed">
+                                      Hạt giống: {crop.seedName}
+                                    </Text>
+                                  </Stack>
+                                </Group>
                               </Card>
                             ))}
                           </Group>
@@ -1404,49 +1406,50 @@ const AreaManagementAddRegionPage = () => {
                                     }}
                                   >
                                     {plot.crops.length > 0 ? (
-                                      <SimpleGrid cols={2} spacing="sm">
+                                      <SimpleGrid cols={1} spacing="sm">
                                         {plot.crops.map((crop, i) => (
                                           <Card
-                                            w={"100%"}
-                                            h={350}
                                             key={i}
                                             withBorder
                                             radius="sm"
                                             shadow="xs"
+                                            w={"100%"}
                                             p={0}
                                           >
-                                            <Image
-                                              src={crop.image}
-                                              alt={crop.cropName}
-                                              w={"100%"}
-                                              h={150}
-                                              fit="cover"
-                                            />
-                                            <Stack gap="xs" mt="sm" px={"xs"}>
-                                              <Group justify="space-between">
-                                                <Title order={5}>
-                                                  {crop.cultivar}
-                                                </Title>
-                                                <Group gap={"xs"}>
-                                                  <Badge
-                                                    color="gray"
-                                                    variant="light"
-                                                  >
-                                                    {crop.cropCode}
-                                                  </Badge>
+                                            <Group align="flex-start">
+                                              <Image
+                                                src={crop.image}
+                                                alt={crop.cropName}
+                                                w={"40%"}
+                                                h={150}
+                                                fit="cover"
+                                              />
+                                              <Stack flex={1} gap="xs" p={"xs"}>
+                                                <Group justify="space-between">
+                                                  <Title order={5}>
+                                                    {crop.cultivar}
+                                                  </Title>
+                                                  <Group gap={"xs"}>
+                                                    <Badge
+                                                      color="gray"
+                                                      variant="light"
+                                                    >
+                                                      {crop.cropCode}
+                                                    </Badge>
+                                                  </Group>
                                                 </Group>
-                                              </Group>
 
-                                              <Text size="sm" c="dimmed">
-                                                Cây trồng: {crop.cropName}
-                                              </Text>
-                                              <Text size="sm" c="dimmed">
-                                                Mã hạt giống: {crop.seedCode}
-                                              </Text>
-                                              <Text size="sm" c="dimmed">
-                                                Hạt giống: {crop.seedName}
-                                              </Text>
-                                            </Stack>
+                                                <Text size="sm" c="dimmed">
+                                                  Cây trồng: {crop.cropName}
+                                                </Text>
+                                                <Text size="sm" c="dimmed">
+                                                  Mã hạt giống: {crop.seedCode}
+                                                </Text>
+                                                <Text size="sm" c="dimmed">
+                                                  Hạt giống: {crop.seedName}
+                                                </Text>
+                                              </Stack>
+                                            </Group>
                                           </Card>
                                         ))}
                                       </SimpleGrid>
@@ -1463,49 +1466,54 @@ const AreaManagementAddRegionPage = () => {
                           </Scrollable>
                         )}
                         {type === "area" && (
-                          <Scrollable h={350}>
+                          <Scrollable h={170}>
                             <Group wrap="nowrap" gap="xs" align="flex-start">
                               {plotsInArea.map((plot) => (
                                 <Group wrap="nowrap" gap="xs">
                                   {plot.crops.map((crop, i) => (
                                     <Card
-                                      w={300}
-                                      h={350}
+                                      w={420}
+                                      h={170}
                                       key={i}
                                       withBorder
                                       radius="sm"
                                       shadow="xs"
                                       p={0}
                                     >
-                                      <Image
-                                        src={crop.image}
-                                        alt={crop.cropName}
-                                        w={"100%"}
-                                        h={150}
-                                        fit="cover"
-                                      />
-                                      <Stack gap="xs" mt="sm" px={"xs"}>
-                                        <Group justify="space-between">
-                                          <Title order={5}>
-                                            {crop.cultivar}
-                                          </Title>
-                                          <Group gap={"xs"}>
-                                            <Badge color="gray" variant="light">
-                                              {crop.cropCode}
-                                            </Badge>
+                                      <Group align="flex-start">
+                                        <Image
+                                          src={crop.image}
+                                          alt={crop.cropName}
+                                          w={"40%"}
+                                          h={170}
+                                          fit="cover"
+                                        />
+                                        <Stack flex={1} gap="xs" p={"xs"}>
+                                          <Group justify="space-between">
+                                            <Title order={5}>
+                                              {crop.cultivar}
+                                            </Title>
+                                            <Group gap={"xs"}>
+                                              <Badge
+                                                color="gray"
+                                                variant="light"
+                                              >
+                                                {crop.cropCode}
+                                              </Badge>
+                                            </Group>
                                           </Group>
-                                        </Group>
 
-                                        <Text size="sm" c="dimmed">
-                                          Cây trồng: {crop.cropName}
-                                        </Text>
-                                        <Text size="sm" c="dimmed">
-                                          Mã hạt giống: {crop.seedCode}
-                                        </Text>
-                                        <Text size="sm" c="dimmed">
-                                          Hạt giống: {crop.seedName}
-                                        </Text>
-                                      </Stack>
+                                          <Text size="sm" c="dimmed">
+                                            Cây trồng: {crop.cropName}
+                                          </Text>
+                                          <Text size="sm" c="dimmed">
+                                            Mã hạt giống: {crop.seedCode}
+                                          </Text>
+                                          <Text size="sm" c="dimmed">
+                                            Hạt giống: {crop.seedName}
+                                          </Text>
+                                        </Stack>
+                                      </Group>
                                     </Card>
                                   ))}
                                 </Group>

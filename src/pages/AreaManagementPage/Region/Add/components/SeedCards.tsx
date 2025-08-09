@@ -36,12 +36,12 @@ const SeedCards: React.FC<SeedCardSelectorProps> = ({
     }
   };
   return (
-    <Scrollable h={300}>
+    <Scrollable h={100}>
       <Group gap="md" wrap="nowrap" align="flex-start" p={"xs"}>
         {seeds.map((seed) => (
           <Card
-            w={300}
-            h={300}
+            w={400}
+            h={100}
             key={seed.code}
             p={0}
             withBorder
@@ -58,14 +58,15 @@ const SeedCards: React.FC<SeedCardSelectorProps> = ({
             onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
             onClick={() => onSelect(seed.code)}
           >
-            <Stack gap="xs">
+            <Group gap="xs" align="flex-start">
               <Image
                 src={seed.image}
                 alt={seed.seedName}
-                height={200}
+                height={100}
+                w={"40%"}
                 fit="cover"
               />
-              <Stack gap={"xs"} p={"xs"}>
+              <Stack flex={1} gap={"xs"} p={"xs"}>
                 <Group justify="space-between">
                   <Text fw={500}>{seed.seedName}</Text>
                   <Group gap={"xs"}>
@@ -85,7 +86,7 @@ const SeedCards: React.FC<SeedCardSelectorProps> = ({
               {/* <Text size="sm" c="dimmed">
                 {seed.description}
               </Text> */}
-            </Stack>
+            </Group>
           </Card>
         ))}
       </Group>
