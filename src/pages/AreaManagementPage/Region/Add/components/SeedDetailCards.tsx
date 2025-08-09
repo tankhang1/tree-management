@@ -5,12 +5,17 @@ import { useState } from "react";
 
 type SeedDetailCardsProps = {
   isMultiple?: boolean;
+  isTouchable?: boolean;
 };
 
-const SeedDetailCards = ({ isMultiple }: SeedDetailCardsProps) => {
+const SeedDetailCards = ({
+  isMultiple,
+  isTouchable = true,
+}: SeedDetailCardsProps) => {
   const [selectedSeeds, setSelectedSeeds] = useState<string[]>([]);
 
   const onSelectSeed = (seedCode: string) => {
+    if (!isTouchable) return;
     if (!isMultiple) {
       setSelectedSeeds([seedCode]);
       return;

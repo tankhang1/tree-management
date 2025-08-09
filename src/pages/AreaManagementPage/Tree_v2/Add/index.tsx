@@ -17,6 +17,7 @@ import {
   Accordion,
   ScrollAreaAutosize,
   Badge,
+  Select,
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import {
@@ -107,7 +108,7 @@ export const samplePlots = [
     seeds: [
       {
         code: "SDR-RI6",
-        seedName: "Sầu riêng Ri6",
+        seedName: "Sầu riêng Ri6 - SR-RI6",
         cropName: "Sầu riêng",
         image:
           "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT_lo7BwRUzpkCiruaT48T5-8HZ8_7_sNxH0w&s",
@@ -115,7 +116,7 @@ export const samplePlots = [
       },
       {
         code: "SDR-RI6-2",
-        seedName: "Sầu riêng Ri6 - Loại 2",
+        seedName: "Sầu riêng Ri6 - SR-RI6-2",
         cropName: "Sầu riêng",
         image:
           "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT_lo7BwRUzpkCiruaT48T5-8HZ8_7_sNxH0w&s",
@@ -432,15 +433,14 @@ const AreaManagementTreeAddv2Page = () => {
                       </Stack>
                     </Radio.Group>
                   </Stack>
-                  {form.values.allocation.type === "plot" && (
-                    <Card withBorder radius={4} shadow="sm" p="md" flex={1}>
-                      <Title order={6} mb="xs">
-                        Danh sách hạt giống
-                      </Title>
-                      <SeedDetailCards isMultiple />
-                    </Card>
-                  )}
-                  {form.values.allocation.type === "row" && (
+                  <Card withBorder radius={4} shadow="sm" p="md" flex={1}>
+                    <Title order={6} mb="xs">
+                      Danh sách hạt giống
+                    </Title>
+                    <SeedDetailCards isTouchable={false} />
+                  </Card>
+
+                  {/* {form.values.allocation.type === "row" && (
                     <Card withBorder radius={4} shadow="sm" p="md" flex={1}>
                       <Group justify="space-between" align="center">
                         <Title order={6} mb="xs">
@@ -482,7 +482,7 @@ const AreaManagementTreeAddv2Page = () => {
                         </Card>
                       </Group>
                     </Card>
-                  )}
+                  )} */}
                 </Group>
 
                 {form.values.allocation.type === "plot" && (
@@ -490,9 +490,22 @@ const AreaManagementTreeAddv2Page = () => {
                     {/* Nhập số cây theo lô */}
                     <Divider
                       my="sm"
-                      label="Nhập số cây theo lô"
+                      label="Danh sách cây trồng theo lô"
                       labelPosition="center"
                     />
+                    <Stack gap={0}>
+                      <Group align="center">
+                        <Title order={6} mb="xs">
+                          Danh sách cây trồng theo lô
+                        </Title>
+                        <Button radius={4} variant="light">
+                          Thêm mới
+                        </Button>
+                      </Group>
+                      <Text c="dimmed" fz="sm">
+                        Chọn lô để xem danh sách cây trồng đã phân bổ
+                      </Text>
+                    </Stack>
                     <Group gap="xs">
                       {form.values.allocation.selectedPlots[0].seeds.map(
                         (p) => (
@@ -503,15 +516,15 @@ const AreaManagementTreeAddv2Page = () => {
                             miw={250}
                             key={p.code}
                           >
-                            <Stack gap="xs" key={p.code}>
-                              <Stack gap={2}>
-                                <Text fw={600}>
-                                  {p.seedName} ({p.code})
-                                </Text>
-                                <Text c="dimmed" fz="sm">
-                                  {p.cropName}
-                                </Text>
-                              </Stack>
+                            <Stack gap="xs" key={p.code} mt={"md"}>
+                              <Select
+                                radius={4}
+                                label="Hạt giống"
+                                data={samplePlots[0].seeds.map((seed) => ({
+                                  value: seed.code,
+                                  label: seed.seedName,
+                                }))}
+                              />
                               <NumberInput
                                 label="Số cây"
                                 min={0}
@@ -519,6 +532,16 @@ const AreaManagementTreeAddv2Page = () => {
                                 value={0}
                                 w={220}
                               />
+                              <ActionIcon
+                                pos={"absolute"}
+                                top={10}
+                                right={10}
+                                variant="light"
+                                radius={4}
+                                color="red"
+                              >
+                                <IconTrash size={16} />
+                              </ActionIcon>
                             </Stack>
                           </Card>
                         )
@@ -526,7 +549,7 @@ const AreaManagementTreeAddv2Page = () => {
                     </Group>
 
                     {/* Tổng theo lô */}
-                    <Group justify="space-between" mt="sm">
+                    <Group mt="sm">
                       <Text fw={500}>Tổng số cây</Text>
                       <Text fw={700} c="green">
                         {form.values.allocation.selectedPlots
@@ -541,7 +564,12 @@ const AreaManagementTreeAddv2Page = () => {
               {/* ====== THEO HÀNG ====== */}
               {form.values.allocation.type === "row" && (
                 <Stack>
-                  <Title order={6}>Danh sách hàng đã chọn</Title>
+                  <Group align="center">
+                    <Title order={6}>Danh sách cây trồng theo hàng</Title>
+                    <Button radius={4} variant="light">
+                      Thêm mới
+                    </Button>
+                  </Group>
                   <Accordion variant="contained" multiple radius={4}>
                     <Accordion.Item value="row-1">
                       <Accordion.Control>
@@ -554,18 +582,60 @@ const AreaManagementTreeAddv2Page = () => {
                       </Accordion.Control>
                       <Accordion.Panel>
                         <Stack gap={"xs"}>
-                          <Title order={6} mb="xs">
+                          <Title order={6} mt="xs">
                             Danh sách cây trồng
                           </Title>
                           <Card withBorder radius={4} p="md">
-                            <Stack gap={"xs"}>
-                              <SeedDetailCards isMultiple />
-                              <NumberInput radius={4} label="Số lượng cây" />
-                            </Stack>
+                            <Group align="flex-end" gap={"xs"}>
+                              <Select
+                                radius={4}
+                                label="Hạt giống"
+                                data={samplePlots[0].seeds.map((seed) => ({
+                                  value: seed.code,
+                                  label: seed.seedName,
+                                }))}
+                                flex={1}
+                              />
+                              <NumberInput
+                                flex={1}
+                                radius={4}
+                                label="Số lượng cây"
+                              />
+                              <Button
+                                variant="light"
+                                color="red"
+                                radius={4}
+                                mt="md"
+                                w={100}
+                              >
+                                Xóa
+                              </Button>
+                            </Group>
+                            <Group align="flex-end" gap={"xs"}>
+                              <Select
+                                radius={4}
+                                label="Hạt giống"
+                                data={samplePlots[0].seeds.map((seed) => ({
+                                  value: seed.code,
+                                  label: seed.seedName,
+                                }))}
+                                flex={1}
+                              />
+                              <NumberInput
+                                flex={1}
+                                radius={4}
+                                label="Số lượng cây"
+                              />
+                              <Button
+                                w={100}
+                                variant="outline"
+                                radius={4}
+                                mt="md"
+                              >
+                                Thêm mới
+                              </Button>
+                            </Group>
                           </Card>
-                          <Button variant="outline" radius={4} mt="md">
-                            Thêm mới
-                          </Button>
                         </Stack>
                       </Accordion.Panel>
                     </Accordion.Item>
@@ -635,6 +705,31 @@ const AreaManagementTreeAddv2Page = () => {
                           >
                             {/* Form nhập 1 điểm rồi Thêm */}
                             <Group align="flex-end">
+                              <Select
+                                label="Hạt giống"
+                                placeholder="Chọn hạt giống"
+                                radius={4}
+                                data={p.seeds.map((seed) => ({
+                                  value: seed.code,
+                                  label: seed.seedName,
+                                }))}
+                                disabled
+                                value={"SDR-RI6"}
+                                onChange={(v) => {
+                                  form.setFieldValue("gps.inputBuffer", {
+                                    ...form.values.gps.inputBuffer,
+                                    byPlot: {
+                                      ...(form.values.gps.inputBuffer?.byPlot ??
+                                        {}),
+                                      [p.id]: {
+                                        ...buf,
+                                        seedCode: v ?? "",
+                                      },
+                                    },
+                                  });
+                                }}
+                                flex={1}
+                              />
                               <TextInput
                                 label="Mã cây"
                                 placeholder="T001"
@@ -815,6 +910,18 @@ const AreaManagementTreeAddv2Page = () => {
                             style={{ position: "relative", zIndex: 1 }}
                           >
                             <Group align="flex-end">
+                              <Select
+                                label="Hạt giống"
+                                placeholder="Chọn hạt giống"
+                                radius={4}
+                                value={"SDR-RI6"}
+                                disabled
+                                data={samplePlots[0].seeds.map((seed) => ({
+                                  value: seed.code,
+                                  label: seed.seedName,
+                                }))}
+                                flex={1}
+                              />
                               <TextInput
                                 label="Mã cây"
                                 placeholder="R1-001"
