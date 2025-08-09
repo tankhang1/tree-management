@@ -24,7 +24,7 @@ import {
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { IconArrowLeft, IconSearch, IconUser } from "@tabler/icons-react";
-import { useState } from "react";
+import { memo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import RegionCardSelector from "./components/RegionCards";
 import CropCards from "./components/CropCards";
@@ -34,7 +34,6 @@ import { useDisclosure } from "@mantine/hooks";
 import { EmployeeCardList } from "../../../HRManagementPage/Team/Add/components/EmployeeCardList";
 import { areaOptions, cropOptions, seedOptions } from "../../Row/Add";
 import Scrollable from "../../../../components/Scrollable";
-import SeedDetailCards from "./components/SeedDetailCards";
 export interface AreaOption {
   code: string;
   name: string;
@@ -1705,4 +1704,4 @@ const AreaManagementAddRegionPage = () => {
   );
 };
 
-export default AreaManagementAddRegionPage;
+export default memo(AreaManagementAddRegionPage);

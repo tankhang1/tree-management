@@ -14,7 +14,7 @@ import {
 import { DatePickerInput } from "@mantine/dates";
 import { MapContainer, Marker, Polyline, TileLayer } from "react-leaflet";
 import L from "leaflet";
-import { IconPlus, IconTrash } from "@tabler/icons-react";
+import { IconTrash } from "@tabler/icons-react";
 import { useMemo } from "react";
 import { useForm } from "@mantine/form";
 import { sampleGpsData, samplePlots, sampleRows } from "..";

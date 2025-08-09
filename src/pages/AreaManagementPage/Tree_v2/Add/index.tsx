@@ -26,7 +26,7 @@ import {
   IconSearch,
   IconTrash,
 } from "@tabler/icons-react";
-import { useState } from "react";
+import { memo, useState } from "react";
 import { MapContainer, Marker, Polygon, TileLayer } from "react-leaflet";
 import { useNavigate } from "react-router-dom";
 import ConfirmStep from "./components/ConfirmStep";
@@ -232,9 +232,6 @@ const sampleGpsDataRow = {
   },
 };
 const AreaManagementTreeAddv2Page = () => {
-  const [selectedCrop, setSelectedCrop] = useState<string>(
-    cropGroups[0].cropName
-  );
   const navigate = useNavigate();
   const [openedTreeList, setOpenedTreeList] = useState(false);
   const [active, setActive] = useState(0);
@@ -1279,4 +1276,4 @@ const AreaManagementTreeAddv2Page = () => {
   );
 };
 
-export default AreaManagementTreeAddv2Page;
+export default memo(AreaManagementTreeAddv2Page);
