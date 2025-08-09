@@ -6,6 +6,7 @@ import {
   Image,
   Badge,
   Checkbox,
+  Button,
 } from "@mantine/core";
 import type { SeedOption } from "..";
 import Scrollable from "../../../../../components/Scrollable";
@@ -17,11 +18,13 @@ interface SeedCardSelectorProps {
   onSelect: (code: string) => void;
   isMultiple?: boolean;
   isTouchable?: boolean;
+  isDelete?: boolean;
 }
 
 const SeedCards: React.FC<SeedCardSelectorProps> = ({
   seeds,
   isMultiple = false,
+  isDelete = false,
   isTouchable = true,
 }) => {
   const [selected, setSelected] = useState<string[]>([]);
@@ -86,6 +89,18 @@ const SeedCards: React.FC<SeedCardSelectorProps> = ({
               {/* <Text size="sm" c="dimmed">
                 {seed.description}
               </Text> */}
+              {isDelete && (
+                <Button
+                  pos={"absolute"}
+                  bottom={10}
+                  right={10}
+                  color="red"
+                  variant="light"
+                  radius={4}
+                >
+                  Xóa
+                </Button>
+              )}
             </Group>
           </Card>
         ))}

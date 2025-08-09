@@ -942,7 +942,7 @@ const AreaManagementAddRegionPage = () => {
                     <Accordion.Panel>
                       <Stack gap="xs">
                         {/* Phương pháp canh tác */}
-                        <Select
+                        {/* <Select
                           label="Phương pháp canh tác"
                           data={["Xen canh", "Truyền thống", "Công nghệ cao"]}
                           radius={4}
@@ -952,7 +952,7 @@ const AreaManagementAddRegionPage = () => {
                           label="Phương pháp tưới tiêu"
                           data={["Tưới nhỏ giọt", "Tưới phun mưa", "Tưới tràn"]}
                           radius={4}
-                        />
+                        /> */}
                         <Group>
                           <Text fw={"500"} fz={14}>
                             Giống cây trồng
@@ -962,11 +962,12 @@ const AreaManagementAddRegionPage = () => {
                             variant="outline"
                             onClick={() => setOpenedFilterTree(true)}
                           >
-                            Tìm kiếm
+                            Thêm mới
                           </Button>
                         </Group>
                         <SeedCards
                           selected=""
+                          isDelete
                           seeds={seedOptions}
                           onSelect={() => {}}
                           isTouchable={false}
@@ -974,13 +975,13 @@ const AreaManagementAddRegionPage = () => {
 
                         {/* Danh sách cây trồng */}
 
-                        <TextInput
+                        {/* <TextInput
                           label="Hạt giống"
                           leftSection={<IconSearch size={18} />}
                           radius={4}
                           placeholder="Tìm kiếm hạt giống"
                         />
-                        <SeedDetailCards />
+                        <SeedDetailCards /> */}
                       </Stack>
                     </Accordion.Panel>
                   </Accordion.Item>
@@ -1030,24 +1031,25 @@ const AreaManagementAddRegionPage = () => {
                                   setOpenedFilterMultiple(true);
                                 }}
                               >
-                                Tìm kiếm
+                                Thêm mới
                               </Button>
                             </Group>
                             <SeedCards
                               selected=""
+                              isDelete
                               seeds={seedOptions}
                               onSelect={() => {}}
                               isTouchable={false}
                             />
                             {/* Danh sách cây trồng */}
 
-                            <TextInput
+                            {/* <TextInput
                               label="Hạt giống"
                               leftSection={<IconSearch size={18} />}
                               radius={4}
                               placeholder="Tìm kiếm hạt giống"
                             />
-                            <SeedDetailCards isMultiple={true} />
+                            <SeedDetailCards isMultiple={true} /> */}
                           </Stack>
                         </Card>
                       </Stack>
@@ -1093,22 +1095,23 @@ const AreaManagementAddRegionPage = () => {
                         variant="outline"
                         onClick={() => setOpenedFilterTree(true)}
                       >
-                        Tìm kiếm
+                        Thêm mới
                       </Button>
                     </Group>
                     <SeedCards
+                      isDelete
                       selected=""
                       seeds={seedOptions}
                       onSelect={() => {}}
                       isTouchable={false}
                     />
-                    <TextInput
+                    {/* <TextInput
                       label="Hạt giống"
                       leftSection={<IconSearch size={18} />}
                       radius={4}
                       placeholder="Tìm kiếm hạt giống"
                     />
-                    <SeedDetailCards />
+                    <SeedDetailCards /> */}
                   </Stack>
                 </Accordion.Panel>
               </Accordion.Item>
@@ -1141,22 +1144,23 @@ const AreaManagementAddRegionPage = () => {
                         variant="outline"
                         onClick={() => setOpenedFilterTree(true)}
                       >
-                        Tìm kiếm
+                        Thêm mới
                       </Button>
                     </Group>
                     <SeedCards
                       selected=""
                       seeds={seedOptions}
                       onSelect={() => {}}
+                      isDelete
                       isTouchable={false}
                     />
-                    <TextInput
+                    {/* <TextInput
                       label="Hạt giống"
                       leftSection={<IconSearch size={18} />}
                       radius={4}
                       placeholder="Tìm kiếm hạt giống"
                     />
-                    <SeedDetailCards />
+                    <SeedDetailCards /> */}
                   </Stack>
                 </Accordion.Panel>
               </Accordion.Item>
@@ -1188,25 +1192,26 @@ const AreaManagementAddRegionPage = () => {
                     variant="outline"
                     onClick={() => setOpenedFilterTree(true)}
                   >
-                    Tìm kiếm
+                    Thêm mới
                   </Button>
                 </Group>
                 <SeedCards
                   selected=""
                   seeds={seedOptions}
                   onSelect={() => {}}
+                  isDelete
                   isTouchable={false}
                 />
 
                 {/* Danh sách cây trồng */}
-
+                {/* 
                 <TextInput
                   label="Hạt giống"
                   leftSection={<IconSearch size={18} />}
                   radius={4}
                   placeholder="Tìm kiếm hạt giống"
                 />
-                <SeedDetailCards />
+                <SeedDetailCards /> */}
               </Stack>
             </Card>
           </Stack>
@@ -1304,9 +1309,6 @@ const AreaManagementAddRegionPage = () => {
                                     </Text>
                                     <Text size="sm" c="dimmed">
                                       Mã hạt giống: {crop.seedCode}
-                                    </Text>
-                                    <Text size="sm" c="dimmed">
-                                      Hạt giống: {crop.seedName}
                                     </Text>
                                   </Stack>
                                 </Group>
@@ -1445,9 +1447,6 @@ const AreaManagementAddRegionPage = () => {
                                                 <Text size="sm" c="dimmed">
                                                   Mã hạt giống: {crop.seedCode}
                                                 </Text>
-                                                <Text size="sm" c="dimmed">
-                                                  Hạt giống: {crop.seedName}
-                                                </Text>
                                               </Stack>
                                             </Group>
                                           </Card>
@@ -1508,9 +1507,6 @@ const AreaManagementAddRegionPage = () => {
                                           </Text>
                                           <Text size="sm" c="dimmed">
                                             Mã hạt giống: {crop.seedCode}
-                                          </Text>
-                                          <Text size="sm" c="dimmed">
-                                            Hạt giống: {crop.seedName}
                                           </Text>
                                         </Stack>
                                       </Group>
