@@ -6,9 +6,11 @@ import {
   Image,
   Badge,
   Checkbox,
+  ActionIcon,
 } from "@mantine/core";
 import Scrollable from "../../../../../components/Scrollable";
 import { useState } from "react";
+import { IconTrash } from "@tabler/icons-react";
 
 interface SeedOption {
   code: string;
@@ -22,15 +24,20 @@ interface SeedCardSelectorProps {
   seeds: SeedOption[];
   selected: string;
   isCheckbox?: boolean;
+  isTouchable?: boolean;
+  isDelete?: boolean;
   onSelect: (code: string) => void;
 }
 
 const SeedCards: React.FC<SeedCardSelectorProps> = ({
   seeds,
+  isTouchable = true,
   isCheckbox = true,
+  isDelete = false,
 }) => {
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
   const onSelect = (code: string) => {
+    if (!isTouchable) return;
     setSelectedIds((prev) =>
       prev.includes(code) ? prev.filter((id) => id !== code) : [...prev, code]
     );
@@ -85,6 +92,18 @@ const SeedCards: React.FC<SeedCardSelectorProps> = ({
               <Text size="sm" c="dimmed">
                 {seed.description}
               </Text>
+              {isDelete && (
+                <ActionIcon
+                  pos={"absolute"}
+                  right={10}
+                  bottom={10}
+                  color="red"
+                  variant="light"
+                  radius={4}
+                >
+                  <IconTrash size={16} />
+                </ActionIcon>
+              )}
             </Stack>
           </Card>
         ))}

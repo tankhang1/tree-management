@@ -7,7 +7,9 @@ import {
   Title,
   Image,
   Checkbox,
+  ActionIcon,
 } from "@mantine/core";
+import { IconTrash } from "@tabler/icons-react";
 
 interface SeedDetailCardProps {
   imageUrl: string;
@@ -20,6 +22,7 @@ interface SeedDetailCardProps {
   yieldPerHectare: string;
   isMultiple?: boolean;
   isActive?: boolean;
+  isDelete?: boolean;
   onClick?: () => void;
 }
 
@@ -34,6 +37,7 @@ const SeedDetailCard = ({
   yieldPerHectare,
   isMultiple = false,
   isActive = false,
+  isDelete = false,
   onClick,
 }: SeedDetailCardProps) => {
   return (
@@ -86,7 +90,22 @@ const SeedDetailCard = ({
         <Text size="sm">
           Năng suất: <b>{yieldPerHectare}</b>
         </Text>
-
+        {isDelete && (
+          <ActionIcon
+            color="red"
+            variant="light"
+            radius={4}
+            pos={"absolute"}
+            bottom={10}
+            right={10}
+            onClick={(e) => {
+              e.stopPropagation();
+              // Handle delete action here
+            }}
+          >
+            <IconTrash size={16} />
+          </ActionIcon>
+        )}
         {/* <Button
           variant="light"
           color="green"

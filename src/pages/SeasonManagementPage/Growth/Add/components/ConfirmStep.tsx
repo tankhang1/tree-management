@@ -4,18 +4,18 @@ import {
   Group,
   Text,
   Title,
-  Badge,
   Divider,
-  Image,
   Accordion,
+  ScrollAreaAutosize,
 } from "@mantine/core";
+import { IconClockHour4, IconCalendar } from "@tabler/icons-react";
+import CropCards from "./CropCards";
 import {
-  IconClockHour4,
-  IconCalendar,
-  IconPlant,
-  IconSeedling,
-  IconLayersSubtract,
-} from "@tabler/icons-react";
+  cropOptions,
+  seedOptions,
+} from "../../../../AreaManagementPage/Row/Add";
+import SeedCards from "./SeedCards";
+import SeedDetailCards from "../../../../AreaManagementPage/Region/Add/components/SeedDetailCards";
 
 const ConfirmStep = () => {
   const data = {
@@ -49,11 +49,16 @@ const ConfirmStep = () => {
   };
 
   return (
-    <Stack gap="lg">
+    <Stack gap="xl">
+      {/* Tiêu đề */}
       <Title order={3}>📋 Xác nhận thông tin mùa vụ</Title>
 
+      {/* Thông tin mùa vụ + Chu kỳ */}
       <Group align="flex-start" gap="md" grow>
-        <Card withBorder radius="md" shadow="sm">
+        <Card withBorder radius="md" shadow="sm" p="md" style={{ flex: 1 }}>
+          <Title order={5} mb="xs">
+            🗓 Thông tin mùa vụ
+          </Title>
           <Stack gap="xs">
             <Group>
               <IconCalendar size={18} />
@@ -65,65 +70,63 @@ const ConfirmStep = () => {
               <Text fw={500}>Thời gian dự kiến:</Text>
               <Text>{data.duration} ngày</Text>
             </Group>
-            <Group>
-              <IconLayersSubtract size={18} />
-              <Text fw={500}>Nhóm cây trồng:</Text>
-              <Text>{data.treeGroup}</Text>
-            </Group>
-            <Group>
-              <IconPlant size={18} />
-              <Text fw={500}>Loại cây:</Text>
-              <Text>{data.treeCategory}</Text>
-            </Group>
-            <Group>
-              <IconPlant size={18} />
-              <Text fw={500}>Giống cây:</Text>
-              <Text>{data.variety}</Text>
-            </Group>
-            <Group>
-              <IconSeedling size={18} />
-              <Text fw={500}>Hạt giống:</Text>
-              <Text>
-                {data.seedCode} - {data.seedName}
-              </Text>
-            </Group>
           </Stack>
         </Card>
 
-        <Card withBorder radius="md" shadow="xs">
-          <Group align="flex-start">
-            <Image src={data.seedImage} width={200} h={200} fit="contain" />
-            <Stack gap={4}>
-              <Text fw={500}>{data.seedName}</Text>
-              <Text size="sm" c="dimmed">
-                {data.seedDesc}
-              </Text>
-              <Badge variant="outline" color="green">
-                Đơn vị thu hoạch: {data.unit}
-              </Badge>
-            </Stack>
-          </Group>
+        <Card withBorder radius="md" shadow="sm" p="md" style={{ flex: 1 }}>
+          <Title order={5} mb="xs">
+            🔄 Chu kỳ sinh trưởng
+          </Title>
+          <ScrollAreaAutosize mah={180}>
+            <Accordion multiple variant="separated">
+              {data.cycles.map((cycle, i) => (
+                <Accordion.Item value={`cycle-${i}`} key={i}>
+                  <Accordion.Control fw={500}>{cycle.name}</Accordion.Control>
+                  <Accordion.Panel>
+                    <Stack gap={4}>
+                      {cycle.stages.map((stage, j) => (
+                        <Text size="sm" key={j}>
+                          • {stage.name} - {stage.duration} ngày
+                        </Text>
+                      ))}
+                    </Stack>
+                  </Accordion.Panel>
+                </Accordion.Item>
+              ))}
+            </Accordion>
+          </ScrollAreaAutosize>
         </Card>
       </Group>
 
-      <Divider label="🌿 Chu kỳ sinh trưởng" labelPosition="center" />
+      {/* Thông tin cây trồng */}
+      <Divider label="🌿 Thông tin cây trồng" labelPosition="center" />
+      <Card withBorder radius="md" shadow="sm" p="md">
+        <CropCards
+          selected=""
+          plants={cropOptions}
+          isCheckbox={false}
+          isTouchable={false}
+          onSelect={() => {}}
+        />
+      </Card>
 
-      <Accordion multiple variant="separated">
-        {data.cycles.map((cycle, i) => (
-          <Accordion.Item value={`cycle-${i}`} key={i}>
-            <Accordion.Control>{cycle.name}</Accordion.Control>
-            <Accordion.Panel>
-              <Stack gap={4}>
-                {cycle.stages.map((stage, j) => (
-                  <Text size="sm" key={j}>
-                    • {stage.name} - {stage.duration} ngày
-                  </Text>
-                ))}
-              </Stack>
-            </Accordion.Panel>
-          </Accordion.Item>
-        ))}
-      </Accordion>
+      {/* Thông tin giống */}
+      <Divider label="🌱 Thông tin giống cây" labelPosition="center" />
+      <Card withBorder radius="md" shadow="sm" p="md">
+        <SeedCards
+          isCheckbox={false}
+          isTouchable={false}
+          selected=""
+          seeds={seedOptions}
+          onSelect={() => {}}
+        />
+      </Card>
+      <Divider label="🌱 Thông tin hạt giống" labelPosition="center" />
+
+      {/* Chi tiết giống */}
+      <Card withBorder radius="md" shadow="sm" p="md">
+        <SeedDetailCards isTouchable={false} />
+      </Card>
     </Stack>
   );
 };

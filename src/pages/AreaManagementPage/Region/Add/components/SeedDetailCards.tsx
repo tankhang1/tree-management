@@ -6,11 +6,13 @@ import { useState } from "react";
 type SeedDetailCardsProps = {
   isMultiple?: boolean;
   isTouchable?: boolean;
+  isDelete?: boolean;
 };
 
 const SeedDetailCards = ({
   isMultiple,
   isTouchable = true,
+  isDelete = false,
 }: SeedDetailCardsProps) => {
   const [selectedSeeds, setSelectedSeeds] = useState<string[]>([]);
 
@@ -42,6 +44,7 @@ const SeedDetailCards = ({
           isMultiple={isMultiple}
           isActive={selectedSeeds.includes("SR-RI6")}
           onClick={() => onSelectSeed("SR-RI6")}
+          isDelete={isDelete}
         />
 
         <SeedDetailCard
@@ -56,6 +59,7 @@ const SeedDetailCards = ({
           isMultiple={isMultiple}
           isActive={selectedSeeds.includes("SR-RI6-2")}
           onClick={() => onSelectSeed("SR-RI6-2")}
+          isDelete={isDelete}
         />
 
         <SeedDetailCard
@@ -70,6 +74,7 @@ const SeedDetailCards = ({
           isMultiple={isMultiple}
           isActive={selectedSeeds.includes("SR-RI6-3")}
           onClick={() => onSelectSeed("SR-RI6-3")}
+          isDelete={isDelete}
         />
 
         {/* Thêm nhiều loại giống mới */}
@@ -85,6 +90,7 @@ const SeedDetailCards = ({
           isMultiple={isMultiple}
           isActive={selectedSeeds.includes("SR-MN1")}
           onClick={() => onSelectSeed("SR-MN1")}
+          isDelete={isDelete}
         />
 
         <SeedDetailCard
@@ -99,6 +105,7 @@ const SeedDetailCards = ({
           isMultiple={isMultiple}
           isActive={selectedSeeds.includes("SR-KM1")}
           onClick={() => onSelectSeed("SR-KM1")}
+          isDelete={isDelete}
         />
       </Group>
     </Scrollable>

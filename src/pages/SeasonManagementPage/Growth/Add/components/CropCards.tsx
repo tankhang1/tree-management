@@ -6,10 +6,12 @@ import {
   Image,
   Badge,
   Checkbox,
+  ActionIcon,
 } from "@mantine/core";
 import type { CropOption } from "..";
 import Scrollable from "../../../../../components/Scrollable";
 import { useState } from "react";
+import { IconTrash } from "@tabler/icons-react";
 
 interface PlantCardSelectorProps {
   plants: CropOption[];
@@ -19,13 +21,18 @@ interface PlantCardSelectorProps {
 
 type CropCardsProps = {
   isCheckbox?: boolean;
+  isDelete?: boolean;
+  isTouchable?: boolean;
 };
 const CropCards: React.FC<PlantCardSelectorProps & CropCardsProps> = ({
   plants,
   isCheckbox = true,
+  isDelete = false,
+  isTouchable = true,
 }) => {
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
   const onSelect = (code: string) => {
+    if (!isTouchable) return;
     setSelectedIds((prev) =>
       prev.includes(code) ? prev.filter((id) => id !== code) : [...prev, code]
     );
@@ -86,6 +93,18 @@ const CropCards: React.FC<PlantCardSelectorProps & CropCardsProps> = ({
                 <Text size="sm" c="dimmed">
                   <strong>Ghi chú:</strong> {plant.note}
                 </Text>
+              )}
+              {isDelete && (
+                <ActionIcon
+                  color="red"
+                  variant="light"
+                  radius={4}
+                  pos={"absolute"}
+                  bottom={10}
+                  right={10}
+                >
+                  <IconTrash size={16} />
+                </ActionIcon>
               )}
             </Stack>
           </Card>

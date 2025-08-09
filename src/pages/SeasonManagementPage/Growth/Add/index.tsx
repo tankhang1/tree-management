@@ -12,6 +12,7 @@ import {
   Accordion,
   Text,
   Image,
+  Modal,
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { IconArrowLeft, IconSearch } from "@tabler/icons-react";
@@ -59,11 +60,19 @@ export interface CropOption {
   image: string; // URL or base64
 }
 
+export const plantGroups = [
+  { value: "fruit", label: "Cây ăn trái" },
+  { value: "timber", label: "Cây gỗ" },
+  { value: "vegetable", label: "Rau củ" },
+  { value: "industrial", label: "Cây công nghiệp" },
+  { value: "ornamental", label: "Cây cảnh" },
+];
 const SeasonManagementGrowthAddPage = () => {
   const navigate = useNavigate();
+  const [type, setType] = useState<"crop" | "seed" | "seed-detail">("crop");
   const [activeStep, setActiveStep] = useState(0);
   const [cycleStageList, setCycleStageList] = useState<CycleStage[]>([]);
-
+  const [openedFilter, setOpenedFilter] = useState(false);
   const form = useForm({
     initialValues: {
       name: "",
@@ -159,31 +168,70 @@ const SeasonManagementGrowthAddPage = () => {
               radius={4}
               {...form.getInputProps("estimatedDuration")}
             />
-            <Select label="Nhóm cây" radius={4} />
-
-            <TextInput
-              label="Loại cây trồng"
-              leftSection={<IconSearch size={18} />}
-              placeholder="Tìm kiếm loại cây trồng"
-              radius={4}
+            <Group align="center">
+              <Text fz={14} fw={"500"}>
+                Cây trồng
+              </Text>
+              <Button
+                variant="outline"
+                radius={4}
+                onClick={() => {
+                  setOpenedFilter(true);
+                  setType("crop");
+                }}
+              >
+                Thêm mới
+              </Button>
+            </Group>
+            <CropCards
+              selected=""
+              plants={cropOptions}
+              isCheckbox={false}
+              isTouchable={false}
+              onSelect={() => {}}
+              isDelete={true}
             />
-            <CropCards selected="" plants={cropOptions} onSelect={() => {}} />
+            <Group align="center">
+              <Text fz={14} fw={"500"}>
+                Giống cây trồng
+              </Text>
 
-            <TextInput
-              label="Giống cây trồng"
-              leftSection={<IconSearch size={18} />}
-              placeholder="Tìm kiếm giống cây trồng"
-              radius={4}
+              <Button
+                variant="outline"
+                radius={4}
+                onClick={() => {
+                  setOpenedFilter(true);
+                  setType("seed");
+                }}
+              >
+                Thêm mới
+              </Button>
+            </Group>
+            <SeedCards
+              isCheckbox={false}
+              isTouchable={false}
+              selected=""
+              seeds={seedOptions}
+              onSelect={() => {}}
+              isDelete
             />
-            <SeedCards selected="" seeds={seedOptions} onSelect={() => {}} />
 
-            <TextInput
-              label="Hạt giống"
-              leftSection={<IconSearch size={18} />}
-              placeholder="Tìm kiếm hạt giống"
-              radius={4}
-            />
-            <SeedDetailCards isMultiple />
+            <Group align="center">
+              <Text fz={14} fw={"500"}>
+                Hạt giống
+              </Text>
+              <Button
+                variant="outline"
+                radius={4}
+                onClick={() => {
+                  setOpenedFilter(true);
+                  setType("seed-detail");
+                }}
+              >
+                Thêm mới
+              </Button>
+            </Group>
+            <SeedDetailCards isTouchable={false} isDelete={true} />
           </Stack>
         )}
 
@@ -278,6 +326,61 @@ const SeasonManagementGrowthAddPage = () => {
           </Group>
         )}
       </form>
+      <Modal
+        opened={openedFilter}
+        onClose={() => setOpenedFilter(false)}
+        title="Tìm kiếm cây trồng"
+        size="lg"
+      >
+        <Stack gap={"xs"}>
+          <Select
+            label="Nhóm cây"
+            placeholder="Chọn nhóm cây"
+            data={plantGroups}
+            radius={4}
+          />
+
+          <TextInput
+            label="Cây trồng"
+            leftSection={<IconSearch size={18} />}
+            placeholder="Tìm kiếm loại cây trồng"
+            radius={4}
+          />
+          <CropCards selected="" plants={cropOptions} onSelect={() => {}} />
+          {(type === "seed" || type === "seed-detail") && (
+            <Stack gap={"xs"}>
+              <TextInput
+                label="Giống cây trồng"
+                leftSection={<IconSearch size={18} />}
+                placeholder="Tìm kiếm giống cây trồng"
+                radius={4}
+                flex={1}
+              />
+
+              <SeedCards selected="" seeds={seedOptions} onSelect={() => {}} />
+            </Stack>
+          )}
+
+          {type === "seed-detail" && (
+            <Stack gap={"xs"}>
+              <TextInput
+                label="Hạt giống"
+                leftSection={<IconSearch size={18} />}
+                placeholder="Tìm kiếm hạt giống"
+                radius={4}
+                flex={1}
+              />
+
+              <SeedDetailCards isMultiple />
+            </Stack>
+          )}
+          <Group justify="flex-end">
+            <Button radius={4} onClick={() => setOpenedFilter(false)}>
+              Xác nhận
+            </Button>
+          </Group>
+        </Stack>
+      </Modal>
     </Card>
   );
 };
