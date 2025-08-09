@@ -37,6 +37,8 @@ import PlotCardSelector from "../../Row/Add/components/PlotCards";
 import { DatePickerInput } from "@mantine/dates";
 import TreeDetailView from "../components/TreeView";
 import dayjs from "dayjs";
+import SeedCards from "../../Row/Add/components/SeedCards";
+import SeedDetailCards from "../../Region/Add/components/SeedDetailCards";
 
 type LatLng = [number, number];
 type TreeRow = {
@@ -102,18 +104,24 @@ export const samplePlots = [
     cultivation: "Hữu cơ",
     terrainLabel: "DỐC NHẸ (48–56M)",
     treeCount: 50,
-  },
-  {
-    id: "LO-B2",
-    code: "LO-B2",
-    name: "Lô B2",
-    mainCrop: "Mãng cầu",
-    areaM2: 2200,
-    rowsCount: 10,
-    irrigation: "Tưới phun mưa",
-    cultivation: "Truyền thống",
-    terrainLabel: "DỐC TRUNG BÌNH (50–60M)",
-    treeCount: 65,
+    seeds: [
+      {
+        code: "SDR-RI6",
+        seedName: "Sầu riêng Ri6",
+        cropName: "Sầu riêng",
+        image:
+          "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT_lo7BwRUzpkCiruaT48T5-8HZ8_7_sNxH0w&s",
+        seedType: "Hạt giống",
+      },
+      {
+        code: "SDR-RI6-2",
+        seedName: "Sầu riêng Ri6 - Loại 2",
+        cropName: "Sầu riêng",
+        image:
+          "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT_lo7BwRUzpkCiruaT48T5-8HZ8_7_sNxH0w&s",
+        seedType: "Hạt giống",
+      },
+    ],
   },
 ];
 const treeList = [
@@ -149,6 +157,8 @@ const treeList = [
 // Danh sách hàng
 export const sampleRows = [
   { id: "row-1", rowId: "H1", rowName: "Hàng 1", treeCount: 12 },
+  { id: "row-1", rowId: "H1", rowName: "Hàng 4", treeCount: 12 },
+  { id: "row-1", rowId: "H1", rowName: "Hàng 5", treeCount: 12 },
   { id: "row-2", rowId: "H2", rowName: "Hàng 2", treeCount: 15 },
   { id: "row-3", rowId: "H3", rowName: "Hàng 3", treeCount: 10 },
 ];
@@ -353,245 +363,213 @@ const AreaManagementTreeAddv2Page = () => {
           <Stepper.Step label="Bước 2" description="Cây trồng">
             <Stack>
               <Title order={5}>Phân bổ cây trồng</Title>
-              <Radio.Group
-                value={form.values.allocation.type}
-                onChange={(v: string) =>
-                  form.setFieldValue("allocation.type", v)
-                }
-              >
-                <Stack gap="xs">
-                  <Radio value="plot" label="Phân bổ theo lô" />
-                  <Radio value="row" label="Phân bổ theo hàng" />
-                </Stack>
-              </Radio.Group>
 
               {/* ====== THEO LÔ ====== */}
-              {form.values.allocation.type === "plot" && (
-                <Stack>
-                  {/* Thông tin lô (read-only) */}
-                  <Title order={6}>Thông tin các lô đã chọn</Title>
-                  <ScrollAreaAutosize h={300}>
-                    <Group align="stretch" wrap="wrap">
-                      {form.values.allocation.selectedPlots.map((p) => (
-                        <Card
-                          key={p.id}
-                          withBorder
-                          radius={12}
-                          shadow="sm"
-                          p="md"
-                          w={360}
-                        >
-                          <Stack gap={6}>
-                            <Group justify="space-between">
-                              <Text fw={700}>{p.name}</Text>
-                              <Badge variant="filled" color="gray" radius="sm">
-                                {p.code}
-                              </Badge>
-                            </Group>
-                            <Group gap="xs">
-                              <Text fw={700}>Cây trồng chính:</Text>
-                              <Text>{p.mainCrop}</Text>
-                            </Group>
-                            <Group gap="xl">
-                              <Group gap="xs">
-                                <Text fw={700}>Diện tích:</Text>
-                                <Text>
-                                  {p.areaM2.toLocaleString("vi-VN")} m²
-                                </Text>
-                              </Group>
-                              <Group gap="xs">
-                                <Text fw={700}>Số hàng:</Text>
-                                <Text>{p.rowsCount}</Text>
-                              </Group>
-                            </Group>
-                            <Group gap="xl">
-                              <Group gap="xs">
-                                <Text fw={700}>Tưới:</Text>
-                                <Text>{p.irrigation}</Text>
-                              </Group>
-                              <Group gap="xs">
-                                <Text fw={700}>Canh tác:</Text>
-                                <Text>{p.cultivation}</Text>
-                              </Group>
-                            </Group>
-                            <Group gap="xs">
-                              <Text fw={700}>Địa hình:</Text>
-                              <Badge variant="light" color="green" radius="xl">
-                                {p.terrainLabel}
-                              </Badge>
-                            </Group>
-                            <Button
-                              pos={"absolute"}
-                              bottom={10}
-                              right={10}
-                              radius={4}
-                              variant="light"
-                              onClick={() => setOpenedTreeList(true)}
-                            >
-                              Chỉnh sửa
-                            </Button>
-                          </Stack>
-                        </Card>
-                      ))}
-                    </Group>
-                  </ScrollAreaAutosize>
-
-                  {/* Nhập số cây theo lô */}
-                  <Divider
-                    my="sm"
-                    label="Nhập số cây theo lô"
-                    labelPosition="center"
-                  />
-                  <Group gap="xs">
-                    {form.values.allocation.selectedPlots.map((p, idx) => (
+              <Stack>
+                {/* Thông tin lô (read-only) */}
+                <Title order={6}>Thông tin các lô đã chọn</Title>
+                <Group align="stretch" wrap="wrap">
+                  <Stack gap="xs">
+                    {form.values.allocation.selectedPlots.map((p) => (
                       <Card
-                        withBorder
-                        radius={12}
-                        p="md"
-                        w={250}
-                        h={180}
                         key={p.id}
+                        withBorder
+                        radius={4}
+                        shadow="sm"
+                        p="md"
+                        w={360}
+                        h={200}
                       >
-                        <Stack gap="xs" key={p.id}>
-                          <Stack gap={2} w="50%">
-                            <Text fw={600}>
-                              {p.name} ({p.code})
-                            </Text>
-                            <Text c="dimmed" fz="sm">
-                              {p.mainCrop} • {p.areaM2.toLocaleString("vi-VN")}{" "}
-                              m² • {p.rowsCount} hàng
-                            </Text>
-                          </Stack>
-                          <NumberInput
-                            label="Số cây"
-                            min={0}
-                            radius={4}
-                            value={p.treeCount ?? 0}
-                            onChange={(val) => {
-                              const v = Number(val) || 0;
-                              const next = [
-                                ...form.values.allocation.selectedPlots,
-                              ];
-                              next[idx] = { ...p, treeCount: v };
-                              form.setFieldValue(
-                                "allocation.selectedPlots",
-                                next
-                              );
-                            }}
-                            w={220}
-                          />
+                        <Stack gap={6}>
+                          <Group justify="space-between">
+                            <Text fw={700}>{p.name}</Text>
+                            <Badge variant="filled" color="gray" radius="sm">
+                              {p.code}
+                            </Badge>
+                          </Group>
+                          <Group gap="xs">
+                            <Text fw={700}>Cây trồng chính:</Text>
+                            <Text>{p.mainCrop}</Text>
+                          </Group>
+                          <Group gap="xl">
+                            <Group gap="xs">
+                              <Text fw={700}>Diện tích:</Text>
+                              <Text>{p.areaM2.toLocaleString("vi-VN")} m²</Text>
+                            </Group>
+                            <Group gap="xs">
+                              <Text fw={700}>Số hàng:</Text>
+                              <Text>{p.rowsCount}</Text>
+                            </Group>
+                          </Group>
+                          <Group gap="xl">
+                            <Group gap="xs">
+                              <Text fw={700}>Tưới:</Text>
+                              <Text>{p.irrigation}</Text>
+                            </Group>
+                            <Group gap="xs">
+                              <Text fw={700}>Canh tác:</Text>
+                              <Text>{p.cultivation}</Text>
+                            </Group>
+                          </Group>
+                          <Group gap="xs">
+                            <Text fw={700}>Địa hình:</Text>
+                            <Badge variant="light" color="green" radius="xl">
+                              {p.terrainLabel}
+                            </Badge>
+                          </Group>
                         </Stack>
                       </Card>
                     ))}
-                  </Group>
-
-                  {/* Tổng theo lô */}
-                  <Group justify="space-between" mt="sm">
-                    <Text fw={500}>Tổng số cây</Text>
-                    <Text fw={700} c="green">
-                      {form.values.allocation.selectedPlots
-                        .reduce((s, pl) => s + (Number(pl.treeCount) || 0), 0)
-                        .toLocaleString("vi-VN")}
-                    </Text>
-                  </Group>
-                </Stack>
-              )}
-
-              {/* ====== THEO HÀNG ====== */}
-              {form.values.allocation.type === "row" && (
-                <Stack>
-                  <Group justify="space-between" align="center">
-                    <Title order={6}>Danh sách hàng</Title>
-                    <Button
-                      size="xs"
-                      variant="light"
-                      radius={4}
-                      onClick={() =>
-                        form.setFieldValue("allocation.rows", [
-                          ...form.values.allocation.rows,
-                          {
-                            id:
-                              crypto.randomUUID?.() ??
-                              Math.random().toString(36).slice(2, 9),
-                            rowId: undefined,
-                            rowName: "",
-                            treeCount: 0,
-                          },
-                        ])
+                    <Radio.Group
+                      value={form.values.allocation.type}
+                      onChange={(v: string) =>
+                        form.setFieldValue("allocation.type", v)
                       }
                     >
-                      Thêm hàng
-                    </Button>
-                  </Group>
-
-                  <ScrollAreaAutosize h={320}>
-                    <Group align="stretch" wrap="wrap">
-                      {form.values.allocation.rows.map((r, idx) => (
-                        <Card key={r.id} withBorder radius={12} p="md" w={250}>
+                      <Stack gap="xs">
+                        <Radio value="plot" label="Phân bổ theo lô" />
+                        <Radio value="row" label="Phân bổ theo hàng" />
+                      </Stack>
+                    </Radio.Group>
+                  </Stack>
+                  {form.values.allocation.type === "plot" && (
+                    <Card withBorder radius={4} shadow="sm" p="md" flex={1}>
+                      <Title order={6} mb="xs">
+                        Danh sách hạt giống
+                      </Title>
+                      <SeedDetailCards isMultiple />
+                    </Card>
+                  )}
+                  {form.values.allocation.type === "row" && (
+                    <Card withBorder radius={4} shadow="sm" p="md" flex={1}>
+                      <Group justify="space-between" align="center">
+                        <Title order={6} mb="xs">
+                          Danh sách hàng
+                        </Title>
+                        <Button radius={4} variant="light">
+                          Thêm mới
+                        </Button>
+                      </Group>
+                      <Group wrap="nowrap" gap={"xs"}>
+                        <Card withBorder radius={4} p="md" w={250}>
                           <Stack gap="xs">
-                            <Group justify="space-between" align="center">
-                              <Text fw={700}>
-                                {r.rowName || `Hàng ${idx + 1}`}
-                              </Text>
-                              <ActionIcon
-                                variant="light"
-                                color="red"
-                                radius={4}
-                                size="sm"
-                                onClick={() => {
-                                  const next = [...form.values.allocation.rows];
-                                  next.splice(idx, 1);
-                                  form.setFieldValue("allocation.rows", next);
-                                }}
-                              >
-                                <IconTrash size={16} />
-                              </ActionIcon>
-                            </Group>
+                            <Text fw={600}>Hàng 1</Text>
 
-                            {/* Tuỳ bạn đang chọn hàng từ đâu: Select hay TextInput.
-                      Ở đây mình dùng TextInput để linh hoạt */}
                             <TextInput
                               label="Tên hàng"
                               placeholder="VD: Hàng 1"
                               radius={4}
-                              value={r.rowName || ""}
-                              onChange={(e) => {
-                                const next = [...form.values.allocation.rows];
-                                next[idx] = {
-                                  ...r,
-                                  rowName: e.currentTarget.value,
-                                };
-                                form.setFieldValue("allocation.rows", next);
-                              }}
+                              value="Hàng 1"
                             />
-
                             <NumberInput
                               label="Số cây"
                               min={0}
                               radius={4}
-                              value={r.treeCount}
-                              onChange={(val) => {
-                                const v = Number(val) || 0;
-                                const next = [...form.values.allocation.rows];
-                                next[idx] = { ...r, treeCount: v };
-                                form.setFieldValue("allocation.rows", next);
-                              }}
+                              value={12}
+                              w={220}
                             />
+                            <ActionIcon
+                              pos={"absolute"}
+                              top={10}
+                              right={10}
+                              variant="light"
+                              radius={4}
+                              color="red"
+                            >
+                              <IconTrash size={16} />
+                            </ActionIcon>
                           </Stack>
                         </Card>
-                      ))}
-                    </Group>
-                  </ScrollAreaAutosize>
+                      </Group>
+                    </Card>
+                  )}
+                </Group>
 
-                  {/* Tổng theo hàng */}
-                  <Group justify="space-between" mt="sm">
-                    <Text fw={500}>Tổng số cây</Text>
-                    <Text fw={700} c="green">
-                      {form.values.allocation.rows
-                        .reduce((s, row) => s + (Number(row.treeCount) || 0), 0)
-                        .toLocaleString("vi-VN")}
-                    </Text>
-                  </Group>
+                {form.values.allocation.type === "plot" && (
+                  <Stack gap={"xs"}>
+                    {/* Nhập số cây theo lô */}
+                    <Divider
+                      my="sm"
+                      label="Nhập số cây theo lô"
+                      labelPosition="center"
+                    />
+                    <Group gap="xs">
+                      {form.values.allocation.selectedPlots[0].seeds.map(
+                        (p) => (
+                          <Card
+                            withBorder
+                            radius={4}
+                            p="md"
+                            miw={250}
+                            key={p.code}
+                          >
+                            <Stack gap="xs" key={p.code}>
+                              <Stack gap={2}>
+                                <Text fw={600}>
+                                  {p.seedName} ({p.code})
+                                </Text>
+                                <Text c="dimmed" fz="sm">
+                                  {p.cropName}
+                                </Text>
+                              </Stack>
+                              <NumberInput
+                                label="Số cây"
+                                min={0}
+                                radius={4}
+                                value={0}
+                                w={220}
+                              />
+                            </Stack>
+                          </Card>
+                        )
+                      )}
+                    </Group>
+
+                    {/* Tổng theo lô */}
+                    <Group justify="space-between" mt="sm">
+                      <Text fw={500}>Tổng số cây</Text>
+                      <Text fw={700} c="green">
+                        {form.values.allocation.selectedPlots
+                          .reduce((s, pl) => s + (Number(pl.treeCount) || 0), 0)
+                          .toLocaleString("vi-VN")}
+                      </Text>
+                    </Group>
+                  </Stack>
+                )}
+              </Stack>
+
+              {/* ====== THEO HÀNG ====== */}
+              {form.values.allocation.type === "row" && (
+                <Stack>
+                  <Title order={6}>Danh sách hàng đã chọn</Title>
+                  <Accordion variant="contained" multiple radius={4}>
+                    <Accordion.Item value="row-1">
+                      <Accordion.Control>
+                        <Group justify="space-between">
+                          <Text fw={600}>Hàng 1</Text>
+                          <Text c="dimmed" fz="sm">
+                            12 cây
+                          </Text>
+                        </Group>
+                      </Accordion.Control>
+                      <Accordion.Panel>
+                        <Stack gap={"xs"}>
+                          <Title order={6} mb="xs">
+                            Danh sách cây trồng
+                          </Title>
+                          <Card withBorder radius={4} p="md">
+                            <Stack gap={"xs"}>
+                              <SeedDetailCards isMultiple />
+                              <NumberInput radius={4} label="Số lượng cây" />
+                            </Stack>
+                          </Card>
+                          <Button variant="outline" radius={4} mt="md">
+                            Thêm mới
+                          </Button>
+                        </Stack>
+                      </Accordion.Panel>
+                    </Accordion.Item>
+                  </Accordion>
                 </Stack>
               )}
 
@@ -739,31 +717,6 @@ const AreaManagementTreeAddv2Page = () => {
                                 }}
                                 flex={1}
                               />
-                              <Button
-                                variant="light"
-                                leftSection={<IconPlus size={16} />}
-                                radius={4}
-                                onClick={() => {
-                                  if (!buf.lat || !buf.lng) return; // optional: validate
-                                  const next = [...points, { ...buf }];
-                                  form.setFieldValue(
-                                    `gps.byPlot.${p.id}`,
-                                    next
-                                  );
-                                  // clear buffer
-                                  const allBuf = {
-                                    ...(form.values.gps.inputBuffer?.byPlot ??
-                                      {}),
-                                  };
-                                  delete allBuf[p.id];
-                                  form.setFieldValue("gps.inputBuffer", {
-                                    ...form.values.gps.inputBuffer,
-                                    byPlot: allBuf,
-                                  });
-                                }}
-                              >
-                                Thêm
-                              </Button>
                             </Group>
 
                             {/* Map + list điểm đã thêm */}
@@ -947,7 +900,7 @@ const AreaManagementTreeAddv2Page = () => {
                                 }}
                                 flex={1}
                               />
-                              <Button
+                              {/* <Button
                                 variant="light"
                                 leftSection={<IconPlus size={16} />}
                                 radius={4}
@@ -971,7 +924,7 @@ const AreaManagementTreeAddv2Page = () => {
                                 }}
                               >
                                 Thêm
-                              </Button>
+                              </Button> */}
                             </Group>
 
                             <Stack mt="md" gap="xs">
