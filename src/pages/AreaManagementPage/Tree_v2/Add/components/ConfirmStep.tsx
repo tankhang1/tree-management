@@ -12,6 +12,7 @@ import {
   Select,
   ActionIcon,
   SegmentedControl,
+  Image,
 } from "@mantine/core";
 import { DatePickerInput } from "@mantine/dates";
 import { MapContainer, Marker, TileLayer } from "react-leaflet";
@@ -69,6 +70,8 @@ type FormValues = {
     };
   };
 };
+const formatDate = (date) =>
+  date ? new Date(date).toLocaleDateString("vi-VN") : "—";
 
 type ConfirmPlantingProps = {
   area: string;
@@ -77,6 +80,36 @@ type ConfirmPlantingProps = {
   row?: string;
   type: "plot" | "row";
   plantingDate?: string;
+};
+const plot = {
+  id: "LO-A1",
+  code: "LO-A1",
+  name: "Lô A1",
+  mainCrop: "Sầu riêng",
+  areaM2: 1500,
+  rowsCount: 8,
+  irrigation: "Tưới nhỏ giọt",
+  cultivation: "Hữu cơ",
+  terrainLabel: "DỐC NHẸ (48–56M)",
+  treeCount: 50,
+  seeds: [
+    {
+      code: "SDR-RI6",
+      seedName: "Sầu riêng Ri6 - SR-RI6",
+      cropName: "Sầu riêng",
+      image:
+        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT_lo7BwRUzpkCiruaT48T5-8HZ8_7_sNxH0w&s",
+      seedType: "Hạt giống",
+    },
+    {
+      code: "SDR-RI6-2",
+      seedName: "Sầu riêng Ri6 - SR-RI6-2",
+      cropName: "Sầu riêng",
+      image:
+        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT_lo7BwRUzpkCiruaT48T5-8HZ8_7_sNxH0w&s",
+      seedType: "Hạt giống",
+    },
+  ],
 };
 const ConfirmStep = (props: ConfirmPlantingProps) => {
   const [type, setType] = useState<"region" | "area" | "plot">("region");
@@ -112,35 +145,88 @@ const ConfirmStep = (props: ConfirmPlantingProps) => {
       <Title order={3}>Xác nhận thông tin trồng cây</Title>
 
       {/* Thông tin khu vực */}
-      <Card withBorder radius="md" shadow="xs" p="md">
-        <Group grow align="flex-start" justify="space-between">
-          <Stack gap="xs" flex={1}>
-            <Group justify="apart">
-              <Text fw={500}>Vùng trồng:</Text>
-              <Badge>{props.area}</Badge>
+      <Card withBorder radius="md" shadow="sm" p="md">
+        <Stack gap="sm">
+          {/* Header */}
+          <Group justify="space-between">
+            <Text fw={700} size="lg">
+              {type === "plot"
+                ? `Lô A01`
+                : type === "area"
+                ? `Khu vực Tây nguyên`
+                : `Vùng trồng Tây nguyên`}
+            </Text>
+            <Badge color="gray" variant="filled">
+              {plot.code}
+            </Badge>
+          </Group>
+
+          {/* Thông tin chính */}
+          <Group gap="xs">
+            <Text fw={500}>Cây trồng chính:</Text>
+            <Text>{plot.mainCrop}</Text>
+          </Group>
+
+          <Group gap="xl">
+            <Group gap="xs">
+              <Text fw={500}>Diện tích:</Text>
+              <Text>{plot.areaM2.toLocaleString("vi-VN")} m²</Text>
             </Group>
-            <Group justify="apart">
-              <Text fw={500}>Khu vực:</Text>
-              <Badge>{props.zone}</Badge>
+            <Group gap="xs">
+              <Text fw={500}>Số hàng:</Text>
+              <Text>{plot.rowsCount}</Text>
             </Group>
-            <Group justify="apart">
-              <Text fw={500}>Lô:</Text>
-              <Badge>{props.block}</Badge>
+          </Group>
+
+          <Group gap="xl">
+            <Group gap="xs">
+              <Text fw={500}>Tưới:</Text>
+              <Text>{plot.irrigation}</Text>
             </Group>
-            {props.row && (
-              <Group justify="apart">
-                <Text fw={500}>Hàng:</Text>
-                <Badge>{props.row}</Badge>
-              </Group>
-            )}
-            {props.plantingDate && (
-              <Group justify="apart">
-                <Text fw={500}>Ngày trồng:</Text>
-                <Text>{props.plantingDate}</Text>
-              </Group>
-            )}
+            <Group gap="xs">
+              <Text fw={500}>Canh tác:</Text>
+              <Text>{plot.cultivation}</Text>
+            </Group>
+          </Group>
+
+          <Group gap="xs">
+            <Text fw={500}>Địa hình:</Text>
+            <Badge variant="light" color="green" radius="xl">
+              {plot.terrainLabel}
+            </Badge>
+          </Group>
+
+          <Group gap="xs">
+            <Text fw={500}>Số cây:</Text>
+            <Text>{plot.treeCount}</Text>
+          </Group>
+
+          {/* Giống cây */}
+          <Stack gap="xs">
+            <Text fw={600}>Giống cây:</Text>
+            <Group>
+              {plot.seeds.map((seed) => (
+                <Card key={seed.code} withBorder radius="sm" shadow="xs" p={0}>
+                  <Group>
+                    <Image
+                      src={seed.image}
+                      alt={seed.seedName}
+                      w={"40%"}
+                      height={100}
+                      radius="sm"
+                    />
+                    <Stack gap={"xs"} p="xs" flex={1}>
+                      <Text fw={500}>{seed.seedName}</Text>
+                      <Text size="sm" c="dimmed">
+                        {seed.cropName} - {seed.seedType}
+                      </Text>
+                    </Stack>
+                  </Group>
+                </Card>
+              ))}
+            </Group>
           </Stack>
-        </Group>
+        </Stack>
       </Card>
 
       <Divider
@@ -302,9 +388,6 @@ const ConfirmStep = (props: ConfirmPlantingProps) => {
                             }}
                             flex={1}
                           />
-                          <ActionIcon variant="light" color="red" radius={4}>
-                            <IconTrash size={16} />
-                          </ActionIcon>
                         </Group>
 
                         <Group flex={2} align="flex-end">
@@ -418,13 +501,7 @@ const ConfirmStep = (props: ConfirmPlantingProps) => {
                             }}
                             flex={1}
                           />
-                          <ActionIcon variant="light" color="red" radius={4}>
-                            <IconTrash size={16} />
-                          </ActionIcon>
                         </Group>
-                        <Button radius={4} variant="outline">
-                          Thêm mới
-                        </Button>
                       </Stack>
                       {/* Map + list điểm đã thêm */}
                       <Stack flex={1} mt="md" gap="xs">
@@ -636,10 +713,6 @@ const ConfirmStep = (props: ConfirmPlantingProps) => {
                             flex={1}
                           />
                         </Group>
-
-                        <Button radius={4} variant="outline">
-                          Thêm mới
-                        </Button>
                       </Stack>
 
                       {/* Map + existing points */}
@@ -852,10 +925,6 @@ const ConfirmStep = (props: ConfirmPlantingProps) => {
                             flex={1}
                           />
                         </Group>
-
-                        <Button radius={4} variant="outline">
-                          Thêm mới
-                        </Button>
                       </Stack>
 
                       {/* Map + existing points */}
@@ -1071,9 +1140,6 @@ const ConfirmStep = (props: ConfirmPlantingProps) => {
                                     >
                                       Thêm
                                     </Button> */}
-                          <ActionIcon radius={4} variant="light" color="red">
-                            <IconTrash size={16} />
-                          </ActionIcon>
                         </Group>
                         <Group align="flex-end">
                           <Select
@@ -1194,13 +1260,7 @@ const ConfirmStep = (props: ConfirmPlantingProps) => {
                                     >
                                       Thêm
                                     </Button> */}
-                          <ActionIcon radius={4} variant="light" color="red">
-                            <IconTrash size={16} />
-                          </ActionIcon>
                         </Group>
-                        <Button radius={4} variant="outline">
-                          Thêm mới
-                        </Button>
                       </Stack>
 
                       <Stack flex={1} gap="xs">

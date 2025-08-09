@@ -742,6 +742,25 @@ const AreaManagementTreeAddv2Page = () => {
                             <Stack gap="xs" key={p.code} mt={"md"}>
                               <Select
                                 radius={4}
+                                label="Giống cây"
+                                data={[
+                                  {
+                                    label: "Giống Ri6",
+                                    value: "SDR-RI6",
+                                  },
+                                  {
+                                    label: "Giống Ri6-2",
+                                    value: "SDR-RI6-2",
+                                  },
+
+                                  {
+                                    label: "Giống Monthong",
+                                    value: "SDR-Monthong",
+                                  },
+                                ]}
+                              />
+                              <Select
+                                radius={4}
                                 label="Hạt giống"
                                 data={samplePlots[0].seeds.map((seed) => ({
                                   value: seed.code,
@@ -1064,13 +1083,6 @@ const AreaManagementTreeAddv2Page = () => {
                                     }}
                                     flex={1}
                                   />
-                                  <ActionIcon
-                                    variant="light"
-                                    color="red"
-                                    radius={4}
-                                  >
-                                    <IconTrash size={16} />
-                                  </ActionIcon>
                                 </Group>
 
                                 <Group flex={2} align="flex-end">
@@ -1186,17 +1198,7 @@ const AreaManagementTreeAddv2Page = () => {
                                     }}
                                     flex={1}
                                   />
-                                  <ActionIcon
-                                    variant="light"
-                                    color="red"
-                                    radius={4}
-                                  >
-                                    <IconTrash size={16} />
-                                  </ActionIcon>
                                 </Group>
-                                <Button radius={4} variant="outline">
-                                  Thêm mới
-                                </Button>
                               </Stack>
                               {/* Map + list điểm đã thêm */}
                               <Stack flex={1} mt="md" gap="xs">
@@ -1237,21 +1239,6 @@ const AreaManagementTreeAddv2Page = () => {
                                               ).toLocaleDateString("vi-VN")
                                             : "—"}
                                         </Text>
-                                        <ActionIcon
-                                          size="xs"
-                                          variant="subtle"
-                                          color="red"
-                                          onClick={() => {
-                                            const next = [...points];
-                                            next.splice(i, 1);
-                                            form.setFieldValue(
-                                              `gps.byPlot.${p.id}`,
-                                              next
-                                            );
-                                          }}
-                                        >
-                                          <IconTrash size={16} />
-                                        </ActionIcon>
                                       </Group>
                                     ))}
                                   </Stack>
@@ -1413,10 +1400,6 @@ const AreaManagementTreeAddv2Page = () => {
                                     flex={1}
                                   />
                                 </Group>
-
-                                <Button radius={4} variant="outline">
-                                  Thêm mới
-                                </Button>
                               </Stack>
 
                               {/* Map + existing points */}
@@ -1457,21 +1440,6 @@ const AreaManagementTreeAddv2Page = () => {
                                               ).toLocaleDateString("vi-VN")
                                             : "—"}
                                         </Text>
-                                        <ActionIcon
-                                          size="xs"
-                                          variant="subtle"
-                                          color="red"
-                                          onClick={() => {
-                                            const next = [...points];
-                                            next.splice(i, 1);
-                                            form.setFieldValue(
-                                              `gps.byArea.${a.id}`,
-                                              next
-                                            );
-                                          }}
-                                        >
-                                          <IconTrash size={16} />
-                                        </ActionIcon>
                                       </Group>
                                     ))}
                                   </Stack>
@@ -1634,10 +1602,6 @@ const AreaManagementTreeAddv2Page = () => {
                                     flex={1}
                                   />
                                 </Group>
-
-                                <Button radius={4} variant="outline">
-                                  Thêm mới
-                                </Button>
                               </Stack>
 
                               {/* Map + existing points */}
@@ -1862,13 +1826,6 @@ const AreaManagementTreeAddv2Page = () => {
                               >
                                 Thêm
                               </Button> */}
-                                  <ActionIcon
-                                    radius={4}
-                                    variant="light"
-                                    color="red"
-                                  >
-                                    <IconTrash size={16} />
-                                  </ActionIcon>
                                 </Group>
                                 <Group align="flex-end">
                                   <Select
@@ -1995,17 +1952,7 @@ const AreaManagementTreeAddv2Page = () => {
                               >
                                 Thêm
                               </Button> */}
-                                  <ActionIcon
-                                    radius={4}
-                                    variant="light"
-                                    color="red"
-                                  >
-                                    <IconTrash size={16} />
-                                  </ActionIcon>
                                 </Group>
-                                <Button radius={4} variant="outline">
-                                  Thêm mới
-                                </Button>
                               </Stack>
 
                               <Stack flex={1} gap="xs">
