@@ -1,45 +1,78 @@
 import {
-  Stepper,
   Group,
-  Button,
+  Card,
+  Stack,
+  Title,
   TextInput,
   NumberInput,
   Textarea,
   Select,
-  FileInput,
-  Stack,
-  Image,
   Radio,
   Text,
-  Title,
-  Card,
-  SegmentedControl,
+  Button,
   Input,
+  Modal,
+  ActionIcon,
+  Image,
+  Badge,
+  Divider,
 } from "@mantine/core";
 import { useState } from "react";
 import {
-  IconFileUpload,
+  IconSearch,
   IconUpload,
   IconX,
   IconPhoto,
   IconArrowLeft,
-  IconSearch,
+  IconTrash,
 } from "@tabler/icons-react";
 import { Dropzone } from "@mantine/dropzone";
 import SunEditor from "suneditor-react";
-import { useNavigate } from "react-router-dom";
-import { cropOptions } from "../../AreaManagementPage/Row/Add";
+import { cropOptions, seedOptions } from "../../AreaManagementPage/Row/Add";
 import CropCards from "../../SeasonManagementPage/Growth/Add/components/CropCards";
+import { DateTimePicker } from "@mantine/dates";
+import { useNavigate } from "react-router-dom";
+import Scrollable from "../../../components/Scrollable";
+import SeedCards from "../../SeasonManagementPage/Growth/Add/components/SeedCards";
 
-const CertificateAddPage = () => {
+const livestockData = [
+  {
+    id: "ANM001",
+    name: "Bò sữa HF",
+    seed: "Giống bò sữa Holstein Friesian",
+    harvestMethod: "Vắt sữa thủ công & máy",
+    growthCycle: "Chu kỳ sữa 305 ngày/năm",
+    note: "Yêu cầu khí hậu mát mẻ, chuồng trại thoáng mát",
+    image:
+      "https://channuoithuy.com.vn/wp-content/uploads/2023/07/bo-ha-lan-1.jpg",
+  },
+  {
+    id: "ANM002",
+    name: "Heo Landrace",
+    seed: "Giống heo Landrace thuần",
+    harvestMethod: "Xuất bán thịt",
+    growthCycle: "5-6 tháng đạt trọng lượng 100kg",
+    note: "Cần khẩu phần ăn giàu protein",
+    image:
+      "https://upload.wikimedia.org/wikipedia/commons/2/24/Truie_Landrace.jpg",
+  },
+  {
+    id: "ANM003",
+    name: "Gà ri",
+    seed: "Giống gà ri thuần",
+    harvestMethod: "Xuất bán thịt hoặc trứng",
+    growthCycle: "5-6 tháng",
+    note: "Chăn thả vườn, ăn tạp",
+    image:
+      "https://gionggaquy.com/uploads/product/size610/product1/1/product_24.jpg",
+  },
+];
+
+export default function CertificateAddPageGroup() {
   const navigate = useNavigate();
-  const [active, setActive] = useState(0);
-  const [logo, setLogo] = useState<File | null>(null);
+  const [openedFilter, setOpenedFilter] = useState(false);
   const [fileType, setFileType] = useState<"file" | "editor">("file");
-
-  const nextStep = () => setActive((cur) => (cur < 3 ? cur + 1 : cur));
-  const prevStep = () => setActive((cur) => (cur > 0 ? cur - 1 : cur));
-
+  const [treeType, setTreeType] = useState("crop");
   return (
     <Card withBorder shadow="sm" radius={4} p="lg">
       <Group mb="md">
@@ -53,120 +86,81 @@ const CertificateAddPage = () => {
         </Button>
         <Title order={3}>Thêm mới chứng nhận / chứng chỉ</Title>
       </Group>
-      <Stack>
-        <Stepper active={active} onStepClick={setActive}>
-          {/* Step 1: Tổ chức chứng nhận */}
-          <Stepper.Step label="Bước 1" description="Tổ chức chứng nhận">
-            <Stack gap={"xs"}>
-              <FileInput
-                radius={4}
-                label="Logo chứng nhận"
-                leftSection={<IconFileUpload size={18} />}
-                placeholder="Chọn file logo..."
-                value={logo}
-                clearable
-                onChange={setLogo}
-              />
-              {logo && (
-                <Image
-                  src={URL.createObjectURL(logo)}
-                  alt="Logo preview"
-                  w={100}
-                  radius={4}
-                />
-              )}
-              <TextInput
-                label="Tên tổ chức cấp"
-                placeholder="Ví dụ: Tổ chức VietGAP"
-                defaultValue="Tổ chức VietGAP"
-                required
-                radius={4}
-              />
-              <TextInput
-                label="Mã số chứng nhận"
-                placeholder="Số hiệu, ký hiệu..."
-                defaultValue="GCN-VG-2025-001"
-                radius={4}
-              />
-              <TextInput
-                label="Tên chứng nhận"
-                placeholder="Ví dụ: VietGAP"
-                defaultValue="Chứng nhận VietGAP"
-                required
-                radius={4}
-              />
-              <TextInput
-                label="Thời gian cấp"
-                placeholder="dd/mm/yyyy"
-                defaultValue="01/08/2025"
-                radius={4}
-              />
-              <NumberInput
-                label="Thời gian hiệu lực (năm)"
-                placeholder="Ví dụ: 3"
-                defaultValue={3}
-                min={1}
-                radius={4}
-              />
-            </Stack>
-          </Stepper.Step>
-
-          {/* Step 2: Thông tin chứng nhận */}
-          <Stepper.Step label="Bước 2" description="Thông tin chứng nhận">
-            <Stack gap={"xs"}>
-              <Textarea
-                label="Định nghĩa"
-                placeholder="Nhập định nghĩa..."
-                defaultValue="VietGAP là tiêu chuẩn sản xuất nông nghiệp tốt..."
-                minRows={3}
-                radius={4}
-              />
-
-              <Input.Wrapper label="Phạm vi áp dụng">
-                <Group w={"100%"}>
-                  <SegmentedControl
+      <Stack gap="xs">
+        {/* Group chứa các Card */}
+        <Group grow align="flex-start" wrap="wrap" gap="lg">
+          <Stack gap="xs">
+            {/* Card: Tổ chức chứng nhận */}
+            <Card withBorder shadow="sm" radius={4} flex={1}>
+              <Title order={5} mb="md">
+                🏢 Tổ chức chứng nhận
+              </Title>
+              <Stack gap="sm">
+                <Input.Wrapper label="Dấu mộc chứng nhận">
+                  <Dropzone
+                    onDrop={(files) => console.log("accepted files", files)}
+                    maxSize={5 * 1024 ** 2}
                     radius={4}
-                    data={[
-                      { value: "trong-trot", label: "Trồng trọt" },
-                      { value: "chan-nuoi", label: "Chăn nuôi" },
-                    ]}
-                    value="trong-trot"
-                  />
-                </Group>
-              </Input.Wrapper>
+                    accept={["application/pdf"]}
+                  >
+                    <Group
+                      justify="center"
+                      gap="xl"
+                      mih={180}
+                      style={{ pointerEvents: "none" }}
+                    >
+                      <Dropzone.Accept>
+                        <IconUpload
+                          size={52}
+                          color="var(--mantine-color-blue-6)"
+                          stroke={1.5}
+                        />
+                      </Dropzone.Accept>
+                      <Dropzone.Reject>
+                        <IconX
+                          size={52}
+                          color="var(--mantine-color-red-6)"
+                          stroke={1.5}
+                        />
+                      </Dropzone.Reject>
+                      <Dropzone.Idle>
+                        <IconPhoto
+                          size={52}
+                          color="var(--mantine-color-dimmed)"
+                          stroke={1.5}
+                        />
+                      </Dropzone.Idle>
 
-              {/* Nếu Trồng trọt */}
-              <Stack gap={"xs"}>
+                      <div>
+                        <Text size="lg">Kéo & thả dấu mộc vào đây</Text>
+                        <Text size="sm" c="dimmed">
+                          Tối đa 5MB
+                        </Text>
+                      </div>
+                    </Group>
+                  </Dropzone>
+                </Input.Wrapper>
                 <Select
-                  label="Nhóm cây trồng"
+                  label="Tên tổ chức cấp"
+                  defaultValue="Tổ chức VietGAP"
+                  required
+                  radius={4}
                   data={[
-                    "Cây ăn trái",
-                    "Cây lương thực",
-                    "Cây công nghiệp",
-                    "Cây thuốc",
+                    "Tổ chức VietGAP",
+                    "Tổ chức Organic Vietnam",
+                    "Tổ chức GlobalGAP",
                   ]}
-                  radius={4}
-                />
-                <TextInput
-                  label="Cây trồng"
-                  leftSection={<IconSearch size={18} />}
-                  radius={4}
-                  placeholder="Tìm kiếm cây trồng"
-                />
-                <CropCards
-                  selected=""
-                  plants={cropOptions}
-                  onSelect={() => {}}
                 />
               </Stack>
-
-              {/* Nếu Chăn nuôi */}
-            </Stack>
-          </Stepper.Step>
-
-          {/* Step 3: Tiêu chí yêu cầu */}
-          <Stepper.Step label="Bước 3" description="Tiêu chí yêu cầu">
-            <Stack gap={"xs"}>
+            </Card>
+            {/* Card: Tiêu chí yêu cầu */}
+          </Stack>
+          {/* Card: Thông tin chứng nhận */}
+          <Card withBorder shadow="sm" radius={4} h={385}>
+            <Title order={5} mb="md">
+              📌 Tiêu chí yêu cầu
+            </Title>
+            <Stack gap="sm">
               <Radio.Group
                 label="Nội dung giấy chứng nhận"
                 value={fileType}
@@ -174,22 +168,23 @@ const CertificateAddPage = () => {
               >
                 <Group mt="xs">
                   <Radio value="file" label="Tải file PDF" />
-                  <Radio value="editor" label="Nội dung giấy chứng nhận" />
+                  <Radio value="editor" label="Nhập nội dung" />
                 </Group>
               </Radio.Group>
 
               {fileType === "file" ? (
                 <Dropzone
                   onDrop={(files) => console.log("accepted files", files)}
-                  onReject={(files) => console.log("rejected files", files)}
                   maxSize={5 * 1024 ** 2}
                   radius={4}
+                  h={240}
                   accept={["application/pdf"]}
                 >
                   <Group
                     justify="center"
+                    align="center"
                     gap="xl"
-                    mih={220}
+                    h={240}
                     style={{ pointerEvents: "none" }}
                   >
                     <Dropzone.Accept>
@@ -214,98 +209,243 @@ const CertificateAddPage = () => {
                       />
                     </Dropzone.Idle>
 
-                    <div>
-                      <Text size="xl" inline>
-                        Bỏ và thả nội dung giấy chứng nhận tại đây
+                    <Stack gap={"xs"}>
+                      <Text size="lg">Kéo & thả file PDF vào đây</Text>
+                      <Text size="sm" c="dimmed">
+                        Tối đa 5MB
                       </Text>
-                      <Text size="sm" c="dimmed" inline mt={7}>
-                        Đính kèm nội dung giấy chứng nhận (tối đa 5MB)
-                      </Text>
-                    </div>
+                    </Stack>
                   </Group>
                 </Dropzone>
               ) : (
-                <div>
-                  <label style={{ fontSize: 14, fontWeight: 500 }}>
-                    Nội dung giấy chứng nhận
-                  </label>
-                  <SunEditor
-                    setOptions={{
-                      height: "200px",
-                      buttonList: [
-                        ["undo", "redo"],
-                        ["font", "fontSize", "formatBlock"],
-                        ["paragraphStyle", "blockquote"],
-                        [
-                          "bold",
-                          "underline",
-                          "italic",
-                          "strike",
-                          "subscript",
-                          "superscript",
-                        ],
-                        ["fontColor", "hiliteColor", "textStyle"],
-                        ["removeFormat"],
-                        "/", // Line break
-                        ["outdent", "indent"],
-                        ["align", "horizontalRule", "list", "lineHeight"],
-                        [
-                          "table",
-                          "link",
-                          "image",
-                          "video",
-                          "audio" /** ,'math' */,
-                        ], // You must add the 'katex' library at options to use the 'math' plugin.
-                        /** ['imageGallery'] */ // You must add the "imageGalleryUrl".
-                        ["fullScreen", "showBlocks", "codeView"],
-                        ["preview", "print"],
-                        ["save", "template"],
-                        /** ['dir', 'dir_ltr', 'dir_rtl'] */ // "dir": Toggle text direction, "dir_ltr": Right to Left, "dir_rtl": Left to Right
-                      ],
-                    }}
-                  />
-                </div>
+                <SunEditor
+                  height="180px"
+                  setOptions={{
+                    buttonList: [
+                      ["undo", "redo"],
+                      ["bold", "italic", "underline"],
+                      ["list", "align", "link"],
+                      ["image", "table", "codeView"],
+                    ],
+                  }}
+                />
               )}
             </Stack>
-          </Stepper.Step>
-
-          <Stepper.Completed>
-            <Stack align="center" justify="center" mt="xl">
-              <Image
-                src={
-                  "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQjPNbBpZeXnXfTuA6AWek-Kj8NYEVbYdG6ayi5bIWarDuryXDrILdKMTd597quLD0PBKM&usqp=CAU"
-                }
-                w={200}
-                fit="cover"
+          </Card>
+        </Group>
+        <Card withBorder shadow="sm" radius={4} flex={1}>
+          <Title order={5} mb="md">
+            📄 Thông tin chứng nhận
+          </Title>
+          <Stack gap="sm">
+            <Group grow>
+              <TextInput
+                label="Mã số chứng nhận"
+                defaultValue="GCN-VG-2025-001"
+                radius={4}
               />
-              <Text fz={"h2"} ta="center">
-                Thêm giấy chứng nhận mới thành công!
-              </Text>
-              <Text fz={"md"} ta="center" c="dimmed">
-                Bạn có thể xem lại thông tin chứng nhận trong danh sách quản lý
-                chứng nhận.
-              </Text>
-
-              <Button size="md" mt="md" radius={4} onClick={() => navigate(-1)}>
-                Xác nhận
-              </Button>
+              <TextInput
+                label="Tên chứng nhận"
+                defaultValue="Chứng nhận VietGAP"
+                radius={4}
+              />
+            </Group>
+            <Group grow>
+              <DateTimePicker
+                radius={4}
+                label="Thời gian cấp"
+                defaultValue="01/08/2025"
+              />
+              <NumberInput
+                label="Thời gian hiệu lực (năm)"
+                defaultValue={3}
+                min={1}
+              />
+            </Group>
+            <Textarea
+              label="Định nghĩa"
+              defaultValue="VietGAP là tiêu chuẩn sản xuất nông nghiệp tốt..."
+              minRows={3}
+              radius={4}
+            />
+          </Stack>
+        </Card>
+        <Group grow gap={"md"} align="flex-start">
+          <Card withBorder radius={4} shadow="sm">
+            <Stack gap={"xs"}>
+              <Title order={4}>Cây trồng</Title>
+              <Divider />
+              <Radio.Group
+                mt={"md"}
+                defaultValue={treeType}
+                onChange={setTreeType}
+              >
+                <Stack gap={"xs"}>
+                  <Radio value="crop" label="Chứng nhận cấp theo cây trồng" />
+                  <Radio
+                    value="seed"
+                    label="Chứng nhận cấp theo giống cây trồng"
+                  />
+                </Stack>
+              </Radio.Group>
+              <Group>
+                <Button radius={4} onClick={() => setOpenedFilter(true)}>
+                  Thêm mới
+                </Button>
+              </Group>
+              {treeType === "crop" ? (
+                <SeedCards
+                  selected=""
+                  seeds={seedOptions}
+                  onSelect={() => {}}
+                  isDelete
+                  isCheckbox={false}
+                />
+              ) : (
+                <CropCards
+                  selected=""
+                  plants={cropOptions}
+                  onSelect={() => {}}
+                  isCheckbox={false}
+                  isTouchable={false}
+                  isDelete={true}
+                />
+              )}
             </Stack>
-          </Stepper.Completed>
-        </Stepper>
-        {active !== 3 && (
-          <Group justify="space-between" mt="md">
-            <Button radius={4} variant="default" onClick={prevStep}>
-              Quay lại
-            </Button>
+          </Card>
+          <Card withBorder radius={4} shadow="sm">
+            <Stack gap={"xs"}>
+              <Title order={4}>Chăn nuôi</Title>
+              <Divider />
+              <Radio.Group mt={"md"} value={"animal-s"}>
+                <Stack gap={"xs"}>
+                  <Radio value="animal" label="Chứng nhận cấp theo vật nuôi" />
+                  <Radio
+                    value="animal-s"
+                    label="Chứng nhận cấp theo giống vật nuôi"
+                  />
+                </Stack>
+              </Radio.Group>
+              <Group>
+                <Button radius={4}>Thêm mới</Button>
+              </Group>
+              <Scrollable>
+                <Group wrap="nowrap" gap="md">
+                  {livestockData.map((animal) => (
+                    <Card
+                      key={animal.id}
+                      withBorder
+                      radius="md"
+                      shadow="sm"
+                      w={260}
+                      h={360}
+                    >
+                      <Card.Section>
+                        <Image
+                          src={animal.image}
+                          height={140}
+                          alt={animal.name}
+                        />
+                      </Card.Section>
 
-            <Button radius={4} onClick={nextStep}>
-              {active === 2 ? "Hoàn thành" : "Tiếp tục"}
+                      <Stack gap={4} mt="sm">
+                        <Group justify="space-between">
+                          <Text fw={600}>{animal.name}</Text>
+                          <Badge size="sm" variant="light">
+                            {animal.id}
+                          </Badge>
+                        </Group>
+
+                        <Text size="sm">
+                          <strong>Giống:</strong> {animal.seed}
+                        </Text>
+                        <Text size="sm">
+                          <strong>Hình thức chăn nuôi:</strong>{" "}
+                          {animal.harvestMethod}
+                        </Text>
+                        <Text size="sm">
+                          <strong>Chu kỳ sinh trưởng:</strong>{" "}
+                          {animal.growthCycle}
+                        </Text>
+                        <Text size="sm" c="dimmed">
+                          <strong>Ghi chú:</strong> {animal.note}
+                        </Text>
+                      </Stack>
+
+                      <ActionIcon
+                        pos={"absolute"}
+                        bottom={10}
+                        right={10}
+                        color="red"
+                        variant="light"
+                        radius={4}
+                      >
+                        <IconTrash size={16} />
+                      </ActionIcon>
+                    </Card>
+                  ))}
+                </Group>
+              </Scrollable>
+            </Stack>
+          </Card>
+        </Group>
+        <Group justify="flex-end" mt="md">
+          <Button radius={4}>Hoàn thành</Button>
+        </Group>
+      </Stack>
+      <Modal
+        title={"Tìm kiếm cây trồng"}
+        opened={openedFilter}
+        onClose={() => setOpenedFilter(false)}
+        size={"lg"}
+      >
+        <Stack gap={"xs"}>
+          <Select
+            label="Nhóm cây trồng"
+            radius={4}
+            data={[
+              "Cây ăn trái",
+              "Cây lương thực",
+              "Cây công nghiệp",
+              "Cây thuốc",
+            ]}
+          />
+
+          {treeType === "crop" ? (
+            <Stack gap={"xs"}>
+              <TextInput
+                label="Cây trồng"
+                leftSection={<IconSearch size={18} />}
+                placeholder="Tìm kiếm cây trồng"
+                radius={4}
+              />
+              <SeedCards selected="" seeds={seedOptions} onSelect={() => {}} />
+            </Stack>
+          ) : (
+            <Stack gap={"xs"}>
+              <TextInput
+                label="Cây trồng"
+                leftSection={<IconSearch size={18} />}
+                placeholder="Tìm kiếm cây trồng"
+                radius={4}
+              />
+              <SeedCards selected="" seeds={seedOptions} onSelect={() => {}} />
+              <TextInput
+                label="Giống cây trồng"
+                leftSection={<IconSearch size={18} />}
+                placeholder="Tìm kiếm giống cây trồng"
+                radius={4}
+              />
+              <CropCards selected="" plants={cropOptions} onSelect={() => {}} />
+            </Stack>
+          )}
+          <Group justify="flex-end">
+            <Button radius={4} onClick={() => setOpenedFilter(false)}>
+              Xác nhận
             </Button>
           </Group>
-        )}
-      </Stack>
+        </Stack>
+      </Modal>
     </Card>
   );
-};
-
-export default CertificateAddPage;
+}

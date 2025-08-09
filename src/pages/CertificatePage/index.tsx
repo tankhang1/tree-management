@@ -63,10 +63,9 @@ const certificateDataset: Certificate[] = [
 const CertificatePage = () => {
   const navigate = useNavigate();
   const certificateColumns: MRT_ColumnDef<Certificate>[] = [
-    { accessorKey: "id", header: "Mã chứng nhận" },
     {
       accessorKey: "orgLogo",
-      header: "Logo",
+      header: "Dấu mộc chứng nhận",
       Cell: ({ cell }) => (
         <img
           src={cell.getValue<string>()}
@@ -75,7 +74,6 @@ const CertificatePage = () => {
         />
       ),
     },
-    { accessorKey: "orgName", header: "Tổ chức cấp" },
     { accessorKey: "certCode", header: "Mã số" },
     { accessorKey: "certName", header: "Tên chứng nhận" },
     { accessorKey: "issueDate", header: "Ngày cấp" },
@@ -101,8 +99,7 @@ const CertificatePage = () => {
         );
       },
     },
-    { accessorKey: "scopeGroup", header: "Nhóm" },
-    { accessorKey: "scopeItem", header: "Đối tượng" },
+
     {
       accessorKey: "fileUrl",
       header: "Tài liệu",
