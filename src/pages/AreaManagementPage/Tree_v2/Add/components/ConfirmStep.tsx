@@ -9,6 +9,7 @@ import {
   Button,
   TextInput,
   Accordion,
+  Select,
 } from "@mantine/core";
 import { DatePickerInput } from "@mantine/dates";
 import { MapContainer, Marker, Polyline, TileLayer } from "react-leaflet";
@@ -179,6 +180,18 @@ const ConfirmStep = (props: ConfirmPlantingProps) => {
                   <Card withBorder radius="sm" shadow="xs" p="md">
                     {/* Form nhập 1 điểm, bấm Thêm để append */}
                     <Group align="flex-end" wrap="wrap">
+                      <Select
+                        label="Hạt giống"
+                        placeholder="Chọn hạt giống"
+                        radius={4}
+                        data={p.seeds.map((seed) => ({
+                          value: seed.code,
+                          label: seed.seedName,
+                        }))}
+                        disabled
+                        flex={1}
+                        value={"SDR-RI6"} // Chỉ ví dụ, có thể thay đổi
+                      />
                       <TextInput
                         label="Mã cây"
                         placeholder="A1-001"
@@ -189,7 +202,7 @@ const ConfirmStep = (props: ConfirmPlantingProps) => {
                             [p.id]: { ...buf, code: e.currentTarget.value },
                           })
                         }
-                        w={200}
+                        flex={1}
                         radius={4}
                       />
                       <TextInput
@@ -206,7 +219,7 @@ const ConfirmStep = (props: ConfirmPlantingProps) => {
                             },
                           });
                         }}
-                        w={200}
+                        flex={1}
                         radius={4}
                       />
                       <TextInput
@@ -223,7 +236,7 @@ const ConfirmStep = (props: ConfirmPlantingProps) => {
                             },
                           });
                         }}
-                        w={200}
+                        flex={1}
                         radius={4}
                       />
                       <DatePickerInput
@@ -231,24 +244,8 @@ const ConfirmStep = (props: ConfirmPlantingProps) => {
                         placeholder="Chọn ngày"
                         value={buf.plantedAt ?? null}
                         radius={4}
+                        flex={1}
                       />
-                      <Button
-                        leftSection={<IconPlus size={16} />}
-                        variant="light"
-                        radius={4}
-                        onClick={() => {
-                          if (buf.lat == null || buf.lng == null) return;
-                          const next = [...pts, { ...buf }];
-                          form.setFieldValue(`gps.byPlot.${p.id}`, next);
-                          const cloned = {
-                            ...form.values.gps.inputBuffer.byPlot,
-                          };
-                          delete cloned[p.id];
-                          form.setFieldValue("gps.inputBuffer.byPlot", cloned);
-                        }}
-                      >
-                        Thêm
-                      </Button>
                     </Group>
 
                     <Stack mt="md" gap="xs">
@@ -355,6 +352,19 @@ const ConfirmStep = (props: ConfirmPlantingProps) => {
                 <Accordion.Panel>
                   <Card withBorder radius="sm" shadow="xs" p="md">
                     <Group align="flex-end" wrap="wrap">
+                      <Select
+                        label="Hạt giống"
+                        placeholder="Chọn hạt giống"
+                        radius={4}
+                        data={samplePlots[0].seeds.map((seed) => ({
+                          value: seed.code,
+                          label: seed.seedName,
+                        }))}
+                        disabled
+                        flex={1}
+                        value={"SDR-RI6"} // Chỉ ví dụ, có thể thay đổi
+                      />
+
                       <TextInput
                         label="Mã cây"
                         placeholder="R1-001"
@@ -365,7 +375,7 @@ const ConfirmStep = (props: ConfirmPlantingProps) => {
                             [key]: { ...buf, code: e.currentTarget.value },
                           })
                         }
-                        w={200}
+                        flex={1}
                         radius={4}
                       />
                       <TextInput
@@ -382,7 +392,7 @@ const ConfirmStep = (props: ConfirmPlantingProps) => {
                             },
                           });
                         }}
-                        w={200}
+                        flex={1}
                         radius={4}
                       />
                       <TextInput
@@ -399,7 +409,7 @@ const ConfirmStep = (props: ConfirmPlantingProps) => {
                             },
                           });
                         }}
-                        w={200}
+                        flex={1}
                         radius={4}
                       />
                       <DatePickerInput
@@ -407,24 +417,8 @@ const ConfirmStep = (props: ConfirmPlantingProps) => {
                         placeholder="Chọn ngày"
                         value={buf.plantedAt ?? null}
                         radius={4}
+                        flex={1}
                       />
-                      <Button
-                        leftSection={<IconPlus size={16} />}
-                        variant="light"
-                        radius={4}
-                        onClick={() => {
-                          if (buf.lat == null || buf.lng == null) return;
-                          const next = [...pts, { ...buf }];
-                          form.setFieldValue(`gps.byRow.${key}`, next);
-                          const cloned = {
-                            ...form.values.gps.inputBuffer.byRow,
-                          };
-                          delete cloned[key];
-                          form.setFieldValue("gps.inputBuffer.byRow", cloned);
-                        }}
-                      >
-                        Thêm
-                      </Button>
                     </Group>
 
                     <Stack mt="md" gap="xs">
