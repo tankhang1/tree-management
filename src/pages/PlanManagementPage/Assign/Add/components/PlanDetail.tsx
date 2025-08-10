@@ -173,18 +173,14 @@ const PlanDetail = () => {
                       <Badge variant="light">Vật tư</Badge>
                       <List spacing={4} size="sm" icon={<IconBox size={14} />}>
                         {stage.materials.map((mat, i) => (
-                          <List.Item key={i}>
-                            {mat.item} - {mat.quantity}
-                          </List.Item>
+                          <List.Item key={i}>{mat.item}</List.Item>
                         ))}
                       </List>
 
                       <Badge variant="light">Thiết bị</Badge>
                       <List spacing={4} size="sm" icon={<IconTool size={14} />}>
                         {stage.equipment.map((eq, i) => (
-                          <List.Item key={i}>
-                            {eq.item} - {eq.quantity}
-                          </List.Item>
+                          <List.Item key={i}>{eq.item}</List.Item>
                         ))}
                       </List>
 
@@ -195,9 +191,7 @@ const PlanDetail = () => {
                         icon={<IconVaccine size={14} />}
                       >
                         {stage.pesticides.map((ps, i) => (
-                          <List.Item key={i}>
-                            {ps.item} - {ps.quantity}
-                          </List.Item>
+                          <List.Item key={i}>{ps.item}</List.Item>
                         ))}
                       </List>
                     </Stack>

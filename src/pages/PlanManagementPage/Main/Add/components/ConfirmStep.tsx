@@ -20,9 +20,9 @@ const ConfirmStep = () => {
     season: "Mùa Xuân 2025",
     treeGroup: "Cây ngắn ngày",
     treeCategory: "Rau cải",
-    crop: "Rau muống",
+    crop: "Sầu riêng",
     cropCode: "RAU-001",
-    cropVariety: "Rau muống lá nhỏ",
+    cropVariety: "Sầu riêng Ri6",
     cropSeed: "RMLN-2025",
     cropImage:
       "https://food-map.s3.ap-southeast-1.amazonaws.com/news/2021/03/sau-rieng-ri6-3.jpg",
@@ -33,6 +33,7 @@ const ConfirmStep = () => {
     zone: "Vùng Đồng Bằng",
     area: "Khu vực A1",
     plot: "Lô số 3",
+    cycleName: "Chu kỳ 1", // <-- đổi ở đây nếu cần
     stages: [
       {
         name: "Gieo hạt",
@@ -55,28 +56,35 @@ const ConfirmStep = () => {
     ],
   };
 
+  // helper: chuyển array tên -> [{ item, quantity }]
+  const toItems = (arr?: string[]) =>
+    (arr || []).map((name) => ({ item: name, quantity: 1 }));
+
   return (
     <Stack>
       <Title order={3}>Xác nhận kế hoạch canh tác</Title>
 
+      {/* Thông tin tổng quan */}
       <Group grow>
         <Card withBorder>
           <Stack gap={4}>
             <Group>
               <Text fw={500}>Kế hoạch:</Text>
-              <Text>Kế hoạch trồng sầu riêng</Text>
+              <Text>
+                {data.crop} - {data.cropVariety} (Mã: {data.cropCode})
+              </Text>
             </Group>
             <Group>
               <Text fw={500}>Mùa vụ:</Text>
               <Text>{data.season}</Text>
             </Group>
-
             <Group>
               <Text fw={500}>Thời gian chu kỳ:</Text>
               <Text>{data.duration} ngày</Text>
             </Group>
           </Stack>
         </Card>
+
         <Card withBorder>
           <Stack gap={4}>
             <Group>
@@ -94,103 +102,30 @@ const ConfirmStep = () => {
           </Stack>
         </Card>
       </Group>
+
       <Divider label="Danh sách hạt giống" labelPosition="center" my="md" />
       <SeedDetailCards isTouchable={false} />
+
       <Divider label="Danh sách giai đoạn" labelPosition="center" my="md" />
 
       <Card withBorder radius={4} shadow="sm" p="md">
         <Stack>
-          <Text fw={"bold"}>Chu kì 2</Text>
+          <Text fw="bold">{data.cycleName}</Text>
 
           <SimpleGrid cols={{ base: 1, sm: 2, md: 3 }} spacing="md">
-            <GrowthStageCard
-              stageName="Giai đoạn Nảy mầm"
-              materials={[
-                {
-                  item: "Phân NPK",
-                  quantity: 50,
-                },
-              ]}
-              equipment={[
-                {
-                  item: "Bình tưới",
-                  quantity: 1,
-                },
-              ]}
-              pesticides={[
-                {
-                  item: "Confidor",
-                  quantity: 1,
-                },
-              ]}
-              mode="view"
-            />
-            <GrowthStageCard
-              stageName="Giai đoạn sinh trưởng"
-              materials={[
-                {
-                  item: "Phân NPK",
-                  quantity: 50,
-                },
-              ]}
-              equipment={[
-                {
-                  item: "Bình tưới",
-                  quantity: 1,
-                },
-              ]}
-              pesticides={[
-                {
-                  item: "Confidor",
-                  quantity: 1,
-                },
-              ]}
-              mode="view"
-            />
-            <GrowthStageCard
-              stageName="Giai đoạn sinh trưởng"
-              materials={[
-                {
-                  item: "Phân NPK",
-                  quantity: 50,
-                },
-              ]}
-              equipment={[
-                {
-                  item: "Bình tưới",
-                  quantity: 1,
-                },
-              ]}
-              pesticides={[
-                {
-                  item: "Confidor",
-                  quantity: 1,
-                },
-              ]}
-              mode="view"
-            />
-            <GrowthStageCard
-              stageName="Giai đoạn sinh trưởng"
-              materials={[
-                {
-                  item: "Phân NPK",
-                  quantity: 50,
-                },
-              ]}
-              equipment={[
-                {
-                  item: "Bình tưới",
-                  quantity: 1,
-                },
-              ]}
-              pesticides={[
-                {
-                  item: "Confidor",
-                  quantity: 1,
-                },
-              ]}
-              mode="view"
-            />
+            {data.stages.map((s) => (
+              <GrowthStageCard
+                key={s.name}
+                stageName={`${s.name} (${s.duration} ngày)`}
+                materials={toItems(s.materials)}
+                equipment={toItems(s.equipment)}
+                pesticides={toItems(s.pesticides)}
+                // Nếu GrowthStageCard có props hiển thị tài liệu:
+                // documentType={s.documentType as "file" | "editor"}
+                // document={s.document}
+                mode="view"
+              />
+            ))}
           </SimpleGrid>
         </Stack>
       </Card>

@@ -46,7 +46,7 @@ const assignmentData: Assignment[] = [
     assignDate: "2025-07-10",
     startDate: "2025-07-11",
     endDate: "2025-07-12",
-    departments: ["Chăm sóc cây", "Phòng bảo vệ thực vật"],
+    departments: ["Phòng kỹ thuật"],
     employees: ["Nguyễn Văn A", "Lê Thị B"],
     creator: "Nguyễn Quản Lý",
     supervisor: "Lê Giám Sát",

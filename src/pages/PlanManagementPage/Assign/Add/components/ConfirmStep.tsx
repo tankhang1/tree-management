@@ -1,30 +1,146 @@
 import {
+  Badge,
   Card,
+  Divider,
   Group,
+  Image,
+  Paper,
+  SimpleGrid,
   Stack,
   Text,
-  Title,
-  Divider,
-  Badge,
-  Image,
   ThemeIcon,
+  Title,
+  rem,
 } from "@mantine/core";
 import {
   IconMapPin,
   IconClipboardText,
   IconLayersSubtract,
   IconClockHour4,
-  IconPaperclip,
   IconUser,
-  IconFileText,
   IconUsers,
-  IconAsset,
-  IconBox,
   IconTool,
   IconVaccine,
-  IconCar,
+  IconBox,
 } from "@tabler/icons-react";
 import Scrollable from "../../../../../components/Scrollable";
+
+/* --- Small UI helpers --- */
+function InfoRow({
+  icon,
+  label,
+  value,
+}: {
+  icon: React.ReactNode;
+  label: string;
+  value: React.ReactNode;
+}) {
+  return (
+    <Group align="center" gap="xs" wrap="nowrap">
+      <span style={{ display: "inline-flex", width: rem(18) }}>{icon}</span>
+      <Text fw={600} fz="sm">
+        {label}
+      </Text>
+      <Text fz="sm">{value}</Text>
+    </Group>
+  );
+}
+
+function TagList({
+  icon,
+  items,
+  color = "indigo",
+  emptyText = "Không có",
+}: {
+  icon: React.ReactNode;
+  items: string[];
+  color?: string;
+  emptyText?: string;
+}) {
+  return (
+    <Group gap={6} wrap="wrap">
+      <ThemeIcon color={color} variant="light" radius="md">
+        {icon}
+      </ThemeIcon>
+      {items.length ? (
+        items.map((t) => (
+          <Badge key={t} variant="light" color={color}>
+            {t}
+          </Badge>
+        ))
+      ) : (
+        <Text c="dimmed" fz="sm">
+          {emptyText}
+        </Text>
+      )}
+    </Group>
+  );
+}
+type Resource = {
+  type: "Vật tư" | "Thuốc BVTV" | "Thiết bị";
+  name: string;
+  quantity: number;
+  unit: string;
+  img: string;
+};
+
+function ResourceCard({ r }: { r: Resource }) {
+  const icon =
+    r.type === "Vật tư" ? (
+      <IconBox size={16} />
+    ) : r.type === "Thuốc BVTV" ? (
+      <IconVaccine size={16} />
+    ) : (
+      <IconTool size={16} />
+    );
+
+  return (
+    <Paper
+      withBorder
+      radius={4}
+      p="sm"
+      w={"100%"}
+      style={{
+        position: "relative",
+        overflow: "hidden",
+      }}
+    >
+      {/* Dải màu trái */}
+      <div
+        style={{
+          position: "absolute",
+          inset: 0,
+          borderRadius: "inherit",
+          pointerEvents: "none",
+        }}
+      />
+
+      <Group gap="sm" align="flex-start" wrap="nowrap">
+        <Image
+          src={r.img || "https://via.placeholder.com/100x100?text=No+Image"}
+          alt={r.name}
+          w={80}
+          h={80}
+          radius="sm"
+          fit="cover"
+        />
+
+        <Stack gap={4} flex={1}>
+          <Group gap={6} align="center">
+            {icon}
+            <Text fw={600} fz="sm">
+              {r.type}
+            </Text>
+          </Group>
+          <Text>{r.name}</Text>
+          <Text c="dimmed" fz="sm">
+            {r.quantity} {r.unit}
+          </Text>
+        </Stack>
+      </Group>
+    </Paper>
+  );
+}
 
 const ConfirmStep = () => {
   const data = {
@@ -48,6 +164,8 @@ const ConfirmStep = () => {
     zone: "Vùng Đồng Bằng",
     area: "Khu vực A1",
     plot: "Lô số 3",
+    startDate: "15/02/2025",
+    endDate: "19/02/2025",
     cycles: [
       {
         name: "Chu kỳ 1",
@@ -55,7 +173,7 @@ const ConfirmStep = () => {
           {
             name: "Gieo hạt",
             duration: 5,
-            documentType: "file",
+            documentType: "file" as "file" | "editor",
             document: "Tài liệu gieo hạt.pdf",
             materials: ["Phân NPK"],
             equipment: ["Bình tưới"],
@@ -63,21 +181,104 @@ const ConfirmStep = () => {
             leader: "Nguyễn Văn A",
             members: ["Nguyễn Văn A", "Trần Thị B"],
             resources: [
-              { type: "Phân bón", amount: 5, unit: "kg" },
-              { type: "Thiết bị", amount: 1, unit: "cái" },
-            ],
+              {
+                type: "Thiết bị",
+                name: "Máy cày Kubota L3218",
+                quantity: 3,
+                unit: "cái",
+                img: "https://kubotadailoi.com/uploads/images/P-1176_L3218_slide.jpg",
+              },
+              {
+                type: "Thiết bị",
+                name: "Máy bay nông nghiệp DJI Agras",
+                quantity: 1,
+                unit: "cái",
+                img: "https://agridrone.vn/wp-content/uploads/2023/02/16887_T50_%E6%AD%A3%E4%BE%A7.jpg",
+              },
+              {
+                type: "Vật tư",
+                name: "Béc tưới nhỏ giọt 8L/h",
+                quantity: 1200,
+                unit: "cái",
+                img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSXj6nfv7JlBEuVoQo0o9DUUXGAnLXXec-JLg&s",
+              },
+              {
+                type: "Vật tư",
+                name: "Ống HDPE Φ16",
+                quantity: 800,
+                unit: "m",
+                img: "https://bizweb.dktcdn.net/thumb/1024x1024/100/348/321/products/ong-hdpe-wata-20.jpg?v=1669780765193",
+              },
+              {
+                type: "Thuốc BVTV",
+                name: "Thuốc trừ sâu Emamectin 5%",
+                quantity: 40,
+                unit: "chai",
+                img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRV9s4k_p9Y4CZNPLFlRhbQPc4GZZvVNSoGVg&s",
+              },
+              {
+                type: "Thuốc BVTV",
+                name: "Thuốc trừ nấm Mancozeb 80WP",
+                quantity: 8,
+                unit: "gói",
+                img: "https://nongduochai.vn/images/products/2021/04/13/original/manozeb-80wp_xanh_1kg_1618288208.png",
+              },
+            ] as Resource[],
           },
           {
-            name: "Ra lá",
+            name: "Ra hoa",
             duration: 10,
-            documentType: "editor",
-            document: "Giai đoạn ra lá cần đủ ánh sáng và độ ẩm",
+            documentType: "editor" as "file" | "editor",
+            document: "Giai đoạn ra lá cần đủ ánh sáng và độ ẩm.",
             materials: ["Vôi bột"],
             equipment: ["Máy xịt"],
             pesticides: ["Confidor"],
             leader: "Trần Thị B",
             members: ["Lê Văn C"],
-            resources: [{ type: "Thuốc BVTV", amount: 3, unit: "chai" }],
+            resources: [
+              {
+                type: "Thiết bị",
+                name: "Máy cày Kubota L3218",
+                quantity: 3,
+                unit: "cái",
+                img: "https://kubotadailoi.com/uploads/images/P-1176_L3218_slide.jpg",
+              },
+              {
+                type: "Thiết bị",
+                name: "Máy bay nông nghiệp DJI Agras",
+                quantity: 1,
+                unit: "cái",
+                img: "https://agridrone.vn/wp-content/uploads/2023/02/16887_T50_%E6%AD%A3%E4%BE%A7.jpg",
+              },
+              {
+                type: "Vật tư",
+                name: "Béc tưới nhỏ giọt 8L/h",
+                quantity: 1200,
+                unit: "cái",
+                img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSXj6nfv7JlBEuVoQo0o9DUUXGAnLXXec-JLg&s",
+              },
+              {
+                type: "Vật tư",
+                name: "Ống HDPE Φ16",
+                quantity: 800,
+                unit: "m",
+                img: "https://bizweb.dktcdn.net/thumb/1024x1024/100/348/321/products/ong-hdpe-wata-20.jpg?v=1669780765193",
+              },
+              {
+                type: "Thuốc BVTV",
+                name: "Thuốc trừ sâu Emamectin 5%",
+                quantity: 40,
+                unit: "chai",
+                img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRV9s4k_p9Y4CZNPLFlRhbQPc4GZZvVNSoGVg&s",
+              },
+              {
+                type: "Thuốc BVTV",
+                name: "Thuốc trừ nấm Mancozeb 80WP",
+                quantity: 8,
+                unit: "gói",
+                img: "https://nongduochai.vn/images/products/2021/04/13/original/manozeb-80wp_xanh_1kg_1618288208.png",
+              },
+            ] as Resource[],
           },
         ],
       },
@@ -88,81 +289,104 @@ const ConfirmStep = () => {
     <Stack>
       <Title order={3}>Xác nhận kế hoạch canh tác</Title>
 
-      <Group grow align="flex-start">
-        <Card withBorder h={250}>
-          <Group flex={1} align="flex-start">
-            <Stack flex={1} gap={4}>
-              <Group>
-                <Text fw={500}>Tên công việc:</Text>
-                <Text>{data.name}</Text>
-              </Group>
-              <Group>
-                <Text fw={500}>Mùa vụ:</Text>
-                <Text>{data.season}</Text>
-              </Group>
-              <Group>
-                <Text fw={500}>Kế hoạch:</Text>
-                <Text>{data.plan}</Text>
-              </Group>
-              <Group>
-                <Text fw={500}>Người quản lý:</Text>
-                <Text>{data.manager}</Text>
-              </Group>
-              <Group>
-                <Text fw={500}>Người kiểm định chất lượng:</Text>
-                <Text>{data.supervisor}</Text>
-              </Group>
+      {/* Top summary */}
+      <Group grow align="stretch">
+        {/* Thông tin chung */}
+        <Card withBorder radius={4} p="md" style={{ flex: 1 }}>
+          <Stack gap={8}>
+            <InfoRow
+              icon={<IconClipboardText size={18} />}
+              label="Tên công việc:"
+              value={data.name}
+            />
+            <InfoRow
+              icon={<IconClipboardText size={18} />}
+              label="Kế hoạch:"
+              value={data.plan}
+            />
+            <InfoRow
+              icon={<IconClipboardText size={18} />}
+              label="Mùa vụ:"
+              value={data.season}
+            />
+            <InfoRow
+              icon={<IconUser size={18} />}
+              label="Người quản lý:"
+              value={data.manager}
+            />
+            <InfoRow
+              icon={<IconUser size={18} />}
+              label="Người kiểm định chất lượng:"
+              value={data.supervisor}
+            />
+            <InfoRow
+              icon={<IconClockHour4 size={18} />}
+              label="Thời gian thực hiện dự kiến:"
+              value={data.startDate}
+            />
+            <InfoRow
+              icon={<IconClockHour4 size={18} />}
+              label="Thời gian hoàn thành dự kiến:"
+              value={data.endDate}
+            />
+          </Stack>
 
-              <Group>
-                <Text fw={500}>Thời gian thực hiện dự kiến:</Text>
-                <Text>15/2/2025</Text>
-              </Group>
-              <Group>
-                <Text fw={500}>Thời gian hoàn thành dự kiến:</Text>
-                <Text>19/2/2025</Text>
-              </Group>
-            </Stack>
-            <Stack flex={1} gap={"xs"}>
-              <Group>
-                <IconMapPin size={16} />
-                <Text>{data.zone}</Text>
-              </Group>
-              <Group>
-                <IconLayersSubtract size={16} />
-                <Text>{data.area}</Text>
-              </Group>
-              <Group>
-                <IconClipboardText size={16} />
-                <Text>{data.plot}</Text>
-              </Group>
-            </Stack>
+          <Divider my="sm" />
+
+          <Group gap="md">
+            <InfoRow
+              icon={<IconMapPin size={18} />}
+              label="Vùng:"
+              value={data.zone}
+            />
+            <InfoRow
+              icon={<IconLayersSubtract size={18} />}
+              label="Khu vực:"
+              value={data.area}
+            />
+            <InfoRow
+              icon={<IconClipboardText size={18} />}
+              label="Lô:"
+              value={data.plot}
+            />
           </Group>
         </Card>
-        <Card withBorder h={250}>
-          <Group grow align="flex-start">
-            <Stack>
-              <Group>
-                <Text fw={500}>Cây trồng:</Text>
-                <Text>Sầu riêng</Text>
+
+        {/* Cây trồng */}
+        <Card withBorder radius={4} p="md" style={{ flex: 1 }}>
+          <Group align="flex-start" justify="space-between" wrap="nowrap">
+            <Stack gap={6} style={{ minWidth: 0 }}>
+              <Group gap="xs" wrap="wrap">
+                <Badge variant="light" color="green">
+                  {data.treeGroup}
+                </Badge>
+                <Badge variant="light" color="teal">
+                  {data.treeCategory}
+                </Badge>
+                <Badge variant="light" color="blue">
+                  Mã: {data.cropCode}
+                </Badge>
               </Group>
-              <Group>
-                <Text fw={500}>Giống cây:</Text>
-                <Text>Sầu riêng Ri6</Text>
-              </Group>
-              <Group>
-                <Text fw={500}>Hạt giống:</Text>
-                <Text>{data.cropSeed}</Text>
-              </Group>
-              <Group>
-                <Text fw={500}>Đơn vị thu hoạch:</Text>
-                <Text>{data.harvestUnit}</Text>
-              </Group>
+              <Text fw={600}>{data.crop}</Text>
+              <Text c="dimmed" fz="sm">
+                Giống: {data.cropVariety} • Hạt giống: {data.cropSeed}
+              </Text>
+              <Text fz="sm" lineClamp={3}>
+                {data.cropDescription}
+              </Text>
+              <Badge variant="outline" color="gray" mt={4}>
+                Đơn vị thu hoạch: {data.harvestUnit}
+              </Badge>
             </Stack>
+
             <Image
               src={data.cropImage}
-              h={210}
+              h={180}
+              w={240}
               radius="md"
-              alt="Ảnh cây trồng"
+              alt={`${data.crop}`}
+              fit="cover"
+              style={{ flexShrink: 0 }}
             />
           </Group>
         </Card>
@@ -174,118 +398,74 @@ const ConfirmStep = () => {
         my="md"
       />
 
-      {data.cycles.map((cycle, cycleIdx) => (
-        <Stack key={cycleIdx} gap="lg">
-          <Title order={3}>{cycle.name}</Title>
+      {/* Cycles & stages */}
+      {data.cycles.map((cycle) => (
+        <Stack key={cycle.name} gap="lg">
+          <Title order={4}>{cycle.name}</Title>
 
-          <Group>
-            {cycle.stages.map((stage, stageIdx) => (
-              <Card
-                w={400}
-                h={500}
-                key={stageIdx}
-                shadow="sm"
-                withBorder
-                radius="md"
-                p="md"
-              >
-                <Stack gap="xs">
-                  {/* Header */}
-                  <Group justify="space-between" align="center">
-                    <Group>
-                      <ThemeIcon color="blue" variant="light" radius="md">
-                        <IconClockHour4 size={18} />
-                      </ThemeIcon>
-                      <Text fw={600}>
-                        {stage.name} ({stage.duration} ngày)
-                      </Text>
-                    </Group>
-                    <Badge variant="light" color="blue">
-                      {cycle.name}
-                    </Badge>
-                  </Group>
-
-                  {/* Tài liệu */}
-
-                  {/* Trưởng nhóm */}
-                  <Divider label="Trưởng nhóm" labelPosition="left" />
-                  <Group>
-                    <ThemeIcon color="teal" variant="light" radius="md">
-                      <IconUser size={16} />
-                    </ThemeIcon>
-                    <Text size="sm">{stage.leader}</Text>
-                  </Group>
-
-                  {/* Nhân sự */}
-                  <Divider label="Nhân sự" labelPosition="left" />
-                  <Group gap={6}>
-                    <ThemeIcon color="indigo" variant="light" radius="md">
-                      <IconUsers size={16} />
-                    </ThemeIcon>
-                    {stage.members.map((member, i) => (
-                      <Badge key={i} color="indigo" variant="light">
-                        {member}
+          <Scrollable h={600}>
+            <Group wrap="nowrap" align="stretch">
+              {cycle.stages.map((stage) => (
+                <Card
+                  key={`${cycle.name}-${stage.name}`}
+                  shadow="sm"
+                  w={700}
+                  withBorder
+                  radius={4}
+                  p="md"
+                >
+                  <Stack gap="xs">
+                    {/* Header */}
+                    <Group justify="space-between" align="center">
+                      <Group gap="xs">
+                        <ThemeIcon color="blue" variant="light" radius="md">
+                          <IconClockHour4 size={18} />
+                        </ThemeIcon>
+                        <Text fw={700}>
+                          {stage.name} ({stage.duration} ngày)
+                        </Text>
+                      </Group>
+                      <Badge variant="light" color="blue">
+                        {cycle.name}
                       </Badge>
-                    ))}
-                  </Group>
-
-                  {/* Tài sản */}
-                  <Divider label="Hạng mục sử dụng" labelPosition="left" />
-
-                  <Title order={4} size="h6">
-                    Phân bón
-                  </Title>
-                  <Scrollable>
-                    <Group gap={4} wrap="nowrap">
-                      {[
-                        { type: "Phân bón NPK", amount: 100, unit: "kg" },
-                        { type: "Phân bón hữu cơ", amount: 50, unit: "kg" },
-                        { type: "Phân bón lá", amount: 20, unit: "l" },
-                      ].map((res, i) => (
-                        <Card w={210} withBorder radius={4} shadow="sm">
-                          <Group key={i}>
-                            <ThemeIcon color="cyan" variant="light" radius="md">
-                              <IconAsset size={16} />
-                            </ThemeIcon>
-                            <Text size="sm">
-                              {res.type}: {res.amount} {res.unit || ""}
-                            </Text>
-                          </Group>
-                        </Card>
-                      ))}
                     </Group>
-                  </Scrollable>
-                  <Title order={4} size="h6">
-                    Máy móc
-                  </Title>
-                  <Scrollable>
-                    <Group gap={4} wrap="nowrap">
-                      {[
-                        { type: "Máy cày", amount: 1, unit: "cái" },
-                        { type: "Máy kéo", amount: 1, unit: "cái" },
-                        { type: "Máy phun thuốc", amount: 1, unit: "cái" },
-                      ].map((res, i) => (
-                        <Card w={210} withBorder radius={4} shadow="sm">
-                          <Group key={i}>
-                            <ThemeIcon
-                              color="green"
-                              variant="light"
-                              radius="md"
-                            >
-                              <IconCar size={16} />
-                            </ThemeIcon>
-                            <Text size="sm">
-                              {res.type}: {res.amount} {res.unit || ""}
-                            </Text>
-                          </Group>
-                        </Card>
-                      ))}
+
+                    {/* Leader */}
+                    <Divider label="Trưởng nhóm" labelPosition="left" />
+                    <Group>
+                      <ThemeIcon color="teal" variant="light" radius="md">
+                        <IconUser size={16} />
+                      </ThemeIcon>
+                      <Text size="sm">{stage.leader || "Chưa chọn"}</Text>
                     </Group>
-                  </Scrollable>
-                </Stack>
-              </Card>
-            ))}
-          </Group>
+
+                    {/* Members */}
+                    <Divider label="Nhân sự" labelPosition="left" />
+                    <TagList
+                      icon={<IconUsers size={16} />}
+                      items={stage.members}
+                      color="indigo"
+                      emptyText="Chưa có nhân sự"
+                    />
+
+                    {/* Materials / Equipment / Pesticides (danh sách tên) */}
+                    <Divider label="Hạng mục sử dụng" labelPosition="left" />
+
+                    {/* Resources (có số lượng) */}
+                    {stage.resources?.length ? (
+                      <>
+                        <SimpleGrid cols={2} spacing="sm" verticalSpacing="sm">
+                          {stage.resources.map((r, i) => (
+                            <ResourceCard key={i} r={r} />
+                          ))}
+                        </SimpleGrid>
+                      </>
+                    ) : null}
+                  </Stack>
+                </Card>
+              ))}
+            </Group>
+          </Scrollable>
         </Stack>
       ))}
     </Stack>
