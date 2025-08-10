@@ -113,7 +113,7 @@ function InfoItem({
   );
 }
 
-export function ResourceCard({ r }: { r: Resource }) {
+function ResourceCard({ r }: { r: Resource }) {
   const icon =
     r.type === "Vật tư" ? (
       <IconBox size={16} />
