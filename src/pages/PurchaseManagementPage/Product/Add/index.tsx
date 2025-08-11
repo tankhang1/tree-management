@@ -412,8 +412,8 @@ const PurchaseManagementProductAddPage = () => {
                   {...form.getInputProps("contract")}
                   radius={4}
                 />
-                <Scrollable h={220}>
-                  <Group p={"xs"}>
+                <Scrollable h={300}>
+                  <Group p={"xs"} wrap="nowrap">
                     <Card
                       shadow="sm"
                       padding="md"

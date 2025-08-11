@@ -46,6 +46,7 @@ import { EmployeeCardList } from "../../../HRManagementPage/Team/Add/components/
 import { SelectableSupplierCards } from "../../../SupplyManagementPage/Add/components/SelectableSupplierCards";
 import AreaCard from "../../../StockManagementPage/Delivery/Add/components/AreaCard";
 import { useNavigate } from "react-router-dom";
+import Scrollable from "../../../../components/Scrollable";
 
 const areaGroups = [
   {
@@ -680,110 +681,114 @@ const PurchaseManagementMaterialAddPage = () => {
                   {...form.getInputProps("contract")}
                   radius={4}
                 />
-                <Group>
-                  <Card
-                    shadow="sm"
-                    padding="md"
-                    radius="md"
-                    withBorder
-                    style={{
-                      borderColor: selectedContract === 0 ? "green" : undefined,
-                    }}
-                    onMouseEnter={(e) =>
-                      (e.currentTarget.style.transform = "scale(1.02)")
-                    }
-                    onMouseLeave={(e) =>
-                      (e.currentTarget.style.transform = "scale(1)")
-                    }
-                    onClick={() => setSelectedContract(0)}
-                  >
-                    <Group justify="apart" mb="xs">
-                      <Title order={5}>
-                        HĐMB-001 - Hợp đồng mua bán thiết bị tưới
-                      </Title>
-                      <Badge color="blue">Hợp đồng mua bán</Badge>
-                    </Group>
+                <Scrollable h={300}>
+                  <Group p={"xs"} wrap="nowrap">
+                    <Card
+                      shadow="sm"
+                      padding="md"
+                      radius="md"
+                      withBorder
+                      style={{
+                        borderColor:
+                          selectedContract === 0 ? "green" : undefined,
+                      }}
+                      onMouseEnter={(e) =>
+                        (e.currentTarget.style.transform = "scale(1.02)")
+                      }
+                      onMouseLeave={(e) =>
+                        (e.currentTarget.style.transform = "scale(1)")
+                      }
+                      onClick={() => setSelectedContract(0)}
+                    >
+                      <Group justify="apart" mb="xs">
+                        <Title order={5}>
+                          HĐMB-001 - Hợp đồng mua bán thiết bị tưới
+                        </Title>
+                        <Badge color="blue">Hợp đồng mua bán</Badge>
+                      </Group>
 
-                    <Text size="sm">
-                      <b>Ngày ký:</b> 20/06/2025
-                    </Text>
-                    <Text size="sm">
-                      <b>Bên A:</b> CTY TNHH Thiết bị Nông nghiệp
-                    </Text>
-                    <Text size="sm">
-                      <b>Bên B:</b> Hợp tác xã Rau Sạch Lâm Đồng
-                    </Text>
-                    <Text size="sm">
-                      <b>Loại hợp đồng:</b> Mới
-                    </Text>
+                      <Text size="sm">
+                        <b>Ngày ký:</b> 20/06/2025
+                      </Text>
+                      <Text size="sm">
+                        <b>Bên A:</b> CTY TNHH Thiết bị Nông nghiệp
+                      </Text>
+                      <Text size="sm">
+                        <b>Bên B:</b> Hợp tác xã Rau Sạch Lâm Đồng
+                      </Text>
+                      <Text size="sm">
+                        <b>Loại hợp đồng:</b> Mới
+                      </Text>
 
-                    <Divider my="xs" />
-                    <Text size="sm" lineClamp={2}>
-                      <b>Nội dung:</b> Cung cấp hệ thống tưới tự động và thiết
-                      bị điều khiển trung tâm...
-                    </Text>
+                      <Divider my="xs" />
+                      <Text size="sm" lineClamp={2}>
+                        <b>Nội dung:</b> Cung cấp hệ thống tưới tự động và thiết
+                        bị điều khiển trung tâm...
+                      </Text>
 
-                    <Group mt="md" justify="apart">
-                      <Button size="xs" variant="light">
-                        Xem chi tiết
-                      </Button>
-                      <Button size="xs" variant="subtle" color="red">
-                        Huỷ
-                      </Button>
-                    </Group>
-                  </Card>
-                  <Card
-                    shadow="sm"
-                    padding="md"
-                    radius="md"
-                    withBorder
-                    style={{
-                      borderColor: selectedContract === 1 ? "green" : undefined,
-                    }}
-                    onMouseEnter={(e) =>
-                      (e.currentTarget.style.transform = "scale(1.02)")
-                    }
-                    onMouseLeave={(e) =>
-                      (e.currentTarget.style.transform = "scale(1)")
-                    }
-                    onClick={() => setSelectedContract(1)}
-                  >
-                    <Group justify="apart" mb="xs">
-                      <Title order={5}>
-                        HĐMB-001 - Hợp đồng mua bán thiết bị tưới
-                      </Title>
-                      <Badge color="blue">Hợp đồng mua bán</Badge>
-                    </Group>
+                      <Group mt="md" justify="apart">
+                        <Button size="xs" variant="light">
+                          Xem chi tiết
+                        </Button>
+                        <Button size="xs" variant="subtle" color="red">
+                          Huỷ
+                        </Button>
+                      </Group>
+                    </Card>
+                    <Card
+                      shadow="sm"
+                      padding="md"
+                      radius="md"
+                      withBorder
+                      style={{
+                        borderColor:
+                          selectedContract === 1 ? "green" : undefined,
+                      }}
+                      onMouseEnter={(e) =>
+                        (e.currentTarget.style.transform = "scale(1.02)")
+                      }
+                      onMouseLeave={(e) =>
+                        (e.currentTarget.style.transform = "scale(1)")
+                      }
+                      onClick={() => setSelectedContract(1)}
+                    >
+                      <Group justify="apart" mb="xs">
+                        <Title order={5}>
+                          HĐMB-001 - Hợp đồng mua bán thiết bị tưới
+                        </Title>
+                        <Badge color="blue">Hợp đồng mua bán</Badge>
+                      </Group>
 
-                    <Text size="sm">
-                      <b>Ngày ký:</b> 20/06/2025
-                    </Text>
-                    <Text size="sm">
-                      <b>Bên A:</b> CTY TNHH Thiết bị Nông nghiệp
-                    </Text>
-                    <Text size="sm">
-                      <b>Bên B:</b> Hợp tác xã Rau Sạch Lâm Đồng
-                    </Text>
-                    <Text size="sm">
-                      <b>Loại hợp đồng:</b> Mới
-                    </Text>
+                      <Text size="sm">
+                        <b>Ngày ký:</b> 20/06/2025
+                      </Text>
+                      <Text size="sm">
+                        <b>Bên A:</b> CTY TNHH Thiết bị Nông nghiệp
+                      </Text>
+                      <Text size="sm">
+                        <b>Bên B:</b> Hợp tác xã Rau Sạch Lâm Đồng
+                      </Text>
+                      <Text size="sm">
+                        <b>Loại hợp đồng:</b> Mới
+                      </Text>
 
-                    <Divider my="xs" />
-                    <Text size="sm" lineClamp={2}>
-                      <b>Nội dung:</b> Cung cấp hệ thống tưới tự động và thiết
-                      bị điều khiển trung tâm...
-                    </Text>
+                      <Divider my="xs" />
+                      <Text size="sm" lineClamp={2}>
+                        <b>Nội dung:</b> Cung cấp hệ thống tưới tự động và thiết
+                        bị điều khiển trung tâm...
+                      </Text>
 
-                    <Group mt="md" justify="apart">
-                      <Button size="xs" variant="light">
-                        Xem chi tiết
-                      </Button>
-                      <Button size="xs" variant="subtle" color="red">
-                        Huỷ
-                      </Button>
-                    </Group>
-                  </Card>
-                </Group>
+                      <Group mt="md" justify="apart">
+                        <Button size="xs" variant="light">
+                          Xem chi tiết
+                        </Button>
+                        <Button size="xs" variant="subtle" color="red">
+                          Huỷ
+                        </Button>
+                      </Group>
+                    </Card>
+                  </Group>
+                </Scrollable>
               </Stack>
             ) : (
               <Text>

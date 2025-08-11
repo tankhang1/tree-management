@@ -661,6 +661,7 @@ export default function PlanManagementAssignAddPage() {
                     label="Mùa vụ"
                     placeholder="Chọn mùa vụ"
                     radius={4}
+                    defaultValue={"Mùa Xuân 2025"}
                     data={["Mùa Xuân 2025", "Mùa Hè 2025"]}
                     {...form.getInputProps("season")}
                   />

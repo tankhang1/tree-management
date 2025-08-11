@@ -576,8 +576,8 @@ const StockManagementIOPage = () => {
                   {...form.getInputProps("contract")}
                   radius={4}
                 />
-                <Scrollable h={210}>
-                  <Group p={"xs"}>
+                <Scrollable h={300}>
+                  <Group p={"xs"} wrap="nowrap">
                     <Card
                       shadow="sm"
                       padding="md"

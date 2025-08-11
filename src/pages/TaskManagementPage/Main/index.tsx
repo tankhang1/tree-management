@@ -70,7 +70,7 @@ const TaskManagementMainPage = () => {
     navigate(PATH.TASK_MAIN_DETAIL);
   };
   const onTaskAssign = () => {
-    navigate(PATH.PLAN_ADD_ASSIGN);
+    navigate(PATH.PLAN_ADD_UNPLANNED);
   };
   const columns: MRT_ColumnDef<EmployeeTask>[] = [
     { accessorKey: "employee", header: "Nhân viên" },

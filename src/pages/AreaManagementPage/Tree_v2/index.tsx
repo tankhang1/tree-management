@@ -17,7 +17,6 @@ import {
   IconFileExcel,
   IconLivePhoto,
   IconSearch,
-  IconTableRow,
   IconTrash,
 } from "@tabler/icons-react";
 import type { MRT_ColumnDef } from "mantine-react-table";
@@ -125,12 +124,6 @@ const plotOptions = [
   "Lô D1 - Khu vực D4",
 ];
 
-const rowOptions = [
-  "Hàng 1 - Lô A1",
-  "Hàng 2 - Lô B1",
-  "Hàng 3 - Lô C1",
-  "Hàng 4 - Lô D1",
-];
 const AreaManagementTreev2Page = () => {
   const navigate = useNavigate();
   const [openedRowForm, { open: openRowForm, close: closeRowForm }] =
@@ -237,13 +230,6 @@ const AreaManagementTreev2Page = () => {
           leftSection={<IconLivePhoto size={18} />}
           placeholder="Tìm kiếm lô"
           data={plotOptions}
-        />
-        <Select
-          searchable
-          radius={4}
-          leftSection={<IconTableRow size={18} />}
-          placeholder="Tìm kiếm hàng"
-          data={rowOptions}
         />
       </Group>
       <Table columns={allocationColumns} data={allocationData} />

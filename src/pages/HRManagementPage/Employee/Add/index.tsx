@@ -71,16 +71,22 @@ const HRManagementEmployeeAddPage = () => {
                   placeholder="Chọn tỉnh thành/ thành phố"
                   label="Tỉnh thành"
                   radius={4}
+                  data={[
+                    { value: "Hà Nội", label: "Hà Nội" },
+                    { value: "TP.HCM", label: "TP.HCM" },
+                    { value: "Đà Nẵng", label: "Đà Nẵng" },
+                  ]}
                 />
-                {/* <Select
-                placeholder="Chọn thành phố"
-                label="Chọn thành phố"
-                radius={4}
-              /> */}
+
                 <Select
                   placeholder="Chọn phường/xã"
                   label="Phường/xã"
                   radius={4}
+                  data={[
+                    { value: "Phường 1", label: "Phường 1" },
+                    { value: "Phường 2", label: "Phường 2" },
+                    { value: "Phường 3", label: "Phường 3" },
+                  ]}
                 />
                 <TextInput
                   label="Địa chỉ chi tiết"

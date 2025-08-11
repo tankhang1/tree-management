@@ -161,9 +161,9 @@ const ConfirmStep = () => {
       "Loại rau muống sinh trưởng nhanh, phù hợp với vùng đất ẩm. Có thể thu hoạch sau 45 ngày.",
     harvestUnit: "kg",
     duration: 45,
-    zone: "Vùng Đồng Bằng",
-    area: "Khu vực A1",
-    plot: "Lô số 3",
+    zone: "Vùng Trồng Tây Nguyên",
+    area: "Khu vực Buôn Hồ",
+    plot: "Lô A1-01",
     startDate: "15/02/2025",
     endDate: "19/02/2025",
     cycles: [
@@ -171,7 +171,7 @@ const ConfirmStep = () => {
         name: "Chu kỳ 1",
         stages: [
           {
-            name: "Gieo hạt",
+            name: "Nảy mầm",
             duration: 5,
             documentType: "file" as "file" | "editor",
             document: "Tài liệu gieo hạt.pdf",
@@ -287,7 +287,7 @@ const ConfirmStep = () => {
 
   return (
     <Stack>
-      <Title order={3}>Xác nhận kế hoạch canh tác</Title>
+      <Title order={3}>Xác nhận công việc canh tác</Title>
 
       {/* Top summary */}
       <Group grow align="stretch">
