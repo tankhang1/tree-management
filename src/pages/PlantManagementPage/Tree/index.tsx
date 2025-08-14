@@ -23,7 +23,7 @@ import Table from "../../../components/Table";
 import type { MRT_ColumnDef } from "mantine-react-table";
 import { useNavigate } from "react-router-dom";
 import { PATH } from "../../../constants/path.constants";
-type TreeCrop = {
+export type TreeCrop = {
   id: string;
   name: string;
   seedType: string; // chọn II.2
@@ -32,7 +32,7 @@ type TreeCrop = {
   note?: string;
   imgUrl?: string;
 };
-const treeCropData: TreeCrop[] = [
+export const treeCropData: TreeCrop[] = [
   {
     id: "TREE001",
     name: "Sầu riêng",

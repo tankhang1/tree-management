@@ -51,15 +51,9 @@ const PlotCardSelector: React.FC<LotCardSelectorProps> = ({ lots }) => {
                 <Text size="sm">
                   <strong>Diện tích:</strong> {lot.area}
                 </Text>
-                <Text size="sm">
-                  <strong>Số hàng:</strong> {lot.rows}
-                </Text>
               </Group>
 
               <Group gap="md">
-                <Text size="sm">
-                  <strong>Tưới:</strong> {lot.irrigation}
-                </Text>
                 <Text size="sm">
                   <strong>Canh tác:</strong> {lot.farming}
                 </Text>

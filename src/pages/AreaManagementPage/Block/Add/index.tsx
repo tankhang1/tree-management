@@ -97,7 +97,7 @@ const seedOptions: SeedOption[] = [
   },
 ];
 
-const lotOptions: LotOption[] = [
+export const lotOptions: LotOption[] = [
   {
     code: "LO-A1-01",
     name: "Lô A1-01",
@@ -440,10 +440,8 @@ const AreaManagementBlockAddPage = () => {
               />
             </Stack>
             <Stack gap={"xs"}>
-              <Text fw={500} fz={15}>
-                Khu vực
-              </Text>
               <TextInput
+                label="Khu vực"
                 placeholder="Tìm kiếm khu vực"
                 radius={4}
                 leftSection={<IconSearch size={18} />}

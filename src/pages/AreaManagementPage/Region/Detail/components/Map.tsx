@@ -146,9 +146,29 @@ const MapBox = ({
                   dashArray: key === "row" ? "4" : undefined,
                 })}
                 onEachFeature={(feature: Feature, layer) => {
-                  const props = feature.properties || {};
-                  const content = `<b>${label}:</b> ${props.name || "N/A"}`;
-
+                  const content = `
+    <div style="font-family: 'Roboto', Arial, sans-serif; min-width: 220px;">
+      <div style="font-weight: bold; font-size: 16px;">Lô A1</div>
+      <div style="position: absolute; top: 12px; right: 12px; background: #e0e0e0; border-radius: 8px; padding: 2px 10px; font-size: 12px; font-weight: bold;">
+        LO-A1
+      </div>
+      <div style="margin-top: 8px;">
+        <b>Giống cây:</b> Sầu riêng Ri6
+      </div>
+      <div>
+        <b>Diện tích:</b> 2,000 m²
+       
+      </div>
+      <div>
+        <b>Canh tác:</b> Hữu cơ
+      </div>
+      <div>
+        <b>Địa hình:</b> <span style="background: #e6f4ec; color: #388E3C; border-radius: 6px; padding: 2px 8px; font-weight: bold;">
+          Dốc nhẹ (48 - 56M)
+        </span>
+      </div>
+    </div>
+  `;
                   layer.bindPopup(content);
                 }}
               />
