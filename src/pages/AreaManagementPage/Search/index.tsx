@@ -45,7 +45,6 @@ import {
 } from "@tabler/icons-react";
 import Table from "../../../components/Table";
 import type { MRT_ColumnDef } from "mantine-react-table";
-import { treeCropData, type TreeCrop } from "../../PlantManagementPage/Tree";
 import { CompanyList } from "../../../components/CompanyList";
 import { areaOptions, cropOptions, plotOptions, seedOptions } from "../Row/Add";
 import AreaCards from "../Zone/Add/components/AreaCards";
@@ -60,9 +59,16 @@ import {
   ResourceCard,
   type Resource,
 } from "../../PlanManagementPage/Assign/Add/components/ConfirmStep";
+import { TreeDetailModal, type TreeDetail } from "./components/TreeDetailModal";
 
 // ---------------- Types & mock data ----------------
-
+type TreeCrop = {
+  id: string; // Mã cây trồng
+  name: string; // Cây trồng
+  variety: string; // Giống cây
+  seedType: string; // Hạt giống
+  plantingDate: string; // Thời gian trồng
+};
 type CultivationHistory = {
   id: string;
   cropSeasonName: string; // Mùa vụ
@@ -258,6 +264,47 @@ const resource: Resource[] = [
     img: "https://nongduochai.vn/images/products/2021/04/13/original/manozeb-80wp_xanh_1kg_1618288208.png",
   },
 ];
+const treeCropData: TreeCrop[] = [
+  {
+    id: "TREE001",
+    name: "Sầu riêng",
+    variety: "Ri6",
+    seedType: "Hạt lai F1",
+    plantingDate: "2023-05-10",
+  },
+  {
+    id: "TREE002",
+    name: "Xoài",
+    variety: "Cát Chu",
+    seedType: "Ghép cành",
+    plantingDate: "2024-03-15",
+  },
+];
+const treeDetail: TreeDetail = {
+  id: "CT001",
+  name: "Sầu riêng Ri6",
+  type: "Cây ăn trái",
+  note: "Ưa đất thịt, thoát nước tốt.",
+  seedCode: "SR-RI6",
+  seedName: "Giống Ri6",
+  supplier: "Công ty Nông sản Việt",
+  origin: "Việt Nam",
+  germinationRate: "85",
+  yield: "25",
+  seedNote: "Giống được kiểm định bởi Bộ NN&PTNT.",
+  seedDoc: null,
+  harvestMethod: "Theo quả",
+  growthCycle: "Trung bình 3 năm",
+  growthStages: [
+    "Ươm giống",
+    "Trồng cây con",
+    "Chăm sóc sinh trưởng",
+    "Ra hoa",
+    "Kết trái",
+  ],
+  growthTime: "1095",
+  growthNote: "Cần tỉa cành định kỳ và phòng ngừa sâu bệnh.",
+};
 // ---------------- Component ----------------
 const StatChip = ({
   icon,
@@ -312,44 +359,15 @@ export default function MVFarmSearch() {
   const [view, setView] = useState<"details" | "list">("details");
   const [cultivationDetail, setCultivationDetail] = useState(false);
   const [cultivationNoteDetail, setCultivationNoteDetail] = useState(false);
+  const [openedTreeDetail, setOpenedTreeDetail] = useState(false);
   // ---------- Columns ----------
   const treeCropColumns: MRT_ColumnDef<TreeCrop>[] = useMemo(
     () => [
-      { accessorKey: "id", header: "Mã cây" },
-      {
-        accessorKey: "imgUrl",
-        header: "Hình ảnh",
-        size: 80,
-        Cell: ({ cell }) => {
-          const url = cell.getValue<string>();
-          return url ? (
-            <Image
-              src={url}
-              alt="Ảnh giống cây"
-              h={48}
-              w={48}
-              fit="cover"
-              radius={4}
-              styles={{
-                image: { border: "1px solid var(--mantine-color-gray-3)" },
-              }}
-            />
-          ) : (
-            <Text size="xs" c="dimmed">
-              Không có ảnh
-            </Text>
-          );
-        },
-      },
-      { accessorKey: "name", header: "Tên cây" },
+      { accessorKey: "id", header: "Mã cây trồng" },
+      { accessorKey: "name", header: "Cây trồng" },
+      { accessorKey: "variety", header: "Giống cây" },
       { accessorKey: "seedType", header: "Hạt giống" },
-      { accessorKey: "harvestMethod", header: "Hình thức thu hoạch" },
-      { accessorKey: "growthCycle", header: "Chu kỳ sinh trưởng" },
-      {
-        accessorKey: "note",
-        header: "Ghi chú",
-        Cell: ({ row }) => row.original.note || "—",
-      },
+      { accessorKey: "plantingDate", header: "Thời gian trồng" },
       {
         accessorKey: "actions",
         header: "Tuỳ chọn",
@@ -364,7 +382,10 @@ export default function MVFarmSearch() {
             </Menu.Target>
 
             <Menu.Dropdown>
-              <Menu.Item leftSection={<IconEye size={18} />}>
+              <Menu.Item
+                leftSection={<IconEye size={18} />}
+                onClick={() => setOpenedTreeDetail(true)}
+              >
                 Chi tiết
               </Menu.Item>
               <Menu.Item leftSection={<IconEdit size={18} />} color="green">
@@ -970,7 +991,10 @@ export default function MVFarmSearch() {
             <Button
               radius={4}
               leftSection={<IconCheck size={16} />}
-              onClick={() => setOpenFilterModal(false)}
+              onClick={() => {
+                setOpenFilterModal(false);
+                setView("list");
+              }}
             >
               Áp dụng
             </Button>
@@ -1061,6 +1085,11 @@ export default function MVFarmSearch() {
           </Stack>
         </Card>
       </Modal>
+      <TreeDetailModal
+        opened={openedTreeDetail}
+        onClose={() => setOpenedTreeDetail(false)}
+        data={treeDetail}
+      />
     </Stack>
   );
 }
