@@ -739,7 +739,7 @@ export default function MVFarmSearch() {
                     </Group>
                     <Box
                       mt="sm"
-                      style={{ overflow: "hidden", borderRadius: 8, zIndex: 0 }}
+                      style={{ overflow: "hidden", borderRadius: 8, zIndex: 1 }}
                     >
                       <MapBox />
                     </Box>
@@ -862,238 +862,251 @@ export default function MVFarmSearch() {
       )}
 
       {/* ------ Filter Modal ------ */}
-      <Modal
-        opened={openFilterModal}
-        onClose={() => setOpenFilterModal(false)}
-        size="lg"
-        title={
-          <Group gap={6}>
-            <IconFilter size={18} />
-            <Text fw={600}>Bộ lọc cây trồng</Text>
-          </Group>
-        }
-        centered
-        withinPortal
-        styles={{
-          inner: {
-            zIndex: 999,
-          },
-        }}
-      >
-        <Stack gap="md">
-          <Paper withBorder p="md" radius={4}>
-            <Stack gap="sm">
-              <Title order={5}>Doanh nghiệp / Nông hộ</Title>
-              <CompanyList />
-            </Stack>
-          </Paper>
-          <Paper withBorder p="md" radius={4}>
-            <Stack gap="sm">
-              <Title order={5}>Thông tin cây trồng</Title>
-              <Select
-                label="Nhóm cây trồng"
-                placeholder="Chọn nhóm cây trồng"
-                radius={4}
-                data={[
-                  "Cây ăn trái",
-                  "Cây công nghiệp",
-                  "Cây lương thực",
-                  "Cây thuốc",
-                  "Cây cảnh",
-                  "Cây lấy gỗ",
-                  "Cây lấy dầu",
-                  "Cây lấy sợi",
-                ]}
-              />
-              <TextInput
-                label="Giống cây trồng"
-                placeholder="Tìm kiếm giống cây trồng"
-                radius={4}
-                leftSection={<IconSearch size={18} />}
-              />
-              <SeedCards selected="" seeds={seedOptions} onSelect={() => {}} />
-              <TextInput
-                label="Cây trồng"
-                placeholder="Tìm kiếm cây trồng"
-                radius={4}
-                leftSection={<IconSearch size={18} />}
-              />
-
-              <CropCards
-                selected="1"
-                plants={cropOptions}
-                onSelect={() => {}}
-              />
-            </Stack>
-          </Paper>
-          <Paper withBorder p="md" radius={4}>
-            <Stack gap="sm">
-              <Title order={5}>Thông tin vùng trồng</Title>
-              <Select
-                radius={4}
-                data={["V01", "V02", "V03"]}
-                label="Mã định danh"
-                searchable
-                styles={{ dropdown: { zIndex: 1000 } }}
-              />
-              <Select
-                label="Khu vực canh tác"
-                placeholder="Chọn khu vực canh tác"
-                radius={4}
-                data={[
-                  "Khu vực canh tác Đồng Nai",
-                  "Khu vực canh tác Bình Dương",
-                ]}
-                searchable
-                styles={{ dropdown: { zIndex: 1000 } }}
-              />
-
-              <TextInput
-                label="Vùng trồng"
-                placeholder="Tìm kiếm vùng trồng"
-                radius={4}
-                leftSection={<IconSearch size={18} />}
-              />
-              <RegionCardSelector
-                regions={regionOptions}
-                selected={"12"}
-                onSelect={() => {}}
-              />
-              <TextInput
-                label="Khu vực"
-                placeholder="Tìm theo địa danh"
-                radius={4}
-                leftSection={<IconSearch size={16} />}
-              />
-              <AreaCards
-                areas={areaOptions}
-                selected={""}
-                onSelect={() => {}}
-              />
-              <TextInput
-                placeholder="Tìm kiếm lô"
-                label="Lô"
-                radius={4}
-                leftSection={<IconSearch size={16} />}
-              />
-              <PlotCardSelector lots={plotOptions} />
-            </Stack>
-          </Paper>
-
-          <Group justify="space-between">
-            <Button
-              radius={4}
-              variant="default"
-              leftSection={<IconRotateClockwise2 size={16} />}
-            >
-              Đặt lại
-            </Button>
-            <Button
-              radius={4}
-              leftSection={<IconCheck size={16} />}
-              onClick={() => {
-                setOpenFilterModal(false);
-                setView("list");
-              }}
-            >
-              Áp dụng
-            </Button>
-          </Group>
-        </Stack>
-      </Modal>
-      <Modal
-        opened={cultivationDetail}
-        onClose={() => setCultivationDetail(false)}
-        size="lg"
-        title={
-          <Group gap={6}>
-            <IconEye size={18} />
-            <Text fw={600}>Chi tiết canh tác</Text>
-          </Group>
-        }
-        centered
-        withinPortal
-      >
-        {cultivationNoteData?.length > 0 ? (
-          <Table data={cultivationNoteData} columns={cultivationNoteColumns} />
-        ) : (
-          <Text c="red">Không có dữ liệu!</Text>
-        )}
-      </Modal>
-      <Modal
-        opened={cultivationNoteDetail}
-        onClose={() => setCultivationNoteDetail(false)}
-        size="lg"
-        title={
-          <Group gap={6}>
-            <IconEye size={18} />
-            <Text fw={600}>Chi tiết sổ tay canh tác</Text>
-          </Group>
-        }
-        centered
-        withinPortal
-      >
-        <Card withBorder radius={4} shadow="md" p="lg">
-          <Stack gap="md">
-            <Text fw={700} size="lg">
-              Sổ phiếu: PH001
-            </Text>
-            <Divider />
-            <Text size="sm">
-              <b>Nhân sự thực hiện:</b>
-            </Text>
-            <Group gap="xs">
-              <Badge color="teal" variant="light">
-                Nguyễn Văn C
-              </Badge>
-              <Badge color="teal" variant="light">
-                Lê Văn D
-              </Badge>
+      {openFilterModal && (
+        <Modal
+          opened={openFilterModal}
+          onClose={() => setOpenFilterModal(false)}
+          size="lg"
+          title={
+            <Group gap={6}>
+              <IconFilter size={18} />
+              <Text fw={600}>Bộ lọc cây trồng</Text>
             </Group>
-            <Divider />
-            <Text size="sm">
-              <b>Nội dung canh tác:</b>
-            </Text>
-            <Text size="sm" c="gray.7">
-              Phun thuốc sâu cho lô A1, kiểm tra sức khỏe cây.
-            </Text>
-            <Divider />
-            <Text size="sm">
-              <b>Hình ảnh ghi nhận:</b>
-            </Text>
-            <Scrollable h={150}>
-              <Group gap="xs" wrap="nowrap">
-                <Image
-                  src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSTkLFeonuxGVlj-FHk_bg7ZZGS9CoqRIp0vg&s"
-                  alt="Ảnh ghi nhận"
-                  h={150}
+          }
+          centered
+          withinPortal
+          styles={{
+            inner: {
+              zIndex: 999,
+            },
+          }}
+        >
+          <Stack gap="md">
+            <Paper withBorder p="md" radius={4}>
+              <Stack gap="sm">
+                <Title order={5}>Doanh nghiệp / Nông hộ</Title>
+                <CompanyList />
+              </Stack>
+            </Paper>
+            <Paper withBorder p="md" radius={4}>
+              <Stack gap="sm">
+                <Title order={5}>Thông tin cây trồng</Title>
+                <Select
+                  label="Nhóm cây trồng"
+                  placeholder="Chọn nhóm cây trồng"
                   radius={4}
+                  data={[
+                    "Cây ăn trái",
+                    "Cây công nghiệp",
+                    "Cây lương thực",
+                    "Cây thuốc",
+                    "Cây cảnh",
+                    "Cây lấy gỗ",
+                    "Cây lấy dầu",
+                    "Cây lấy sợi",
+                  ]}
                 />
-                <Image
-                  src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcScYIhqE3CmX71yYFFM3T4jkdKjIRyhJxC-wA&s"
-                  alt="Ảnh ghi nhận"
-                  h={150}
+                <TextInput
+                  label="Giống cây trồng"
+                  placeholder="Tìm kiếm giống cây trồng"
                   radius={4}
+                  leftSection={<IconSearch size={18} />}
                 />
-              </Group>
-            </Scrollable>
-            <Divider />
-            <Text size="sm">
-              <b>Hạng mục sử dụng:</b>
-            </Text>
-            <SimpleGrid cols={2} spacing="sm" verticalSpacing="sm">
-              {resource?.map((r, i) => (
-                <ResourceCard key={i} r={r} />
-              ))}
-            </SimpleGrid>
+                <SeedCards
+                  selected=""
+                  seeds={seedOptions}
+                  onSelect={() => {}}
+                />
+                <TextInput
+                  label="Cây trồng"
+                  placeholder="Tìm kiếm cây trồng"
+                  radius={4}
+                  leftSection={<IconSearch size={18} />}
+                />
+
+                <CropCards
+                  selected="1"
+                  plants={cropOptions}
+                  onSelect={() => {}}
+                />
+              </Stack>
+            </Paper>
+            <Paper withBorder p="md" radius={4}>
+              <Stack gap="sm">
+                <Title order={5}>Thông tin vùng trồng</Title>
+                <Select
+                  radius={4}
+                  data={["V01", "V02", "V03"]}
+                  label="Mã định danh"
+                  searchable
+                  styles={{ dropdown: { zIndex: 1000 } }}
+                />
+                <Select
+                  label="Khu vực canh tác"
+                  placeholder="Chọn khu vực canh tác"
+                  radius={4}
+                  data={[
+                    "Khu vực canh tác Đồng Nai",
+                    "Khu vực canh tác Bình Dương",
+                  ]}
+                  searchable
+                  styles={{ dropdown: { zIndex: 1000 } }}
+                />
+
+                <TextInput
+                  label="Vùng trồng"
+                  placeholder="Tìm kiếm vùng trồng"
+                  radius={4}
+                  leftSection={<IconSearch size={18} />}
+                />
+                <RegionCardSelector
+                  regions={regionOptions}
+                  selected={"12"}
+                  onSelect={() => {}}
+                />
+                <TextInput
+                  label="Khu vực"
+                  placeholder="Tìm theo địa danh"
+                  radius={4}
+                  leftSection={<IconSearch size={16} />}
+                />
+                <AreaCards
+                  areas={areaOptions}
+                  selected={""}
+                  onSelect={() => {}}
+                />
+                <TextInput
+                  placeholder="Tìm kiếm lô"
+                  label="Lô"
+                  radius={4}
+                  leftSection={<IconSearch size={16} />}
+                />
+                <PlotCardSelector lots={plotOptions} />
+              </Stack>
+            </Paper>
+
+            <Group justify="space-between">
+              <Button
+                radius={4}
+                variant="default"
+                leftSection={<IconRotateClockwise2 size={16} />}
+              >
+                Đặt lại
+              </Button>
+              <Button
+                radius={4}
+                leftSection={<IconCheck size={16} />}
+                onClick={() => {
+                  setOpenFilterModal(false);
+                  setView("list");
+                }}
+              >
+                Áp dụng
+              </Button>
+            </Group>
           </Stack>
-        </Card>
-      </Modal>
-      <TreeDetailModal
-        opened={openedTreeDetail ?? undefined}
-        onClose={() => setOpenedTreeDetail(false)}
-        data={treeDetail}
-      />
+        </Modal>
+      )}
+      {cultivationDetail && (
+        <Modal
+          opened={cultivationDetail}
+          onClose={() => setCultivationDetail(false)}
+          size="lg"
+          title={
+            <Group gap={6}>
+              <IconEye size={18} />
+              <Text fw={600}>Chi tiết canh tác</Text>
+            </Group>
+          }
+          centered
+        >
+          {cultivationNoteData?.length > 0 ? (
+            <Table
+              data={cultivationNoteData}
+              columns={cultivationNoteColumns}
+            />
+          ) : (
+            <Text c="red">Không có dữ liệu!</Text>
+          )}
+        </Modal>
+      )}
+      {cultivationNoteDetail && (
+        <Modal
+          opened={cultivationNoteDetail}
+          onClose={() => setCultivationNoteDetail(false)}
+          size="lg"
+          title={
+            <Group gap={6}>
+              <IconEye size={18} />
+              <Text fw={600}>Chi tiết sổ tay canh tác</Text>
+            </Group>
+          }
+          centered
+        >
+          <Card withBorder radius={4} shadow="md" p="lg">
+            <Stack gap="md">
+              <Text fw={700} size="lg">
+                Sổ phiếu: PH001
+              </Text>
+              <Divider />
+              <Text size="sm">
+                <b>Nhân sự thực hiện:</b>
+              </Text>
+              <Group gap="xs">
+                <Badge color="teal" variant="light">
+                  Nguyễn Văn C
+                </Badge>
+                <Badge color="teal" variant="light">
+                  Lê Văn D
+                </Badge>
+              </Group>
+              <Divider />
+              <Text size="sm">
+                <b>Nội dung canh tác:</b>
+              </Text>
+              <Text size="sm" c="gray.7">
+                Phun thuốc sâu cho lô A1, kiểm tra sức khỏe cây.
+              </Text>
+              <Divider />
+              <Text size="sm">
+                <b>Hình ảnh ghi nhận:</b>
+              </Text>
+              <Scrollable h={150}>
+                <Group gap="xs" wrap="nowrap">
+                  <Image
+                    src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSTkLFeonuxGVlj-FHk_bg7ZZGS9CoqRIp0vg&s"
+                    alt="Ảnh ghi nhận"
+                    h={150}
+                    radius={4}
+                  />
+                  <Image
+                    src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcScYIhqE3CmX71yYFFM3T4jkdKjIRyhJxC-wA&s"
+                    alt="Ảnh ghi nhận"
+                    h={150}
+                    radius={4}
+                  />
+                </Group>
+              </Scrollable>
+              <Divider />
+              <Text size="sm">
+                <b>Hạng mục sử dụng:</b>
+              </Text>
+              <SimpleGrid cols={2} spacing="sm" verticalSpacing="sm">
+                {resource?.map((r, i) => (
+                  <ResourceCard key={i} r={r} />
+                ))}
+              </SimpleGrid>
+            </Stack>
+          </Card>
+        </Modal>
+      )}
+      {openedTreeDetail && (
+        <TreeDetailModal
+          opened={openedTreeDetail ?? undefined}
+          onClose={() => setOpenedTreeDetail(false)}
+          data={treeDetail}
+        />
+      )}
     </Stack>
   );
 }

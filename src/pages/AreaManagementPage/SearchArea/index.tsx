@@ -542,7 +542,7 @@ export default function MVFarmSearch() {
 
             <SegmentedControl
               value={view}
-              onChange={(v) => setView(v as any)}
+              onChange={(v) => setView(v as "details" | "list")}
               data={[
                 { label: "Chi tiết", value: "details" },
                 { label: "Danh sách", value: "list" },
@@ -593,11 +593,6 @@ export default function MVFarmSearch() {
                     w={300}
                     radius={4}
                     fit="cover"
-                    styles={{
-                      image: {
-                        border: "1px solid var(--mantine-color-gray-3)",
-                      },
-                    }}
                   />
                   <Stack gap={8} style={{ flex: 1 }}>
                     <Group gap="xs">
