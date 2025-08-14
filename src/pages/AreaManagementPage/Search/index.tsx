@@ -1,5 +1,6 @@
 import { useMemo, useState } from "react";
 import {
+  Accordion,
   ActionIcon,
   Badge,
   Box,
@@ -12,6 +13,7 @@ import {
   Menu,
   Modal,
   Paper,
+  Progress,
   SegmentedControl,
   Select,
   SimpleGrid,
@@ -25,26 +27,39 @@ import {
 import {
   IconBadge,
   IconBorderAll,
+  IconCalendarClock,
   IconCheck,
+  IconClockHour4,
   IconDotsVertical,
   IconEdit,
   IconEye,
   IconFilter,
+  IconHash,
+  IconLeaf,
   IconMap2,
   IconRotateClockwise2,
   IconSearch,
   IconTable,
+  IconTimeline,
   IconTrash,
 } from "@tabler/icons-react";
 import Table from "../../../components/Table";
 import type { MRT_ColumnDef } from "mantine-react-table";
 import { treeCropData, type TreeCrop } from "../../PlantManagementPage/Tree";
 import { CompanyList } from "../../../components/CompanyList";
-import { areaOptions, plotOptions } from "../Row/Add";
+import { areaOptions, cropOptions, plotOptions, seedOptions } from "../Row/Add";
 import AreaCards from "../Zone/Add/components/AreaCards";
 import PlotCardSelector from "../Row/Add/components/PlotCards";
 import MapBox from "../Region/Detail/components/Map";
 import Scrollable from "../../../components/Scrollable";
+import CropCards from "../../SeasonManagementPage/Growth/Add/components/CropCards";
+import SeedCards from "../../SeasonManagementPage/Growth/Add/components/SeedCards";
+import { regionOptions } from "../Block/Add";
+import RegionCardSelector from "../Row/Add/components/RegionCards";
+import {
+  ResourceCard,
+  type Resource,
+} from "../../PlanManagementPage/Assign/Add/components/ConfirmStep";
 
 // ---------------- Types & mock data ----------------
 
@@ -161,6 +176,12 @@ const harvestInfoData: HarvestInfo[] = [
   },
 ];
 
+type Stage = {
+  id: string;
+  name: string;
+  duration: string; // e.g. "7 ngày" or "10–12 ngày"
+  percent?: number; // optional progress share (0–100)
+};
 type GrowthStage = {
   id: string;
   name: string; // Tên giai đoạn
@@ -193,8 +214,98 @@ const growthCycles: GrowthCycle[] = [
     ],
   },
 ];
+const resource: Resource[] = [
+  {
+    type: "Thiết bị",
+    name: "Máy cày Kubota L3218",
+    quantity: 3,
+    unit: "cái",
+    img: "https://kubotadailoi.com/uploads/images/P-1176_L3218_slide.jpg",
+  },
+  {
+    type: "Thiết bị",
+    name: "Máy bay nông nghiệp DJI Agras",
+    quantity: 1,
+    unit: "cái",
+    img: "https://agridrone.vn/wp-content/uploads/2023/02/16887_T50_%E6%AD%A3%E4%BE%A7.jpg",
+  },
+  {
+    type: "Vật tư",
+    name: "Béc tưới nhỏ giọt 8L/h",
+    quantity: 1200,
+    unit: "cái",
+    img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSXj6nfv7JlBEuVoQo0o9DUUXGAnLXXec-JLg&s",
+  },
+  {
+    type: "Vật tư",
+    name: "Ống HDPE Φ16",
+    quantity: 800,
+    unit: "m",
+    img: "https://bizweb.dktcdn.net/thumb/1024x1024/100/348/321/products/ong-hdpe-wata-20.jpg?v=1669780765193",
+  },
+  {
+    type: "Thuốc BVTV",
+    name: "Thuốc trừ sâu Emamectin 5%",
+    quantity: 40,
+    unit: "chai",
+    img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRV9s4k_p9Y4CZNPLFlRhbQPc4GZZvVNSoGVg&s",
+  },
+  {
+    type: "Thuốc BVTV",
+    name: "Thuốc trừ nấm Mancozeb 80WP",
+    quantity: 8,
+    unit: "gói",
+    img: "https://nongduochai.vn/images/products/2021/04/13/original/manozeb-80wp_xanh_1kg_1618288208.png",
+  },
+];
 // ---------------- Component ----------------
+const StatChip = ({
+  icon,
+  label,
+  value,
+}: {
+  icon: React.ReactNode;
+  label: string;
+  value: string;
+}) => (
+  <Paper withBorder radius={4} p="sm">
+    <Group gap={8} align="center">
+      <ThemeIcon variant="light" size="lg" radius={4}>
+        {icon}
+      </ThemeIcon>
+      <Stack gap={0}>
+        <Text size="xs" c="gray.6">
+          {label}
+        </Text>
+        <Text size="sm" fw={600}>
+          {value}
+        </Text>
+      </Stack>
+    </Group>
+  </Paper>
+);
 
+// Stage line with optional progress
+const StageRow = ({ stage }: { stage: Stage }) => (
+  <Box>
+    <Group justify="space-between" gap={8} align="center">
+      <Text size="sm" fw={600}>
+        {stage.name}
+      </Text>
+      <Group gap={6}>
+        <ThemeIcon size={22} variant="light" radius={6}>
+          <IconClockHour4 size={14} />
+        </ThemeIcon>
+        <Text size="sm" c="gray.7">
+          {stage.duration}
+        </Text>
+      </Group>
+    </Group>
+    {typeof stage.percent === "number" && (
+      <Progress value={stage.percent} mt={6} radius="xl" />
+    )}
+  </Box>
+);
 export default function MVFarmSearch() {
   const [keyword, setKeyword] = useState("");
   const [openFilterModal, setOpenFilterModal] = useState(false);
@@ -615,44 +726,87 @@ export default function MVFarmSearch() {
                 </Card>
 
                 <Card shadow="sm" radius={4} withBorder p="lg">
-                  <Group gap="xs">
-                    <ThemeIcon variant="light">
-                      <IconBadge size={16} />
-                    </ThemeIcon>
-                    <Text fw={700} size="lg">
-                      Thông tin chu kỳ sinh trưởng
-                    </Text>
-                  </Group>
-                  <SimpleGrid cols={2} spacing={8} mt="sm">
-                    <Text size="sm" c="gray.6">
-                      <b>Tên:</b> Mùa vụ Xuân 2025
-                    </Text>
-                    <Text size="sm">
-                      <b>Mã:</b> MSV2025XUAN
-                    </Text>
-                    <Text size="sm">
-                      <b>Ước tính:</b> 90 ngày
-                    </Text>
-                  </SimpleGrid>
-                  <Stack gap="md">
-                    <Text fw={700} size="lg">
-                      Thông tin chu kỳ sinh trưởng
-                    </Text>
-                    {growthCycles.map((cycle) => (
-                      <Box key={cycle.id} mb="sm">
-                        <Text fw={600} size="md" mb={4}>
-                          {cycle.name}
+                  {/* Header */}
+                  <Group justify="space-between" align="center">
+                    <Group gap="xs">
+                      <ThemeIcon variant="light" radius={10} size={34}>
+                        <IconBadge size={18} />
+                      </ThemeIcon>
+                      <Stack gap={0}>
+                        <Text fw={700} size="lg">
+                          Thông tin chu kỳ sinh trưởng
                         </Text>
-                        <Stack gap={4} pl={12}>
-                          {cycle.stages.map((stage) => (
-                            <Text key={stage.id} size="sm">
-                              <b>{stage.name}:</b> {stage.duration}
-                            </Text>
-                          ))}
-                        </Stack>
-                      </Box>
+                        <Text size="xs" c="gray.6">
+                          Tổng quan mùa vụ và các giai đoạn
+                        </Text>
+                      </Stack>
+                    </Group>
+                    <Badge
+                      variant="light"
+                      size="md"
+                      leftSection={<IconTimeline size={14} />}
+                    >
+                      Chu kỳ: {growthCycles.length}
+                    </Badge>
+                  </Group>
+
+                  <Divider my="md" />
+
+                  {/* Season summary */}
+                  <SimpleGrid cols={{ base: 1, sm: 3 }} spacing={10}>
+                    <StatChip
+                      icon={<IconLeaf size={16} />}
+                      label="Tên mùa vụ"
+                      value={"Mùa vụ Xuân 2025"}
+                    />
+                    <StatChip
+                      icon={<IconHash size={16} />}
+                      label="Mã"
+                      value={"MSV2025XUAN"}
+                    />
+                    <StatChip
+                      icon={<IconCalendarClock size={16} />}
+                      label="Ước tính"
+                      value={"90 ngày"}
+                    />
+                  </SimpleGrid>
+
+                  <Tooltip label={`Hoàn thành ước tính: 70%`} withArrow>
+                    <Box mt="sm">
+                      <Progress value={70} radius="xl" size="lg" />
+                    </Box>
+                  </Tooltip>
+
+                  <Divider my="md" />
+
+                  {/* Cycles & stages */}
+                  <Accordion variant="separated" radius={4} multiple>
+                    {growthCycles.map((cycle) => (
+                      <Accordion.Item key={cycle.id} value={cycle.id}>
+                        <Accordion.Control
+                          icon={
+                            <ThemeIcon variant="light" size={26} radius={4}>
+                              <IconLeaf size={16} />
+                            </ThemeIcon>
+                          }
+                        >
+                          <Group justify="space-between" wrap="nowrap">
+                            <Text fw={600}>{cycle.name}</Text>
+                            <Badge variant="light">
+                              {cycle.stages.length} giai đoạn
+                            </Badge>
+                          </Group>
+                        </Accordion.Control>
+                        <Accordion.Panel>
+                          <Stack gap="sm" pl={2}>
+                            {cycle.stages.map((stage) => (
+                              <StageRow key={stage.id} stage={stage} />
+                            ))}
+                          </Stack>
+                        </Accordion.Panel>
+                      </Accordion.Item>
                     ))}
-                  </Stack>
+                  </Accordion>
                 </Card>
                 <Card shadow="sm" radius={4} withBorder p="lg" mt="md">
                   <Stack gap={8}>
@@ -712,24 +866,84 @@ export default function MVFarmSearch() {
               <CompanyList />
             </Stack>
           </Paper>
+          <Paper withBorder p="md" radius={4}>
+            <Stack gap="sm">
+              <Title order={5}>Thông tin cây trồng</Title>
+              <Select
+                label="Nhóm cây trồng"
+                placeholder="Chọn nhóm cây trồng"
+                radius={4}
+                data={[
+                  "Cây ăn trái",
+                  "Cây công nghiệp",
+                  "Cây lương thực",
+                  "Cây thuốc",
+                  "Cây cảnh",
+                  "Cây lấy gỗ",
+                  "Cây lấy dầu",
+                  "Cây lấy sợi",
+                ]}
+              />
+              <TextInput
+                label="Giống cây trồng"
+                placeholder="Tìm kiếm giống cây trồng"
+                radius={4}
+                leftSection={<IconSearch size={18} />}
+              />
+              <SeedCards selected="" seeds={seedOptions} onSelect={() => {}} />
+              <TextInput
+                label="Cây trồng"
+                placeholder="Tìm kiếm cây trồng"
+                radius={4}
+                leftSection={<IconSearch size={18} />}
+              />
 
+              <CropCards
+                selected="1"
+                plants={cropOptions}
+                onSelect={() => {}}
+              />
+            </Stack>
+          </Paper>
           <Paper withBorder p="md" radius={4}>
             <Stack gap="sm">
               <Title order={5}>Thông tin vùng trồng</Title>
-              <Group grow align="flex-end">
-                <Select
-                  searchable
-                  radius={4}
-                  data={["V01", "V02", "V03"]}
-                  label="Mã định danh"
-                />
-                <TextInput
-                  label="Khu vực"
-                  placeholder="Tìm theo địa danh"
-                  radius={4}
-                  leftSection={<IconSearch size={16} />}
-                />
-              </Group>
+              <Select
+                radius={4}
+                data={["V01", "V02", "V03"]}
+                label="Mã định danh"
+                searchable
+                styles={{ dropdown: { zIndex: 1000 } }}
+              />
+              <Select
+                label="Khu vực canh tác"
+                placeholder="Chọn khu vực canh tác"
+                radius={4}
+                data={[
+                  "Khu vực canh tác Đồng Nai",
+                  "Khu vực canh tác Bình Dương",
+                ]}
+                searchable
+                styles={{ dropdown: { zIndex: 1000 } }}
+              />
+
+              <TextInput
+                label="Vùng trồng"
+                placeholder="Tìm kiếm vùng trồng"
+                radius={4}
+                leftSection={<IconSearch size={18} />}
+              />
+              <RegionCardSelector
+                regions={regionOptions}
+                selected={"12"}
+                onSelect={() => {}}
+              />
+              <TextInput
+                label="Khu vực"
+                placeholder="Tìm theo địa danh"
+                radius={4}
+                leftSection={<IconSearch size={16} />}
+              />
               <AreaCards
                 areas={areaOptions}
                 selected={""}
@@ -747,12 +961,14 @@ export default function MVFarmSearch() {
 
           <Group justify="space-between">
             <Button
+              radius={4}
               variant="default"
               leftSection={<IconRotateClockwise2 size={16} />}
             >
               Đặt lại
             </Button>
             <Button
+              radius={4}
               leftSection={<IconCheck size={16} />}
               onClick={() => setOpenFilterModal(false)}
             >
@@ -789,7 +1005,7 @@ export default function MVFarmSearch() {
         centered
         withinPortal
       >
-        <Card withBorder radius={8} shadow="md" p="lg">
+        <Card withBorder radius={4} shadow="md" p="lg">
           <Stack gap="md">
             <Text fw={700} size="lg">
               Sổ phiếu: PH001
@@ -817,7 +1033,7 @@ export default function MVFarmSearch() {
             <Text size="sm">
               <b>Hình ảnh ghi nhận:</b>
             </Text>
-            <Scrollable>
+            <Scrollable h={150}>
               <Group gap="xs" wrap="nowrap">
                 <Image
                   src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSTkLFeonuxGVlj-FHk_bg7ZZGS9CoqRIp0vg&s"
@@ -837,26 +1053,11 @@ export default function MVFarmSearch() {
             <Text size="sm">
               <b>Hạng mục sử dụng:</b>
             </Text>
-            <Stack gap={4}>
-              <Box>
-                <Text fw={600} size="xs">
-                  Thiết bị:
-                </Text>
-                <Text size="xs">Máy phun thuốc (1 cái)</Text>
-              </Box>
-              <Box>
-                <Text fw={600} size="xs">
-                  Thuốc BVTV:
-                </Text>
-                <Text size="xs">Confidor (2 chai), Actara (1 chai)</Text>
-              </Box>
-              <Box>
-                <Text fw={600} size="xs">
-                  Phân bón:
-                </Text>
-                <Text size="xs">NPK 16-16-8 (50 kg)</Text>
-              </Box>
-            </Stack>
+            <SimpleGrid cols={2} spacing="sm" verticalSpacing="sm">
+              {resource.map((r, i) => (
+                <ResourceCard key={i} r={r} />
+              ))}
+            </SimpleGrid>
           </Stack>
         </Card>
       </Modal>

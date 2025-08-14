@@ -76,7 +76,7 @@ function TagList({
     </Group>
   );
 }
-type Resource = {
+export type Resource = {
   type: "Vật tư" | "Thuốc BVTV" | "Thiết bị";
   name: string;
   quantity: number;
@@ -84,7 +84,7 @@ type Resource = {
   img: string;
 };
 
-function ResourceCard({ r }: { r: Resource }) {
+export function ResourceCard({ r }: { r: Resource }) {
   const icon =
     r.type === "Vật tư" ? (
       <IconBox size={16} />

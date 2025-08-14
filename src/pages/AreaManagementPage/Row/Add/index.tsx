@@ -149,7 +149,7 @@ export const cropOptions: CropOption[] = [
   {
     code: "TREE001",
     name: "Sầu riêng",
-    seed: "Hạt lai F1",
+    seed: "Sầu riêng Ri6",
     harvestMethod: "Thu hoạch thủ công",
     growthCycle: "Chu kỳ dài (5-7 năm)",
     note: "Yêu cầu đất thịt và thoát nước tốt",
@@ -159,7 +159,7 @@ export const cropOptions: CropOption[] = [
   {
     code: "TREE002",
     name: "Xoài",
-    seed: "Ghép cành",
+    seed: "Xoài cát",
     harvestMethod: "Thu hoạch bằng sào",
     growthCycle: "Chu kỳ trung bình (3-5 năm)",
     image:
@@ -168,7 +168,7 @@ export const cropOptions: CropOption[] = [
   {
     code: "TREE003",
     name: "Chuối",
-    seed: "Chồi cây",
+    seed: "Chuối xiêm",
     harvestMethod: "Thu hoạch cuống",
     growthCycle: "Chu kỳ ngắn (9-12 tháng)",
     image:
