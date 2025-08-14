@@ -1082,7 +1082,7 @@ export default function MVFarmSearch() {
               <b>Hạng mục sử dụng:</b>
             </Text>
             <SimpleGrid cols={2} spacing="sm" verticalSpacing="sm">
-              {resource.map((r, i) => (
+              {resource?.map((r, i) => (
                 <ResourceCard key={i} r={r} />
               ))}
             </SimpleGrid>
