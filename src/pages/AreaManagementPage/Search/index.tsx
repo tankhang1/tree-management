@@ -1014,7 +1014,11 @@ export default function MVFarmSearch() {
         centered
         withinPortal
       >
-        <Table data={cultivationNoteData} columns={cultivationNoteColumns} />
+        {cultivationNoteData?.length > 0 ? (
+          <Table data={cultivationNoteData} columns={cultivationNoteColumns} />
+        ) : (
+          <Text c="red">Không có dữ liệu!</Text>
+        )}
       </Modal>
       <Modal
         opened={cultivationNoteDetail}
@@ -1086,7 +1090,7 @@ export default function MVFarmSearch() {
         </Card>
       </Modal>
       <TreeDetailModal
-        opened={openedTreeDetail}
+        opened={openedTreeDetail ?? undefined}
         onClose={() => setOpenedTreeDetail(false)}
         data={treeDetail}
       />
