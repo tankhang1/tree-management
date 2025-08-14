@@ -108,6 +108,9 @@ const ContactPage = L(() => import("./pages/ContactPage"));
 // Area Management
 const AreaManagementPage = L(() => import("./pages/AreaManagementPage"));
 const AreaSearchPage = L(() => import("./pages/AreaManagementPage/Search"));
+const AreaSearchAreaPage = L(
+  () => import("./pages/AreaManagementPage/SearchArea")
+);
 const AreaManagementRegionPage = L(
   () => import("./pages/AreaManagementPage/Region")
 );
@@ -843,6 +846,11 @@ const ROUTES = [
     key="area_search"
     path={PATH.AREA_SEARCH_TREE}
     element={withSuspense(<AreaSearchPage />)}
+  />,
+  <Route
+    key="area_search_area"
+    path={PATH.AREA_SEARCH}
+    element={withSuspense(<AreaSearchAreaPage />)}
   />,
   <Route
     key="area_tree"

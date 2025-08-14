@@ -128,7 +128,7 @@ const MapBox = ({
       <TileLayer url="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}" />
 
       {LAYERS.map(
-        ({ key, color, fill, label }) =>
+        ({ key, color, fill }) =>
           visibleLayers[key] &&
           data[key] && (
             <Pane
@@ -175,26 +175,28 @@ const MapBox = ({
 
               {
                 //@ts-expect-error no check
-                data[key].features.map((feature: Feature) => {
-                  //@ts-expect-error no check
-                  const { center, properties } = feature;
-                  if (!center) return null;
-                  //@ts-expect-error no check
-                  const icon = L.divIcon({
-                    className: "text-label",
-                    html: `<div style="color: #fff;font-size:16px; font-weight: bold;">${
-                      properties?.name || ""
-                    }</div>`,
-                  });
+                data?.[key] &&
+                  data?.[key]?.features &&
+                  data[key].features.map((feature: Feature) => {
+                    //@ts-expect-error no check
+                    const { center, properties } = feature;
+                    if (!center) return null;
+                    //@ts-expect-error no check
+                    const icon = L.divIcon({
+                      className: "text-label",
+                      html: `<div style="color: #fff;font-size:16px; font-weight: bold;">${
+                        properties?.name || ""
+                      }</div>`,
+                    });
 
-                  return (
-                    <Marker
-                      key={properties?.id}
-                      position={[center[1], center[0]]} // [lat, lng]
-                      icon={icon}
-                    />
-                  );
-                })
+                    return (
+                      <Marker
+                        key={properties?.id}
+                        position={[center[1], center[0]]} // [lat, lng]
+                        icon={icon}
+                      />
+                    );
+                  })
               }
             </Pane>
           )

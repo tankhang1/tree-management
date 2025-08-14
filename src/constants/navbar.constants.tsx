@@ -62,6 +62,7 @@ export const NAV_BAR = [
       { label: "Chi tiết phân bổ", link: PATH.AREA_TREE },
       { label: "Chi tiết phân bổ (v2)", link: PATH.AREA_TREE_v2 },
       { label: "Tìm kiếm cây trồng", link: PATH.AREA_SEARCH_TREE },
+      { label: "Tìm kiếm vùng trồng", link: PATH.AREA_SEARCH },
       { label: "Lịch sử", link: PATH.AREA_HISTORY },
     ],
   },

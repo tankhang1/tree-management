@@ -59,6 +59,7 @@ export const PATH = {
   AREA_ADD_CULTIVATION_METHOD: "/area-management/cultivation-method/add",
   AREA_HISTORY: "/area-management/history",
   AREA_SEARCH_TREE: "/area-management/search-tree",
+  AREA_SEARCH: "/area-management/search",
   //Map Management
   MAP_REGION: "/map-management/region",
   MAP_ADD_REGION: "/map-management/region/add",
