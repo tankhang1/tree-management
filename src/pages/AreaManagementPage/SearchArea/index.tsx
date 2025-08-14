@@ -741,7 +741,7 @@ export default function MVFarmSearch() {
                       mt="sm"
                       style={{ overflow: "hidden", borderRadius: 8, zIndex: 0 }}
                     >
-                      <MapBox plot zoom={17} />
+                      <MapBox />
                     </Box>
                   </Stack>
                 </Card>
