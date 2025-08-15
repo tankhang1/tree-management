@@ -643,14 +643,19 @@ export default function MVFarmSearch() {
                       <Text size="sm">
                         <b>Nhóm cây trồng:</b> Cây ăn trái
                       </Text>
-                      <Text size="sm">
-                        <b>Sức khỏe cây trồng:</b>{" "}
-                        <Badge color="green" variant="light" radius="sm">
+                      <Group gap={6} align="center">
+                        <Text size="sm" component="span">
+                          <b>Sức khỏe cây trồng:</b>
+                        </Text>
+                        <Badge
+                          component="span"
+                          color="green"
+                          variant="light"
+                          radius="sm"
+                        >
                           Tốt
                         </Badge>
-                        {/* Nếu đang bệnh thì dùng màu đỏ */}
-                        {/* <Badge color="red" variant="light" radius="sm">Đang bệnh</Badge> */}
-                      </Text>
+                      </Group>
                     </SimpleGrid>
                     <Divider my={6} />
                     <Text size="sm" c="gray.7">
