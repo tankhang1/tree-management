@@ -21,9 +21,17 @@ import {
   Image,
   Textarea,
   SegmentedControl,
+  Tooltip,
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
-import { IconArrowLeft, IconSearch, IconUser } from "@tabler/icons-react";
+import {
+  IconArrowLeft,
+  IconCalendar,
+  IconCertificate,
+  IconSearch,
+  IconShieldCheck,
+  IconUser,
+} from "@tabler/icons-react";
 import { memo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import RegionCardSelector from "./components/RegionCards";
@@ -34,6 +42,7 @@ import { useDisclosure } from "@mantine/hooks";
 import { EmployeeCardList } from "../../../HRManagementPage/Team/Add/components/EmployeeCardList";
 import { areaOptions, cropOptions, seedOptions } from "../../Row/Add";
 import Scrollable from "../../../../components/Scrollable";
+import CertificateCardList from "./components/CertificateCards";
 export interface AreaOption {
   code: string;
   name: string;
@@ -298,6 +307,17 @@ const lotOptions: TLotOption[] = [
     description: "Địa hình dốc nhẹ, từ 48m đến 56m",
   },
 ];
+
+function InfoRow({ label, value }: { label: string; value: string }) {
+  return (
+    <Group gap={8} wrap="nowrap">
+      <Text size="sm" c="dimmed" style={{ minWidth: 150 }}>
+        {label}:
+      </Text>
+      <Text size="sm">{value}</Text>
+    </Group>
+  );
+}
 const AreaManagementAddRegionPage = () => {
   const navigate = useNavigate();
   const [
@@ -806,6 +826,7 @@ const AreaManagementAddRegionPage = () => {
                 label="Khu vực canh tác"
                 placeholder="Nhập khu vực canh tác"
               />
+              <CertificateCardList />
               <Autocomplete
                 label="Vùng trồng"
                 placeholder="Tìm kiếm vùng trồng"
@@ -935,7 +956,7 @@ const AreaManagementAddRegionPage = () => {
                   Khu vực Nam Trung Bộ
                 </Text>
                 <Divider />
-                <Accordion variant="contained" radius="md">
+                <Accordion variant="contained" radius={4}>
                   <Accordion.Item value="A01">
                     <Accordion.Control>Lô A01</Accordion.Control>
                     <Accordion.Panel>
@@ -1164,7 +1185,7 @@ const AreaManagementAddRegionPage = () => {
         )}
         {active === 1 && type === "region" && (
           <Stack mt="md" gap="md">
-            <Card withBorder radius="md" shadow="sm" p="md">
+            <Card withBorder radius={4} shadow="sm" p="md">
               <Stack gap="xs">
                 {/* Phương pháp canh tác */}
                 <Select
@@ -1213,40 +1234,123 @@ const AreaManagementAddRegionPage = () => {
         )}
         {active === 2 && (
           <Stack mt="md" gap="lg">
-            <Card withBorder radius="md" shadow="sm" p="md">
-              <Title order={5} mb="xs">
-                📌 Thông tin vùng trồng
-              </Title>
-              <Stack gap="xs">
-                {/* Thông tin nhân viên */}
-                <Text size="sm">
-                  <strong>Nhân viên quản lý:</strong> Nguyễn Văn A
-                </Text>
-                <Text size="sm">
-                  <strong>Danh sách nhân viên tham gia:</strong> Nguyễn Văn A,
-                  Trần Thị B, Lê Văn C
-                </Text>
+            <Group grow align="flex-start">
+              <Card withBorder radius={4} shadow="sm" p="md">
+                <Title order={5} mb="xs">
+                  📌 Thông tin vùng trồng
+                </Title>
+                <Stack gap="xs">
+                  {/* Thông tin nhân viên */}
+                  <Text size="sm">
+                    <strong>Nhân viên quản lý:</strong> Nguyễn Văn A
+                  </Text>
+                  <Text size="sm">
+                    <strong>Danh sách nhân viên tham gia:</strong> Nguyễn Văn A,
+                    Trần Thị B, Lê Văn C
+                  </Text>
 
-                {/* Thông tin vùng */}
-                <Text size="sm">
-                  <strong>Mã vùng:</strong> VT-001
-                </Text>
-                <Text size="sm">
-                  <strong>Diện tích:</strong> 50.000 m²
-                </Text>
-                <Text size="sm">
-                  <strong>Loại đất:</strong> Đất đỏ bazan
-                </Text>
-                <Text size="sm">
-                  <strong>Địa hình:</strong> Cao, Thoai thoải
-                </Text>
-                <Text size="sm">
-                  <strong>Ghi chú:</strong> Vùng trồng này cần chú ý về hệ thống
-                  tưới tiêu và phân bón.
-                </Text>
-              </Stack>
-            </Card>
+                  {/* Thông tin vùng */}
+                  <Text size="sm">
+                    <strong>Mã vùng:</strong> VT-001
+                  </Text>
+                  <Text size="sm">
+                    <strong>Diện tích:</strong> 50.000 m²
+                  </Text>
+                  <Text size="sm">
+                    <strong>Loại đất:</strong> Đất đỏ bazan
+                  </Text>
+                  <Text size="sm">
+                    <strong>Địa hình:</strong> Cao, Thoai thoải
+                  </Text>
+                  <Text size="sm">
+                    <strong>Ghi chú:</strong> Vùng trồng này cần chú ý về hệ
+                    thống tưới tiêu và phân bón.
+                  </Text>
+                </Stack>
+              </Card>
+              <Card withBorder radius={4} shadow="sm" p="md">
+                <Title order={5} mb="xs">
+                  🏅 Giấy chứng nhận
+                </Title>
 
+                <Group align="flex-start" gap="lg" wrap="nowrap">
+                  {/* Ảnh chứng nhận + dấu mộc */}
+                  <div style={{ position: "relative", minWidth: 180 }}>
+                    <Image
+                      src="https://vnce.vn/Uploads/images/chung-nhan-hop-chuan/chung-nhan-vietgap-san-pham.jpg"
+                      alt="Ảnh giấy chứng nhận"
+                      radius={4}
+                      width={180}
+                      height={120}
+                      fit="cover"
+                    />
+                    <Tooltip label="Dấu chứng nhận VietGAP" withArrow>
+                      <Image
+                        src="https://sutech.vn/wp-content/uploads/2021/09/logo-vietgap-chan-nuoi.jpg"
+                        alt="Dấu chứng nhận"
+                        w={56}
+                        h={56}
+                        radius="xl"
+                        style={{
+                          position: "absolute",
+                          right: 8,
+                          bottom: 8,
+                          border: "2px solid white",
+                          boxShadow: "0 4px 10px rgba(0,0,0,.15)",
+                        }}
+                      />
+                    </Tooltip>
+                  </div>
+
+                  {/* Nội dung chi tiết */}
+                  <Stack gap="xs" style={{ flex: 1 }}>
+                    <Group justify="space-between">
+                      <Group gap={8}>
+                        <IconCertificate size={18} />
+                        <Title order={5} lh={1.2}>
+                          Chứng nhận VietGAP
+                        </Title>
+                      </Group>
+                      <Badge
+                        color="teal"
+                        variant="light"
+                        leftSection={<IconShieldCheck size={14} />}
+                      >
+                        Hiệu lực 3 năm
+                      </Badge>
+                    </Group>
+
+                    <Group gap="xs" wrap="wrap">
+                      <Badge variant="light">GCN-VG-2025-001</Badge>
+                      <Badge variant="outline">Tổ chức VietGAP</Badge>
+                      <Badge
+                        variant="outline"
+                        leftSection={<IconCalendar size={14} />}
+                      >
+                        Cấp ngày 08/01/2025
+                      </Badge>
+                    </Group>
+
+                    <Divider my={4} />
+
+                    <Stack gap={4}>
+                      <InfoRow
+                        label="Tên chứng nhận"
+                        value="Chứng nhận VietGAP"
+                      />
+                      <InfoRow label="Mã số" value="GCN-VG-2025-001" />
+                      <InfoRow label="Tổ chức cấp" value="Tổ chức VietGAP" />
+                      <InfoRow label="Ngày cấp" value="08/01/2025" />
+                      <InfoRow label="Thời hạn hiệu lực" value="3 năm" />
+                      <Text size="sm" c="dimmed">
+                        <strong>Định nghĩa:</strong> VietGAP là tiêu chuẩn sản
+                        xuất nông nghiệp tốt.
+                      </Text>
+                    </Stack>
+                  </Stack>
+                </Group>
+              </Card>
+            </Group>
             <Card withBorder radius={4} shadow="sm" p="md">
               <Title order={5} mb="xs">
                 👨‍💼 Nhân viên quản lý

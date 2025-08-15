@@ -7,7 +7,6 @@ import {
   Image,
   Divider,
   Tooltip,
-  Button,
   Checkbox,
   ActionIcon,
 } from "@mantine/core";
