@@ -512,6 +512,7 @@ const PlanManagementUnplannedAddPage = () => {
                         </Text>
                         <Checkbox
                           radius={4}
+                          onChange={() => {}}
                           checked={selectedDevice.includes(index)}
                           readOnly
                         />
@@ -606,6 +607,7 @@ const PlanManagementUnplannedAddPage = () => {
                         </Text>
                         <Checkbox
                           radius={4}
+                          onChange={() => {}}
                           checked={selectedDevice.includes(index)}
                           readOnly
                         />
@@ -700,6 +702,7 @@ const PlanManagementUnplannedAddPage = () => {
                         </Text>
                         <Checkbox
                           radius={4}
+                          onChange={() => {}}
                           checked={selectedDevice.includes(index)}
                           readOnly
                         />

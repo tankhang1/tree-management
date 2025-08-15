@@ -374,6 +374,7 @@ const SchedulePage = () => {
                         </Stack>
                         <Tooltip label="Hiển thị lịch">
                           <Checkbox
+                          onChange={() => {}}
                             onClick={(e) => {
                               e.stopPropagation();
                             }}

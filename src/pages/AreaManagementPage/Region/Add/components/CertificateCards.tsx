@@ -123,7 +123,7 @@ function CertificateCard({
           <Text fw={600} lineClamp={1}>
             {item.title}
           </Text>
-          <Checkbox radius={4} checked={selected} />
+          <Checkbox radius={4} checked={selected} onChange={() => {}} />
         </Group>
         <Group gap={8} wrap="wrap">
           <Badge variant="light">{item.code}</Badge>

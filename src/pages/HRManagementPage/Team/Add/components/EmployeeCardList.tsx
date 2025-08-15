@@ -203,6 +203,7 @@ export function EmployeeCardList({
                     {isMultiple && (
                       <Checkbox
                         radius={4}
+                        onChange={() => {}}
                         checked={selected.includes(emp.id)}
                       />
                     )}

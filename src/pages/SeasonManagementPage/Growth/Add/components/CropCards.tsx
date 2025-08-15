@@ -75,6 +75,7 @@ const CropCards: React.FC<PlantCardSelectorProps & CropCardsProps> = ({
                   {isCheckbox && (
                     <Checkbox
                       radius={4}
+                      onChange={() => {}}
                       checked={selectedIds.includes(plant.code)}
                     />
                   )}

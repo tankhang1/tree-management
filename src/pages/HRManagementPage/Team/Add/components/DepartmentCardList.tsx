@@ -129,6 +129,7 @@ export function DepartmentCardList({ isCheckbox = true }: DepartmentProps) {
                   {isCheckbox && (
                     <Checkbox
                       radius={4}
+                      onChange={() => {}}
                       checked={selectedIds.includes(dept.code)}
                     />
                   )}

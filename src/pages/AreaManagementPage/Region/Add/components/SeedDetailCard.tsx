@@ -68,7 +68,9 @@ const SeedDetailCard = ({
             <Badge color="gray" variant="light">
               {seedCode}
             </Badge>
-            {isMultiple && <Checkbox radius={4} checked={isActive} />}
+            {isMultiple && (
+              <Checkbox radius={4} checked={isActive} onChange={() => {}} />
+            )}
           </Group>
         </Group>
 

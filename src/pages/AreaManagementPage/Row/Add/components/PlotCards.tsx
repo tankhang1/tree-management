@@ -56,6 +56,7 @@ const PlotCardSelector: React.FC<LotCardSelectorProps> = ({
                     <Checkbox
                       radius={4}
                       checked={selected.includes(lot.code)}
+                      onChange={() => {}}
                     />
                   )}
                 </Group>

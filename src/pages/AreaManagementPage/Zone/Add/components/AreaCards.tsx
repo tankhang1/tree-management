@@ -58,6 +58,7 @@ const AreaCards: React.FC<AreaCardSelectorProps> = ({
                     <Checkbox
                       radius={4}
                       checked={selectedId.includes(area.code)}
+                      onChange={() => {}}
                     />
                   )}
                 </Group>

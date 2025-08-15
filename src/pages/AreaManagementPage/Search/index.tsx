@@ -46,14 +46,11 @@ import {
 } from "@tabler/icons-react";
 import Table from "../../../components/Table";
 import type { MRT_ColumnDef } from "mantine-react-table";
-import { CompanyList } from "../../../components/CompanyList";
-import { areaOptions, cropOptions, plotOptions, seedOptions } from "../Row/Add";
+import { areaOptions, plotOptions } from "../Row/Add";
 import AreaCards from "../Zone/Add/components/AreaCards";
 import PlotCardSelector from "../Row/Add/components/PlotCards";
 import MapBox from "../Region/Detail/components/Map";
 import Scrollable from "../../../components/Scrollable";
-import CropCards from "../../SeasonManagementPage/Growth/Add/components/CropCards";
-import SeedCards from "../../SeasonManagementPage/Growth/Add/components/SeedCards";
 import { regionOptions } from "../Block/Add";
 import RegionCardSelector from "../Row/Add/components/RegionCards";
 import {
@@ -568,7 +565,7 @@ export default function MVFarmSearch() {
 
             <SegmentedControl
               value={view}
-              onChange={(v) => setView(v as any)}
+              onChange={(v) => setView(v as "details" | "list")}
               data={[
                 { label: "Chi tiết", value: "details" },
                 { label: "Danh sách", value: "list" },
@@ -619,11 +616,6 @@ export default function MVFarmSearch() {
                     w={300}
                     radius={4}
                     fit="cover"
-                    styles={{
-                      image: {
-                        border: "1px solid var(--mantine-color-gray-3)",
-                      },
-                    }}
                   />
                   <Stack gap={8} style={{ flex: 1 }}>
                     <Group gap="xs">
@@ -996,7 +988,12 @@ export default function MVFarmSearch() {
                   styles={{ dropdown: { zIndex: 1000 } }}
                   data={["Lô A1", "Lô B2", "Lô C3"]}
                 />
-                <PlotCardSelector lots={plotOptions} isMultiple />
+                <PlotCardSelector
+                  lots={plotOptions}
+                  isMultiple
+                  onSelect={() => {}}
+                  selected={""}
+                />
               </Stack>
             </Paper>
 

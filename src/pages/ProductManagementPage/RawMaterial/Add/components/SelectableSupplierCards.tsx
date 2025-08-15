@@ -52,6 +52,7 @@ export function SelectableSupplierCards({
                 <Checkbox
                   checked={selectedIds.includes(s.id)}
                   readOnly
+                  onChange={() => {}}
                   tabIndex={-1}
                 />
               )}

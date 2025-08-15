@@ -183,6 +183,7 @@ export function SelectableEnterpriseCards({
                 <Checkbox
                   checked={selectedIds.includes(e.id)}
                   readOnly
+                  onChange={() => {}}
                   tabIndex={-1}
                   style={{ cursor: "default" }}
                 />

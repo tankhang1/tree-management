@@ -1657,7 +1657,7 @@ const AreaManagementAddRegionPage = () => {
       >
         <Stack>
           <Group>
-            <Checkbox label="Tất cả" radius={4} />
+            <Checkbox label="Tất cả" radius={4} onChange={() => {}} />
           </Group>
           <SimpleGrid cols={2} spacing="md">
             {lotOptions.map((lot) => (

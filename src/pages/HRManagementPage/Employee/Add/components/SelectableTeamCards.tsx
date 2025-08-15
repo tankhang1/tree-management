@@ -118,6 +118,7 @@ export function SelectableTeamCards({
                 <Checkbox
                   radius={4}
                   checked={selected.includes(team.name)}
+                  onChange={() => {}}
                   readOnly
                 />
               )}

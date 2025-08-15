@@ -485,7 +485,11 @@ const OrderManagementQuickPage = () => {
               <Card withBorder radius={4} shadow="sm">
                 <Group justify="space-between">
                   <Group>
-                    <Checkbox radius={4} />
+                    <Checkbox
+                      radius={4}
+                      onChange={() => {}}
+                      defaultChecked={false}
+                    />
                     <Text fw={"500"}>Chọn tất cả ({cartItems.length})</Text>
                   </Group>
                   <Button
@@ -502,7 +506,11 @@ const OrderManagementQuickPage = () => {
                 <Stack gap="md">
                   <Group justify="space-between" align="center">
                     <Group>
-                      <Checkbox radius={4} />
+                      <Checkbox
+                        radius={4}
+                        onChange={() => {}}
+                        defaultChecked={false}
+                      />
                       <Image
                         src={
                           "https://img.lazcdn.com/g/tps/images/ims-web/TB1T7K2d8Cw3KVjSZFuXXcAOpXa.png"
@@ -570,7 +578,11 @@ const OrderManagementQuickPage = () => {
                 <Stack gap="md">
                   <Group justify="space-between" align="center">
                     <Group>
-                      <Checkbox radius={4} />
+                      <Checkbox
+                        radius={4}
+                        onChange={() => {}}
+                        defaultChecked={false}
+                      />
                       <Image
                         src={
                           "https://img.lazcdn.com/g/tps/images/ims-web/TB1T7K2d8Cw3KVjSZFuXXcAOpXa.png"

@@ -57,7 +57,11 @@ const RegionCardSelector: React.FC<RegionCardSelectorProps> = ({
                   <Badge color="gray">{r.code}</Badge>
 
                   {isMultiple && (
-                    <Checkbox radius={4} checked={selected.includes(r.code)} />
+                    <Checkbox
+                      radius={4}
+                      onChange={() => onSelect(r.code)}
+                      checked={selected.includes(r.code)}
+                    />
                   )}
                 </Group>
               </Group>

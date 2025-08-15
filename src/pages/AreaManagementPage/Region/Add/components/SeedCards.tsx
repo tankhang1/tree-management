@@ -6,7 +6,6 @@ import {
   Image,
   Badge,
   Checkbox,
-  Button,
   ActionIcon,
 } from "@mantine/core";
 import type { SeedOption } from "..";
@@ -79,6 +78,7 @@ const SeedCards: React.FC<SeedCardSelectorProps> = ({
                     {isMultiple && (
                       <Checkbox
                         radius={4}
+                        onChange={() => {}}
                         checked={selected.includes(seed.code)}
                       />
                     )}

@@ -165,6 +165,7 @@ export function SelectableSupplierCards({
               <Text fw={600}>{s.name}</Text>
               {isCheckbox && (
                 <Checkbox
+                  onChange={() => {}}
                   checked={selectedIds.includes(s.id)}
                   readOnly
                   tabIndex={-1}

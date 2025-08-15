@@ -57,6 +57,7 @@ const RegionCardSelector: React.FC<RegionCardSelectorProps> = ({
                   {isMultiSelect && (
                     <Checkbox
                       radius={4}
+                      onChange={() => {}}
                       checked={selectedId.includes(r.code)}
                     />
                   )}

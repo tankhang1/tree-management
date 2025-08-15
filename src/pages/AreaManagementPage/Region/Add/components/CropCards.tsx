@@ -68,6 +68,7 @@ const CropCards: React.FC<PlantCardSelectorProps> = ({
                       <Checkbox
                         checked={selectedId.includes(plant.code)}
                         radius={4}
+                        onChange={() => {}}
                       />
                     )}
                   </Group>
