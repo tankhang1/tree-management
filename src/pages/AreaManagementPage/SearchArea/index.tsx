@@ -764,8 +764,23 @@ export default function MVFarmSearch() {
                     </Group>
                     <Box
                       mt="sm"
-                      style={{ overflow: "hidden", borderRadius: 8, zIndex: 0 }}
+                      style={{
+                        position: "relative",
+                        overflow: "hidden",
+                        borderRadius: 8,
+                        zIndex: 0,
+                      }}
                     >
+                      <Box
+                        style={{
+                          position: "absolute",
+                          inset: 0,
+                          zIndex: 1,
+                          // let clicks through but block wheel/gesture
+                          pointerEvents: "none",
+                        }}
+                        onWheel={(e) => e.stopPropagation()}
+                      />
                       <MapBox />
                     </Box>
                   </Stack>
