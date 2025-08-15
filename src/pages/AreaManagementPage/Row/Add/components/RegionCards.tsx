@@ -1,4 +1,4 @@
-import { Card, Group, Text, Stack, Badge } from "@mantine/core";
+import { Card, Group, Text, Stack, Badge, Checkbox } from "@mantine/core";
 import type { RegionOption } from "..";
 import Scrollable from "../../../../../components/Scrollable";
 import { useState } from "react";
@@ -7,12 +7,25 @@ interface RegionCardSelectorProps {
   regions: RegionOption[];
   selected: string;
   onSelect: (code: string) => void;
+  isMultiple?: boolean;
 }
 
-const RegionCardSelector: React.FC<RegionCardSelectorProps> = ({ regions }) => {
-  const [selected, setSelected] = useState("");
+const RegionCardSelector: React.FC<RegionCardSelectorProps> = ({
+  regions,
+  isMultiple = false,
+}) => {
+  const [selected, setSelected] = useState<string[]>([]);
   const onSelect = (code: string) => {
-    setSelected(code);
+    if (isMultiple) {
+      setSelected((prev) => {
+        if (prev.includes(code)) {
+          return prev.filter((item) => item !== code);
+        }
+        return [...prev, code];
+      });
+    } else {
+      setSelected([code]);
+    }
   };
   return (
     <Scrollable h={150}>
@@ -24,12 +37,12 @@ const RegionCardSelector: React.FC<RegionCardSelectorProps> = ({ regions }) => {
             radius="md"
             miw={350}
             h={130}
-            shadow={selected === r.code ? "md" : "xs"}
+            shadow={selected.includes(r.code) ? "md" : "xs"}
             style={{
               cursor: "pointer",
               position: "relative",
               transition: "transform 0.2s ease",
-              borderColor: selected === r.code ? "green" : undefined,
+              borderColor: selected.includes(r.code) ? "green" : undefined,
             }}
             onMouseEnter={(e) =>
               (e.currentTarget.style.transform = "scale(1.02)")
@@ -40,7 +53,13 @@ const RegionCardSelector: React.FC<RegionCardSelectorProps> = ({ regions }) => {
             <Stack gap={4}>
               <Group justify="space-between">
                 <Text fw={500}>{r.name}</Text>
-                <Badge color="gray">{r.code}</Badge>
+                <Group>
+                  <Badge color="gray">{r.code}</Badge>
+
+                  {isMultiple && (
+                    <Checkbox radius={4} checked={selected.includes(r.code)} />
+                  )}
+                </Group>
               </Group>
               <Text size="sm">
                 <strong>Diện tích:</strong> {r.area}

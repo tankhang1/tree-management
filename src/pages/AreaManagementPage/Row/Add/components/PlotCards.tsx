@@ -1,4 +1,4 @@
-import { Card, Stack, Text, Group, Badge } from "@mantine/core";
+import { Card, Stack, Text, Group, Badge, Checkbox } from "@mantine/core";
 import type { LotOption } from "..";
 import Scrollable from "../../../../../components/Scrollable";
 import { useState } from "react";
@@ -7,12 +7,22 @@ interface LotCardSelectorProps {
   lots: LotOption[];
   selected: string;
   onSelect: (code: string) => void;
+  isMultiple?: boolean;
 }
 
-const PlotCardSelector: React.FC<LotCardSelectorProps> = ({ lots }) => {
-  const [selected, setSelected] = useState("");
+const PlotCardSelector: React.FC<LotCardSelectorProps> = ({
+  lots,
+  isMultiple = false,
+}) => {
+  const [selected, setSelected] = useState<string[]>([]);
   const onSelect = (code: string) => {
-    setSelected(code);
+    if (isMultiple) {
+      setSelected((prev) =>
+        prev.includes(code) ? prev.filter((id) => id !== code) : [...prev, code]
+      );
+    } else {
+      setSelected([code]);
+    }
   };
   return (
     <Scrollable h={180}>
@@ -23,9 +33,9 @@ const PlotCardSelector: React.FC<LotCardSelectorProps> = ({ lots }) => {
             withBorder
             radius="md"
             h={170}
-            shadow={selected === lot.code ? "md" : "xs"}
+            shadow={selected.includes(lot.code) ? "md" : "xs"}
             style={{
-              borderColor: selected === lot.code ? "green" : undefined,
+              borderColor: selected.includes(lot.code) ? "green" : undefined,
               cursor: "pointer",
               minWidth: 300,
               position: "relative",
@@ -40,7 +50,15 @@ const PlotCardSelector: React.FC<LotCardSelectorProps> = ({ lots }) => {
             <Stack gap={6}>
               <Group justify="space-between">
                 <Text fw={500}>{lot.name}</Text>
-                <Badge color="gray">{lot.code}</Badge>
+                <Group>
+                  <Badge color="gray">{lot.code}</Badge>
+                  {isMultiple && (
+                    <Checkbox
+                      radius={4}
+                      checked={selected.includes(lot.code)}
+                    />
+                  )}
+                </Group>
               </Group>
 
               <Text size="sm">

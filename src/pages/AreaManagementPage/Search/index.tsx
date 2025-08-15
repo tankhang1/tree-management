@@ -12,6 +12,7 @@ import {
   Image,
   Menu,
   Modal,
+  MultiSelect,
   Paper,
   Progress,
   SegmentedControl,
@@ -305,6 +306,34 @@ const treeDetail: TreeDetail = {
   growthTime: "1095",
   growthNote: "Cần tỉa cành định kỳ và phòng ngừa sâu bệnh.",
 };
+const companyOptions = [
+  {
+    label:
+      "Hộ ông Nguyễn Văn A - Nguyễn Văn A - Ấp 1, xã Tân Lập, huyện Hớn Quản, Bình Phước",
+    value: "company1",
+  },
+  {
+    label:
+      "HTX Nông nghiệp Bền Vững - Trần Thị B - Xã Phú Riềng, huyện Phú Riềng, Bình Phước",
+    value: "company2",
+  },
+  // Thêm các doanh nghiệp/nông hộ khác ở đây
+];
+const plantVarietyOptions = [
+  {
+    label: "Sầu riêng - Ri6",
+    value: "saurieng-ri6",
+  },
+  {
+    label: "Xoài - Cát Chu",
+    value: "xoai-catchu",
+  },
+  {
+    label: "Cà phê - Robusta",
+    value: "caphe-robusta",
+  },
+  // Thêm các cây trồng và giống khác ở đây
+];
 // ---------------- Component ----------------
 const StatChip = ({
   icon,
@@ -881,56 +910,28 @@ export default function MVFarmSearch() {
             },
           }}
         >
-          <Stack gap="md">
+          <Stack gap="xs">
             <Paper withBorder p="md" radius={4}>
-              <Stack gap="sm">
-                <Title order={5}>Doanh nghiệp / Nông hộ</Title>
-                <CompanyList />
-              </Stack>
-            </Paper>
-            <Paper withBorder p="md" radius={4}>
-              <Stack gap="sm">
+              <Stack gap={"sm"}>
                 <Title order={5}>Thông tin cây trồng</Title>
-                <Select
-                  label="Nhóm cây trồng"
-                  placeholder="Chọn nhóm cây trồng"
-                  radius={4}
-                  data={[
-                    "Cây ăn trái",
-                    "Cây công nghiệp",
-                    "Cây lương thực",
-                    "Cây thuốc",
-                    "Cây cảnh",
-                    "Cây lấy gỗ",
-                    "Cây lấy dầu",
-                    "Cây lấy sợi",
-                  ]}
-                />
-                <TextInput
-                  label="Giống cây trồng"
-                  placeholder="Tìm kiếm giống cây trồng"
-                  radius={4}
-                  leftSection={<IconSearch size={18} />}
-                />
-                <SeedCards
-                  selected=""
-                  seeds={seedOptions}
-                  onSelect={() => {}}
-                />
-                <TextInput
-                  label="Cây trồng"
-                  placeholder="Tìm kiếm cây trồng"
-                  radius={4}
-                  leftSection={<IconSearch size={18} />}
-                />
 
-                <CropCards
-                  selected="1"
-                  plants={cropOptions}
-                  onSelect={() => {}}
+                <Select
+                  radius={4}
+                  searchable
+                  label="Doanh nghiệp / nông hộ"
+                  data={companyOptions}
+                  styles={{ dropdown: { zIndex: 1000 } }}
+                />
+                <Select
+                  radius={4}
+                  searchable
+                  label="Giống cây trồng"
+                  data={plantVarietyOptions}
+                  styles={{ dropdown: { zIndex: 1000 } }}
                 />
               </Stack>
             </Paper>
+
             <Paper withBorder p="md" radius={4}>
               <Stack gap="sm">
                 <Title order={5}>Thông tin vùng trồng</Title>
@@ -953,35 +954,49 @@ export default function MVFarmSearch() {
                   styles={{ dropdown: { zIndex: 1000 } }}
                 />
 
-                <TextInput
+                <MultiSelect
                   label="Vùng trồng"
+                  clearable
                   placeholder="Tìm kiếm vùng trồng"
                   radius={4}
                   leftSection={<IconSearch size={18} />}
+                  data={["Vùng Trồng Tây Nguyên", "Vùng Trồng Miền Tây"]}
+                  styles={{ dropdown: { zIndex: 1000 } }}
                 />
                 <RegionCardSelector
                   regions={regionOptions}
                   selected={"12"}
                   onSelect={() => {}}
+                  isMultiple
                 />
-                <TextInput
+                <MultiSelect
                   label="Khu vực"
+                  clearable
                   placeholder="Tìm theo địa danh"
                   radius={4}
                   leftSection={<IconSearch size={16} />}
+                  styles={{ dropdown: { zIndex: 1000 } }}
+                  data={[
+                    "Khu vực phía Bắc",
+                    "Khu vực phía Nam",
+                    "Khu vực phía Tây",
+                  ]}
                 />
                 <AreaCards
                   areas={areaOptions}
                   selected={""}
                   onSelect={() => {}}
+                  isMultiple
                 />
-                <TextInput
+                <MultiSelect
                   placeholder="Tìm kiếm lô"
                   label="Lô"
                   radius={4}
                   leftSection={<IconSearch size={16} />}
+                  styles={{ dropdown: { zIndex: 1000 } }}
+                  data={["Lô A1", "Lô B2", "Lô C3"]}
                 />
-                <PlotCardSelector lots={plotOptions} />
+                <PlotCardSelector lots={plotOptions} isMultiple />
               </Stack>
             </Paper>
 
