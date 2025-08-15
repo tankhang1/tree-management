@@ -92,7 +92,7 @@ const MapBox = ({
       });
     }, 100);
   };
-  useEffect(() => {
+  const onGetData = () => {
     Promise.all(
       [...LAYERS, { key: "plant", label: "Tree" }].map((layer) =>
         fetch(`/${layer.key}.geojson`).then((res) => res.json())
@@ -109,6 +109,9 @@ const MapBox = ({
         setPlantFeatures(plantGeo.features);
       }
     });
+  };
+  useEffect(() => {
+    onGetData();
   }, []);
   return (
     <MapContainer

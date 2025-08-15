@@ -53,7 +53,9 @@ const LotCard = ({
             <Badge color="green" variant="light">
               {lotCode}
             </Badge>
-            {isCheckbox && <Checkbox radius={4} checked={selected} />}
+            {isCheckbox && (
+              <Checkbox radius={4} checked={selected} onChange={() => {}} />
+            )}
             {closable && (
               <ActionIcon color="red">
                 <IconTrash size={18} />
