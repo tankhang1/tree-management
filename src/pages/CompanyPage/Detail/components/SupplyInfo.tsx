@@ -258,7 +258,7 @@ export default function SupplyInfo() {
     { accessorKey: "category", header: "Phân loại" },
     {
       accessorKey: "stock",
-      header: "Tồn kho",
+      header: "Số lượng",
       Cell: ({ row }) => {
         const m = row.original as Material;
         const st = getStatus(m);

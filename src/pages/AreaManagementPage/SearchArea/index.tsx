@@ -1,6 +1,5 @@
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import {
-  Accordion,
   ActionIcon,
   Badge,
   Box,
@@ -15,7 +14,7 @@ import {
   Modal,
   MultiSelect,
   Paper,
-  Progress,
+  ScrollAreaAutosize,
   SegmentedControl,
   Select,
   SimpleGrid,
@@ -29,19 +28,18 @@ import {
 import {
   IconBadge,
   IconBorderAll,
-  IconCalendarClock,
-  IconClockHour4,
+  IconCalendar,
+  IconCertificate,
   IconDotsVertical,
   IconEdit,
   IconEye,
   IconFilter,
-  IconHash,
   IconLeaf,
   IconMap2,
   IconRotateClockwise2,
   IconSearch,
+  IconShieldCheck,
   IconSparkles,
-  IconTimeline,
   IconTrash,
 } from "@tabler/icons-react";
 import Table from "../../../components/Table";
@@ -57,6 +55,9 @@ import {
   TreeDetailModal,
   type TreeDetail,
 } from "../Search/components/TreeDetailModal";
+import { InfoRow } from "../Region/Add";
+import { areaOptions } from "../Row/Add";
+import { EmployeeCardList } from "../../HRManagementPage/Team/Add/components/EmployeeCardList";
 
 // ---------------- Types & mock data ----------------
 type TreeCrop = {
@@ -83,17 +84,7 @@ type CultivationNote = {
   actualStart: string; // Thời gian thực hiện
   actualEnd: string; // Thời gian hoàn thành
 };
-type PestRecord = {
-  id: string; // Số phiếu
-  detectedAt: string; // Thời gian phát hiện
-  resolvedAt: string; // Thời gian xử lý
-  pestStatus: string; // Tình trạng sâu bệnh
-  solution: string; // Nội dung xử lý
-  pesticides: string[]; // Thuốc BVTV (nhiều loại)
-  staffHandler: string; // Nhân viên xử lý
-  staffManager: string; // Nhân viên quản lý
-  staffQuality: string; // Nhân viên kiểm định chất lượng
-};
+
 const cultivationNoteData: CultivationNote[] = [
   {
     id: "PH001",
@@ -133,90 +124,6 @@ const cultivationHistoryData: CultivationHistory[] = [
   },
 ];
 
-const pestRecordData: PestRecord[] = [
-  {
-    id: "PH001",
-    detectedAt: "2025-03-15",
-    resolvedAt: "2025-03-18",
-    pestStatus: "Rầy nâu",
-    solution: "Phun thuốc và kiểm tra lại sau 7 ngày",
-    pesticides: ["Confidor", "Actara"],
-    staffHandler: "Nguyễn Văn A",
-    staffManager: "Trần Thị B",
-    staffQuality: "Lê Văn C",
-  },
-  {
-    id: "PH002",
-    detectedAt: "2025-04-10",
-    resolvedAt: "2025-04-13",
-    pestStatus: "Sâu đục thân",
-    solution: "Cắt bỏ cành bị hại, phun thuốc sinh học",
-    pesticides: ["Regent", "Vertimec"],
-    staffHandler: "Phạm Văn D",
-    staffManager: "Nguyễn Thị E",
-    staffQuality: "Trần Văn F",
-  },
-];
-
-type HarvestInfo = {
-  id: string;
-  harvestDate: string; // Thời gian thu hoạch
-  yield: number; // Sản lượng
-  unit: string; // Đơn vị / Quy cách
-};
-const harvestInfoData: HarvestInfo[] = [
-  {
-    id: "H001",
-    harvestDate: "2025-07-15",
-    yield: 1500,
-    unit: "kg",
-  },
-  {
-    id: "H002",
-    harvestDate: "2025-08-10",
-    yield: 800,
-    unit: "thùng (20kg)",
-  },
-];
-
-type Stage = {
-  id: string;
-  name: string;
-  duration: string; // e.g. "7 ngày" or "10–12 ngày"
-  percent?: number; // optional progress share (0–100)
-};
-type GrowthStage = {
-  id: string;
-  name: string; // Tên giai đoạn
-  duration: string; // Thời gian (ví dụ: "30 ngày")
-};
-
-type GrowthCycle = {
-  id: string;
-  name: string; // Tên chu kỳ (ví dụ: "Chu kỳ trung bình (3-5 năm)")
-  stages: GrowthStage[]; // Danh sách các giai đoạn
-};
-
-const growthCycles: GrowthCycle[] = [
-  {
-    id: "cycle1",
-    name: "Chu kỳ trung bình (3-5 năm)",
-    stages: [
-      { id: "stage1", name: "Ra hoa", duration: "30 ngày" },
-      { id: "stage2", name: "Kết trái", duration: "60 ngày" },
-      { id: "stage3", name: "Thu hoạch", duration: "15 ngày" },
-    ],
-  },
-  {
-    id: "cycle2",
-    name: "Chu kỳ dài (5-7 năm)",
-    stages: [
-      { id: "stage1", name: "Ra hoa", duration: "40 ngày" },
-      { id: "stage2", name: "Kết trái", duration: "80 ngày" },
-      { id: "stage3", name: "Thu hoạch", duration: "20 ngày" },
-    ],
-  },
-];
 const resource: Resource[] = [
   {
     type: "Thiết bị",
@@ -330,54 +237,510 @@ const plantVarietyOptions = [
   },
   // Thêm các cây trồng và giống khác ở đây
 ];
-// ---------------- Component ----------------
-const StatChip = ({
-  icon,
-  label,
-  value,
-}: {
-  icon: React.ReactNode;
-  label: string;
-  value: string;
-}) => (
-  <Paper withBorder radius={4} p="sm">
-    <Group gap={8} align="center">
-      <ThemeIcon variant="light" size="lg" radius={4}>
-        {icon}
-      </ThemeIcon>
-      <Stack gap={0}>
-        <Text size="xs" c="gray.6">
-          {label}
-        </Text>
-        <Text size="sm" fw={600}>
-          {value}
-        </Text>
-      </Stack>
-    </Group>
-  </Paper>
-);
+type AreaZone = {
+  id: string;
+  code: string;
+  name: string;
+  regionName: string;
+  areaName?: string;
+  plotName?: string;
+  employee: string;
+  area: number; // diện tích (m²)
+  soilType: string;
+  terrain: string[];
+  mainCrop: string;
+  gps: string;
+  numberOfLots: number;
+  cultivationZone: string;
+  tree: string;
+};
+const areaZoneData: AreaZone[] = [
+  {
+    id: "V001",
+    code: "V-A1",
+    name: "Khu vực A1",
+    regionName: "Vùng Trồng A",
+    employee: "Nguyễn Văn A",
+    area: 10000,
+    tree: "Sầu riêng",
 
-// Stage line with optional progress
-const StageRow = ({ stage }: { stage: Stage }) => (
-  <Box>
-    <Group justify="space-between" gap={8} align="center">
-      <Text size="sm" fw={600}>
-        {stage.name}
-      </Text>
-      <Group gap={6}>
-        <ThemeIcon size={22} variant="light" radius={6}>
-          <IconClockHour4 size={14} />
-        </ThemeIcon>
-        <Text size="sm" c="gray.7">
-          {stage.duration}
-        </Text>
-      </Group>
-    </Group>
-    {typeof stage.percent === "number" && (
-      <Progress value={stage.percent} mt={6} radius="xl" />
-    )}
-  </Box>
-);
+    soilType: "Đất thịt",
+    terrain: ["Cao", "Dốc"],
+    mainCrop: "Sầu riêng",
+    gps: "12.3456,78.9101 12.3457,78.9102 12.3458,78.9103 12.3459,78.9104",
+    numberOfLots: 5,
+    cultivationZone: "Khu vực canh tác Đồng Nai",
+  },
+  {
+    id: "V002",
+    code: "V-B2",
+    name: "Khu vực B2",
+    regionName: "Vùng Trồng B",
+    employee: "Trần Thị B",
+    area: 8500,
+    tree: "Sầu riêng",
+
+    soilType: "Đất phù sa",
+    terrain: ["Thấp", "Trũng"],
+    mainCrop: "Xoài",
+    gps: "13.1234,79.5678 13.1235,79.5679 13.1236,79.5680 13.1237,79.5681",
+    numberOfLots: 3,
+    cultivationZone: "Khu vực canh tác Đồng Nai",
+  },
+  {
+    id: "V003",
+    code: "V-C1",
+    name: "Khu vực C1",
+    tree: "Sầu riêng",
+
+    regionName: "Vùng Trồng C",
+    employee: "Lê Văn C",
+    area: 6000,
+    soilType: "Đất cát",
+    terrain: ["Bằng phẳng"],
+    mainCrop: "Chuối",
+    gps: "14.5678,80.1234 14.5679,80.1235 14.5680,80.1236 14.5681,80.1237",
+    numberOfLots: 4,
+    cultivationZone: "Khu vực canh tác Tây Nguyên",
+  },
+  {
+    id: "V004",
+    code: "V-D3",
+    tree: "Sầu riêng",
+
+    name: "Khu vực D3",
+    regionName: "Vùng Trồng D",
+    employee: "Phạm Thị D",
+    area: 12000,
+    soilType: "Đất đỏ bazan",
+    terrain: ["Cao", "Bằng phẳng"],
+    mainCrop: "Cà phê",
+    gps: "15.6789,81.2345 15.6790,81.2346 15.6791,81.2347 15.6792,81.2348",
+    numberOfLots: 6,
+    cultivationZone: "Khu vực canh tác Tây Nguyên",
+  },
+  {
+    id: "V005",
+    code: "V-E4",
+    tree: "Sầu riêng",
+
+    name: "Khu vực E4",
+    regionName: "Vùng Trồng E",
+    employee: "Nguyễn Văn E",
+    area: 9500,
+    soilType: "Đất sét",
+    terrain: ["Dốc", "Thấp"],
+    mainCrop: "Mít",
+    gps: "16.7890,82.3456 16.7891,82.3457 16.7892,82.3458 16.7893,82.3459",
+    numberOfLots: 4,
+    cultivationZone: "Khu vực canh tác Miền Tây",
+  },
+  {
+    id: "V006",
+    code: "V-F5",
+    name: "Khu vực F5",
+    areaName: "Khu vực F5",
+    regionName: "Vùng Trồng F",
+    employee: "Hoàng Thị F",
+    area: 7000,
+    soilType: "Đất phù sa",
+    tree: "Bưởi",
+    terrain: ["Trũng"],
+    mainCrop: "Bưởi",
+    gps: "17.8901,83.4567 17.8902,83.4568 17.8903,83.4569 17.8904,83.4570",
+    numberOfLots: 3,
+    cultivationZone: "Khu vực canh tác Miền Tây",
+  },
+  {
+    id: "V007",
+    code: "V-G6",
+    areaName: "Khu vực G6",
+    plotName: "Lô G61, Lô G62",
+    name: "Khu vực G6",
+    regionName: "Vùng Trồng G",
+    employee: "Vũ Văn G",
+    area: 11000,
+    tree: "Sầu riêng",
+    soilType: "Đất thịt",
+    terrain: ["Cao", "Dốc"],
+    mainCrop: "Cam",
+    gps: "18.9012,84.5678 18.9013,84.5679 18.9014,84.5680 18.9015,84.5681",
+    numberOfLots: 5,
+    cultivationZone: "Khu vực canh tác Miền Trung",
+  },
+  {
+    id: "V008",
+    code: "V-H7",
+    name: "Khu vực H7",
+    regionName: "Vùng Trồng H",
+    employee: "Trần Văn H",
+    area: 8000,
+    tree: "Sầu riêng",
+
+    soilType: "Đất đỏ bazan",
+    terrain: ["Bằng phẳng"],
+    mainCrop: "Dừa",
+    gps: "19.0123,85.6789 19.0124,85.6790 19.0125,85.6791 19.0126,85.6792",
+    numberOfLots: 4,
+    cultivationZone: "Khu vực canh tác Miền Trung",
+  },
+];
+const PLOTS = [
+  // Khu vực phía Bắc
+  {
+    id: "plot-001",
+    areaCode: "KV-BAC",
+    name: "Lô A1",
+    employee: "Nguyễn Văn A",
+    cultivationMethod: "Hữu cơ",
+    crops: [
+      {
+        cropGroup: "Trái cây",
+        cropCode: "SR001",
+        cropName: "Cây sầu riêng",
+        cultivar: "Sầu riêng Ri6",
+        seedCode: "HatSR-A1",
+        seedName: "Hạt giống Ri6 F1",
+        image:
+          "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQiewLxKYlUogAMvIFZH-d7Zk2ILXPRtmWlXA&s",
+      },
+      {
+        cropGroup: "Trái cây",
+        cropCode: "SR002",
+        cropName: "Cây sầu riêng",
+        cultivar: "Sầu riêng Monthong",
+        seedCode: "HatSR-B2",
+        seedName: "Hạt giống Monthong Thái Lan",
+        image:
+          "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQiewLxKYlUogAMvIFZH-d7Zk2ILXPRtmWlXA&s",
+      },
+      {
+        cropGroup: "Trái cây",
+        cropCode: "XM001",
+        cropName: "Cây xoài",
+        cultivar: "Xoài cát Hòa Lộc",
+        seedCode: "HatXM-A1",
+        seedName: "Hạt giống Hòa Lộc F1",
+        image:
+          "https://caylaygo.com/wp-content/uploads/2022/05/cay-xoai-cat-3.jpg",
+      },
+      {
+        cropGroup: "Trái cây",
+        cropCode: "XM002",
+        cropName: "Cây xoài",
+        cultivar: "Xoài keo",
+        seedCode: "HatXM-B2",
+        seedName: "Hạt giống xoài keo giống chuẩn",
+        image:
+          "https://caylaygo.com/wp-content/uploads/2022/05/cay-xoai-cat-3.jpg",
+      },
+    ],
+  },
+  {
+    id: "plot-002",
+    areaCode: "KV-BAC",
+    name: "Lô A2",
+    employee: "Nguyễn Văn A",
+    cultivationMethod: "Hữu cơ",
+    crops: [
+      {
+        cropGroup: "Trái cây",
+        cropCode: "SR001",
+        cropName: "Cây sầu riêng",
+        cultivar: "Sầu riêng Ri6",
+        seedCode: "HatSR-A1",
+        seedName: "Hạt giống Ri6 F1",
+        image:
+          "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQiewLxKYlUogAMvIFZH-d7Zk2ILXPRtmWlXA&s",
+      },
+      {
+        cropGroup: "Trái cây",
+        cropCode: "SR002",
+        cropName: "Cây sầu riêng",
+        cultivar: "Sầu riêng Monthong",
+        seedCode: "HatSR-B2",
+        seedName: "Hạt giống Monthong Thái Lan",
+        image:
+          "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQiewLxKYlUogAMvIFZH-d7Zk2ILXPRtmWlXA&s",
+      },
+      {
+        cropGroup: "Trái cây",
+        cropCode: "XM001",
+        cropName: "Cây xoài",
+        cultivar: "Xoài cát Hòa Lộc",
+        seedCode: "HatXM-A1",
+        seedName: "Hạt giống Hòa Lộc F1",
+        image:
+          "https://caylaygo.com/wp-content/uploads/2022/05/cay-xoai-cat-3.jpg",
+      },
+      {
+        cropGroup: "Trái cây",
+        cropCode: "XM002",
+        cropName: "Cây xoài",
+        cultivar: "Xoài keo",
+        seedCode: "HatXM-B2",
+        seedName: "Hạt giống xoài keo giống chuẩn",
+        image:
+          "https://caylaygo.com/wp-content/uploads/2022/05/cay-xoai-cat-3.jpg",
+      },
+    ],
+  },
+  {
+    id: "plot-003",
+    areaCode: "KV-BAC",
+    name: "Lô A3",
+    employee: "Lê Văn C",
+    cultivationMethod: "Tưới nhỏ giọt",
+    crops: [
+      {
+        cropGroup: "Trái cây",
+        cropCode: "SR001",
+        cropName: "Cây sầu riêng",
+        cultivar: "Sầu riêng Ri6",
+        seedCode: "HatSR-A1",
+        seedName: "Hạt giống Ri6 F1",
+        image:
+          "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQiewLxKYlUogAMvIFZH-d7Zk2ILXPRtmWlXA&s",
+      },
+    ],
+  },
+
+  // Khu vực phía Nam
+  {
+    id: "plot-004",
+    areaCode: "KV-NAM",
+    name: "Lô B1",
+    employee: "Trần Thị B",
+    cultivationMethod: "Thủy canh",
+    crops: [
+      {
+        cropGroup: "Trái cây",
+        cropCode: "SR001",
+        cropName: "Cây sầu riêng",
+        cultivar: "Sầu riêng Ri6",
+        seedCode: "HatSR-A1",
+        seedName: "Hạt giống Ri6 F1",
+        image:
+          "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQiewLxKYlUogAMvIFZH-d7Zk2ILXPRtmWlXA&s",
+      },
+      {
+        cropGroup: "Trái cây",
+        cropCode: "SR002",
+        cropName: "Cây sầu riêng",
+        cultivar: "Sầu riêng Monthong",
+        seedCode: "HatSR-B2",
+        seedName: "Hạt giống Monthong Thái Lan",
+        image:
+          "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQiewLxKYlUogAMvIFZH-d7Zk2ILXPRtmWlXA&s",
+      },
+    ],
+  },
+  {
+    id: "plot-005",
+    areaCode: "KV-NAM",
+    name: "Lô B2",
+    employee: "Trần Thị B",
+    cultivationMethod: "Canh tác tự nhiên",
+    crops: [
+      {
+        cropGroup: "Trái cây",
+        cropCode: "XM001",
+        cropName: "Cây xoài",
+        cultivar: "Xoài cát Hòa Lộc",
+        seedCode: "HatXM-A1",
+        seedName: "Hạt giống Hòa Lộc F1",
+        image:
+          "https://caylaygo.com/wp-content/uploads/2022/05/cay-xoai-cat-3.jpg",
+      },
+      {
+        cropGroup: "Trái cây",
+        cropCode: "XM002",
+        cropName: "Cây xoài",
+        cultivar: "Xoài keo",
+        seedCode: "HatXM-B2",
+        seedName: "Hạt giống xoài keo giống chuẩn",
+        image:
+          "https://caylaygo.com/wp-content/uploads/2022/05/cay-xoai-cat-3.jpg",
+      },
+    ],
+  },
+  {
+    id: "plot-006",
+    areaCode: "KV-NAM",
+    name: "Lô B3",
+    employee: "Trần Thị B",
+    cultivationMethod: "Hữu cơ",
+    crops: [
+      {
+        cropGroup: "Trái cây",
+        cropCode: "SR001",
+        cropName: "Cây sầu riêng",
+        cultivar: "Sầu riêng Ri6",
+        seedCode: "HatSR-A1",
+        seedName: "Hạt giống Ri6 F1",
+        image:
+          "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQiewLxKYlUogAMvIFZH-d7Zk2ILXPRtmWlXA&s",
+      },
+    ],
+  },
+
+  // Khu vực phía Tây
+  {
+    id: "plot-007",
+    areaCode: "KV-TAY",
+    name: "Lô C1",
+    employee: "Phạm Văn C",
+    cultivationMethod: "Tưới nhỏ giọt",
+    crops: [
+      {
+        cropGroup: "Trái cây",
+        cropCode: "SR001",
+        cropName: "Cây sầu riêng",
+        cultivar: "Sầu riêng Ri6",
+        seedCode: "HatSR-A1",
+        seedName: "Hạt giống Ri6 F1",
+        image:
+          "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQiewLxKYlUogAMvIFZH-d7Zk2ILXPRtmWlXA&s",
+      },
+    ],
+  },
+  {
+    id: "plot-008",
+    areaCode: "KV-TAY",
+    name: "Lô C2",
+    employee: "Phạm Văn C",
+    cultivationMethod: "Canh tác hữu cơ",
+    crops: [
+      {
+        cropGroup: "Trái cây",
+        cropCode: "SR001",
+        cropName: "Cây sầu riêng",
+        cultivar: "Sầu riêng Ri6",
+        seedCode: "HatSR-A1",
+        seedName: "Hạt giống Ri6 F1",
+        image:
+          "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQiewLxKYlUogAMvIFZH-d7Zk2ILXPRtmWlXA&s",
+      },
+    ],
+  },
+  {
+    id: "plot-009",
+    areaCode: "KV-TAY",
+    name: "Lô C3",
+    employee: "Phạm Văn C",
+    cultivationMethod: "Tưới phun mưa",
+    crops: [
+      {
+        cropGroup: "Trái cây",
+        cropCode: "SR001",
+        cropName: "Cây sầu riêng",
+        cultivar: "Sầu riêng Ri6",
+        seedCode: "HatSR-A1",
+        seedName: "Hạt giống Ri6 F1",
+        image:
+          "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQiewLxKYlUogAMvIFZH-d7Zk2ILXPRtmWlXA&s",
+      },
+    ],
+  },
+  {
+    id: "plot-010",
+    areaCode: "KV-TAY",
+    name: "Lô C4",
+    employee: "Phạm Văn C",
+    cultivationMethod: "Thủy canh",
+    crops: [
+      {
+        cropGroup: "Trái cây",
+        cropCode: "SR001",
+        cropName: "Cây sầu riêng",
+        cultivar: "Sầu riêng Ri6",
+        seedCode: "HatSR-A1",
+        seedName: "Hạt giống Ri6 F1",
+        image:
+          "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQiewLxKYlUogAMvIFZH-d7Zk2ILXPRtmWlXA&s",
+      },
+      {
+        cropGroup: "Trái cây",
+        cropCode: "SR002",
+        cropName: "Cây sầu riêng",
+        cultivar: "Sầu riêng Monthong",
+        seedCode: "HatSR-B2",
+        seedName: "Hạt giống Monthong Thái Lan",
+        image:
+          "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQiewLxKYlUogAMvIFZH-d7Zk2ILXPRtmWlXA&s",
+      },
+      {
+        cropGroup: "Trái cây",
+        cropCode: "XM001",
+        cropName: "Cây xoài",
+        cultivar: "Xoài cát Hòa Lộc",
+        seedCode: "HatXM-A1",
+        seedName: "Hạt giống Hòa Lộc F1",
+        image:
+          "https://caylaygo.com/wp-content/uploads/2022/05/cay-xoai-cat-3.jpg",
+      },
+    ],
+  },
+
+  // Khu vực phía Đông
+  {
+    id: "plot-011",
+    areaCode: "KV-DONG",
+    name: "Lô D1",
+    employee: "Nguyễn Thị D",
+    cultivationMethod: "Tưới phun mưa",
+    crops: [
+      {
+        cropGroup: "Trái cây",
+        cropCode: "SR001",
+        cropName: "Cây sầu riêng",
+        cultivar: "Sầu riêng Ri6",
+        seedCode: "HatSR-A1",
+        seedName: "Hạt giống Ri6 F1",
+        image:
+          "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQiewLxKYlUogAMvIFZH-d7Zk2ILXPRtmWlXA&s",
+      },
+    ],
+  },
+  {
+    id: "plot-012",
+    areaCode: "KV-DONG",
+    name: "Lô D2",
+    employee: "Nguyễn Thị D",
+    cultivationMethod: "Hữu cơ",
+    crops: [
+      {
+        cropGroup: "Trái cây",
+        cropCode: "SR001",
+        cropName: "Cây sầu riêng",
+        cultivar: "Sầu riêng Ri6",
+        seedCode: "HatSR-A1",
+        seedName: "Hạt giống Ri6 F1",
+        image:
+          "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQiewLxKYlUogAMvIFZH-d7Zk2ILXPRtmWlXA&s",
+      },
+    ],
+  },
+  {
+    id: "plot-013",
+    areaCode: "KV-DONG",
+    name: "Lô D3",
+    employee: "Nguyễn Thị D",
+    cultivationMethod: "Tưới nhỏ giọt",
+    crops: [
+      {
+        cropGroup: "Trái cây",
+        cropCode: "SR001",
+        cropName: "Cây sầu riêng",
+        cultivar: "Sầu riêng Ri6",
+        seedCode: "HatSR-A1",
+        seedName: "Hạt giống Ri6 F1",
+        image:
+          "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQiewLxKYlUogAMvIFZH-d7Zk2ILXPRtmWlXA&s",
+      },
+    ],
+  },
+];
 export default function MVFarmSearch() {
   const [keyword, setKeyword] = useState("");
   const [view, setView] = useState<"details" | "list">("details");
@@ -386,46 +749,65 @@ export default function MVFarmSearch() {
   const [openedTreeDetail, setOpenedTreeDetail] = useState(false);
   const [isFilter, setIsFilter] = useState(false);
   // ---------- Columns ----------
-  const treeCropColumns: MRT_ColumnDef<TreeCrop>[] = useMemo(
-    () => [
-      { accessorKey: "id", header: "Mã cây trồng" },
-      { accessorKey: "name", header: "Cây trồng" },
-      { accessorKey: "variety", header: "Giống cây" },
-      { accessorKey: "seedType", header: "Hạt giống" },
-      { accessorKey: "plantingDate", header: "Thời gian trồng" },
-      {
-        accessorKey: "actions",
-        header: "Tuỳ chọn",
-        enableColumnActions: false,
-        size: 10,
-        Cell: () => (
-          <Menu shadow="md" withinPortal>
-            <Menu.Target>
-              <ActionIcon variant="subtle" color="gray">
-                <IconDotsVertical size={18} />
-              </ActionIcon>
-            </Menu.Target>
+  const areaZoneColumns: MRT_ColumnDef<AreaZone>[] = [
+    {
+      accessorKey: "cultivationZone",
+      header: "Khu vực canh tác",
+    },
+    {
+      accessorKey: "regionName",
+      header: "Vùng",
+    },
+    {
+      accessorKey: "areaName",
+      header: "Khu vực",
+    },
+    {
+      accessorKey: "plotName",
+      header: "Lô",
+    },
+    {
+      accessorKey: "area",
+      header: "Diện tích canh tác (m²)",
+      Cell: ({ row }) => <Text>{row.original.area.toLocaleString()} m²</Text>,
+    },
+    {
+      accessorKey: "tree",
+      header: "Cây trồng",
+    },
+    {
+      accessorKey: "employee",
+      header: "Người quản lý",
+    },
 
-            <Menu.Dropdown>
-              <Menu.Item
-                leftSection={<IconEye size={18} />}
-                onClick={() => setOpenedTreeDetail(true)}
-              >
-                Chi tiết
-              </Menu.Item>
-              <Menu.Item leftSection={<IconEdit size={18} />} color="green">
-                Chỉnh sửa
-              </Menu.Item>
-              <Menu.Item leftSection={<IconTrash size={18} />} color="red">
-                Xoá
-              </Menu.Item>
-            </Menu.Dropdown>
-          </Menu>
-        ),
-      },
-    ],
-    []
-  );
+    {
+      accessorKey: "actions",
+      header: "Tuỳ chọn",
+      enableColumnActions: false,
+      size: 10,
+      Cell: () => (
+        <Menu shadow="md">
+          <Menu.Target>
+            <ActionIcon variant="transparent" c={"gray"}>
+              <IconDotsVertical />
+            </ActionIcon>
+          </Menu.Target>
+
+          <Menu.Dropdown>
+            <Menu.Item leftSection={<IconEye size={18} color="gray" />}>
+              Chi tiết
+            </Menu.Item>
+            <Menu.Item leftSection={<IconEdit size={18} color="green" />}>
+              Chỉnh sửa
+            </Menu.Item>
+            <Menu.Item leftSection={<IconTrash size={18} />} color="red">
+              Xoá
+            </Menu.Item>
+          </Menu.Dropdown>
+        </Menu>
+      ),
+    },
+  ];
   const cultivationNoteColumns: MRT_ColumnDef<CultivationNote>[] = [
     { accessorKey: "id", header: "Số phiếu" },
     { accessorKey: "expectedStart", header: "Thời gian dự kiến thực hiện" },
@@ -503,29 +885,6 @@ export default function MVFarmSearch() {
     },
   ];
 
-  const pestRecordColumns: MRT_ColumnDef<PestRecord>[] = [
-    { accessorKey: "id", header: "Số phiếu" },
-    { accessorKey: "detectedAt", header: "Thời gian phát hiện" },
-    { accessorKey: "resolvedAt", header: "Thời gian xử lý" },
-    { accessorKey: "pestStatus", header: "Tình trạng sâu bệnh" },
-    { accessorKey: "solution", header: "Nội dung xử lý" },
-    {
-      accessorKey: "pesticides",
-      header: "Thuốc BVTV",
-      Cell: ({ cell }) => {
-        const val = cell.getValue<string[] | undefined>();
-        return Array.isArray(val) ? val.join(", ") : "-";
-      },
-    },
-    { accessorKey: "staffHandler", header: "Nhân viên xử lý" },
-    { accessorKey: "staffManager", header: "Nhân viên quản lý" },
-    { accessorKey: "staffQuality", header: "Nhân viên kiểm định chất lượng" },
-  ];
-  const harvestInfoColumns: MRT_ColumnDef<HarvestInfo>[] = [
-    { accessorKey: "harvestDate", header: "Thời gian thu hoạch" },
-    { accessorKey: "yield", header: "Sản lượng" },
-    { accessorKey: "unit", header: "Đơn vị / Quy cách" },
-  ];
   // Quick counts for header badges (mock derived)
   const totalTrees = treeCropData.length;
 
@@ -702,109 +1061,204 @@ export default function MVFarmSearch() {
         <Stack gap="md">
           <Grid gutter="md">
             <Grid.Col span={{ base: 12, md: 7 }}>
-              <Card shadow="sm" radius={4} withBorder p="lg">
-                <Group gap="md" align="flex-start" wrap="nowrap">
-                  <Image
-                    src="https://vuacaygiong.com/wp-content/uploads/2017/11/Sau_rieng_Musang_King_d197.jpg"
-                    alt="Sầu riêng"
-                    h={220}
-                    w={300}
-                    radius={4}
-                    fit="cover"
-                  />
-                  <Stack gap={8} style={{ flex: 1 }}>
-                    <Group gap="xs">
-                      <Title order={4} style={{ lineHeight: 1.1 }}>
-                        Sầu riêng
-                      </Title>
-                      <Badge variant="light" color="yellow" radius="sm">
-                        Ưu tiên
-                      </Badge>
-                    </Group>
-                    <SimpleGrid cols={{ base: 1, sm: 2 }} spacing={6}>
-                      <Text size="sm" c="gray.7">
-                        <b>Mã cây:</b> TREE001
-                      </Text>
-
-                      <Text size="sm">
-                        <b>Giống cây trồng:</b> Ri6
-                      </Text>
-                      <Text size="sm">
-                        <b>Hình thức thu hoạch:</b> Thủ công
-                      </Text>
-                      <Text size="sm">
-                        <b>Hạt giống:</b> Hạt lai F1
-                      </Text>
-                      <Text size="sm">
-                        <b>Nhóm cây trồng:</b> Cây ăn trái
-                      </Text>
-                      <Group gap={6} align="center">
-                        <Text size="sm" component="span">
-                          <b>Sức khỏe cây trồng:</b>
-                        </Text>
-                        <Badge
-                          component="span"
-                          color="green"
-                          variant="light"
-                          radius="sm"
-                        >
-                          Tốt
-                        </Badge>
-                      </Group>
-                    </SimpleGrid>
-                    <Divider my={6} />
-                    <Text size="sm" c="gray.7">
-                      <b>Ghi chú:</b> Yêu cầu đất thịt và thoát nước tốt
+              <Card shadow="sm" radius={4} withBorder p="lg" mb="md">
+                <Stack gap={8}>
+                  <Group gap="xs">
+                    <ThemeIcon variant="light" color="green">
+                      <IconBadge size={16} />
+                    </ThemeIcon>
+                    <Text fw={700} size="lg">
+                      Thông tin canh tác
                     </Text>
-                    <Group gap="xs" mt="xs">
-                      <Tooltip label="Xem chi tiết">
-                        <ActionIcon variant="light" radius={4}>
-                          <IconEye size={18} />
-                        </ActionIcon>
-                      </Tooltip>
-                      <Tooltip label="Chỉnh sửa">
-                        <ActionIcon variant="light" color="green" radius={4}>
-                          <IconEdit size={18} />
-                        </ActionIcon>
-                      </Tooltip>
-                      <Tooltip label="Xoá">
-                        <ActionIcon variant="light" color="red" radius={4}>
-                          <IconTrash size={18} />
-                        </ActionIcon>
-                      </Tooltip>
-                    </Group>
-                  </Stack>
-                </Group>
-              </Card>
+                  </Group>
+                  <Card withBorder radius={4} shadow="sm" p="md">
+                    <Title order={5} mb="xs">
+                      🌱 Thông tin các lô cây trồng theo khu vực
+                    </Title>
+                    <ScrollAreaAutosize mah={500}>
+                      <Stack gap="md">
+                        {areaOptions.map((area) => {
+                          const plotsInArea = PLOTS.filter(
+                            (plot) => plot.areaCode === area.code
+                          );
+                          if (plotsInArea.length === 0) return null;
 
-              <Card shadow="sm" radius={4} withBorder p="lg" mt="md">
+                          return (
+                            <Box key={area.code}>
+                              <Card
+                                withBorder
+                                radius="sm"
+                                shadow="xs"
+                                p="sm"
+                                mb="xs"
+                                bg="gray.0"
+                              >
+                                <Group
+                                  justify="space-between"
+                                  align="flex-start"
+                                >
+                                  <Box>
+                                    <Title order={6}>
+                                      📦 Khu vực: {area.name} (Mã: {area.code})
+                                    </Title>
+                                    <Text size="sm">
+                                      <strong>Diện tích:</strong> {area.area}
+                                    </Text>
+                                    <Text size="sm">
+                                      <strong>Loại đất:</strong> {area.soilType}
+                                    </Text>
+                                    <Text size="sm">
+                                      <strong>Địa hình:</strong>{" "}
+                                      {area.terrain.join(", ")}
+                                    </Text>
+                                  </Box>
+                                  <Badge
+                                    variant="light"
+                                    color="green"
+                                    size="lg"
+                                  >
+                                    {plotsInArea.length} lô cây
+                                  </Badge>
+                                </Group>
+                              </Card>
+
+                              <Scrollable h={400}>
+                                <Group
+                                  wrap="nowrap"
+                                  gap="md"
+                                  align="flex-start"
+                                >
+                                  {plotsInArea.map((plot) => (
+                                    <Card
+                                      key={plot.id}
+                                      withBorder
+                                      radius="sm"
+                                      shadow="xs"
+                                      p="sm"
+                                      w={450}
+                                      style={{
+                                        display: "flex",
+                                        flexDirection: "column",
+                                        justifyContent: "space-between",
+                                      }}
+                                    >
+                                      <Group justify="space-between">
+                                        <Box>
+                                          <Text fw={600}>{plot.name}</Text>
+                                          <Badge
+                                            color="gray"
+                                            variant="light"
+                                            mt={4}
+                                          >
+                                            Mã khu vực: {plot.areaCode}
+                                          </Badge>
+                                        </Box>
+                                        <Text size="sm" c="dimmed">
+                                          {plot.cultivationMethod}
+                                        </Text>
+                                      </Group>
+
+                                      <Box
+                                        mt="xs"
+                                        style={{
+                                          flexGrow: 1,
+                                          height: 350, // hoặc bất kỳ chiều cao phù hợp
+                                          overflowY: "auto",
+                                        }}
+                                      >
+                                        {plot.crops.length > 0 ? (
+                                          <SimpleGrid cols={1} spacing="sm">
+                                            {plot.crops.map((crop, i) => (
+                                              <Card
+                                                key={i}
+                                                withBorder
+                                                radius="sm"
+                                                shadow="xs"
+                                                w={"100%"}
+                                                p={0}
+                                              >
+                                                <Group align="flex-start">
+                                                  <Image
+                                                    src={crop.image}
+                                                    alt={crop.cropName}
+                                                    w={"40%"}
+                                                    h={150}
+                                                    fit="cover"
+                                                  />
+                                                  <Stack
+                                                    flex={1}
+                                                    gap="xs"
+                                                    p={"xs"}
+                                                  >
+                                                    <Group justify="space-between">
+                                                      <Title order={5}>
+                                                        {crop.cultivar}
+                                                      </Title>
+                                                      <Group gap={"xs"}>
+                                                        <Badge
+                                                          color="gray"
+                                                          variant="light"
+                                                        >
+                                                          {crop.cropCode}
+                                                        </Badge>
+                                                      </Group>
+                                                    </Group>
+
+                                                    <Text size="sm" c="dimmed">
+                                                      Cây trồng: {crop.cropName}
+                                                    </Text>
+                                                    <Text size="sm" c="dimmed">
+                                                      Mã cây trồng:{" "}
+                                                      {crop.seedCode}
+                                                    </Text>
+                                                  </Stack>
+                                                </Group>
+                                              </Card>
+                                            ))}
+                                          </SimpleGrid>
+                                        ) : (
+                                          <Text size="sm" c="dimmed">
+                                            Chưa có cây trồng nào được thêm vào
+                                            lô này.
+                                          </Text>
+                                        )}
+                                      </Box>
+                                    </Card>
+                                  ))}
+                                </Group>
+                              </Scrollable>
+                            </Box>
+                          );
+                        })}
+                      </Stack>
+                    </ScrollAreaAutosize>
+                  </Card>
+                </Stack>
+              </Card>
+              <Card withBorder radius={4} shadow="sm" p="md" mb={"md"}>
+                <Title order={5} mb="xs">
+                  👨‍💼 Nhân viên quản lý
+                </Title>
+                <EmployeeCardList
+                  isDelete={false}
+                  isMultiple={false}
+                  isTouchable={false}
+                />
+              </Card>
+              <Card shadow="sm" radius={4} withBorder p="lg">
                 <Stack gap={8}>
                   <Group gap="xs">
                     <ThemeIcon variant="light">
                       <IconBadge size={16} />
                     </ThemeIcon>
                     <Text fw={700} size="lg">
-                      Lịch sử canh tác
+                      Lịch sử kế hoạch canh tác
                     </Text>
                   </Group>
                   <Table
                     columns={cultivationHistoryColumns}
                     data={cultivationHistoryData}
                   />
-                </Stack>
-              </Card>
-
-              <Card shadow="sm" radius={4} withBorder p="lg" mt="md">
-                <Stack gap={8}>
-                  <Group gap="xs">
-                    <ThemeIcon variant="light" color="red">
-                      <IconBadge size={16} />
-                    </ThemeIcon>
-                    <Text fw={700} size="lg">
-                      Lịch sử sâu bệnh
-                    </Text>
-                  </Group>
-                  <Table columns={pestRecordColumns} data={pestRecordData} />
                 </Stack>
               </Card>
             </Grid.Col>
@@ -874,109 +1328,74 @@ export default function MVFarmSearch() {
                         }}
                         onWheel={(e) => e.stopPropagation()}
                       />
-                      <MapBox />
+                      <MapBox zoom={15} zone />
                     </Box>
                   </Stack>
                 </Card>
+                <Card withBorder radius={4} shadow="sm" p="md">
+                  <Title order={5} mb="xs">
+                    🏅 Giấy chứng nhận
+                  </Title>
 
-                <Card shadow="sm" radius={4} withBorder p="lg">
-                  {/* Header */}
-                  <Group justify="space-between" align="center">
-                    <Group gap="xs">
-                      <ThemeIcon variant="light" radius={10} size={34}>
-                        <IconBadge size={18} />
-                      </ThemeIcon>
-                      <Stack gap={0}>
-                        <Text fw={700} size="lg">
-                          Thông tin chu kỳ sinh trưởng
-                        </Text>
-                        <Text size="xs" c="gray.6">
-                          Tổng quan mùa vụ và các giai đoạn
+                  <Group align="flex-start" gap="lg" wrap="nowrap">
+                    {/* Ảnh chứng nhận + dấu mộc */}
+                    <Tooltip label="Dấu chứng nhận VietGAP" withArrow>
+                      <Image
+                        w={"40%"}
+                        src="https://sutech.vn/wp-content/uploads/2021/09/logo-vietgap-chan-nuoi.jpg"
+                        alt="Dấu chứng nhận"
+                        radius="xl"
+                        style={{}}
+                      />
+                    </Tooltip>
+
+                    {/* Nội dung chi tiết */}
+                    <Stack gap="xs" style={{ flex: 1 }}>
+                      <Group justify="space-between">
+                        <Group gap={8}>
+                          <IconCertificate size={18} />
+                          <Title order={5} lh={1.2}>
+                            Chứng nhận VietGAP
+                          </Title>
+                        </Group>
+                        <Badge
+                          color="teal"
+                          variant="light"
+                          leftSection={<IconShieldCheck size={14} />}
+                        >
+                          Hiệu lực 3 năm
+                        </Badge>
+                      </Group>
+
+                      <Group gap="xs" wrap="wrap">
+                        <Badge variant="light">GCN-VG-2025-001</Badge>
+                        <Badge variant="outline">Tổ chức VietGAP</Badge>
+                        <Badge
+                          variant="outline"
+                          leftSection={<IconCalendar size={14} />}
+                        >
+                          Cấp ngày 08/01/2025
+                        </Badge>
+                      </Group>
+
+                      <Divider my={4} />
+
+                      <Stack gap={4}>
+                        <InfoRow
+                          label="Tên chứng nhận"
+                          value="Chứng nhận VietGAP"
+                        />
+                        <InfoRow label="Mã số" value="GCN-VG-2025-001" />
+                        <InfoRow label="Tổ chức cấp" value="Tổ chức VietGAP" />
+                        <InfoRow label="Ngày cấp" value="08/01/2025" />
+                        <InfoRow label="Thời hạn hiệu lực" value="3 năm" />
+                        <Text size="sm" c="dimmed">
+                          <strong>Định nghĩa:</strong> VietGAP là tiêu chuẩn sản
+                          xuất nông nghiệp tốt.
                         </Text>
                       </Stack>
-                    </Group>
-                    <Badge
-                      variant="light"
-                      size="md"
-                      leftSection={<IconTimeline size={14} />}
-                    >
-                      Chu kỳ: {growthCycles.length}
-                    </Badge>
+                    </Stack>
                   </Group>
-
-                  <Divider my="md" />
-
-                  {/* Season summary */}
-                  <SimpleGrid cols={{ base: 1, sm: 3 }} spacing={10}>
-                    <StatChip
-                      icon={<IconLeaf size={16} />}
-                      label="Tên mùa vụ"
-                      value={"Mùa vụ Xuân 2025"}
-                    />
-                    <StatChip
-                      icon={<IconHash size={16} />}
-                      label="Mã"
-                      value={"MSV2025XUAN"}
-                    />
-                    <StatChip
-                      icon={<IconCalendarClock size={16} />}
-                      label="Ước tính"
-                      value={"90 ngày"}
-                    />
-                  </SimpleGrid>
-
-                  <Tooltip label={`Hoàn thành ước tính: 70%`} withArrow>
-                    <Box mt="sm">
-                      <Progress value={70} radius="xl" size="lg" />
-                    </Box>
-                  </Tooltip>
-
-                  <Divider my="md" />
-
-                  {/* Cycles & stages */}
-                  <Accordion variant="separated" radius={4} multiple>
-                    {growthCycles.map((cycle) => (
-                      <Accordion.Item key={cycle.id} value={cycle.id}>
-                        <Accordion.Control
-                          icon={
-                            <ThemeIcon variant="light" size={26} radius={4}>
-                              <IconLeaf size={16} />
-                            </ThemeIcon>
-                          }
-                        >
-                          <Group justify="space-between" wrap="nowrap">
-                            <Text fw={600}>{cycle.name}</Text>
-                            <Badge variant="light">
-                              {cycle.stages.length} giai đoạn
-                            </Badge>
-                          </Group>
-                        </Accordion.Control>
-                        <Accordion.Panel>
-                          <Stack gap="sm" pl={2}>
-                            {cycle.stages.map((stage) => (
-                              <StageRow key={stage.id} stage={stage} />
-                            ))}
-                          </Stack>
-                        </Accordion.Panel>
-                      </Accordion.Item>
-                    ))}
-                  </Accordion>
-                </Card>
-                <Card shadow="sm" radius={4} withBorder p="lg" mt="md">
-                  <Stack gap={8}>
-                    <Group gap="xs">
-                      <ThemeIcon variant="light">
-                        <IconBadge size={16} />
-                      </ThemeIcon>
-                      <Text fw={700} size="lg">
-                        Lịch sử thu hoạch
-                      </Text>
-                    </Group>
-                    <Table
-                      columns={harvestInfoColumns}
-                      data={harvestInfoData}
-                    />
-                  </Stack>
                 </Card>
               </Stack>
             </Grid.Col>
@@ -985,12 +1404,12 @@ export default function MVFarmSearch() {
       ) : (
         <Card withBorder radius={4} shadow="sm" p="lg">
           <Group mb="sm" justify="space-between">
-            <Text fw={700}>Danh sách cây trồng</Text>
+            <Text fw={700}>Danh sách vùng trồng</Text>
             <Text size="sm" c="dimmed">
               Tổng cộng {totalTrees} mục
             </Text>
           </Group>
-          <Table columns={treeCropColumns} data={treeCropData} />
+          <Table columns={areaZoneColumns} data={areaZoneData} />
         </Card>
       )}
 

@@ -57,10 +57,12 @@ import { TreeDetailModal, type TreeDetail } from "./components/TreeDetailModal";
 // ---------------- Types & mock data ----------------
 type TreeCrop = {
   id: string; // Mã cây trồng
+  img: string;
   name: string; // Cây trồng
   variety: string; // Giống cây
   seedType: string; // Hạt giống
   plantingDate: string; // Thời gian trồng
+  region: string;
 };
 type CultivationHistory = {
   id: string;
@@ -260,17 +262,21 @@ const resource: Resource[] = [
 const treeCropData: TreeCrop[] = [
   {
     id: "TREE001",
+    img: "https://traicayhoabien.com/wp-content/uploads/2023/04/SAU-RIENG-RI6-2.webp",
     name: "Sầu riêng",
     variety: "Ri6",
     seedType: "Hạt lai F1",
     plantingDate: "2023-05-10",
+    region: "Khu vực canh tác phía Bắc",
   },
   {
     id: "TREE002",
     name: "Xoài",
+    img: "https://market.nhovn.com/public/upload/images/hinhsanpham/xoai-cat-chu-89391597459145.jpg",
     variety: "Cát Chu",
     seedType: "Ghép cành",
     plantingDate: "2024-03-15",
+    region: "Khu vực canh tác phía Nam",
   },
 ];
 const treeDetail: TreeDetail = {
@@ -385,10 +391,16 @@ export default function MVFarmSearch() {
   const treeCropColumns: MRT_ColumnDef<TreeCrop>[] = useMemo(
     () => [
       { accessorKey: "id", header: "Mã cây trồng" },
+      {
+        accessorKey: "img",
+        header: "Hình ảnh",
+        Cell: ({ row }) => <Image src={row.original.img} w={100} />,
+      },
       { accessorKey: "name", header: "Cây trồng" },
       { accessorKey: "variety", header: "Giống cây" },
       { accessorKey: "seedType", header: "Hạt giống" },
       { accessorKey: "plantingDate", header: "Thời gian trồng" },
+      { accessorKey: "region", header: "Khu vực canh tác" },
       {
         accessorKey: "actions",
         header: "Tuỳ chọn",
@@ -870,7 +882,7 @@ export default function MVFarmSearch() {
                         }}
                         onWheel={(e) => e.stopPropagation()}
                       />
-                      <MapBox />
+                      <MapBox marker />
                     </Box>
                   </Stack>
                 </Card>

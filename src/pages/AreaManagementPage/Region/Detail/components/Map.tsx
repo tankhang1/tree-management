@@ -25,6 +25,7 @@ type TMapBox = {
   plot?: boolean;
   row?: boolean;
   plant?: boolean;
+  marker?: boolean;
 };
 const MapBox = ({
   h = 400,
@@ -34,6 +35,7 @@ const MapBox = ({
   plot = false,
   row = false,
   plant = false,
+  marker = false,
 }: TMapBox) => {
   const [data, setData] = useState<Record<string, GeoJsonObject>>({});
   const [plantFeatures, setPlantFeatures] = useState<Feature<Point>[]>([]);
@@ -127,7 +129,7 @@ const MapBox = ({
     >
       <ZoomListener onChange={onZoomChange} />
       <TileLayer url="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}" />
-
+      {marker && <Marker position={[11.553203605968022, 107.12999664743181]} />}
       {LAYERS.map(
         ({ key, color, fill }) =>
           visibleLayers[key] &&

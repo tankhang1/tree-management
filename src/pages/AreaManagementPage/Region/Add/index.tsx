@@ -308,7 +308,7 @@ const lotOptions: TLotOption[] = [
   },
 ];
 
-function InfoRow({ label, value }: { label: string; value: string }) {
+export function InfoRow({ label, value }: { label: string; value: string }) {
   return (
     <Group gap={8} wrap="nowrap">
       <Text size="sm" c="dimmed" style={{ minWidth: 150 }}>
