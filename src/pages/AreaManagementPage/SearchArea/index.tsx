@@ -6,6 +6,7 @@ import {
   Box,
   Button,
   Card,
+  Collapse,
   Divider,
   Grid,
   Group,
@@ -29,7 +30,6 @@ import {
   IconBadge,
   IconBorderAll,
   IconCalendarClock,
-  IconCheck,
   IconClockHour4,
   IconDotsVertical,
   IconEdit,
@@ -40,20 +40,16 @@ import {
   IconMap2,
   IconRotateClockwise2,
   IconSearch,
+  IconSparkles,
   IconTable,
   IconTimeline,
   IconTrash,
 } from "@tabler/icons-react";
 import Table from "../../../components/Table";
 import type { MRT_ColumnDef } from "mantine-react-table";
-import { areaOptions, plotOptions } from "../Row/Add";
-import AreaCards from "../Zone/Add/components/AreaCards";
-import PlotCardSelector from "../Row/Add/components/PlotCards";
 import MapBox from "../Region/Detail/components/Map";
 import Scrollable from "../../../components/Scrollable";
 
-import { regionOptions } from "../Block/Add";
-import RegionCardSelector from "../Row/Add/components/RegionCards";
 import {
   ResourceCard,
   type Resource,
@@ -385,11 +381,11 @@ const StageRow = ({ stage }: { stage: Stage }) => (
 );
 export default function MVFarmSearch() {
   const [keyword, setKeyword] = useState("");
-  const [openFilterModal, setOpenFilterModal] = useState(false);
   const [view, setView] = useState<"details" | "list">("details");
   const [cultivationDetail, setCultivationDetail] = useState(false);
   const [cultivationNoteDetail, setCultivationNoteDetail] = useState(false);
   const [openedTreeDetail, setOpenedTreeDetail] = useState(false);
+  const [isFilter, setIsFilter] = useState(false);
   // ---------- Columns ----------
   const treeCropColumns: MRT_ColumnDef<TreeCrop>[] = useMemo(
     () => [
@@ -539,37 +535,33 @@ export default function MVFarmSearch() {
   return (
     <Stack p="md" gap="md">
       {/* ------ Header / Filters ------ */}
-      <Paper withBorder p="md" radius={4} shadow="xs">
-        <Stack gap="sm">
-          <Group justify="space-between" align="flex-start">
-            <Stack gap={4}>
-              <Group gap="xs">
-                <ThemeIcon variant="light" radius="xl" size={28}>
-                  <IconBorderAll size={16} />
-                </ThemeIcon>
-                <Title order={3}>Tìm kiếm vùng trồng</Title>
-              </Group>
-              <Group gap="xs">
-                <Badge leftSection={<IconTable size={12} />} variant="light">
-                  {totalTrees} cây
-                </Badge>
-                <Badge
-                  leftSection={<IconBadge size={12} />}
-                  variant="light"
-                  color="green"
-                >
-                  {totalCultivations} canh tác
-                </Badge>
-                <Badge
-                  leftSection={<IconBadge size={12} />}
-                  variant="light"
-                  color="red"
-                >
-                  {totalPests} sâu bệnh
-                </Badge>
-              </Group>
-            </Stack>
-
+      <Card withBorder radius={8} shadow="sm" p="lg">
+        <Stack gap="md">
+          {/* Header */}
+          <Group gap="md" align="center" justify="space-between">
+            <Group gap="md">
+              <ThemeIcon variant="light" radius="xl" size={36}>
+                <IconBorderAll size={20} />
+              </ThemeIcon>
+              <Title order={3}>Tìm kiếm cây trồng</Title>
+              <Badge leftSection={<IconTable size={12} />} variant="light">
+                {totalTrees} cây
+              </Badge>
+              <Badge
+                leftSection={<IconBadge size={12} />}
+                variant="light"
+                color="green"
+              >
+                {totalCultivations} canh tác
+              </Badge>
+              <Badge
+                leftSection={<IconBadge size={12} />}
+                variant="light"
+                color="red"
+              >
+                {totalPests} sâu bệnh
+              </Badge>
+            </Group>
             <SegmentedControl
               value={view}
               onChange={(v) => setView(v as "details" | "list")}
@@ -581,6 +573,7 @@ export default function MVFarmSearch() {
             />
           </Group>
 
+          {/* Search & filter actions */}
           <Group align="flex-end" wrap="nowrap">
             <TextInput
               flex={1}
@@ -595,9 +588,11 @@ export default function MVFarmSearch() {
               <Button
                 radius={4}
                 leftSection={<IconFilter size={16} />}
-                onClick={() => setOpenFilterModal(true)}
+                onClick={() => {
+                  setIsFilter(!isFilter);
+                }}
               >
-                Lọc
+                {isFilter ? "Ẩn bộ lọc" : "Hiện bộ lọc"}
               </Button>
             </Tooltip>
             <Tooltip label="Xoá bộ lọc" openDelay={300}>
@@ -606,8 +601,121 @@ export default function MVFarmSearch() {
               </ActionIcon>
             </Tooltip>
           </Group>
+
+          <Collapse in={isFilter} transitionDuration={170}>
+            <Paper withBorder p="lg" radius={4}>
+              <Stack gap="sm">
+                <Group gap={8}>
+                  <ThemeIcon variant="light" color="green" radius="xl">
+                    <IconLeaf size={18} />
+                  </ThemeIcon>
+                  <Title order={5} fw={600}>
+                    Thông tin cây trồng
+                  </Title>
+                </Group>
+                <SimpleGrid cols={{ base: 1, sm: 2 }} spacing="sm">
+                  <Select
+                    radius={4}
+                    searchable
+                    clearable
+                    label="Doanh nghiệp / nông hộ"
+                    data={companyOptions}
+                    styles={{ dropdown: { zIndex: 1000 } }}
+                  />
+                  <Select
+                    radius={4}
+                    searchable
+                    clearable
+                    label="Giống cây trồng"
+                    data={plantVarietyOptions}
+                    styles={{ dropdown: { zIndex: 1000 } }}
+                  />
+                </SimpleGrid>
+
+                <Divider my="xs" />
+
+                <Group gap={8}>
+                  <ThemeIcon variant="light" color="teal" radius="xl">
+                    <IconMap2 size={18} />
+                  </ThemeIcon>
+                  <Title order={5} fw={600}>
+                    Thông tin vùng trồng
+                  </Title>
+                </Group>
+
+                <SimpleGrid cols={{ base: 1, sm: 2 }} spacing="sm">
+                  <Select
+                    radius={4}
+                    data={["V01", "V02", "V03"]}
+                    label="Mã định danh"
+                    searchable
+                    clearable
+                    styles={{ dropdown: { zIndex: 1000 } }}
+                  />
+                  <Select
+                    label="Khu vực canh tác"
+                    placeholder="Chọn khu vực canh tác"
+                    radius={4}
+                    searchable
+                    clearable
+                    data={[
+                      "Khu vực canh tác Đồng Nai",
+                      "Khu vực canh tác Bình Dương",
+                    ]}
+                    styles={{ dropdown: { zIndex: 1000 } }}
+                  />
+                  <MultiSelect
+                    label="Vùng trồng"
+                    clearable
+                    placeholder="Tìm kiếm vùng trồng"
+                    radius={4}
+                    searchable
+                    leftSection={<IconSearch size={16} />}
+                    data={["Vùng Trồng Tây Nguyên", "Vùng Trồng Miền Tây"]}
+                    styles={{ dropdown: { zIndex: 1000 } }}
+                  />
+                  <MultiSelect
+                    label="Khu vực"
+                    clearable
+                    placeholder="Tìm theo địa danh"
+                    radius={4}
+                    searchable
+                    leftSection={<IconSearch size={16} />}
+                    data={[
+                      "Khu vực phía Bắc",
+                      "Khu vực phía Nam",
+                      "Khu vực phía Tây",
+                    ]}
+                    styles={{ dropdown: { zIndex: 1000 } }}
+                  />
+                  <MultiSelect
+                    placeholder="Tìm kiếm lô"
+                    label="Lô"
+                    radius={4}
+                    searchable
+                    leftSection={<IconSearch size={16} />}
+                    data={["Lô A1", "Lô B2", "Lô C3"]}
+                    styles={{ dropdown: { zIndex: 1000 } }}
+                  />
+                </SimpleGrid>
+
+                <Group justify="space-between" mt="md">
+                  <Button
+                    variant="light"
+                    radius={4}
+                    leftSection={<IconRotateClockwise2 size={16} />}
+                  >
+                    Xoá bộ lọc
+                  </Button>
+                  <Button radius={4} leftSection={<IconSparkles size={16} />}>
+                    Lọc dữ liệu
+                  </Button>
+                </Group>
+              </Stack>
+            </Paper>
+          </Collapse>
         </Stack>
-      </Paper>
+      </Card>
 
       {/* ------ Content ------ */}
       {view === "details" ? (
@@ -907,142 +1015,7 @@ export default function MVFarmSearch() {
       )}
 
       {/* ------ Filter Modal ------ */}
-      {openFilterModal && (
-        <Modal
-          opened={openFilterModal}
-          onClose={() => setOpenFilterModal(false)}
-          size="lg"
-          title={
-            <Group gap={6}>
-              <IconFilter size={18} />
-              <Text fw={600}>Bộ lọc cây trồng</Text>
-            </Group>
-          }
-          centered
-          withinPortal
-          styles={{
-            inner: {
-              zIndex: 999,
-            },
-          }}
-        >
-          <Stack gap="xs">
-            <Paper withBorder p="md" radius={4}>
-              <Stack gap={"sm"}>
-                <Title order={5}>Thông tin cây trồng</Title>
 
-                <Select
-                  radius={4}
-                  searchable
-                  label="Doanh nghiệp / nông hộ"
-                  data={companyOptions}
-                  styles={{ dropdown: { zIndex: 1000 } }}
-                />
-                <Select
-                  radius={4}
-                  searchable
-                  label="Giống cây trồng"
-                  data={plantVarietyOptions}
-                  styles={{ dropdown: { zIndex: 1000 } }}
-                />
-              </Stack>
-            </Paper>
-
-            <Paper withBorder p="md" radius={4}>
-              <Stack gap="sm">
-                <Title order={5}>Thông tin vùng trồng</Title>
-                <Select
-                  radius={4}
-                  data={["V01", "V02", "V03"]}
-                  label="Mã định danh"
-                  searchable
-                  styles={{ dropdown: { zIndex: 1000 } }}
-                />
-                <Select
-                  label="Khu vực canh tác"
-                  placeholder="Chọn khu vực canh tác"
-                  radius={4}
-                  data={[
-                    "Khu vực canh tác Đồng Nai",
-                    "Khu vực canh tác Bình Dương",
-                  ]}
-                  searchable
-                  styles={{ dropdown: { zIndex: 1000 } }}
-                />
-
-                <MultiSelect
-                  label="Vùng trồng"
-                  clearable
-                  placeholder="Tìm kiếm vùng trồng"
-                  radius={4}
-                  leftSection={<IconSearch size={18} />}
-                  data={["Vùng Trồng Tây Nguyên", "Vùng Trồng Miền Tây"]}
-                  styles={{ dropdown: { zIndex: 1000 } }}
-                />
-                <RegionCardSelector
-                  regions={regionOptions}
-                  selected={"12"}
-                  onSelect={() => {}}
-                  isMultiple
-                />
-                <MultiSelect
-                  label="Khu vực"
-                  clearable
-                  placeholder="Tìm theo địa danh"
-                  radius={4}
-                  leftSection={<IconSearch size={16} />}
-                  styles={{ dropdown: { zIndex: 1000 } }}
-                  data={[
-                    "Khu vực phía Bắc",
-                    "Khu vực phía Nam",
-                    "Khu vực phía Tây",
-                  ]}
-                />
-                <AreaCards
-                  areas={areaOptions}
-                  selected={""}
-                  onSelect={() => {}}
-                  isMultiple
-                />
-                <MultiSelect
-                  placeholder="Tìm kiếm lô"
-                  label="Lô"
-                  radius={4}
-                  leftSection={<IconSearch size={16} />}
-                  styles={{ dropdown: { zIndex: 1000 } }}
-                  data={["Lô A1", "Lô B2", "Lô C3"]}
-                />
-                <PlotCardSelector
-                  lots={plotOptions}
-                  isMultiple
-                  onSelect={() => {}}
-                  selected={""}
-                />
-              </Stack>
-            </Paper>
-
-            <Group justify="space-between">
-              <Button
-                radius={4}
-                variant="default"
-                leftSection={<IconRotateClockwise2 size={16} />}
-              >
-                Đặt lại
-              </Button>
-              <Button
-                radius={4}
-                leftSection={<IconCheck size={16} />}
-                onClick={() => {
-                  setOpenFilterModal(false);
-                  setView("list");
-                }}
-              >
-                Áp dụng
-              </Button>
-            </Group>
-          </Stack>
-        </Modal>
-      )}
       {cultivationDetail && (
         <Modal
           opened={cultivationDetail}
