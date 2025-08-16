@@ -165,14 +165,14 @@ const ContractManagementPage = () => {
         <Select
           radius={4}
           leftSection={<IconContract size={18} />}
-          placeholder="Loại hoại đồng"
+          placeholder="Loại hợp đồng"
           data={["Thu", "Mua"]}
         />
         <Select
           radius={4}
           leftSection={<IconTypeface size={18} />}
-          placeholder="Loại hoại đồng"
-          data={["Thu", "Mua"]}
+          placeholder="Trạng thái"
+          data={["Chờ duyệt", "Đang hiệu lực", "Hết hiệu lực"]}
         />
       </Group>
       <Table columns={contractColumns} data={contractData} />
