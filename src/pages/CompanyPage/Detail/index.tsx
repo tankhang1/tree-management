@@ -4,6 +4,7 @@ import SimpleInfo from "./components/SimpleInfo";
 import { IconArrowLeft } from "@tabler/icons-react";
 import { useNavigate } from "react-router-dom";
 import ContractInfo from "./components/ContractInfo";
+import MachineInfo from "./components/MachineInfo";
 
 export default function CompanyDetailPage() {
   const navigate = useNavigate();
@@ -70,6 +71,7 @@ export default function CompanyDetailPage() {
         </Group>
         {tab === "info" && <SimpleInfo />}
         {tab === "contract" && <ContractInfo />}
+        {tab === "machine" && <MachineInfo />}
       </Stack>
     </Paper>
   );
