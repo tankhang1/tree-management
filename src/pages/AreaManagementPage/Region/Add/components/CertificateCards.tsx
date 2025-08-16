@@ -3,16 +3,12 @@ import {
   Badge,
   Card,
   Group,
-  SimpleGrid,
   Stack,
   Text,
   Image,
-  Avatar,
-  Tooltip,
   TextInput,
   Checkbox,
 } from "@mantine/core";
-import { IconCertificate } from "@tabler/icons-react";
 
 // ===== Types & mock =====
 export type CertificateItem = {
@@ -31,8 +27,7 @@ const ITEMS: CertificateItem[] = [
     title: "Chứng nhận VietGAP",
     code: "GCN-VG-2025-001",
     org: "Tổ chức VietGAP",
-    thumb:
-      "https://vnce.vn/Uploads/images/chung-nhan-hop-chuan/chung-nhan-vietgap-san-pham.jpg",
+    thumb: "https://cdn.vietnambiz.vn/2020/3/2/vg-15831176957661073999454.jpg",
     seal: "https://sutech.vn/wp-content/uploads/2021/09/logo-vietgap-chan-nuoi.jpg",
     tags: ["Cây trồng", "Phổ biến"],
   },
@@ -51,7 +46,8 @@ const ITEMS: CertificateItem[] = [
     title: "Hữu cơ (Organic)",
     code: "ORG-2025-009",
     org: "Tổ chức Organic",
-    thumb: "https://knacert.com.vn/storage/chung-nhan-organic.jpg",
+    thumb:
+      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT6gVh1iA6YqokjIWbv7NOW74DpRMFBAqOO5Su6HzrevyCWDG0dBwxzZxCTLAyo6RQ6agY&usqp=CAU",
     tags: ["Organic"],
   },
 ];
@@ -71,6 +67,8 @@ function CertificateCard({
       withBorder
       radius={4}
       padding="sm"
+      w={300}
+      h={140}
       className="relative"
       style={{
         borderWidth: 1,
@@ -80,63 +78,36 @@ function CertificateCard({
       }}
       onClick={() => onToggle(item.id)}
     >
-      {/* Thumb */}
-      <div style={{ position: "relative" }}>
-        {item.thumb ? (
-          <Image
-            src={item.thumb}
-            height={120}
-            radius={4}
-            alt={item.title}
-            fit="revert"
-          />
-        ) : (
-          <Card
-            radius="md"
-            withBorder
-            style={{ height: 120, display: "grid", placeItems: "center" }}
-          >
-            <IconCertificate size={28} />
-          </Card>
-        )}
+      <Group align="center" justify="flex-start">
+        <Image
+          src={item.thumb}
+          h={100}
+          w={"30%"}
+          radius={4}
+          alt={item.title}
+          fit="scale-down"
+        />
 
-        {/* Seal (dấu mộc) overlay ở góc */}
-        {item.seal && (
-          <Tooltip label="Dấu chứng nhận" withArrow>
-            <Avatar
-              src={item.seal}
-              alt="seal"
-              radius="xl"
-              style={{
-                position: "absolute",
-                right: 8,
-                bottom: 8,
-                border: "2px solid white",
-              }}
-            />
-          </Tooltip>
-        )}
-      </div>
-
-      <Stack gap={6} mt="sm">
-        <Group justify="space-between" align="flex-start" wrap="nowrap">
-          <Text fw={600} lineClamp={1}>
-            {item.title}
+        <Stack flex={1} gap={6} mt="sm">
+          <Group justify="space-between" align="flex-start" wrap="nowrap">
+            <Text fw={600} lineClamp={1}>
+              {item.title}
+            </Text>
+            <Checkbox radius={4} checked={selected} onChange={() => {}} />
+          </Group>
+          <Group gap={8} wrap="wrap">
+            <Badge variant="light">{item.code}</Badge>
+            {item.tags?.map((t) => (
+              <Badge key={t} variant="outline">
+                {t}
+              </Badge>
+            ))}
+          </Group>
+          <Text size="sm" c="dimmed" lineClamp={1}>
+            {item.org}
           </Text>
-          <Checkbox radius={4} checked={selected} onChange={() => {}} />
-        </Group>
-        <Group gap={8} wrap="wrap">
-          <Badge variant="light">{item.code}</Badge>
-          {item.tags?.map((t) => (
-            <Badge key={t} variant="outline">
-              {t}
-            </Badge>
-          ))}
-        </Group>
-        <Text size="sm" c="dimmed" lineClamp={1}>
-          {item.org}
-        </Text>
-      </Stack>
+        </Stack>
+      </Group>
     </Card>
   );
 }
@@ -159,7 +130,7 @@ export default function CertificateCardList() {
         placeholder="Tìm kiếm giấy chứng nhận"
       />
 
-      <SimpleGrid cols={{ base: 1, sm: 2, md: 3 }} spacing="md">
+      <Group wrap="nowrap">
         {ITEMS.map((item) => (
           <CertificateCard
             key={item.id}
@@ -168,7 +139,7 @@ export default function CertificateCardList() {
             onToggle={toggle}
           />
         ))}
-      </SimpleGrid>
+      </Group>
     </Stack>
   );
 }

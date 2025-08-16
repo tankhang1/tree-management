@@ -1235,7 +1235,7 @@ const AreaManagementAddRegionPage = () => {
         {active === 2 && (
           <Stack mt="md" gap="lg">
             <Group grow align="flex-start">
-              <Card withBorder radius={4} shadow="sm" p="md">
+              <Card withBorder radius={4} shadow="sm" p="md" h={300}>
                 <Title order={5} mb="xs">
                   📌 Thông tin vùng trồng
                 </Title>
@@ -1268,39 +1268,22 @@ const AreaManagementAddRegionPage = () => {
                   </Text>
                 </Stack>
               </Card>
-              <Card withBorder radius={4} shadow="sm" p="md">
+              <Card withBorder radius={4} shadow="sm" p="md" h={300}>
                 <Title order={5} mb="xs">
                   🏅 Giấy chứng nhận
                 </Title>
 
                 <Group align="flex-start" gap="lg" wrap="nowrap">
                   {/* Ảnh chứng nhận + dấu mộc */}
-                  <div style={{ position: "relative", minWidth: 180 }}>
+                  <Tooltip label="Dấu chứng nhận VietGAP" withArrow>
                     <Image
-                      src="https://vnce.vn/Uploads/images/chung-nhan-hop-chuan/chung-nhan-vietgap-san-pham.jpg"
-                      alt="Ảnh giấy chứng nhận"
-                      radius={4}
-                      width={180}
-                      height={120}
-                      fit="cover"
+                      w={"40%"}
+                      src="https://sutech.vn/wp-content/uploads/2021/09/logo-vietgap-chan-nuoi.jpg"
+                      alt="Dấu chứng nhận"
+                      radius="xl"
+                      style={{}}
                     />
-                    <Tooltip label="Dấu chứng nhận VietGAP" withArrow>
-                      <Image
-                        src="https://sutech.vn/wp-content/uploads/2021/09/logo-vietgap-chan-nuoi.jpg"
-                        alt="Dấu chứng nhận"
-                        w={56}
-                        h={56}
-                        radius="xl"
-                        style={{
-                          position: "absolute",
-                          right: 8,
-                          bottom: 8,
-                          border: "2px solid white",
-                          boxShadow: "0 4px 10px rgba(0,0,0,.15)",
-                        }}
-                      />
-                    </Tooltip>
-                  </div>
+                  </Tooltip>
 
                   {/* Nội dung chi tiết */}
                   <Stack gap="xs" style={{ flex: 1 }}>
