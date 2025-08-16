@@ -17,7 +17,6 @@ import {
   IconDotsVertical,
   IconEye,
   IconFileText,
-  IconTruck,
   IconTools,
   IconTrash,
   IconEdit,
@@ -369,47 +368,6 @@ const listMachine: MachineDetail[] = [
   },
 ];
 
-function SupplierModal({
-  opened,
-  onClose,
-  suppliers,
-}: {
-  opened: boolean;
-  onClose: () => void;
-  suppliers?: Supplier[];
-}) {
-  const supplierColumns: MRT_ColumnDef<Supplier>[] = [
-    { accessorKey: "name", header: "Tên" },
-    { accessorKey: "phone", header: "SĐT" },
-    { accessorKey: "email", header: "Email" },
-    { accessorKey: "unit", header: "Đơn vị" },
-    { accessorKey: "specification", header: "Quy cách" },
-    { accessorKey: "quantity", header: "Số lượng" },
-    { accessorKey: "note", header: "Ghi chú" },
-  ];
-
-  return (
-    <Modal
-      opened={opened}
-      onClose={onClose}
-      title={
-        <Group gap={8}>
-          <IconTruck size={18} />
-          <Text fw={600}>Nhà cung cấp</Text>
-        </Group>
-      }
-      size="lg"
-      radius={4}
-    >
-      <Table
-        //@ts-expect-error no check
-        data={suppliers}
-        columns={supplierColumns}
-      />
-    </Modal>
-  );
-}
-
 function TechDocModal({
   opened,
   onClose,
@@ -484,10 +442,7 @@ function TechDocModal({
 // --- Main list ---
 export default function MachineInfo() {
   const [machines] = useState<Machine[]>(machinesSeed);
-  const [suppliersModal, setSuppliersModal] = useState<{
-    open: boolean;
-    suppliers?: Supplier[];
-  }>({ open: false });
+
   const [docsModal, setDocsModal] = useState<{
     open: boolean;
     docs?: TechDoc[];
@@ -594,12 +549,6 @@ export default function MachineInfo() {
 
       <Table data={machines} columns={machineColumns} />
 
-      {/* Modals */}
-      <SupplierModal
-        opened={suppliersModal.open}
-        onClose={() => setSuppliersModal({ open: false })}
-        suppliers={suppliersModal.suppliers}
-      />
       <TechDocModal
         opened={docsModal.open}
         onClose={() => setDocsModal({ open: false })}

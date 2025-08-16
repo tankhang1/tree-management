@@ -41,7 +41,6 @@ import {
   IconRotateClockwise2,
   IconSearch,
   IconSparkles,
-  IconTable,
   IconTimeline,
   IconTrash,
 } from "@tabler/icons-react";
@@ -522,8 +521,6 @@ export default function MVFarmSearch() {
   ];
   // Quick counts for header badges (mock derived)
   const totalTrees = treeCropData.length;
-  const totalCultivations = cultivationHistoryData.length;
-  const totalPests = pestRecordData.length;
 
   return (
     <Stack p="md" gap="md">
@@ -537,23 +534,6 @@ export default function MVFarmSearch() {
                 <IconBorderAll size={20} />
               </ThemeIcon>
               <Title order={3}>Tìm kiếm cây trồng</Title>
-              <Badge leftSection={<IconTable size={12} />} variant="light">
-                {totalTrees} cây
-              </Badge>
-              <Badge
-                leftSection={<IconBadge size={12} />}
-                variant="light"
-                color="green"
-              >
-                {totalCultivations} canh tác
-              </Badge>
-              <Badge
-                leftSection={<IconBadge size={12} />}
-                variant="light"
-                color="red"
-              >
-                {totalPests} sâu bệnh
-              </Badge>
             </Group>
             <SegmentedControl
               value={view}
@@ -572,7 +552,7 @@ export default function MVFarmSearch() {
               flex={1}
               label="Từ khoá"
               radius={4}
-              placeholder="Tên cây, mã vùng (V01), địa điểm…"
+              placeholder="Sầu riêng Ri6"
               leftSection={<IconSearch size={16} />}
               value={keyword}
               onChange={(e) => setKeyword(e.currentTarget.value)}
