@@ -1,7 +1,6 @@
 import {
   Box,
   Button,
-  Divider,
   Group,
   MultiSelect,
   Paper,
@@ -14,7 +13,6 @@ import {
 } from "@mantine/core";
 import {
   IconChevronLeft,
-  IconLeaf,
   IconMap2,
   IconMapPin,
   IconRotateClockwise2,
