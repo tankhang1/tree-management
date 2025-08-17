@@ -175,6 +175,12 @@ const MapManagementAddRegionPage = () => {
               label="Mã vùng (định danh nhà nước)"
               {...form.getInputProps("region.codeGov")}
             />
+            <TextInput
+              radius={4}
+              label="Tên vùng trồng"
+              required
+              {...form.getInputProps("region.name")}
+            />
             <Select
               searchable
               clearable
@@ -321,12 +327,7 @@ const MapManagementAddRegionPage = () => {
                 "Xã Bình Trưng",
               ]}
             />
-            <TextInput
-              radius={4}
-              label="Tên vùng trồng"
-              required
-              {...form.getInputProps("region.name")}
-            />
+            <TextInput radius={4} label="Địa chỉ" />
             <CompanyList />
             <NumberInput
               radius={4}

@@ -223,7 +223,7 @@ export const NAV_BAR = [
         link: PATH.COMPANY_PARTNER,
       },
       {
-        label: "Danh sách địa chỉ",
+        label: "Địa chỉ giao nhận",
         link: PATH.COMPANY_ADDRESS,
       },
       // { label: "Danh sách liên hệ", link: PATH.CONTACT_LIST },

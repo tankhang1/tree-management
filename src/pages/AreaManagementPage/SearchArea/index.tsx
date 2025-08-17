@@ -945,13 +945,170 @@ export default function MVFarmSearch() {
             <Paper withBorder p="lg" radius={4}>
               <Stack gap="sm">
                 <Group gap={8}>
-                  <ThemeIcon variant="light" color="green" radius="xl">
-                    <IconLeaf size={18} />
+                  <ThemeIcon variant="light" color="teal" radius="xl">
+                    <IconMap2 size={18} />
                   </ThemeIcon>
                   <Title order={5} fw={600}>
-                    Thông tin cây trồng
+                    Thông tin vùng trồng
                   </Title>
                 </Group>
+                <MultiSelect
+                  radius={4}
+                  searchable
+                  clearable
+                  label="Cây trồng"
+                  data={["Sầu Riêng", "Xoài"]}
+                  styles={{ dropdown: { zIndex: 1000 } }}
+                />
+                <Group grow>
+                  <MultiSelect
+                    searchable
+                    clearable
+                    radius={4}
+                    multiple
+                    label="Tỉnh/Thành phố"
+                    placeholder="Tỉnh/Thành phố"
+                    data={[
+                      "Hà Nội",
+                      "TP. Hồ Chí Minh",
+                      "Đà Nẵng",
+                      "Cần Thơ",
+                      "Hải Phòng",
+                      "Nha Trang",
+                      "Bình Dương",
+                      "Đồng Nai",
+                      "Bà Rịa - Vũng Tàu",
+                      "Quảng Ninh",
+                      "Thanh Hóa",
+                      "Nghệ An",
+                      "Huế",
+                      "Quảng Nam",
+                      "Quảng Ngãi",
+                      "Bắc Ninh",
+                      "Bắc Giang",
+                      "Lâm Đồng",
+                      "Tiền Giang",
+                      "Long An",
+                      "Vĩnh Long",
+                      "Sóc Trăng",
+                      "Kiên Giang",
+                      "Cà Mau",
+                      "Bình Thuận",
+                      "Phú Yên",
+                      "Khánh Hòa",
+                      "Tây Ninh",
+                      "Trà Vinh",
+                      "Bến Tre",
+                      "Hậu Giang",
+                      "Đắk Lắk",
+                      "Đắk Nông",
+                      "Gia Lai",
+                      "Kon Tum",
+                      "Hà Tĩnh",
+                      "Quảng Bình",
+                      "Quảng Trị",
+                      "Thái Bình",
+                      "Nam Định",
+                      "Ninh Bình",
+                      "Hòa Bình",
+                      "Sơn La",
+                      "Lai Châu",
+                      "Điện Biên",
+                      "Lào Cai",
+                      "Yên Bái",
+                      "Tuyên Quang",
+                      "Phú Thọ",
+                      "Vĩnh Phúc",
+                      "Hà Nam",
+                      "Hưng Yên",
+                      "Hải Dương",
+                      "Thái Nguyên",
+                      "Bắc Kạn",
+                      "Cao Bằng",
+                      "Lạng Sơn",
+                    ]}
+                  />
+                  <MultiSelect
+                    clearable
+                    radius={4}
+                    searchable
+                    label="Phường/Xã"
+                    placeholder="Phường/Xã"
+                    data={[
+                      "Phường Bến Nghé",
+                      "Phường Bến Thành",
+                      "Phường Nguyễn Thái Bình",
+                      "Phường Phạm Ngũ Lão",
+                      "Phường Tân Định",
+                      "Phường Đa Kao",
+                      "Phường 1 (Quận 3)",
+                      "Phường 2 (Quận 3)",
+                      "Phường 3 (Quận 3)",
+                      "Phường 4 (Quận 3)",
+                      "Phường 5 (Quận 3)",
+                      "Phường 6 (Quận 3)",
+                      "Phường 7 (Quận 3)",
+                      "Phường 8 (Quận 3)",
+                      "Phường 9 (Quận 3)",
+                      "Phường 10 (Quận 3)",
+                      "Phường 11 (Quận 3)",
+                      "Phường 12 (Quận 3)",
+                      "Xã Tân Phú Trung",
+                      "Xã Bình Mỹ",
+                      "Xã Thới Tam Thôn",
+                      "Xã Trung An",
+                      "Xã Phước Vĩnh An",
+                      "Xã Phước Hiệp",
+                      "Xã Phước Thạnh",
+                      "Xã An Nhơn Tây",
+                      "Xã Nhuận Đức",
+                      "Xã Phạm Văn Cội",
+                      "Xã Phú Hòa Đông",
+                      "Xã Phú Mỹ Hưng",
+                      "Xã Phước Lộc",
+                      "Xã Long Thới",
+                      "Xã Nhơn Đức",
+                      "Xã Phước Kiển",
+                      "Xã Bình Hưng",
+                      "Xã Đa Phước",
+                      "Xã Tân Kiên",
+                      "Xã Tân Nhựt",
+                      "Xã Lê Minh Xuân",
+                      "Xã Vĩnh Lộc A",
+                      "Xã Vĩnh Lộc B",
+                      "Xã Phạm Văn Hai",
+                      "Xã Quy Đức",
+                      "Xã Hưng Long",
+                      "Xã Bình Chánh",
+                      "Xã An Phú Tây",
+                      "Xã Tân Quý Tây",
+                      "Xã Tân Túc",
+                      "Xã Bình Lợi",
+                      "Xã Bình Thắng",
+                      "Xã Bình An",
+                      "Xã Bình Chuẩn",
+                      "Xã Bình Hòa",
+                      "Xã Bình Nhâm",
+                      "Xã Bình Phước",
+                      "Xã Bình Sơn",
+                      "Xã Bình Tân",
+                      "Xã Bình Thạnh",
+                      "Xã Bình Thuận",
+                      "Xã Bình Trị",
+                      "Xã Bình Xuyên",
+                      "Xã Bình Yên",
+                      "Xã Bình Định",
+                      "Xã Bình Dương",
+                      "Xã Bình Phú",
+                      "Xã Bình Quới",
+                      "Xã Bình Thới",
+                      "Xã Bình Thành",
+                      "Xã Bình Tiến",
+                      "Xã Bình Trưng",
+                    ]}
+                  />
+                </Group>
+
                 <SimpleGrid cols={{ base: 1, sm: 2 }} spacing="sm">
                   <Select
                     radius={4}
@@ -961,79 +1118,13 @@ export default function MVFarmSearch() {
                     data={companyOptions}
                     styles={{ dropdown: { zIndex: 1000 } }}
                   />
-                  <Select
-                    radius={4}
-                    searchable
-                    clearable
-                    label="Giống cây trồng"
-                    data={plantVarietyOptions}
-                    styles={{ dropdown: { zIndex: 1000 } }}
-                  />
-                </SimpleGrid>
 
-                <Divider my="xs" />
-
-                <Group gap={8}>
-                  <ThemeIcon variant="light" color="teal" radius="xl">
-                    <IconMap2 size={18} />
-                  </ThemeIcon>
-                  <Title order={5} fw={600}>
-                    Thông tin vùng trồng
-                  </Title>
-                </Group>
-
-                <SimpleGrid cols={{ base: 1, sm: 2 }} spacing="sm">
                   <Select
                     radius={4}
                     data={["V01", "V02", "V03"]}
                     label="Mã định danh"
                     searchable
                     clearable
-                    styles={{ dropdown: { zIndex: 1000 } }}
-                  />
-                  <Select
-                    label="Khu vực canh tác"
-                    placeholder="Chọn khu vực canh tác"
-                    radius={4}
-                    searchable
-                    clearable
-                    data={[
-                      "Khu vực canh tác Đồng Nai",
-                      "Khu vực canh tác Bình Dương",
-                    ]}
-                    styles={{ dropdown: { zIndex: 1000 } }}
-                  />
-                  <MultiSelect
-                    label="Vùng trồng"
-                    clearable
-                    placeholder="Tìm kiếm vùng trồng"
-                    radius={4}
-                    searchable
-                    leftSection={<IconSearch size={16} />}
-                    data={["Vùng Trồng Tây Nguyên", "Vùng Trồng Miền Tây"]}
-                    styles={{ dropdown: { zIndex: 1000 } }}
-                  />
-                  <MultiSelect
-                    label="Khu vực"
-                    clearable
-                    placeholder="Tìm theo địa danh"
-                    radius={4}
-                    searchable
-                    leftSection={<IconSearch size={16} />}
-                    data={[
-                      "Khu vực phía Bắc",
-                      "Khu vực phía Nam",
-                      "Khu vực phía Tây",
-                    ]}
-                    styles={{ dropdown: { zIndex: 1000 } }}
-                  />
-                  <MultiSelect
-                    placeholder="Tìm kiếm lô"
-                    label="Lô"
-                    radius={4}
-                    searchable
-                    leftSection={<IconSearch size={16} />}
-                    data={["Lô A1", "Lô B2", "Lô C3"]}
                     styles={{ dropdown: { zIndex: 1000 } }}
                   />
                 </SimpleGrid>
