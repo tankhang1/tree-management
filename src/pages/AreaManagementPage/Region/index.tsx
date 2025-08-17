@@ -38,6 +38,8 @@ type AreaZone = {
   numberOfLots: number;
   cultivationZone: string;
   tree: string;
+  province: string;
+  district: string;
 };
 const areaZoneData: AreaZone[] = [
   {
@@ -48,6 +50,8 @@ const areaZoneData: AreaZone[] = [
     employee: "Nguyễn Văn A",
     area: 10000,
     tree: "Sầu riêng",
+    province: "An Giang",
+    district: "TP. Long Xuyên",
 
     soilType: "Đất thịt",
     terrain: ["Cao", "Dốc"],
@@ -71,6 +75,8 @@ const areaZoneData: AreaZone[] = [
     gps: "13.1234,79.5678 13.1235,79.5679 13.1236,79.5680 13.1237,79.5681",
     numberOfLots: 3,
     cultivationZone: "Khu vực canh tác Đồng Nai",
+    province: "Đồng Nai",
+    district: "Huyện Nhơn Trạch",
   },
   {
     id: "V003",
@@ -87,6 +93,8 @@ const areaZoneData: AreaZone[] = [
     gps: "14.5678,80.1234 14.5679,80.1235 14.5680,80.1236 14.5681,80.1237",
     numberOfLots: 4,
     cultivationZone: "Khu vực canh tác Tây Nguyên",
+    province: "Đắk Lắk",
+    district: "Huyện Buôn Ma Thuột",
   },
   {
     id: "V004",
@@ -103,6 +111,8 @@ const areaZoneData: AreaZone[] = [
     gps: "15.6789,81.2345 15.6790,81.2346 15.6791,81.2347 15.6792,81.2348",
     numberOfLots: 6,
     cultivationZone: "Khu vực canh tác Tây Nguyên",
+    province: "Đắk Lắk",
+    district: "Huyện Buôn Ma Thuột",
   },
   {
     id: "V005",
@@ -119,6 +129,8 @@ const areaZoneData: AreaZone[] = [
     gps: "16.7890,82.3456 16.7891,82.3457 16.7892,82.3458 16.7893,82.3459",
     numberOfLots: 4,
     cultivationZone: "Khu vực canh tác Miền Tây",
+    province: "An Giang",
+    district: "TP. Long Xuyên",
   },
   {
     id: "V006",
@@ -135,6 +147,8 @@ const areaZoneData: AreaZone[] = [
     gps: "17.8901,83.4567 17.8902,83.4568 17.8903,83.4569 17.8904,83.4570",
     numberOfLots: 3,
     cultivationZone: "Khu vực canh tác Miền Tây",
+    province: "An Giang",
+    district: "TP. Long Xuyên",
   },
   {
     id: "V007",
@@ -152,6 +166,8 @@ const areaZoneData: AreaZone[] = [
     gps: "18.9012,84.5678 18.9013,84.5679 18.9014,84.5680 18.9015,84.5681",
     numberOfLots: 5,
     cultivationZone: "Khu vực canh tác Miền Trung",
+    province: "Khánh Hòa",
+    district: "TP. Nha Trang",
   },
   {
     id: "V008",
@@ -168,6 +184,8 @@ const areaZoneData: AreaZone[] = [
     gps: "19.0123,85.6789 19.0124,85.6790 19.0125,85.6791 19.0126,85.6792",
     numberOfLots: 4,
     cultivationZone: "Khu vực canh tác Miền Trung",
+    province: "Khánh Hòa",
+    district: "TP. Nha Trang",
   },
 ];
 const mainCrops = ["Sầu riêng", "Xoài", "Chuối", "Cà phê", "Mít", "Bưởi"];
@@ -188,6 +206,14 @@ const AreaManagementRegionPage = () => {
     {
       accessorKey: "cultivationZone",
       header: "Khu vực canh tác",
+    },
+    {
+      accessorKey: "province",
+      header: "Tỉnh/Thành phố",
+    },
+    {
+      accessorKey: "district",
+      header: "Phường/Xã",
     },
     {
       accessorKey: "regionName",
@@ -290,6 +316,150 @@ const AreaManagementRegionPage = () => {
           leftSection={<IconBrandMetabrainz size={18} />}
           placeholder="Địa hình"
           data={terrains}
+        />
+        <Select
+          searchable
+          clearable
+          radius={4}
+          multiple
+          placeholder="Tỉnh/Thành phố"
+          data={[
+            "Hà Nội",
+            "TP. Hồ Chí Minh",
+            "Đà Nẵng",
+            "Cần Thơ",
+            "Hải Phòng",
+            "Nha Trang",
+            "Bình Dương",
+            "Đồng Nai",
+            "Bà Rịa - Vũng Tàu",
+            "Quảng Ninh",
+            "Thanh Hóa",
+            "Nghệ An",
+            "Huế",
+            "Quảng Nam",
+            "Quảng Ngãi",
+            "Bắc Ninh",
+            "Bắc Giang",
+            "Lâm Đồng",
+            "Tiền Giang",
+            "Long An",
+            "Vĩnh Long",
+            "Sóc Trăng",
+            "Kiên Giang",
+            "Cà Mau",
+            "Bình Thuận",
+            "Phú Yên",
+            "Khánh Hòa",
+            "Tây Ninh",
+            "Trà Vinh",
+            "Bến Tre",
+            "Hậu Giang",
+            "Đắk Lắk",
+            "Đắk Nông",
+            "Gia Lai",
+            "Kon Tum",
+            "Hà Tĩnh",
+            "Quảng Bình",
+            "Quảng Trị",
+            "Thái Bình",
+            "Nam Định",
+            "Ninh Bình",
+            "Hòa Bình",
+            "Sơn La",
+            "Lai Châu",
+            "Điện Biên",
+            "Lào Cai",
+            "Yên Bái",
+            "Tuyên Quang",
+            "Phú Thọ",
+            "Vĩnh Phúc",
+            "Hà Nam",
+            "Hưng Yên",
+            "Hải Dương",
+            "Thái Nguyên",
+            "Bắc Kạn",
+            "Cao Bằng",
+            "Lạng Sơn",
+          ]}
+        />
+        <Select
+          clearable
+          radius={4}
+          searchable
+          placeholder="Phường/Xã"
+          data={[
+            "Phường Bến Nghé",
+            "Phường Bến Thành",
+            "Phường Nguyễn Thái Bình",
+            "Phường Phạm Ngũ Lão",
+            "Phường Tân Định",
+            "Phường Đa Kao",
+            "Phường 1 (Quận 3)",
+            "Phường 2 (Quận 3)",
+            "Phường 3 (Quận 3)",
+            "Phường 4 (Quận 3)",
+            "Phường 5 (Quận 3)",
+            "Phường 6 (Quận 3)",
+            "Phường 7 (Quận 3)",
+            "Phường 8 (Quận 3)",
+            "Phường 9 (Quận 3)",
+            "Phường 10 (Quận 3)",
+            "Phường 11 (Quận 3)",
+            "Phường 12 (Quận 3)",
+            "Xã Tân Phú Trung",
+            "Xã Bình Mỹ",
+            "Xã Thới Tam Thôn",
+            "Xã Trung An",
+            "Xã Phước Vĩnh An",
+            "Xã Phước Hiệp",
+            "Xã Phước Thạnh",
+            "Xã An Nhơn Tây",
+            "Xã Nhuận Đức",
+            "Xã Phạm Văn Cội",
+            "Xã Phú Hòa Đông",
+            "Xã Phú Mỹ Hưng",
+            "Xã Phước Lộc",
+            "Xã Long Thới",
+            "Xã Nhơn Đức",
+            "Xã Phước Kiển",
+            "Xã Bình Hưng",
+            "Xã Đa Phước",
+            "Xã Tân Kiên",
+            "Xã Tân Nhựt",
+            "Xã Lê Minh Xuân",
+            "Xã Vĩnh Lộc A",
+            "Xã Vĩnh Lộc B",
+            "Xã Phạm Văn Hai",
+            "Xã Quy Đức",
+            "Xã Hưng Long",
+            "Xã Bình Chánh",
+            "Xã An Phú Tây",
+            "Xã Tân Quý Tây",
+            "Xã Tân Túc",
+            "Xã Bình Lợi",
+            "Xã Bình Thắng",
+            "Xã Bình An",
+            "Xã Bình Chuẩn",
+            "Xã Bình Hòa",
+            "Xã Bình Nhâm",
+            "Xã Bình Phước",
+            "Xã Bình Sơn",
+            "Xã Bình Tân",
+            "Xã Bình Thạnh",
+            "Xã Bình Thuận",
+            "Xã Bình Trị",
+            "Xã Bình Xuyên",
+            "Xã Bình Yên",
+            "Xã Bình Định",
+            "Xã Bình Dương",
+            "Xã Bình Phú",
+            "Xã Bình Quới",
+            "Xã Bình Thới",
+            "Xã Bình Thành",
+            "Xã Bình Tiến",
+            "Xã Bình Trưng",
+          ]}
         />
       </Group>
       <Table columns={areaZoneColumns} data={areaZoneData} />

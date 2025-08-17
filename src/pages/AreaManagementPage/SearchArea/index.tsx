@@ -34,7 +34,6 @@ import {
   IconEdit,
   IconEye,
   IconFilter,
-  IconLeaf,
   IconMap2,
   IconRotateClockwise2,
   IconSearch,
@@ -222,21 +221,7 @@ const companyOptions = [
   },
   // Thêm các doanh nghiệp/nông hộ khác ở đây
 ];
-const plantVarietyOptions = [
-  {
-    label: "Sầu riêng - Ri6",
-    value: "saurieng-ri6",
-  },
-  {
-    label: "Xoài - Cát Chu",
-    value: "xoai-catchu",
-  },
-  {
-    label: "Cà phê - Robusta",
-    value: "caphe-robusta",
-  },
-  // Thêm các cây trồng và giống khác ở đây
-];
+
 type AreaZone = {
   id: string;
   code: string;
@@ -1391,6 +1376,10 @@ export default function MVFarmSearch() {
                         <b>Lô:</b> Lô 05
                       </Text>
                     </SimpleGrid>
+                    <Text size="sm">
+                      <b>Địa chỉ:</b> Ấp 1, xã Tân Lập, huyện Hớn Quản, Bình
+                      Phước
+                    </Text>
                     <Divider my={6} />
                     <Group gap="xs">
                       <ThemeIcon variant="light" color="teal">

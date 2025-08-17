@@ -854,6 +854,10 @@ export default function MVFarmSearch() {
                         <b>Hàng:</b> Hàng 8
                       </Text>
                     </SimpleGrid>
+                    <Text size="sm">
+                      <b>Địa chỉ:</b> Ấp 1, xã Tân Lập, huyện Hớn Quản, Bình
+                      Phước
+                    </Text>
                     <Divider my={6} />
                     <Group gap="xs">
                       <ThemeIcon variant="light" color="teal">
