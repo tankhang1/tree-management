@@ -6,6 +6,7 @@ import {
   Group,
   Menu,
   Modal,
+  Select,
   Stack,
   Text,
   Title,
@@ -29,6 +30,7 @@ type Product = {
   tree: string; // Cây (chọn từ danh sách II)
   category: string; // Loại sản phẩm (chọn từ XII.2)
   description: string; // Nội dung mô tả chi tiết
+  isActive: boolean;
 };
 const productData: Product[] = [
   {
@@ -37,6 +39,7 @@ const productData: Product[] = [
     tree: "Sầu riêng",
     category: "Thực phẩm chế biến",
     description: "Sản phẩm được làm từ sầu riêng Ri6, đóng gói 250g.",
+    isActive: true,
   },
   {
     id: "SP002",
@@ -44,6 +47,7 @@ const productData: Product[] = [
     tree: "Cà phê",
     category: "Đồ uống",
     description: "Cafe Arabica thu hoạch tại Đắk Lắk, rang mộc.",
+    isActive: true,
   },
   {
     id: "SP003",
@@ -51,6 +55,7 @@ const productData: Product[] = [
     tree: "Chuối",
     category: "Thực phẩm sấy",
     description: "Chuối sấy dẻo đóng gói 100g, không chất bảo quản.",
+    isActive: false,
   },
 ];
 const product = {
@@ -71,6 +76,17 @@ const ProductManagementItemPage = () => {
   const productColumns: MRT_ColumnDef<Product>[] = [
     { accessorKey: "id", header: "Mã sản phẩm" },
     { accessorKey: "name", header: "Tên sản phẩm" },
+    {
+      accessorKey: "isActive",
+      header: "Công khai",
+
+      Cell: ({ row }) =>
+        row.original.isActive ? (
+          <Badge color="green">Công khai</Badge>
+        ) : (
+          <Badge color="red">Không</Badge>
+        ),
+    },
     { accessorKey: "tree", header: "Cây" },
     { accessorKey: "category", header: "Loại sản phẩm" },
     { accessorKey: "description", header: "Mô tả" },
@@ -120,6 +136,15 @@ const ProductManagementItemPage = () => {
             Thêm mới
           </Button>
         </Group>
+      </Group>
+      <Group>
+        <Select
+          data={["Công khai", "Không"]}
+          radius={4}
+          searchable
+          clearable
+          placeholder={"Công khai"}
+        />
       </Group>
 
       <Table columns={productColumns} data={productData} />

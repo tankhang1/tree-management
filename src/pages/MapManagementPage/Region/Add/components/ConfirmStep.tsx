@@ -73,6 +73,7 @@ export function ConfirmStep({
               <Badge color="green">{name}</Badge>
             </Group>
           </Grid.Col>
+
           <Grid.Col span={6}>
             <Group gap="xs">
               <IconBuildingFactory size={18} />
@@ -82,9 +83,24 @@ export function ConfirmStep({
           </Grid.Col>
           <Grid.Col span={6}>
             <Group gap="xs">
+              <IconMapPin size={18} />
+              <Text fw={500}>Tỉnh/Thành phố:</Text>
+              <Badge color="green">Tỉnh Đắk Lắk</Badge>
+            </Group>
+          </Grid.Col>
+          <Grid.Col span={6}>
+            <Group gap="xs">
               <IconRulerMeasure size={18} />
               <Text fw={500}>Diện tích:</Text>
               <Text>{size.toLocaleString()} m²</Text>
+            </Group>
+          </Grid.Col>
+
+          <Grid.Col span={6}>
+            <Group gap="xs">
+              <IconMapPin size={18} />
+              <Text fw={500}>Phường/Xã:</Text>
+              <Badge color="green">Xã Krông Pắk</Badge>
             </Group>
           </Grid.Col>
           <Grid.Col span={6}>

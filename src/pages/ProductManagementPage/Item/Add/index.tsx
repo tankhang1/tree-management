@@ -15,6 +15,7 @@ import {
   NumberInput,
   Divider,
   ScrollArea,
+  Switch,
 } from "@mantine/core";
 import { Dropzone, IMAGE_MIME_TYPE } from "@mantine/dropzone";
 import {
@@ -208,6 +209,12 @@ const ProductManagementItemAddPage = () => {
                     setForm({ ...form, productName: e.currentTarget.value })
                   }
                   radius={4}
+                />
+
+                <Switch
+                  label="Sản phẩm công khai"
+                  labelPosition="left"
+                  fw={500}
                 />
                 <TextInput
                   placeholder="Loại sản phẩm"
@@ -715,6 +722,9 @@ const ProductManagementItemAddPage = () => {
                     </Text>
                     <Text>
                       <b>Mô tả:</b> {form.content || "Không có"}
+                    </Text>
+                    <Text>
+                      <b>Sản phẩm công khai:</b> Không
                     </Text>
                   </Stack>
                 </Card>
