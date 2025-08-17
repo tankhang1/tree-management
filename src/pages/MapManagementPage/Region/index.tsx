@@ -177,7 +177,7 @@ const MapManagementRegionPage = () => {
     },
     {
       accessorKey: "district",
-      header: "Quận/Huyện",
+      header: "Phường/Xã",
     },
     {
       accessorKey: "area",
@@ -358,7 +358,7 @@ const MapManagementRegionPage = () => {
           clearable
           radius={4}
           searchable
-          placeholder="Xã/Phường"
+          placeholder="Phường/Xã"
           data={[
             "Phường Bến Nghé",
             "Phường Bến Thành",

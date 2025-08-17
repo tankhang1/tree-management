@@ -244,10 +244,10 @@ const MapManagementAddRegionPage = () => {
             />
             <Select
               clearable
-              label="Xã/Phường"
+              label="Phường/Xã"
               radius={4}
               searchable
-              placeholder="Xã/Phường"
+              placeholder="Phường/Xã"
               data={[
                 "Phường Bến Nghé",
                 "Phường Bến Thành",
