@@ -267,6 +267,7 @@ const AreaManagementRegionPage = () => {
       <Group>
         <Select
           searchable
+          clearable
           radius={4}
           leftSection={<IconTree size={18} />}
           placeholder="Cây trồng chính"
@@ -274,6 +275,7 @@ const AreaManagementRegionPage = () => {
         />
         <Select
           searchable
+          clearable
           radius={4}
           leftSection={<IconSandbox size={18} />}
           placeholder="Loại đất"
@@ -282,6 +284,7 @@ const AreaManagementRegionPage = () => {
         />
         <Select
           searchable
+          clearable
           radius={4}
           multiple
           leftSection={<IconBrandMetabrainz size={18} />}

@@ -625,6 +625,8 @@ const AreaManagementRowAddPage = () => {
 
                         {form.getValues().farming === "Xen canh" && (
                           <Select
+                            searchable
+                            clearable
                             radius={4}
                             label="Hạt giống cây"
                             data={["Giống A", "Giống B"]}
@@ -703,6 +705,8 @@ const AreaManagementRowAddPage = () => {
 
                         {form.getValues().farming === "Xen canh" && (
                           <Select
+                            searchable
+                            clearable
                             radius={4}
                             label="Hạt giống cây"
                             data={["Giống A", "Giống B"]}

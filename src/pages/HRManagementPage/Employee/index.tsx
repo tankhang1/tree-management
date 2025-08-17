@@ -160,6 +160,7 @@ const HRManagementEmployeePage = () => {
         />
         <Select
           searchable
+          clearable
           radius={4}
           leftSection={<IconHome size={18} />}
           placeholder="Chọn phòng ban"
@@ -173,6 +174,7 @@ const HRManagementEmployeePage = () => {
         />
         <Select
           searchable
+          clearable
           radius={4}
           placeholder="Chọn vai trò"
           data={[

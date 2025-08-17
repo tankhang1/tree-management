@@ -70,6 +70,8 @@ const CreateBatmanTaskForm = ({ onFilter }: TCreateBatmanTaskForm) => {
         </Group>
 
         <Select
+          searchable
+          clearable
           label="Trạng thái"
           placeholder="Chọn trạng thái"
           data={["Chưa bắt đầu", "Đang thực hiện", "Đã hoàn thành"]}

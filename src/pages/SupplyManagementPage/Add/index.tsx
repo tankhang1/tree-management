@@ -154,6 +154,8 @@ export default function SupplyManagementPage() {
                 radius={4}
               />
               <Select
+                searchable
+                clearable
                 label="Loại vật tư"
                 value={formData.name}
                 required

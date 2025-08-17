@@ -86,6 +86,8 @@ const AddFertilizerUsageForm = () => {
         />
 
         <Select
+          searchable
+          clearable
           label="Loại phân bón"
           placeholder="Chọn phân bón"
           data={fertilizerOptions}
@@ -162,9 +164,16 @@ const AddFertilizerUsageForm = () => {
           />
         </Group>
         <Select
+          searchable
+          clearable
           label="Lí do sử dụng"
           placeholder="Ví dụ: Bón lót, bón thúc, bón phân vi sinh..."
           radius={4}
+          data={[
+            { value: "bon_lot", label: "Bón lót" },
+            { value: "bon_thuc", label: "Bón thúc" },
+            { value: "bon_vi_sinh", label: "Bón phân vi sinh" },
+          ]}
         />
 
         <Textarea

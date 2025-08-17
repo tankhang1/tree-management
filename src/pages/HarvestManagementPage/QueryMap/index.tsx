@@ -98,9 +98,43 @@ const HarvestManagementQueryMapPage = () => {
         p={"sm"}
       >
         <Stack w={300}>
-          <Select label="Vùng" placeholder="Chọn vùng" radius={4} clearable />
-          <Select label="Khu vực" placeholder="Khu vực" radius={4} clearable />
-          <Select label="Lô" placeholder="Lô" radius={4} clearable />
+          <Select
+            label="Vùng"
+            placeholder="Chọn vùng"
+            radius={4}
+            searchable
+            clearable
+            data={[
+              { value: "vung_a", label: "Vùng A" },
+              { value: "vung_b", label: "Vùng B" },
+              { value: "vung_c", label: "Vùng C" },
+            ]}
+          />
+          <Select
+            label="Khu vực"
+            placeholder="Khu vực"
+            radius={4}
+            searchable
+            clearable
+            data={[
+              { value: "khu_a", label: "Khu A" },
+              { value: "khu_b", label: "Khu B" },
+              { value: "khu_c", label: "Khu C" },
+            ]}
+          />
+          <Select
+            label="Lô"
+            placeholder="Lô"
+            radius={4}
+            searchable
+            clearable
+            data={[
+              { value: "lo_1", label: "Lô 1" },
+              { value: "lo_2", label: "Lô 2" },
+              { value: "lo_3", label: "Lô 3" },
+              { value: "lo_4", label: "Lô 4" },
+            ]}
+          />
           {/* <Select label="Hàng" placeholder="Hàng" radius={4} clearable /> */}
 
           <Button

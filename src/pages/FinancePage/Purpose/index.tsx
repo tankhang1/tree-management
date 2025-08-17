@@ -122,6 +122,8 @@ const FinancePurposeManagementPage = () => {
       >
         <Stack gap="sm">
           <Select
+            searchable
+            clearable
             radius={4}
             label="Loại"
             placeholder="Chọn loại"

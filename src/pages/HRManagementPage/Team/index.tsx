@@ -168,10 +168,12 @@ const HRManagementTeamPage = () => {
       </Group>
       <Group>
         <Select
+          searchable
+          clearable
           radius={4}
           leftSection={<IconHome size={18} />}
           placeholder="Chọn bộ phận"
-          data={["Mùa vụ A"]}
+          data={["Mùa vụ A", "Mùa vụ B", "Mùa vụ C"]}
         />
       </Group>
       <Table columns={groupColumns} data={groupData} />

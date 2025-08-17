@@ -93,6 +93,8 @@ const MachineManagementMainAddPage = () => {
                 radius={4}
               />
               <Select
+                searchable
+                clearable
                 label="Loại máy móc/thiết bị"
                 data={["Xe tải", "Xe múc", "Máy móc khác", "Xe cày"]}
                 {...form.getInputProps("type")}

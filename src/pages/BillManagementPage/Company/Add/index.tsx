@@ -70,8 +70,9 @@ const BillManagementCompanyAddPage = () => {
                   withAsterisk
                 />
                 <Select
-                  label="Mã đơn hàng"
                   searchable
+                  clearable
+                  label="Mã đơn hàng"
                   placeholder="Nhập mã đơn hàng"
                   value={formData.orderId}
                   data={[
@@ -208,6 +209,8 @@ const BillManagementCompanyAddPage = () => {
                 withAsterisk
               />
               <Select
+                searchable
+                clearable
                 label="Trạng thái"
                 placeholder="Trạng thái"
                 data={[

@@ -171,6 +171,8 @@ const PackagingSpecificationPage = () => {
             }
           />
           <Select
+            searchable
+            clearable
             label="Dạng đóng gói"
             placeholder="Chọn dạng đóng gói"
             data={[

@@ -186,6 +186,8 @@ const BillManagementUserPage = () => {
         />
 
         <Select
+          searchable
+          clearable
           placeholder="Trạng thái"
           radius={4}
           data={["Đã thanh toán", "Chưa thanh toán", "Đã hủy"]} // Danh sách trạng thái

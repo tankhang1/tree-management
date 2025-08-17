@@ -381,6 +381,8 @@ export default function StockManagementAddDeliveryPage() {
             <Card withBorder radius="md" shadow="sm" p="md">
               <Stack>
                 <Select
+                  searchable
+                  clearable
                   label="Kho"
                   data={[
                     "Khu A - Khu phụ A1 - Kho A",

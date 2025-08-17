@@ -235,6 +235,8 @@ const PlanManagementUnplannedAddPage = () => {
             </Group>
 
             <Select
+              searchable
+              clearable
               label="Mùa vụ"
               placeholder="Chọn mùa vụ cụ thể"
               data={["Mùa Xuân 2025", "Mùa Hè 2025"]}
@@ -244,6 +246,8 @@ const PlanManagementUnplannedAddPage = () => {
             />
 
             <Select
+              searchable
+              clearable
               label="Chu kỳ sinh trưởng"
               placeholder="Chọn chu kỳ"
               data={["Chu kỳ 1", "Chu kỳ 2"]}
@@ -253,6 +257,8 @@ const PlanManagementUnplannedAddPage = () => {
             />
 
             <Select
+              searchable
+              clearable
               label="Giai đoạn sinh trưởng"
               placeholder="Chọn giai đoạn"
               data={["Gieo trồng", "Ra hoa", "Kết trái"]}
@@ -432,6 +438,8 @@ const PlanManagementUnplannedAddPage = () => {
       >
         <Stack gap={"xs"}>
           <Select
+            searchable
+            clearable
             radius={4}
             label="Loại máy móc thiết bị"
             placeholder="Tìm kiếm loại máy móc thiết bị"
@@ -536,6 +544,8 @@ const PlanManagementUnplannedAddPage = () => {
       >
         <Stack gap={"xs"}>
           <Select
+            searchable
+            clearable
             label="Loại vật tư"
             placeholder="Tìm kiếm loại vật tư"
             radius={4}
@@ -631,6 +641,8 @@ const PlanManagementUnplannedAddPage = () => {
       >
         <Stack gap={"xs"}>
           <Select
+            searchable
+            clearable
             label="Loại thuốc trừ sâu"
             placeholder="Tìm kiếm loại thuốc trừ sâu"
             radius={4}

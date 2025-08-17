@@ -198,6 +198,8 @@ const MachineManagementMainPage = () => {
       </Group>
       <Group>
         <Select
+          searchable
+          clearable
           radius={4}
           leftSection={<IconCar size={18} />}
           placeholder="Tìm kiếm loại xe"

@@ -55,9 +55,12 @@ const PlantManagementTechnicalDocAddPage = () => {
       <form onSubmit={form.onSubmit(handleSubmit)}>
         <Stack gap="xs">
           <Select
+            searchable
+            clearable
             label="Mã mẫu cây"
             placeholder="TMP-01"
             radius={4}
+            data={["TMP-01", "TMP-02", "TMP-03"]}
             {...form.getInputProps("templateCode")}
           />
 

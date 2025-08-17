@@ -741,6 +741,8 @@ const AreaManagementTreeAddv2Page = () => {
                           >
                             <Stack gap="xs" key={p.code} mt={"md"}>
                               <Select
+                                searchable
+                                clearable
                                 radius={4}
                                 label="Giống cây"
                                 data={[
@@ -760,6 +762,8 @@ const AreaManagementTreeAddv2Page = () => {
                                 ]}
                               />
                               <Select
+                                searchable
+                                clearable
                                 radius={4}
                                 label="Hạt giống"
                                 data={samplePlots[0].seeds.map((seed) => ({
@@ -831,6 +835,8 @@ const AreaManagementTreeAddv2Page = () => {
                           <Card withBorder radius={4} p="md">
                             <Group align="flex-end" gap={"xs"}>
                               <Select
+                                searchable
+                                clearable
                                 radius={4}
                                 label="Hạt giống"
                                 data={samplePlots[0].seeds.map((seed) => ({
@@ -855,6 +861,8 @@ const AreaManagementTreeAddv2Page = () => {
                             </Group>
                             <Group align="flex-end" gap={"xs"}>
                               <Select
+                                searchable
+                                clearable
                                 radius={4}
                                 label="Hạt giống"
                                 data={samplePlots[0].seeds.map((seed) => ({
@@ -972,6 +980,8 @@ const AreaManagementTreeAddv2Page = () => {
                               <Stack gap={"xs"}>
                                 <Group flex={2} align="flex-end">
                                   <Select
+                                    searchable
+                                    clearable
                                     label="Hạt giống"
                                     placeholder="Chọn hạt giống"
                                     radius={4}
@@ -1087,6 +1097,8 @@ const AreaManagementTreeAddv2Page = () => {
 
                                 <Group flex={2} align="flex-end">
                                   <Select
+                                    searchable
+                                    clearable
                                     label="Hạt giống"
                                     placeholder="Chọn hạt giống"
                                     radius={4}
@@ -1288,6 +1300,8 @@ const AreaManagementTreeAddv2Page = () => {
                               <Stack gap="xs" flex={2}>
                                 <Group align="flex-end">
                                   <Select
+                                    searchable
+                                    clearable
                                     label="Hạt giống"
                                     placeholder="Chọn hạt giống"
                                     radius={4}
@@ -1490,6 +1504,8 @@ const AreaManagementTreeAddv2Page = () => {
                               <Stack gap="xs" flex={2}>
                                 <Group align="flex-end">
                                   <Select
+                                    searchable
+                                    clearable
                                     label="Hạt giống"
                                     placeholder="Chọn hạt giống"
                                     radius={4}
@@ -1703,6 +1719,8 @@ const AreaManagementTreeAddv2Page = () => {
                               <Stack flex={2} gap={"xs"}>
                                 <Group align="flex-end">
                                   <Select
+                                    searchable
+                                    clearable
                                     label="Hạt giống"
                                     placeholder="Chọn hạt giống"
                                     radius={4}
@@ -1829,6 +1847,8 @@ const AreaManagementTreeAddv2Page = () => {
                                 </Group>
                                 <Group align="flex-end">
                                   <Select
+                                    searchable
+                                    clearable
                                     label="Hạt giống"
                                     placeholder="Chọn hạt giống"
                                     radius={4}

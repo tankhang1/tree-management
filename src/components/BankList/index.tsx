@@ -56,6 +56,7 @@ const BankSelect = ({ label = "Ngân hàng" }: TBankSelect) => {
   return (
     <Select
       searchable
+      clearable
       label={label}
       placeholder="Tìm theo tên hoặc mã"
       radius={4}

@@ -89,6 +89,8 @@ const AddSupplyForm = ({ onFilter }: TAddSupplyForm) => {
         />
 
         <Select
+          searchable
+          clearable
           label="Vật tư"
           data={materialOptions}
           radius={4}
@@ -145,6 +147,8 @@ const AddSupplyForm = ({ onFilter }: TAddSupplyForm) => {
         </Group>
         {form.getValues().type === "huỷ" && (
           <Select
+            searchable
+            clearable
             label="Kho xuất hàng"
             data={["Kho A", "Kho B"]}
             radius={4}
@@ -153,6 +157,8 @@ const AddSupplyForm = ({ onFilter }: TAddSupplyForm) => {
         )}
         {form.getValues().type === "nhập" && (
           <Select
+            searchable
+            clearable
             label="Kho nhập hàng"
             data={["Kho A", "Kho B"]}
             radius={4}
@@ -161,6 +167,8 @@ const AddSupplyForm = ({ onFilter }: TAddSupplyForm) => {
         )}
         {form.getValues().type === "xuất" && (
           <Select
+            searchable
+            clearable
             label="Kho xuất hàng"
             data={["Kho A", "Kho B"]}
             radius={4}

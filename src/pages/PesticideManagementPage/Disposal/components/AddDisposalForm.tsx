@@ -86,6 +86,8 @@ const AddDisposalForm = () => {
         />
 
         <Select
+          searchable
+          clearable
           label="Thuốc cần huỷ"
           placeholder="Chọn thuốc"
           data={pesticideOptions}
@@ -157,6 +159,8 @@ const AddDisposalForm = () => {
           />
         </Group>
         <Select
+          searchable
+          clearable
           label="Lý do huỷ thuốc"
           placeholder="VD: Thuốc hết hạn, bao bì rách..."
           data={disposalReasons}

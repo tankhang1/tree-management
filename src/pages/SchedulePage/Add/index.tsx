@@ -85,6 +85,8 @@ const ScheduleAddPage = () => {
 
           <Group grow>
             <Select
+              searchable
+              clearable
               label="Loại cây"
               data={["Sầu riêng", "Xoài", "Chuối"]}
               radius={4}
@@ -93,6 +95,8 @@ const ScheduleAddPage = () => {
             />
 
             <Select
+              searchable
+              clearable
               label="Thời gian"
               data={["Sáng", "Chiều", "Tối"]}
               radius={4}
@@ -102,6 +106,8 @@ const ScheduleAddPage = () => {
           </Group>
 
           <Select
+            searchable
+            clearable
             label="Trạng thái"
             data={["Đang diễn ra", "Hoàn thành"]}
             radius={4}

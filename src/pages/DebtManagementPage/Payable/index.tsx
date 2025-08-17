@@ -167,6 +167,8 @@ const DebtManagementPayablePage = () => {
       </Group>
       <Group>
         <Select
+          searchable
+          clearable
           label="Phân loại"
           placeholder="Phân loại"
           data={[
@@ -178,6 +180,8 @@ const DebtManagementPayablePage = () => {
           radius={4}
         />
         <Select
+          searchable
+          clearable
           label="Trạng thái"
           placeholder="Trạng thái"
           data={[

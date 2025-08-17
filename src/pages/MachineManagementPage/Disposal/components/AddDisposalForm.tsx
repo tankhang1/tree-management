@@ -113,6 +113,8 @@ const AddDisposalForm = () => {
         </Group>
 
         <Select
+          searchable
+          clearable
           label="Lý do thanh lý"
           placeholder="VD: Máy hỏng, nâng cấp thiết bị"
           data={disposalReasons}

@@ -143,6 +143,8 @@ const MapManagementAddAreaPage = () => {
               min={0}
             />
             <Select
+              searchable
+              clearable
               label="Loại đất"
               radius={4}
               data={["Đất thịt", "Đất cát", "Đất đỏ", "Đất sét"]}

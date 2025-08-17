@@ -99,6 +99,8 @@ function ItemCard({
               styles={{ input: { height: rem(36) } }}
             />
             <Select
+              searchable
+              clearable
               placeholder="Quy cách"
               radius={4}
               data={[

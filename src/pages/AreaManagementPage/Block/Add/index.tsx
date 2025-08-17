@@ -472,12 +472,16 @@ const AreaManagementBlockAddPage = () => {
             <Stack gap="xs">
               {/* Phương pháp canh tác */}
               <Select
+                searchable
+                clearable
                 label="Phương pháp canh tác"
                 data={["Xen canh", "Truyền thống", "Công nghệ cao"]}
                 radius={4}
                 value={"Truyền thống"}
               />
               <Select
+                searchable
+                clearable
                 label="Nhóm cây trồng"
                 data={["Cây ăn trái", "Cây lương thực"]}
                 radius={4}
@@ -535,6 +539,8 @@ const AreaManagementBlockAddPage = () => {
               </Group>
 
               <Select
+                searchable
+                clearable
                 label="Phương pháp tưới tiêu"
                 data={["Tưới nhỏ giọt", "Tưới phun mưa", "Tưới tràn"]}
                 radius={4}
@@ -580,6 +586,8 @@ const AreaManagementBlockAddPage = () => {
 
                 {form.getValues().farming === "Xen canh" && (
                   <Select
+                    searchable
+                    clearable
                     radius={4}
                     label="Hạt giống cây"
                     data={["Giống A", "Giống B"]}
@@ -623,6 +631,8 @@ const AreaManagementBlockAddPage = () => {
 
                 {form.getValues().farming === "Xen canh" && (
                   <Select
+                    searchable
+                    clearable
                     radius={4}
                     label="Hạt giống cây"
                     data={["Giống A", "Giống B"]}

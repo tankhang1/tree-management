@@ -177,6 +177,7 @@ const PlantManagementTreePage = () => {
       <Group>
         <Select
           searchable
+          clearable
           radius={4}
           leftSection={<IconSeedling size={18} />}
           placeholder="Hạt giống"
@@ -190,6 +191,7 @@ const PlantManagementTreePage = () => {
         />
         <Select
           searchable
+          clearable
           radius={4}
           leftSection={<IconTractor size={18} />}
           placeholder="Hình thức thu hoạch"
@@ -202,6 +204,7 @@ const PlantManagementTreePage = () => {
         />
         <Select
           searchable
+          clearable
           radius={4}
           leftSection={<IconGrowth size={18} />}
           placeholder="Chu kì sinh trưởng"

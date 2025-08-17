@@ -85,6 +85,8 @@ const AddMaterialUsageForm = () => {
         />
 
         <Select
+          searchable
+          clearable
           label="Vật tư"
           placeholder="Chọn loại vật tư"
           data={materialOptions}

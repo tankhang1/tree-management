@@ -105,6 +105,8 @@ const AddEmployeeForm = () => {
 
       <Group grow>
         <Select
+          searchable
+          clearable
           label="Vai trò"
           placeholder="Chọn vai trò"
           data={[
@@ -118,6 +120,8 @@ const AddEmployeeForm = () => {
           {...form.getInputProps("role")}
         />
         <Select
+          searchable
+          clearable
           label="Cấp bậc"
           placeholder="Chọn cấp bậc"
           data={["Trưởng nhóm", "Nhân viên", "Thực tập"]}
@@ -129,6 +133,8 @@ const AddEmployeeForm = () => {
 
       <Group grow>
         <Select
+          searchable
+          clearable
           label="Phòng ban"
           placeholder="Chọn phòng ban"
           data={["Phòng Nông Nghiệp", "Phòng Kỹ Thuật", "Phòng Kế Toán"]}
@@ -137,13 +143,18 @@ const AddEmployeeForm = () => {
           {...form.getInputProps("department")}
         />
         <Select
+          searchable
+          clearable
           label="Người quản lý"
           placeholder="Tên người quản lý"
           radius={4}
           {...form.getInputProps("manager")}
+          data={["Nguyễn Văn B", "Trần Thị C", "Lê Văn D"]}
         />
       </Group>
       <Select
+        searchable
+        clearable
         label="Trạng thái"
         placeholder="Trạng thái"
         data={[

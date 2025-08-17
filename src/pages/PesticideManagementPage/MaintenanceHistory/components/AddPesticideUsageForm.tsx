@@ -92,6 +92,7 @@ const AddPesticideUsageForm = () => {
 
         <Select
           searchable
+          clearable
           label="Loại thuốc"
           placeholder="Chọn loại thuốc"
           data={pesticideOptions}
@@ -167,9 +168,16 @@ const AddPesticideUsageForm = () => {
           />
         </Group>
         <Select
+          searchable
+          clearable
           label="Lý do sử dụng"
           radius={4}
           placeholder="Ví dụ: Phòng trừ sâu cuốn lá"
+          data={[
+            { value: "reason1", label: "Phòng trừ sâu cuốn lá" },
+            { value: "reason2", label: "Phòng trừ bệnh hại" },
+            { value: "reason3", label: "Phòng trừ cỏ dại" },
+          ]}
         />
 
         <Textarea

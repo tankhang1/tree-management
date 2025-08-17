@@ -115,6 +115,8 @@ const GrowthStageCard = ({
           ? materials.map((mat, index) => (
               <Group key={index} grow>
                 <Select
+                  searchable
+                  clearable
                   label="Vật tư"
                   placeholder="Chọn vật tư"
                   data={["Phân NPK", "Vôi bột"]}
@@ -156,6 +158,8 @@ const GrowthStageCard = ({
           ? equipment.map((eq, index) => (
               <Group key={index} grow>
                 <Select
+                  searchable
+                  clearable
                   label="Thiết bị"
                   placeholder="Chọn thiết bị"
                   data={["Máy xịt", "Bình tưới"]}
@@ -197,6 +201,8 @@ const GrowthStageCard = ({
           ? pesticides.map((pest, index) => (
               <Group key={index} grow>
                 <Select
+                  searchable
+                  clearable
                   label="Thuốc BVTV"
                   placeholder="Chọn thuốc"
                   data={["Confidor", "Radiant"]}

@@ -123,10 +123,27 @@ const ProductManagementBOMPage = () => {
         radius={4}
       >
         <Stack gap={"xs"}>
-          <Select label="Sản phẩm" placeholder="Chọn sản phẩm" radius={4} />
           <Select
+            searchable
+            clearable
+            label="Sản phẩm"
+            placeholder="Chọn sản phẩm"
+            radius={4}
+            data={[
+              { value: "SP001", label: "Sầu riêng Ri6 đóng hộp" },
+              { value: "SP002", label: "Xoài sấy dẻo" },
+            ]}
+          />
+          <Select
+            searchable
+            clearable
             label="Nguyên vật liệu"
             placeholder="Chọn nguyên vật liệu"
+            data={[
+              { value: "MAT001", label: "Hộp thiếc" },
+              { value: "MAT002", label: "Sầu riêng Ri6" },
+              { value: "MAT003", label: "Xoài cát Hòa Lộc" },
+            ]}
             radius={4}
           />
           <Group grow>

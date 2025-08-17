@@ -337,17 +337,19 @@ export default function SupplyInfo() {
         <Title order={3}>Danh sách vật tư nông nghiệp</Title>
         <Group>
           <Select
+            searchable
+            clearable
             placeholder="Phân loại"
             data={categories}
-            clearable
             radius={4}
             value={selectedCategory}
             onChange={setSelectedCategory}
           />
           <Select
+            searchable
+            clearable
             placeholder="Trạng thái tồn kho"
             data={["Còn hàng", "Sắp hết", "Hết hàng"]}
-            clearable
             radius={4}
             value={selectedStatus}
             onChange={setSelectedStatus}

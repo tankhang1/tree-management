@@ -315,6 +315,8 @@ function ItemPickerModal({
       <Stack gap="sm">
         {picker === "pesticide" && (
           <Select
+            searchable
+            clearable
             label="Loại thuốc trừ sâu"
             placeholder="Tìm kiếm loại thuốc trừ sâu"
             radius={4}
@@ -331,6 +333,8 @@ function ItemPickerModal({
         )}
         {picker === "supply" && (
           <Select
+            searchable
+            clearable
             label="Loại vật tư"
             placeholder="Tìm kiếm loại vật tư"
             radius={4}
@@ -347,6 +351,8 @@ function ItemPickerModal({
         )}
         {picker === "machine" && (
           <Select
+            searchable
+            clearable
             radius={4}
             label="Loại máy móc thiết bị"
             placeholder="Tìm kiếm loại máy móc thiết bị"
@@ -658,6 +664,8 @@ export default function PlanManagementAssignAddPage() {
 
                 <Group grow>
                   <Select
+                    searchable
+                    clearable
                     label="Mùa vụ"
                     placeholder="Chọn mùa vụ"
                     radius={4}
@@ -667,6 +675,8 @@ export default function PlanManagementAssignAddPage() {
                   />
                   <Select
                     flex={1}
+                    searchable
+                    clearable
                     label="Kế hoạch"
                     placeholder="Chọn kế hoạch (popup filter)"
                     radius={4}

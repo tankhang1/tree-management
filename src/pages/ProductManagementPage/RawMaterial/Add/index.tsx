@@ -101,6 +101,8 @@ export default function ProductManagementRawMaterialAddPage() {
                 radius={4}
               />
               <Select
+                searchable
+                clearable
                 label="Loại nguyên vật liệu"
                 value={formData.name}
                 required

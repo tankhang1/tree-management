@@ -68,6 +68,8 @@ const HRManagementEmployeeAddPage = () => {
                   radius={4}
                 />
                 <Select
+                  searchable
+                  clearable
                   placeholder="Chọn tỉnh thành/ thành phố"
                   label="Tỉnh thành"
                   radius={4}
@@ -79,6 +81,8 @@ const HRManagementEmployeeAddPage = () => {
                 />
 
                 <Select
+                  searchable
+                  clearable
                   placeholder="Chọn phường/xã"
                   label="Phường/xã"
                   radius={4}

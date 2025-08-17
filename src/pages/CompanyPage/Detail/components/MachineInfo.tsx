@@ -533,15 +533,17 @@ export default function MachineInfo() {
         <Title order={3}>Danh sách máy móc</Title>
         <Group>
           <Select
+            searchable
+            clearable
             placeholder="Loại máy"
             data={["Máy kéo", "Máy sấy", "Xe tải", "Thiết bị tưới"]}
-            clearable
             radius={4}
           />
           <Select
+            searchable
+            clearable
             placeholder="Trạng thái"
             data={["Hoạt động", "Bảo trì", "Chờ bàn giao"]}
-            clearable
             radius={4}
           />
         </Group>

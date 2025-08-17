@@ -219,6 +219,7 @@ const PlantManagementSeedPage = () => {
       <Group>
         <Select
           searchable
+          clearable
           radius={4}
           leftSection={<IconHome size={18} />}
           placeholder="Nhà cung cấp"
@@ -233,6 +234,7 @@ const PlantManagementSeedPage = () => {
         />
         <Select
           searchable
+          clearable
           radius={4}
           leftSection={<IconWorld size={18} />}
           placeholder="Xuất xứ"

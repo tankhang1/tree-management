@@ -370,6 +370,8 @@ const OrderManagementQuickPage = () => {
                       </Text>
                       <Select
                         w={120}
+                        searchable
+                        clearable
                         radius={4}
                         placeholder="Quy cách"
                         data={product.specifications}

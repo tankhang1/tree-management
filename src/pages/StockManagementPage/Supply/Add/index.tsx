@@ -438,6 +438,8 @@ const StockManagementIOPage = () => {
                   </Group>
                 </Input.Wrapper>
                 <Select
+                  searchable
+                  clearable
                   radius={4}
                   label="Loại máy móc thiết bị"
                   placeholder="Tìm kiếm loại máy móc thiết bị"

@@ -190,10 +190,17 @@ const AreaManagementCultivationMethodAddPage = () => {
             <Stack flex={2}>
               <Group align="flex-end">
                 <Select
+                  searchable
+                  clearable
                   label="Nhóm cây trồng"
                   placeholder="Nhóm cây trồng"
                   radius={4}
                   flex={1}
+                  data={[
+                    { value: "fruit", label: "Cây ăn trái" },
+                    { value: "vegetable", label: "Cây rau" },
+                    { value: "herb", label: "Cây thuốc" },
+                  ]}
                 />
                 <Button radius={4}>Thêm mới</Button>
               </Group>

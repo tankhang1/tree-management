@@ -248,6 +248,8 @@ const DebtManagementPayableAddPage = () => {
                     radius={4}
                   />
                   <Select
+                    searchable
+                    clearable
                     label="Phương thức thanh toán"
                     placeholder="Nhập phương thức thanh toán"
                     radius={4}

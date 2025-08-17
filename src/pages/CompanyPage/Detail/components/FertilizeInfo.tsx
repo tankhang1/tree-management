@@ -196,9 +196,10 @@ export default function FertilizerInfo() {
       <Title order={3}>Danh sách phân bón</Title>
       <Group wrap="wrap">
         <Select
+          searchable
+          clearable
           placeholder="Lọc theo loại"
           data={["Vô cơ", "Hữu cơ", "Vi sinh", "Khoáng hữu cơ"]}
-          clearable
           value={kind}
           onChange={(v) => setKind((v as Fertilizer["kind"]) ?? null)}
           radius={4}

@@ -75,6 +75,8 @@ const AddMachineForm = ({ onFilter }: TAddMachineForm) => {
           </Button>
         </Group>
         <Select
+          searchable
+          clearable
           label="Máy móc"
           placeholder="Chọn máy"
           data={machineOptions}
@@ -97,6 +99,8 @@ const AddMachineForm = ({ onFilter }: TAddMachineForm) => {
         {form.getValues().type === "xuất" && (
           <Stack gap={"xs"}>
             <Select
+              searchable
+              clearable
               label="Kho xuất hàng"
               data={["Kho A", "Kho B"]}
               radius={4}
@@ -112,6 +116,8 @@ const AddMachineForm = ({ onFilter }: TAddMachineForm) => {
         )}
         {form.getValues().type === "nhập" && (
           <Select
+            searchable
+            clearable
             label="Kho nhập hàng"
             data={["Kho A", "Kho B"]}
             radius={4}
@@ -120,6 +126,8 @@ const AddMachineForm = ({ onFilter }: TAddMachineForm) => {
         )}
         {form.getValues().type === "huỷ" && (
           <Select
+            searchable
+            clearable
             label="Kho xuất hàng"
             data={["Kho A", "Kho B"]}
             radius={4}

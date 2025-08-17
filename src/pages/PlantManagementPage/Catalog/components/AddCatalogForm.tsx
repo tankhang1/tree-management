@@ -71,6 +71,8 @@ const AddCatalogForm = () => {
           {...form.getInputProps("icc_code")}
         />
         <Select
+          searchable
+          clearable
           label="Nhóm cây"
           placeholder="Chọn nhóm cây"
           data={groupTreeOptions}

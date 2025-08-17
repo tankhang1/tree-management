@@ -279,6 +279,8 @@ const ConfirmStep = (props: ConfirmPlantingProps) => {
                       <Stack gap={"xs"}>
                         <Group flex={2} align="flex-end">
                           <Select
+                            searchable
+                            clearable
                             label="Hạt giống"
                             placeholder="Chọn hạt giống"
                             radius={4}
@@ -392,6 +394,8 @@ const ConfirmStep = (props: ConfirmPlantingProps) => {
 
                         <Group flex={2} align="flex-end">
                           <Select
+                            searchable
+                            clearable
                             label="Hạt giống"
                             placeholder="Chọn hạt giống"
                             radius={4}
@@ -603,6 +607,8 @@ const ConfirmStep = (props: ConfirmPlantingProps) => {
                       <Stack gap="xs" flex={2}>
                         <Group align="flex-end">
                           <Select
+                            searchable
+                            clearable
                             label="Hạt giống"
                             placeholder="Chọn hạt giống"
                             radius={4}
@@ -815,6 +821,8 @@ const ConfirmStep = (props: ConfirmPlantingProps) => {
                       <Stack gap="xs" flex={2}>
                         <Group align="flex-end">
                           <Select
+                            searchable
+                            clearable
                             label="Hạt giống"
                             placeholder="Chọn hạt giống"
                             radius={4}
@@ -1023,6 +1031,8 @@ const ConfirmStep = (props: ConfirmPlantingProps) => {
                       <Stack flex={2} gap={"xs"}>
                         <Group align="flex-end">
                           <Select
+                            searchable
+                            clearable
                             label="Hạt giống"
                             placeholder="Chọn hạt giống"
                             radius={4}
@@ -1143,6 +1153,8 @@ const ConfirmStep = (props: ConfirmPlantingProps) => {
                         </Group>
                         <Group align="flex-end">
                           <Select
+                            searchable
+                            clearable
                             label="Hạt giống"
                             placeholder="Chọn hạt giống"
                             radius={4}

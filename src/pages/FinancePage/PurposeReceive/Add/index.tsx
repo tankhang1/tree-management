@@ -306,6 +306,8 @@ const FinancePurposeReceiveAddPage = () => {
                         locale="vi"
                       />
                       <Select
+                        searchable
+                        clearable
                         label="Hình thức thu"
                         placeholder="Chọn hình thức"
                         data={["Tiền mặt", "Chuyển khoản"]}
@@ -444,6 +446,8 @@ const FinancePurposeReceiveAddPage = () => {
                       />
                       <DateTimePicker label="Ngày tạo chứng từ" radius={4} />
                       <Select
+                        searchable
+                        clearable
                         label="Hình thức thu"
                         placeholder="Chọn hình thức"
                         data={["Tiền mặt", "Chuyển khoản"]}

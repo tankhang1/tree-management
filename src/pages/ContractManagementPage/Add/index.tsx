@@ -212,6 +212,8 @@ const ContractManagementAddPage = () => {
                 radius={4}
               />
               <Select
+                searchable
+                clearable
                 label="Loại hợp đồng"
                 data={contractTypes}
                 value={form.type}
@@ -491,6 +493,8 @@ const ContractManagementAddPage = () => {
                           </Group>
                         </Input.Wrapper>
                         <Select
+                          searchable
+                          clearable
                           radius={4}
                           label="Loại máy móc thiết bị"
                           placeholder="Tìm kiếm loại máy móc thiết bị"
@@ -649,6 +653,8 @@ const ContractManagementAddPage = () => {
                           </Group>
                         </Input.Wrapper>
                         <Select
+                          searchable
+                          clearable
                           radius={4}
                           label="Loại máy móc thiết bị"
                           placeholder="Tìm kiếm loại máy móc thiết bị"

@@ -438,6 +438,8 @@ const PlanManagementMainAddPage = () => {
               {...form.getInputProps("name")}
             />
             <Select
+              searchable
+              clearable
               radius={4}
               label="Mùa vụ"
               placeholder="Mùa Xuân 2025"
@@ -454,6 +456,8 @@ const PlanManagementMainAddPage = () => {
                 <Card withBorder w={300} h={200}>
                   <Stack>
                     <Select
+                      searchable
+                      clearable
                       radius={4}
                       searchable
                       disabled
@@ -462,6 +466,8 @@ const PlanManagementMainAddPage = () => {
                       data={["Chu kì 1", "Chu kì 2"]}
                     />
                     <MultiSelect
+                      searchable
+                      clearable
                       radius={4}
                       label="Danh sách giai đoạn sinh trưởng"
                       placeholder="Chọn giai đoạn sinh trưởng"
@@ -474,6 +480,7 @@ const PlanManagementMainAddPage = () => {
                     <Select
                       radius={4}
                       searchable
+                      clearable
                       disabled
                       label="Tên chu kì sinh trưởng"
                       placeholder="Tên chu kì sinh trưởng"
@@ -481,6 +488,8 @@ const PlanManagementMainAddPage = () => {
                     />
                     <MultiSelect
                       radius={4}
+                      searchable
+                      clearable
                       label="Danh sách giai đoạn sinh trưởng"
                       placeholder="Chọn giai đoạn sinh trưởng"
                       data={["Giai đoạn 1", "Giai đoạn 2"]}

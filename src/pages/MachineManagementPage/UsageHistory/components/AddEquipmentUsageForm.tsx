@@ -67,6 +67,8 @@ const AddEquipmentUsageForm = () => {
         />
 
         <Select
+          searchable
+          clearable
           label="Mã máy"
           placeholder="Chọn mã máy"
           data={["MC001", "MC002", "MC003"]}
@@ -145,6 +147,9 @@ const AddEquipmentUsageForm = () => {
           />
         </Group>
         <Select
+          searchable
+          clearable
+          data={["Canh tác", "Bảo trì", "Vận chuyển"]}
           label="Lí do sử dụng"
           radius={4}
           {...form.getInputProps("purpose")}

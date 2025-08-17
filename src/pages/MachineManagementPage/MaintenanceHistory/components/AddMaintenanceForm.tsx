@@ -75,6 +75,8 @@ const AddMaintenanceForm = () => {
         />
 
         <Select
+          searchable
+          clearable
           label="Máy móc"
           placeholder="Chọn máy"
           data={machineOptions}
@@ -112,6 +114,8 @@ const AddMaintenanceForm = () => {
           </Button>
         </Group>
         <Select
+          searchable
+          clearable
           label="Lý do bảo trì"
           placeholder="Ví dụ: Thay nhớt, kiểm tra động cơ"
           {...form.getInputProps("reason")}

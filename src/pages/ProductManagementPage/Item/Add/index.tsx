@@ -392,6 +392,8 @@ const ProductManagementItemAddPage = () => {
                     </Stack>
                   ) : (
                     <Select
+                      searchable
+                      clearable
                       label="Loại nguyên vật liệu"
                       placeholder="Loại nguyên vật liệu"
                       radius={4}

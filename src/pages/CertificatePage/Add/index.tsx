@@ -141,6 +141,8 @@ export default function CertificateAddPageGroup() {
                   </Dropzone>
                 </Input.Wrapper>
                 <Select
+                  searchable
+                  clearable
                   label="Tên tổ chức cấp"
                   defaultValue="Tổ chức VietGAP"
                   required
@@ -401,6 +403,8 @@ export default function CertificateAddPageGroup() {
       >
         <Stack gap={"xs"}>
           <Select
+            searchable
+            clearable
             label="Nhóm cây trồng"
             radius={4}
             data={[

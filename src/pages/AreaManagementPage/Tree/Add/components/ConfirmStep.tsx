@@ -434,6 +434,7 @@ const ConfirmStep = ({
                                           data={trees.map((tree) => tree.code)}
                                           radius={4}
                                           searchable
+                                          clearable
                                           scrollAreaProps={{ mah: 300 }}
                                         />
                                         <Button
@@ -596,6 +597,7 @@ const ConfirmStep = ({
                                           data={trees.map((tree) => tree.code)}
                                           radius={4}
                                           searchable
+                                          clearable
                                           scrollAreaProps={{ mah: 300 }}
                                         />
                                         <Button

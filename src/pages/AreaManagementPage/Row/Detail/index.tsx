@@ -397,11 +397,12 @@ const AreaManagementRowDetailPage = () => {
                           <Menu.Dropdown>
                             <Stack gap="xs">
                               <Select
+                                searchable
+                                clearable
                                 placeholder="Cây trồng"
                                 label="Cây trồng"
                                 data={trees.map((tree) => tree.code)}
                                 radius={4}
-                                searchable
                                 scrollAreaProps={{ mah: 300 }}
                               />
                               <Button variant="outline" fullWidth radius={4}>

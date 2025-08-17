@@ -88,6 +88,8 @@ const AddDisposalForm = () => {
         />
 
         <Select
+          searchable
+          clearable
           label="Phân bón cần huỷ"
           placeholder="Chọn loại phân bón"
           data={fertilizerOptions}
@@ -141,6 +143,8 @@ const AddDisposalForm = () => {
           />
         </Group>
         <Select
+          searchable
+          clearable
           label="Lý do huỷ"
           placeholder="Chọn lý do"
           data={disposalReasons}

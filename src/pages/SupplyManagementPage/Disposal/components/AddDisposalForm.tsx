@@ -85,6 +85,8 @@ const AddDisposalForm = () => {
         />
 
         <Select
+          searchable
+          clearable
           label="Vật tư cần thanh lý"
           placeholder="Chọn vật tư"
           data={materialOptions}
@@ -115,6 +117,8 @@ const AddDisposalForm = () => {
         </Group>
 
         <Select
+          searchable
+          clearable
           label="Lý do thanh lý"
           placeholder="Chọn lý do"
           data={disposalReasons}

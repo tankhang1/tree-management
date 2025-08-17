@@ -436,6 +436,8 @@ const ContractInfo = () => {
           radius={4}
         />
         <Select
+          searchable
+          clearable
           radius={4}
           leftSection={<IconContract size={18} />}
           placeholder="Loại hợp đồng"
@@ -443,6 +445,8 @@ const ContractInfo = () => {
         />
         <Select
           radius={4}
+          searchable
+          clearable
           leftSection={<IconTypeface size={18} />}
           placeholder="Trạng thái"
           data={["Chờ duyệt", "Đang hiệu lực", "Hết hiệu lực"]}

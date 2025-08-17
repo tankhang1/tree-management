@@ -108,10 +108,13 @@ const SeasonManagementCycleAddPage = () => {
           {active === 0 && (
             <Stack gap={"xs"}>
               <Select
+                searchable
+                clearable
                 label="Nhóm cây cây trồng"
                 placeholder="Nhóm cây trồng"
                 {...form.getInputProps("varietyId")}
                 radius={4}
+                data={["Sầu riêng", "Xoài", "Chuối"]}
               />
 
               <CatalogList />

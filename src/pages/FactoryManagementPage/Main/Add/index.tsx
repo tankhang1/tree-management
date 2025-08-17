@@ -94,6 +94,8 @@ const FactoryManagementMainAddPage = () => {
             radius={4}
           />
           <Select
+            searchable
+            clearable
             label="Người quản lý"
             {...form.getInputProps("manager")}
             radius={4}
@@ -116,6 +118,8 @@ const FactoryManagementMainAddPage = () => {
             locale="vi"
           />
           <Select
+            searchable
+            clearable
             label="Trạng thái"
             data={[
               { value: "Đang hoạt động", label: "Đang hoạt động" },

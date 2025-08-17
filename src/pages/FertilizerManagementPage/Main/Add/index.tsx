@@ -89,6 +89,8 @@ const FertilizerManagementMainAddPage = () => {
                 {...form.getInputProps("name")}
               />
               <Select
+                searchable
+                clearable
                 label="Loại phân bón"
                 placeholder="Loại phân bón"
                 radius={4}

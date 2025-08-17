@@ -42,6 +42,8 @@ const AddBankModal = ({ onClose, onSubmit }: AddBankModalProps) => {
     <Stack gap="md">
       <BankSelect />
       <Select
+        searchable
+        clearable
         label="Chi nhánh"
         placeholder="Chi nhánh"
         data={[
@@ -86,6 +88,8 @@ const AddBankModal = ({ onClose, onSubmit }: AddBankModalProps) => {
         radius={4}
       />
       <Select
+        searchable
+        clearable
         label="Trạng thái"
         placeholder="Trạng thái"
         data={[

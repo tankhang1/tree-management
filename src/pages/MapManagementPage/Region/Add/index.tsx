@@ -189,12 +189,16 @@ const MapManagementAddRegionPage = () => {
               {...form.getInputProps("region.area")}
             />
             <Select
+              searchable
+              clearable
               radius={4}
               label="Loại đất"
               data={["Đất thịt", "Đất cát", "Đất phù sa"]}
               {...form.getInputProps("region.soilType")}
             />
             <MultiSelect
+              searchable
+              clearable
               radius={4}
               label="Thông tin địa hình"
               data={["Cao", "Thấp", "Dốc", "Trũng"]}
@@ -301,12 +305,16 @@ const MapManagementAddRegionPage = () => {
                   />
 
                   <Select
+                    searchable
+                    clearable
                     radius={4}
                     label="Loại đất"
                     data={["Đất thịt", "Đất cát", "Đất phù sa"]}
                     {...form.getInputProps(`areas.${areaIdx}.soilType`)}
                   />
                   <MultiSelect
+                    searchable
+                    clearable
                     radius={4}
                     label="Địa hình"
                     data={["Cao", "Thấp", "Trũng"]}

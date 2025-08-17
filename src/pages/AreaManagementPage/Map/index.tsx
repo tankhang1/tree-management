@@ -45,11 +45,66 @@ const AreaManagementMapPage = () => {
       >
         <Stack w={300}>
           <Title order={4}>Tìm kiếm cây trồng</Title>
-          <Select label="Vùng" placeholder="Vùng" radius={4} clearable />
-          <Select label="Khu vực" placeholder="Khu vực" radius={4} clearable />
-          <Select label="Lô" placeholder="Lô" radius={4} clearable />
-          <Select label="Hàng" placeholder="Hàng" radius={4} clearable />
-          <Select label="Cây" placeholder="Cây" radius={4} clearable />
+          <Select
+            searchable
+            clearable
+            label="Vùng"
+            placeholder="Vùng"
+            radius={4}
+            data={[
+              { value: "north", label: "Miền Bắc" },
+              { value: "central", label: "Miền Trung" },
+              { value: "south", label: "Miền Nam" },
+            ]}
+          />
+          <Select
+            label="Khu vực"
+            placeholder="Khu vực"
+            radius={4}
+            searchable
+            clearable
+            data={[
+              { value: "area1", label: "Khu vực 1" },
+              { value: "area2", label: "Khu vực 2" },
+              { value: "area3", label: "Khu vực 3" },
+            ]}
+          />
+          <Select
+            label="Lô"
+            placeholder="Lô"
+            radius={4}
+            searchable
+            clearable
+            data={[
+              { value: "lot1", label: "Lô 1" },
+              { value: "lot2", label: "Lô 2" },
+              { value: "lot3", label: "Lô 3" },
+            ]}
+          />
+          <Select
+            label="Hàng"
+            placeholder="Hàng"
+            radius={4}
+            searchable
+            clearable
+            data={[
+              { value: "row1", label: "Hàng 1" },
+              { value: "row2", label: "Hàng 2" },
+              { value: "row3", label: "Hàng 3" },
+            ]}
+          />
+          <Select
+            label="Cây"
+            placeholder="Cây"
+            radius={4}
+            searchable
+            clearable
+            data={[
+              { value: "plant1", label: "Cây 1" },
+              { value: "plant2", label: "Cây 2" },
+              { value: "plant3", label: "Cây 3" },
+            ]}
+          />
           <Button radius={4} leftSection={<IconSearch size={18} />}>
             Tìm kiếm
           </Button>

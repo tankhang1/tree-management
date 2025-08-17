@@ -545,6 +545,8 @@ const CompanyAddPage = () => {
                   </Grid.Col>
                   <Grid.Col span={6}>
                     <Select
+                      searchable
+                      clearable
                       label="Chi nhánh (nếu có)"
                       radius={4}
                       data={[

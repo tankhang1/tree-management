@@ -292,6 +292,7 @@ export default function PesticideInfo() {
             { value: "TYPE03", label: TYPE_LABEL.TYPE03 },
             { value: "TYPE04", label: TYPE_LABEL.TYPE04 },
           ]}
+          searchable
           clearable
           value={type}
           onChange={(v) => setType((v as Pesticide["type"]) ?? null)}

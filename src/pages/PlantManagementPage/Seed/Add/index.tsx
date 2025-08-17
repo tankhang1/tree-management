@@ -98,6 +98,8 @@ const PlantManagementSeedAddPage = () => {
             <VendorList />
 
             <Select
+              searchable
+              clearable
               label="Xuất xứ (quốc gia)"
               placeholder="Việt Nam"
               data={["Việt Nam", "Thái Lan", "Malaysia", "Philippines"]}

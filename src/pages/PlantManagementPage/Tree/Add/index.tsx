@@ -104,6 +104,8 @@ const PlantManagementTreeAddPage = () => {
                 radius={4}
               />
               <Select
+                searchable
+                clearable
                 label="Nhóm cây trồng"
                 placeholder="Chọn nhóm cây trồng"
                 radius={4}
@@ -203,9 +205,12 @@ const PlantManagementTreeAddPage = () => {
         {activeStep === 1 && (
           <Stack mt={"md"}>
             <Select
+              searchable
+              clearable
               label="Hạt giống cây"
               placeholder="Chọn giống cây"
               radius={4}
+              data={["SR-RI6", "SR-RI4", "SR-RI3", "SR-RI8", "SR-RI9"]}
             />
             <Scrollable h={450}>
               <Group wrap="nowrap" p={"xs"}>
@@ -278,6 +283,8 @@ const PlantManagementTreeAddPage = () => {
         {activeStep === 2 && (
           <Stack mt="md" gap="xs">
             <Select
+              searchable
+              clearable
               label="Đơn vị tính toán khi thu hoạch"
               placeholder="Chọn phương pháp"
               data={["Theo quả", "Kg", "Tấn", "Thùng / Sọt"]}
@@ -294,8 +301,16 @@ const PlantManagementTreeAddPage = () => {
             {form.values.growthCycles.map((cycle, index) => (
               <Card key={index} withBorder radius="md" shadow="xs" p="md">
                 <Stack gap="xs">
-                  <Select label={"Chu kì sinh trưởng"} radius={4} />
+                  <Select
+                    searchable
+                    clearable
+                    label={"Chu kì sinh trưởng"}
+                    data={["Ngắn hạn", "Trung hạn", "Dài hạn"]}
+                    radius={4}
+                  />
                   <MultiSelect
+                    searchable
+                    clearable
                     label="Giai đoạn sinh trưởng"
                     data={[
                       "Gieo trồng",

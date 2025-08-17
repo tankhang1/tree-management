@@ -63,6 +63,8 @@ const AddVarietyForm = () => {
         />
 
         <Select
+          searchable
+          clearable
           label="Tên cây"
           placeholder="Chọn loại cây"
           radius={4}

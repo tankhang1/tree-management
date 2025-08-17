@@ -165,8 +165,16 @@ const AreaManagementAddZonePage = () => {
         {/* BƯỚC 1 */}
         <Stepper.Step label="Bước 1" description="Thông tin">
           <Stack gap="xs" mt="md">
-            <Select label="Đơn vị quản lý" radius={4} value={form.orgUnit} />
             <Select
+              searchable
+              clearable
+              label="Đơn vị quản lý"
+              radius={4}
+              value={form.orgUnit}
+            />
+            <Select
+              searchable
+              clearable
               label="Nhân viên phụ trách"
               radius={4}
               value={form.employee}
@@ -222,17 +230,23 @@ const AreaManagementAddZonePage = () => {
                   />
                 </Stack>
                 <Select
+                  searchable
+                  clearable
                   label="Phương pháp tưới tiêu"
                   data={["Tưới nhỏ giọt", "Tưới phun mưa", "Tưới tràn"]}
                   radius={4}
                 />
                 <Select
+                  searchable
+                  clearable
                   label="Phương pháp canh tác"
                   data={["Hữu cơ", "Truyền thống", "Công nghệ cao"]}
                   radius={4}
                 />
                 <Select
                   radius={4}
+                  searchable
+                  clearable
                   label="Nhân viên quản lý"
                   data={["Nhân viên A", "Nhân viên B"]}
                 />
@@ -259,16 +273,22 @@ const AreaManagementAddZonePage = () => {
                   />
                 </Stack>
                 <Select
+                  searchable
+                  clearable
                   label="Phương pháp tưới tiêu"
                   data={["Tưới nhỏ giọt", "Tưới phun mưa", "Tưới tràn"]}
                   radius={4}
                 />
                 <Select
+                  searchable
+                  clearable
                   label="Phương pháp canh tác"
                   data={["Hữu cơ", "Truyền thống", "Công nghệ cao"]}
                   radius={4}
                 />
                 <Select
+                  searchable
+                  clearable
                   radius={4}
                   label="Nhân viên quản lý"
                   data={["Nhân viên A", "Nhân viên B"]}
@@ -296,17 +316,23 @@ const AreaManagementAddZonePage = () => {
                   />
                 </Stack>
                 <Select
+                  searchable
+                  clearable
                   label="Phương pháp tưới tiêu"
                   data={["Tưới nhỏ giọt", "Tưới phun mưa", "Tưới tràn"]}
                   radius={4}
                 />
                 <Select
+                  searchable
+                  clearable
                   label="Phương pháp canh tác"
                   data={["Hữu cơ", "Truyền thống", "Công nghệ cao"]}
                   radius={4}
                 />
                 <Select
                   radius={4}
+                  searchable
+                  clearable
                   label="Nhân viên quản lý"
                   data={["Nhân viên A", "Nhân viên B"]}
                 />

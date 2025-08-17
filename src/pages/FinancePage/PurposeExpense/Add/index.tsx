@@ -310,6 +310,8 @@ const FinancePurposeExpenseAddPage = () => {
                         locale="vi"
                       />
                       <Select
+                        searchable
+                        clearable
                         label="Hình thức chi"
                         placeholder="Chọn hình thức"
                         data={["Tiền mặt", "Chuyển khoản"]}
@@ -448,6 +450,8 @@ const FinancePurposeExpenseAddPage = () => {
                       />
                       <DateTimePicker label="Ngày tạo chứng từ" radius={4} />
                       <Select
+                        searchable
+                        clearable
                         label="Hình thức chi"
                         placeholder="Chọn hình thức"
                         data={["Tiền mặt", "Chuyển khoản"]}

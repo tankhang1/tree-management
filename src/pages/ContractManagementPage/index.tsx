@@ -163,12 +163,16 @@ const ContractManagementPage = () => {
           radius={4}
         />
         <Select
+          searchable
+          clearable
           radius={4}
           leftSection={<IconContract size={18} />}
           placeholder="Loại hợp đồng"
           data={["Thu", "Mua"]}
         />
         <Select
+          searchable
+          clearable
           radius={4}
           leftSection={<IconTypeface size={18} />}
           placeholder="Trạng thái"

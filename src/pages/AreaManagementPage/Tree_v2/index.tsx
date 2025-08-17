@@ -212,6 +212,7 @@ const AreaManagementTreev2Page = () => {
       <Group>
         <Select
           searchable
+          clearable
           radius={4}
           leftSection={<IconSearch size={18} />}
           placeholder="Tìm kiếm vùng"
@@ -219,6 +220,7 @@ const AreaManagementTreev2Page = () => {
         />
         <Select
           searchable
+          clearable
           radius={4}
           leftSection={<IconChartAreaFilled size={18} />}
           placeholder="Tìm kiếm khu vực"
@@ -226,6 +228,7 @@ const AreaManagementTreev2Page = () => {
         />
         <Select
           searchable
+          clearable
           radius={4}
           leftSection={<IconLivePhoto size={18} />}
           placeholder="Tìm kiếm lô"

@@ -111,9 +111,43 @@ const HarvestManagementReportPage = () => {
             locale="vi"
             w={300}
           />
-          <Select label="Vùng Trồng" placeholder="Vùng Trồng" radius={4} />
-          <Select label="Khu vực" placeholder="Khu vực" radius={4} clearable />
-          <Select label="Lô" placeholder="Lô" radius={4} clearable />
+          <Select
+            label="Vùng Trồng"
+            placeholder="Vùng Trồng"
+            radius={4}
+            searchable
+            clearable
+            data={[
+              { value: "vung_a", label: "Vùng A" },
+              { value: "vung_b", label: "Vùng B" },
+              { value: "vung_c", label: "Vùng C" },
+            ]}
+          />
+          <Select
+            label="Khu vực"
+            placeholder="Khu vực"
+            radius={4}
+            searchable
+            clearable
+            data={[
+              { value: "khu_a", label: "Khu A" },
+              { value: "khu_b", label: "Khu B" },
+              { value: "khu_c", label: "Khu C" },
+            ]}
+          />
+          <Select
+            label="Lô"
+            placeholder="Lô"
+            radius={4}
+            searchable
+            clearable
+            data={[
+              { value: "lo_1", label: "Lô 1" },
+              { value: "lo_2", label: "Lô 2" },
+              { value: "lo_3", label: "Lô 3" },
+              { value: "lo_4", label: "Lô 4" },
+            ]}
+          />
           <Button leftSection={<IconFileExcel size={18} />} radius={4}>
             Xuất File
           </Button>

@@ -227,6 +227,7 @@ const MapManagementRegionPage = () => {
       <Group>
         <Select
           searchable
+          clearable
           radius={4}
           leftSection={<IconSandbox size={18} />}
           placeholder="Chọn loại đất"
@@ -244,6 +245,7 @@ const MapManagementRegionPage = () => {
         />
         <Select
           searchable
+          clearable
           radius={4}
           multiple
           leftSection={<IconBrandMetabrainz size={18} />}

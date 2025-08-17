@@ -962,12 +962,16 @@ const AreaManagementAddRegionPage = () => {
                     <Accordion.Panel>
                       <Stack gap="xs" mt="sm">
                         <Select
+                          searchable
+                          clearable
                           label="Phương pháp canh tác"
                           data={["Xen canh", "Truyền thống", "Công nghệ cao"]}
                           radius={4}
                           value="Truyền thống"
                         />
                         <Select
+                          searchable
+                          clearable
                           label="Phương pháp tưới tiêu"
                           data={["Tưới nhỏ giọt", "Tưới phun mưa", "Tưới tràn"]}
                           radius={4}
@@ -1007,6 +1011,8 @@ const AreaManagementAddRegionPage = () => {
                       <Stack gap="xs">
                         {/* Phương pháp canh tác */}
                         <Select
+                          searchable
+                          clearable
                           label="Phương pháp canh tác"
                           data={["Xen canh", "Truyền thống", "Công nghệ cao"]}
                           radius={4}
@@ -1021,11 +1027,15 @@ const AreaManagementAddRegionPage = () => {
                         <Card>
                           <Stack>
                             <Select
+                              searchable
+                              clearable
                               label="Nhóm cây trồng"
                               data={["Cây ăn trái", "Cây lương thực"]}
                               radius={4}
                             />
                             <Select
+                              searchable
+                              clearable
                               label="Phương pháp tưới tiêu"
                               data={[
                                 "Tưới nhỏ giọt",
@@ -1092,12 +1102,16 @@ const AreaManagementAddRegionPage = () => {
                 <Accordion.Panel>
                   <Stack gap="xs" mt="sm">
                     <Select
+                      searchable
+                      clearable
                       label="Phương pháp canh tác"
                       data={["Xen canh", "Truyền thống", "Công nghệ cao"]}
                       radius={4}
                       value="Truyền thống"
                     />
                     <Select
+                      searchable
+                      clearable
                       label="Phương pháp tưới tiêu"
                       data={["Tưới nhỏ giọt", "Tưới phun mưa", "Tưới tràn"]}
                       radius={4}
@@ -1141,12 +1155,16 @@ const AreaManagementAddRegionPage = () => {
                 <Accordion.Panel>
                   <Stack gap="xs" mt="sm">
                     <Select
+                      searchable
+                      clearable
                       label="Phương pháp canh tác"
                       data={["Xen canh", "Truyền thống", "Công nghệ cao"]}
                       radius={4}
                       value="Truyền thống"
                     />
                     <Select
+                      searchable
+                      clearable
                       label="Phương pháp tưới tiêu"
                       data={["Tưới nhỏ giọt", "Tưới phun mưa", "Tưới tràn"]}
                       radius={4}
@@ -1189,12 +1207,16 @@ const AreaManagementAddRegionPage = () => {
               <Stack gap="xs">
                 {/* Phương pháp canh tác */}
                 <Select
+                  searchable
+                  clearable
                   label="Phương pháp canh tác"
                   data={["Xen canh", "Truyền thống", "Công nghệ cao"]}
                   radius={4}
                   value={"Truyền thống"}
                 />
                 <Select
+                  searchable
+                  clearable
                   label="Phương pháp tưới tiêu"
                   data={["Tưới nhỏ giọt", "Tưới phun mưa", "Tưới tràn"]}
                   radius={4}
@@ -1736,6 +1758,8 @@ const AreaManagementAddRegionPage = () => {
       >
         <Stack gap={"xs"}>
           <Select
+            searchable
+            clearable
             label="Nhóm cây trồng"
             data={[
               "Cây ăn trái",

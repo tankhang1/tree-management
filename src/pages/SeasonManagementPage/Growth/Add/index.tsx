@@ -239,12 +239,13 @@ const SeasonManagementGrowthAddPage = () => {
           <Stack>
             {/**Dạng drag & drop và trình bày như cột thư mục */}
             <Select
+              searchable
+              clearable
               label="Chu kỳ sinh trưởng"
               data={growthCycleOptions}
               value={currentCycle}
               onChange={setCurrentCycle}
               placeholder="Chọn 1 chu kỳ"
-              clearable
               radius={4}
             />
 
@@ -334,6 +335,8 @@ const SeasonManagementGrowthAddPage = () => {
       >
         <Stack gap={"xs"}>
           <Select
+            searchable
+            clearable
             label="Nhóm cây"
             placeholder="Chọn nhóm cây"
             data={plantGroups}

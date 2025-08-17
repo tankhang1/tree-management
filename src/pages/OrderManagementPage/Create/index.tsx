@@ -335,6 +335,8 @@ const OrderManagementCreatePage = () => {
                     </Stack>
                   ) : (
                     <Select
+                      searchable
+                      clearable
                       label="Loại nguyên vật liệu"
                       placeholder="Loại nguyên vật liệu"
                       radius={4}
@@ -527,6 +529,8 @@ const OrderManagementCreatePage = () => {
                                   <NumberInput label="Đơn giá" radius={4} />
                                   <NumberInput label="Số lượng" radius={4} />
                                   <Select
+                                    searchable
+                                    clearable
                                     label="Đơn vị"
                                     radius={4}
                                     data={[
@@ -584,6 +588,8 @@ const OrderManagementCreatePage = () => {
                                   <NumberInput label="Đơn giá" radius={4} />
                                   <NumberInput label="Số lượng" radius={4} />
                                   <Select
+                                    searchable
+                                    clearable
                                     label="Quy cách"
                                     radius={4}
                                     data={[
@@ -641,10 +647,21 @@ const OrderManagementCreatePage = () => {
             <Stack gap="md">
               <Stack>
                 <Select
-                  label="Hợp đồng liên quan"
                   searchable
+                  clearable
+                  label="Hợp đồng liên quan"
                   placeholder="(Tuỳ chọn)"
                   radius={4}
+                  data={[
+                    {
+                      value: "contract1",
+                      label: "HĐMB-001 - Hợp đồng mua bán thiết bị tưới",
+                    },
+                    {
+                      value: "contract2",
+                      label: "HĐMB-002 - Hợp đồng cung cấp giống cây trồng",
+                    },
+                  ]}
                 />
                 <Scrollable h={250}>
                   <Group p={"xs"}>

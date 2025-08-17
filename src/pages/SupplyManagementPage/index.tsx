@@ -108,6 +108,7 @@ const SupplyManagementPage = () => {
       <Group>
         <Select
           searchable
+          clearable
           radius={4}
           placeholder="Chọn loại vật tư"
           data={supplyTypes.map((type) => type.type)}

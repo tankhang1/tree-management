@@ -221,6 +221,7 @@ const MapManagementAreaPage = () => {
       <Group>
         <Select
           searchable
+          clearable
           radius={4}
           leftSection={<IconTree size={18} />}
           placeholder="Chọn cây trồng chính"
@@ -237,6 +238,7 @@ const MapManagementAreaPage = () => {
         />
         <Select
           searchable
+          clearable
           radius={4}
           leftSection={<IconSandbox size={18} />}
           placeholder="Chọn loại đất"
@@ -254,6 +256,7 @@ const MapManagementAreaPage = () => {
         />
         <Select
           searchable
+          clearable
           radius={4}
           multiple
           leftSection={<IconBrandMetabrainz size={18} />}
