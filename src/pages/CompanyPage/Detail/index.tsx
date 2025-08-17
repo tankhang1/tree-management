@@ -6,6 +6,8 @@ import { useNavigate } from "react-router-dom";
 import ContractInfo from "./components/ContractInfo";
 import MachineInfo from "./components/MachineInfo";
 import SupplyInfo from "./components/SupplyInfo";
+import PesticideInfo from "./components/PesticideInfo";
+import FertilizerInfo from "./components/FertilizeInfo";
 
 export default function CompanyDetailPage() {
   const navigate = useNavigate();
@@ -74,6 +76,8 @@ export default function CompanyDetailPage() {
         {tab === "contract" && <ContractInfo />}
         {tab === "machine" && <MachineInfo />}
         {tab === "supply" && <SupplyInfo />}
+        {tab === "pesticide" && <PesticideInfo />}
+        {tab === "fertilizer" && <FertilizerInfo />}
       </Stack>
     </Paper>
   );
