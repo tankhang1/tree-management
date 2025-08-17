@@ -937,14 +937,22 @@ export default function MVFarmSearch() {
                     Thông tin vùng trồng
                   </Title>
                 </Group>
-                <MultiSelect
-                  radius={4}
-                  searchable
-                  clearable
-                  label="Cây trồng"
-                  data={["Sầu Riêng", "Xoài"]}
-                  styles={{ dropdown: { zIndex: 1000 } }}
-                />
+                <Group grow>
+                  <MultiSelect
+                    radius={4}
+                    searchable
+                    clearable
+                    label="Cây trồng"
+                    data={["Sầu Riêng", "Xoài"]}
+                    styles={{ dropdown: { zIndex: 1000 } }}
+                  />
+                  <MultiSelect
+                    radius={4}
+                    label="Giấy chứng nhận"
+                    placeholder="Giấy chứng nhận"
+                    data={["VietGAP", "GlobalGAP"]}
+                  />
+                </Group>
                 <Group grow>
                   <MultiSelect
                     searchable

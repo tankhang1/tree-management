@@ -15,9 +15,11 @@ import {
   IconChevronLeft,
   IconMap2,
   IconMapPin,
+  IconQrcode,
   IconRotateClockwise2,
   IconSearch,
   IconSparkles,
+  IconTree,
 } from "@tabler/icons-react";
 import { useState } from "react";
 import MapBox from "../../AreaManagementPage/Region/Detail/components/Map";
@@ -192,7 +194,16 @@ const MapManagementMapPage = () => {
                 </Text>
               </Group>
               <Group gap={8}>
-                <IconMapPin size={18} color="#388E3C" />
+                <IconTree size={18} color="#388E3C" />
+                <Text size="sm" c="gray.6" fw={500} style={{ minWidth: 140 }}>
+                  Giống cây trồng:
+                </Text>
+                <Text size="sm" fw={600} c="brand.7">
+                  Giống Ri6
+                </Text>
+              </Group>
+              <Group gap={8}>
+                <IconQrcode size={18} color="#388E3C" />
                 <Text size="sm" c="gray.6" fw={500} style={{ minWidth: 140 }}>
                   Mã địa chính:
                 </Text>
