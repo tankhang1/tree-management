@@ -1,4 +1,12 @@
-import { ActionIcon, Button, Group, Menu, Stack, Title } from "@mantine/core";
+import {
+  ActionIcon,
+  Button,
+  Group,
+  Menu,
+  Select,
+  Stack,
+  Title,
+} from "@mantine/core";
 import {
   IconDotsVertical,
   IconEdit,
@@ -14,27 +22,20 @@ type SupplyType = {
   id: string; // Mã vật tư
   name: string; // Tên vật tư
   supplier: string; // Nhà cung cấp
+  type: string;
 };
 export const supplyTypes: SupplyType[] = [
-  {
-    id: "VT001",
-    name: "Phân NPK 16-16-8",
-    supplier: "Công ty Phân bón Miền Nam",
-  },
-  {
-    id: "VT002",
-    name: "Thuốc trừ sâu SuperKiller",
-    supplier: "Công ty Nông dược Việt Á",
-  },
   {
     id: "VT003",
     name: "Bạt phủ nilon đen",
     supplier: "Cửa hàng Vật tư nông nghiệp Tân Phú",
+    type: "Vật tư nông nghiệp",
   },
   {
     id: "VT004",
     name: "Chai nhựa 500ml",
     supplier: "CTCP Bao bì An Phát",
+    type: "Vật tư đóng gói",
   },
 ];
 
@@ -49,6 +50,10 @@ const SupplyManagementPage = () => {
     {
       accessorKey: "name",
       header: "Tên vật tư",
+    },
+    {
+      accessorKey: "type",
+      header: "Loại vật tư",
     },
     {
       accessorKey: "supplier",
@@ -100,7 +105,14 @@ const SupplyManagementPage = () => {
           </Button>
         </Group>
       </Group>
-
+      <Group>
+        <Select
+          searchable
+          radius={4}
+          placeholder="Chọn loại vật tư"
+          data={supplyTypes.map((type) => type.type)}
+        />
+      </Group>
       <Table columns={supplyTypeColumns} data={supplyTypes} />
     </Stack>
   );

@@ -5,6 +5,7 @@ import {
   Button,
   Group,
   Menu,
+  MultiSelect,
   Select,
   Stack,
   Title,
@@ -158,13 +159,40 @@ const HRManagementEmployeePage = () => {
           radius={4}
         />
         <Select
+          searchable
           radius={4}
           leftSection={<IconHome size={18} />}
           placeholder="Chọn phòng ban"
-          data={["Bộ phân A"]}
+          data={[
+            "Phòng Nông Nghiệp",
+            "Phòng Kỹ Thuật",
+            "Phòng Nhân Sự",
+            "Phòng Kế Toán",
+            "Phòng Quản Lý",
+          ]}
         />
-        <Select radius={4} placeholder="Chọn vai trò" />
-        <Select radius={4} placeholder="Trạng thái" />
+        <Select
+          searchable
+          radius={4}
+          placeholder="Chọn vai trò"
+          data={[
+            "Kỹ sư canh tác",
+            "Giám sát hiện trường",
+            "Nhân viên hành chính",
+            "Kế toán",
+            "Quản lý",
+          ]}
+        />
+        <MultiSelect
+          searchable
+          radius={4}
+          placeholder="Trạng thái"
+          data={[
+            { value: "active", label: "Đang làm việc" },
+            { value: "inactive", label: "Nghỉ việc" },
+            { value: "probation", label: "Thử việc" },
+          ]}
+        />
       </Group>
       <Table columns={staffColumns} data={staffDataset} />
     </Stack>
