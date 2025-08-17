@@ -80,7 +80,6 @@ const CompanyPage = () => {
     { accessorKey: "email", header: "Email" },
     { accessorKey: "address", header: "Địa chỉ" },
     { accessorKey: "taxCode", header: "Mã số thuế" },
-    { accessorKey: "landCertificateNo", header: "Số sổ đỏ" },
     {
       accessorKey: "actions",
       header: "Tuỳ chọn",

@@ -659,9 +659,6 @@ export default function StockManagementAddDeliveryPage() {
                       <strong>Mã số thuế:</strong> {company.taxCode}
                     </Text>
                   )}
-                  <Text size="sm">
-                    <strong>Số sổ đỏ:</strong> {company.landCode}
-                  </Text>
                 </Stack>
               </Card>
             </SimpleGrid>

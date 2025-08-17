@@ -213,9 +213,6 @@ export function SelectableEnterpriseCards({
                   <strong>Mã số thuế:</strong> {e.taxCode}
                 </Text>
               )}
-              <Text size="sm" style={{ color: "#555" }}>
-                <strong>Số sổ đỏ:</strong> {e.landCode}
-              </Text>
             </Stack>
           </Card>
         ))}
