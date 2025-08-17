@@ -29,7 +29,9 @@ import {
 import {
   IconBadge,
   IconBorderAll,
+  IconCalendar,
   IconCalendarClock,
+  IconCertificate,
   IconClockHour4,
   IconDotsVertical,
   IconEdit,
@@ -40,6 +42,7 @@ import {
   IconMap2,
   IconRotateClockwise2,
   IconSearch,
+  IconShieldCheck,
   IconSparkles,
   IconTimeline,
   IconTrash,
@@ -53,6 +56,7 @@ import {
   type Resource,
 } from "../../PlanManagementPage/Assign/Add/components/ConfirmStep";
 import { TreeDetailModal, type TreeDetail } from "./components/TreeDetailModal";
+import { InfoRow } from "../Region/Add";
 
 // ---------------- Types & mock data ----------------
 type TreeCrop = {
@@ -629,13 +633,11 @@ export default function MVFarmSearch() {
                 </Group>
 
                 <SimpleGrid cols={{ base: 1, sm: 2 }} spacing="sm">
-                  <Select
+                  <MultiSelect
                     radius={4}
-                    data={["V01", "V02", "V03"]}
-                    label="Mã định danh"
-                    searchable
-                    clearable
-                    styles={{ dropdown: { zIndex: 1000 } }}
+                    label="Giấy chứng nhận"
+                    placeholder="Giấy chứng nhận"
+                    data={["VietGAP", "GlobalGAP"]}
                   />
                   <Select
                     label="Khu vực canh tác"
@@ -890,7 +892,71 @@ export default function MVFarmSearch() {
                     </Box>
                   </Stack>
                 </Card>
+                <Card withBorder radius={4} shadow="sm" p="md">
+                  <Title order={5} mb="xs">
+                    🏅 Giấy chứng nhận
+                  </Title>
 
+                  <Group align="flex-start" gap="lg" wrap="nowrap">
+                    {/* Ảnh chứng nhận + dấu mộc */}
+                    <Tooltip label="Dấu chứng nhận VietGAP" withArrow>
+                      <Image
+                        w={"40%"}
+                        src="https://sutech.vn/wp-content/uploads/2021/09/logo-vietgap-chan-nuoi.jpg"
+                        alt="Dấu chứng nhận"
+                        radius="xl"
+                        style={{}}
+                      />
+                    </Tooltip>
+
+                    {/* Nội dung chi tiết */}
+                    <Stack gap="xs" style={{ flex: 1 }}>
+                      <Group justify="space-between">
+                        <Group gap={8}>
+                          <IconCertificate size={18} />
+                          <Title order={5} lh={1.2}>
+                            Chứng nhận VietGAP
+                          </Title>
+                        </Group>
+                        <Badge
+                          color="teal"
+                          variant="light"
+                          leftSection={<IconShieldCheck size={14} />}
+                        >
+                          Hiệu lực 3 năm
+                        </Badge>
+                      </Group>
+
+                      <Group gap="xs" wrap="wrap">
+                        <Badge variant="light">GCN-VG-2025-001</Badge>
+                        <Badge variant="outline">Tổ chức VietGAP</Badge>
+                        <Badge
+                          variant="outline"
+                          leftSection={<IconCalendar size={14} />}
+                        >
+                          Cấp ngày 08/01/2025
+                        </Badge>
+                      </Group>
+
+                      <Divider my={4} />
+
+                      <Stack gap={4}>
+                        <InfoRow
+                          label="Tên chứng nhận"
+                          value="Chứng nhận VietGAP"
+                        />
+                        <InfoRow label="Mã số" value="GCN-VG-2025-001" />
+                        <InfoRow label="Tổ chức cấp" value="Tổ chức VietGAP" />
+                        <InfoRow label="Ngày cấp" value="08/01/2025" />
+                        <InfoRow label="Thời hạn hiệu lực" value="3 năm" />
+                        <Text size="sm" c="dimmed">
+                          <strong>Định nghĩa:</strong> VietGAP là tiêu chuẩn sản
+                          xuất nông nghiệp tốt.
+                        </Text>
+                      </Stack>
+                    </Stack>
+                  </Group>
+                </Card>
                 <Card shadow="sm" radius={4} withBorder p="lg">
                   {/* Header */}
                   <Group justify="space-between" align="center">
