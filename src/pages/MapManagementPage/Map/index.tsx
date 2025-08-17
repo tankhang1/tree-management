@@ -85,11 +85,11 @@ const MapManagementMapPage = () => {
         {openDrawer ? (
           <Stack gap="sm">
             <Group gap={8}>
-              <ThemeIcon variant="light" color="green" radius="xl">
-                <IconLeaf size={18} />
+              <ThemeIcon variant="light" color="teal" radius="xl">
+                <IconMap2 size={18} />
               </ThemeIcon>
               <Title order={5} fw={600}>
-                Thông tin cây trồng
+                Thông tin tìm kiếm
               </Title>
             </Group>
             <SimpleGrid cols={{ base: 1, sm: 2 }} spacing="sm">
@@ -110,18 +110,6 @@ const MapManagementMapPage = () => {
                 styles={{ dropdown: { zIndex: 99999 } }}
               />
             </SimpleGrid>
-
-            <Divider my="xs" />
-
-            <Group gap={8}>
-              <ThemeIcon variant="light" color="teal" radius="xl">
-                <IconMap2 size={18} />
-              </ThemeIcon>
-              <Title order={5} fw={600}>
-                Thông tin vùng trồng
-              </Title>
-            </Group>
-
             <SimpleGrid cols={{ base: 1, sm: 2 }} spacing="sm">
               <Select
                 radius={4}
@@ -131,18 +119,7 @@ const MapManagementMapPage = () => {
                 clearable
                 styles={{ dropdown: { zIndex: 99999 } }}
               />
-              <Select
-                label="Khu vực canh tác"
-                placeholder="Chọn khu vực canh tác"
-                radius={4}
-                searchable
-                clearable
-                data={[
-                  "Khu vực canh tác Đồng Nai",
-                  "Khu vực canh tác Bình Dương",
-                ]}
-                styles={{ dropdown: { zIndex: 99999 } }}
-              />
+
               <MultiSelect
                 label="Vùng trồng"
                 clearable
