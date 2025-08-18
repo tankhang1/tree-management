@@ -2,12 +2,17 @@ import {
   ActionIcon,
   Badge,
   Button,
+  Card,
+  CloseButton,
   Group,
   Menu,
-  Select,
+  MultiSelect,
+  SimpleGrid,
   Stack,
   Text,
+  TextInput,
   Title,
+  Tooltip,
 } from "@mantine/core";
 import Table from "../../../components/Table";
 import type { MRT_ColumnDef } from "mantine-react-table";
@@ -17,11 +22,16 @@ import {
   IconEdit,
   IconEye,
   IconFileExcel,
+  IconMapPin,
+  IconRefresh,
   IconSandbox,
+  IconSearch,
   IconTrash,
+  IconX,
 } from "@tabler/icons-react";
 import { useNavigate } from "react-router-dom";
 import { PATH } from "../../../constants/path.constants";
+import { useState } from "react";
 type AreaZone = {
   id: string;
   code: string;
@@ -153,6 +163,19 @@ export const areaZoneData: AreaZone[] = [
 ];
 const MapManagementRegionPage = () => {
   const navigate = useNavigate();
+  const [keyword, setKeyword] = useState("");
+  const [soilTypes, setSoilTypes] = useState<string[]>([]);
+  const [terrains, setTerrains] = useState<string[]>([]);
+  const [provinces, setProvinces] = useState<string[]>([]);
+  const [wards, setWards] = useState<string[]>([]);
+
+  const clearAll = () => {
+    setKeyword("");
+    setSoilTypes([]);
+    setTerrains([]);
+    setProvinces([]);
+    setWards([]);
+  };
   const onRegionDetail = () => {
     navigate(PATH.MAP_REGION_DETAIL);
   };
@@ -251,188 +274,287 @@ const MapManagementRegionPage = () => {
           </Button>
         </Group>
       </Group>
-      <Group>
-        <Select
-          searchable
-          clearable
-          radius={4}
-          leftSection={<IconSandbox size={18} />}
-          placeholder="Chọn loại đất"
-          multiple
-          data={[
-            "Đất thịt",
-            "Đất phù sa",
-            "Đất cát",
-            "Đất sét",
-            "Đất đỏ bazan",
-            "Đất mùn",
-            "Đất kiềm",
-            "Đất chua",
-          ]}
-        />
-        <Select
-          searchable
-          clearable
-          radius={4}
-          multiple
-          leftSection={<IconBrandMetabrainz size={18} />}
-          placeholder="Chọn địa hình"
-          data={[
-            "Cao",
-            "Thấp",
-            "Dốc",
-            "Bằng phẳng",
-            "Trũng",
-            "Đồi núi",
-            "Đồng bằng",
-            "Ven sông",
-          ]}
-        />
-        <Select
-          searchable
-          clearable
-          radius={4}
-          multiple
-          placeholder="Tỉnh/Thành phố"
-          data={[
-            "Hà Nội",
-            "TP. Hồ Chí Minh",
-            "Đà Nẵng",
-            "Cần Thơ",
-            "Hải Phòng",
-            "Nha Trang",
-            "Bình Dương",
-            "Đồng Nai",
-            "Bà Rịa - Vũng Tàu",
-            "Quảng Ninh",
-            "Thanh Hóa",
-            "Nghệ An",
-            "Huế",
-            "Quảng Nam",
-            "Quảng Ngãi",
-            "Bắc Ninh",
-            "Bắc Giang",
-            "Lâm Đồng",
-            "Tiền Giang",
-            "Long An",
-            "Vĩnh Long",
-            "Sóc Trăng",
-            "Kiên Giang",
-            "Cà Mau",
-            "Bình Thuận",
-            "Phú Yên",
-            "Khánh Hòa",
-            "Tây Ninh",
-            "Trà Vinh",
-            "Bến Tre",
-            "Hậu Giang",
-            "Đắk Lắk",
-            "Đắk Nông",
-            "Gia Lai",
-            "Kon Tum",
-            "Hà Tĩnh",
-            "Quảng Bình",
-            "Quảng Trị",
-            "Thái Bình",
-            "Nam Định",
-            "Ninh Bình",
-            "Hòa Bình",
-            "Sơn La",
-            "Lai Châu",
-            "Điện Biên",
-            "Lào Cai",
-            "Yên Bái",
-            "Tuyên Quang",
-            "Phú Thọ",
-            "Vĩnh Phúc",
-            "Hà Nam",
-            "Hưng Yên",
-            "Hải Dương",
-            "Thái Nguyên",
-            "Bắc Kạn",
-            "Cao Bằng",
-            "Lạng Sơn",
-          ]}
-        />
-        <Select
-          clearable
-          radius={4}
-          searchable
-          placeholder="Phường/Xã"
-          data={[
-            "Phường Bến Nghé",
-            "Phường Bến Thành",
-            "Phường Nguyễn Thái Bình",
-            "Phường Phạm Ngũ Lão",
-            "Phường Tân Định",
-            "Phường Đa Kao",
-            "Phường 1 (Quận 3)",
-            "Phường 2 (Quận 3)",
-            "Phường 3 (Quận 3)",
-            "Phường 4 (Quận 3)",
-            "Phường 5 (Quận 3)",
-            "Phường 6 (Quận 3)",
-            "Phường 7 (Quận 3)",
-            "Phường 8 (Quận 3)",
-            "Phường 9 (Quận 3)",
-            "Phường 10 (Quận 3)",
-            "Phường 11 (Quận 3)",
-            "Phường 12 (Quận 3)",
-            "Xã Tân Phú Trung",
-            "Xã Bình Mỹ",
-            "Xã Thới Tam Thôn",
-            "Xã Trung An",
-            "Xã Phước Vĩnh An",
-            "Xã Phước Hiệp",
-            "Xã Phước Thạnh",
-            "Xã An Nhơn Tây",
-            "Xã Nhuận Đức",
-            "Xã Phạm Văn Cội",
-            "Xã Phú Hòa Đông",
-            "Xã Phú Mỹ Hưng",
-            "Xã Phước Lộc",
-            "Xã Long Thới",
-            "Xã Nhơn Đức",
-            "Xã Phước Kiển",
-            "Xã Bình Hưng",
-            "Xã Đa Phước",
-            "Xã Tân Kiên",
-            "Xã Tân Nhựt",
-            "Xã Lê Minh Xuân",
-            "Xã Vĩnh Lộc A",
-            "Xã Vĩnh Lộc B",
-            "Xã Phạm Văn Hai",
-            "Xã Quy Đức",
-            "Xã Hưng Long",
-            "Xã Bình Chánh",
-            "Xã An Phú Tây",
-            "Xã Tân Quý Tây",
-            "Xã Tân Túc",
-            "Xã Bình Lợi",
-            "Xã Bình Thắng",
-            "Xã Bình An",
-            "Xã Bình Chuẩn",
-            "Xã Bình Hòa",
-            "Xã Bình Nhâm",
-            "Xã Bình Phước",
-            "Xã Bình Sơn",
-            "Xã Bình Tân",
-            "Xã Bình Thạnh",
-            "Xã Bình Thuận",
-            "Xã Bình Trị",
-            "Xã Bình Xuyên",
-            "Xã Bình Yên",
-            "Xã Bình Định",
-            "Xã Bình Dương",
-            "Xã Bình Phú",
-            "Xã Bình Quới",
-            "Xã Bình Thới",
-            "Xã Bình Thành",
-            "Xã Bình Tiến",
-            "Xã Bình Trưng",
-          ]}
-        />
-      </Group>
+      <Card withBorder shadow="sm" radius={4} p="md">
+        {/* Header */}
+        <Group justify="space-between" align="center" mb="xs">
+          <Stack gap={0}>
+            <Title order={4}>Tìm kiếm vùng</Title>
+            <Text c="dimmed" size="sm">
+              Điền từ khoá hoặc chọn lọc theo Loại đất, Địa hình, Tỉnh/Thành,
+              Phường/Xã
+            </Text>
+          </Stack>
+
+          <Group>
+            <Tooltip label="Xoá tất cả bộ lọc">
+              <Button
+                radius={4}
+                variant="default"
+                leftSection={<IconRefresh size={16} />}
+                onClick={clearAll}
+              >
+                Làm mới
+              </Button>
+            </Tooltip>
+            <Button radius={4} leftSection={<IconSearch size={16} />}>
+              Lọc thông tin
+            </Button>
+          </Group>
+        </Group>
+
+        {/* Form */}
+        <Stack gap="sm">
+          {/* Khung tìm kiếm (keyword) */}
+          <TextInput
+            radius={4}
+            label="Khung tìm kiếm"
+            description="Ví dụ: KV-AG01, Vùng Trồng Lúa, HTX Vàm Nao, An Giang…"
+            placeholder="Nhập thông tin"
+            leftSection={<IconSearch size={16} />}
+            value={keyword}
+            onChange={(e) => setKeyword(e.currentTarget.value)}
+          />
+
+          <SimpleGrid cols={{ base: 1, md: 2, lg: 4 }} spacing="sm">
+            <MultiSelect
+              radius={4}
+              searchable
+              clearable
+              label="Loại đất"
+              description="Ví dụ: Đất phù sa, Đất đỏ bazan"
+              leftSection={<IconSandbox size={18} />}
+              placeholder="Chọn thông tin"
+              data={[
+                "Đất thịt",
+                "Đất phù sa",
+                "Đất cát",
+                "Đất sét",
+                "Đất đỏ bazan",
+                "Đất mùn",
+                "Đất kiềm",
+                "Đất chua",
+              ]}
+              value={soilTypes}
+              onChange={setSoilTypes}
+              maxDropdownHeight={220}
+            />
+
+            <MultiSelect
+              searchable
+              clearable
+              radius={4}
+              label="Địa hình"
+              description="Ví dụ: Bằng phẳng, Dốc, Ven sông"
+              leftSection={<IconBrandMetabrainz size={18} />}
+              placeholder="Chọn thông tin"
+              data={[
+                "Cao",
+                "Thấp",
+                "Dốc",
+                "Bằng phẳng",
+                "Trũng",
+                "Đồi núi",
+                "Đồng bằng",
+                "Ven sông",
+              ]}
+              value={terrains}
+              onChange={setTerrains}
+              maxDropdownHeight={220}
+            />
+
+            <MultiSelect
+              searchable
+              clearable
+              radius={4}
+              label="Tỉnh/Thành phố"
+              description="Ví dụ: An Giang, Lâm Đồng, TP. Hồ Chí Minh"
+              leftSection={<IconMapPin size={18} />}
+              placeholder="Chọn thông tin"
+              data={[
+                "Hà Nội",
+                "TP. Hồ Chí Minh",
+                "Đà Nẵng",
+                "Cần Thơ",
+                "Hải Phòng",
+                "Nha Trang",
+                "Bình Dương",
+                "Đồng Nai",
+                "Bà Rịa - Vũng Tàu",
+                "Quảng Ninh",
+                "Thanh Hóa",
+                "Nghệ An",
+                "Huế",
+                "Quảng Nam",
+                "Quảng Ngãi",
+                "Bắc Ninh",
+                "Bắc Giang",
+                "Lâm Đồng",
+                "Tiền Giang",
+                "Long An",
+                "Vĩnh Long",
+                "Sóc Trăng",
+                "Kiên Giang",
+                "Cà Mau",
+                "Bình Thuận",
+                "Phú Yên",
+                "Khánh Hòa",
+                "Tây Ninh",
+                "Trà Vinh",
+                "Bến Tre",
+                "Hậu Giang",
+                "Đắk Lắk",
+                "Đắk Nông",
+                "Gia Lai",
+                "Kon Tum",
+                "Hà Tĩnh",
+                "Quảng Bình",
+                "Quảng Trị",
+                "Thái Bình",
+                "Nam Định",
+                "Ninh Bình",
+                "Hòa Bình",
+                "Sơn La",
+                "Lai Châu",
+                "Điện Biên",
+                "Lào Cai",
+                "Yên Bái",
+                "Tuyên Quang",
+                "Phú Thọ",
+                "Vĩnh Phúc",
+                "Hà Nam",
+                "Hưng Yên",
+                "Hải Dương",
+                "Thái Nguyên",
+                "Bắc Kạn",
+                "Cao Bằng",
+                "Lạng Sơn",
+              ]}
+              value={provinces}
+              onChange={setProvinces}
+              maxDropdownHeight={240}
+            />
+
+            <MultiSelect
+              searchable
+              clearable
+              radius={4}
+              label="Phường/Xã"
+              description="Ví dụ: Phường Bến Nghé, Xã Phú Mỹ Hưng"
+              placeholder="Chọn thông tin"
+              data={[
+                "Phường Bến Nghé",
+                "Phường Bến Thành",
+                "Phường Nguyễn Thái Bình",
+                "Phường Phạm Ngũ Lão",
+                "Phường Tân Định",
+                "Phường Đa Kao",
+                "Phường 1 (Quận 3)",
+                "Phường 2 (Quận 3)",
+                "Phường 3 (Quận 3)",
+                "Phường 4 (Quận 3)",
+                "Phường 5 (Quận 3)",
+                "Phường 6 (Quận 3)",
+                "Phường 7 (Quận 3)",
+                "Phường 8 (Quận 3)",
+                "Phường 9 (Quận 3)",
+                "Phường 10 (Quận 3)",
+                "Phường 11 (Quận 3)",
+                "Phường 12 (Quận 3)",
+                "Xã Tân Phú Trung",
+                "Xã Bình Mỹ",
+                "Xã Thới Tam Thôn",
+                "Xã Trung An",
+                "Xã Phước Vĩnh An",
+                "Xã Phước Hiệp",
+                "Xã Phước Thạnh",
+                "Xã An Nhơn Tây",
+                "Xã Nhuận Đức",
+                "Xã Phạm Văn Cội",
+                "Xã Phú Hòa Đông",
+                "Xã Phú Mỹ Hưng",
+                "Xã Phước Lộc",
+                "Xã Long Thới",
+                "Xã Nhơn Đức",
+                "Xã Phước Kiển",
+                "Xã Bình Hưng",
+                "Xã Đa Phước",
+                "Xã Tân Kiên",
+                "Xã Tân Nhựt",
+                "Xã Lê Minh Xuân",
+                "Xã Vĩnh Lộc A",
+                "Xã Vĩnh Lộc B",
+                "Xã Phạm Văn Hai",
+                "Xã Quy Đức",
+                "Xã Hưng Long",
+              ]}
+              value={wards}
+              onChange={setWards}
+              maxDropdownHeight={240}
+            />
+          </SimpleGrid>
+
+          {/* Tóm tắt filter bằng chips (UI) */}
+          {(keyword ||
+            soilTypes.length ||
+            terrains.length ||
+            provinces.length ||
+            wards.length) && (
+            <Group gap={8}>
+              {keyword && (
+                <Badge
+                  variant="light"
+                  rightSection={<CloseButton onClick={() => setKeyword("")} />}
+                >
+                  Từ khoá: {keyword}
+                </Badge>
+              )}
+              {soilTypes.length > 0 && (
+                <Badge
+                  variant="light"
+                  rightSection={
+                    <CloseButton onClick={() => setSoilTypes([])} />
+                  }
+                >
+                  Loại đất: {soilTypes.join(", ")}
+                </Badge>
+              )}
+              {terrains.length > 0 && (
+                <Badge
+                  variant="light"
+                  rightSection={<CloseButton onClick={() => setTerrains([])} />}
+                >
+                  Địa hình: {terrains.join(", ")}
+                </Badge>
+              )}
+              {provinces.length > 0 && (
+                <Badge
+                  variant="light"
+                  rightSection={
+                    <CloseButton onClick={() => setProvinces([])} />
+                  }
+                >
+                  Tỉnh/TP: {provinces.join(", ")}
+                </Badge>
+              )}
+              {wards.length > 0 && (
+                <Badge
+                  variant="light"
+                  rightSection={<CloseButton onClick={() => setWards([])} />}
+                >
+                  Phường/Xã: {wards.join(", ")}
+                </Badge>
+              )}
+              <ActionIcon
+                variant="subtle"
+                onClick={clearAll}
+                title="Xoá tất cả"
+              >
+                <IconX size={16} />
+              </ActionIcon>
+            </Group>
+          )}
+        </Stack>
+      </Card>
       <Table columns={areaZoneColumns} data={areaZoneData} />
     </Stack>
   );

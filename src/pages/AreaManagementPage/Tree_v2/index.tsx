@@ -1,23 +1,32 @@
 import {
   ActionIcon,
+  Badge,
   Button,
+  Card,
+  CloseButton,
   Group,
   Menu,
   Modal,
-  Select,
+  MultiSelect,
+  SimpleGrid,
   Stack,
   Text,
+  TextInput,
   Title,
+  Tooltip,
 } from "@mantine/core";
 import {
-  IconChartAreaFilled,
+  IconBrandMetabrainz,
   IconDotsVertical,
   IconEdit,
   IconEye,
   IconFileExcel,
-  IconLivePhoto,
+  IconRefresh,
+  IconSandbox,
   IconSearch,
   IconTrash,
+  IconTree,
+  IconX,
 } from "@tabler/icons-react";
 import type { MRT_ColumnDef } from "mantine-react-table";
 import Table from "../../../components/Table";
@@ -25,6 +34,8 @@ import { useDisclosure } from "@mantine/hooks";
 import { useNavigate } from "react-router-dom";
 import { PATH } from "../../../constants/path.constants";
 import TreeDetailView from "./components/TreeView";
+import { useState } from "react";
+import { DatePickerInput } from "@mantine/dates";
 type Allocation = {
   allocationId: string; // Mã đợt phân bổ
   recordedAt: Date; // Ngày ghi nhận
@@ -103,31 +114,15 @@ const tree: TTree = {
     [10.124, 106.124],
   ],
 };
-const regionOptions = [
-  "Vùng trồng A - Đồng Nai",
-  "Vùng trồng B - Tây Nguyên",
-  "Vùng trồng C - Miền Tây",
-  "Vùng trồng D - Miền Trung",
-];
-
-const areaOptions = [
-  "Khu vực A1 - Đồng Nai",
-  "Khu vực B2 - Tây Nguyên",
-  "Khu vực C3 - Miền Tây",
-  "Khu vực D4 - Miền Trung",
-];
-
-const plotOptions = [
-  "Lô A1 - Khu vực A1",
-  "Lô B1 - Khu vực B2",
-  "Lô C1 - Khu vực C3",
-  "Lô D1 - Khu vực D4",
-];
 
 const AreaManagementTreev2Page = () => {
   const navigate = useNavigate();
+  const [keyword, setKeyword] = useState("");
   const [openedRowForm, { open: openRowForm, close: closeRowForm }] =
     useDisclosure(false);
+  const onClearAll = () => {
+    setKeyword("");
+  };
   const onAddTree = () => {
     navigate(PATH.AREA_ADD_TREE_v2);
   };
@@ -209,32 +204,140 @@ const AreaManagementTreev2Page = () => {
           </Button>
         </Group>
       </Group>
-      <Group>
-        <Select
-          searchable
-          clearable
-          radius={4}
-          leftSection={<IconSearch size={18} />}
-          placeholder="Tìm kiếm vùng"
-          data={regionOptions}
-        />
-        <Select
-          searchable
-          clearable
-          radius={4}
-          leftSection={<IconChartAreaFilled size={18} />}
-          placeholder="Tìm kiếm khu vực"
-          data={areaOptions}
-        />
-        <Select
-          searchable
-          clearable
-          radius={4}
-          leftSection={<IconLivePhoto size={18} />}
-          placeholder="Tìm kiếm lô"
-          data={plotOptions}
-        />
-      </Group>
+      <Card withBorder shadow="sm" radius={4} p="md">
+        {/* Header */}
+        <Group justify="space-between" align="center" mb="xs">
+          <Stack gap={0}>
+            <Title order={4}>Tìm kiếm danh mục phân bổ</Title>
+            <Text c="dimmed" size="sm">
+              Điền từ khóa hoặc chọn lọc cây trồng chính, vùng, khu vực, khoảng
+              thời gian
+            </Text>
+          </Stack>
+
+          <Group>
+            <Tooltip label="Xoá tất cả bộ lọc">
+              <Button
+                radius={4}
+                variant="default"
+                leftSection={<IconRefresh size={16} />}
+                onClick={onClearAll}
+              >
+                Làm mới
+              </Button>
+            </Tooltip>
+            <Button radius={4} leftSection={<IconSearch size={16} />}>
+              Lọc thông tin
+            </Button>
+          </Group>
+        </Group>
+
+        {/* Form */}
+        <Stack gap="sm">
+          {/* Khung tìm kiếm (keyword) */}
+          <TextInput
+            radius={4}
+            label="Khung tìm kiếm"
+            description="Ví dụ: KV-AG01, Vùng Trồng Lúa, HTX Vàm Nao, An Giang…"
+            placeholder="Nhập thông tin"
+            leftSection={<IconSearch size={16} />}
+            value={keyword}
+            onChange={(e) => setKeyword(e.currentTarget.value)}
+          />
+
+          <SimpleGrid cols={{ base: 1, md: 2, lg: 3 }} spacing="sm">
+            <MultiSelect
+              searchable
+              clearable
+              radius={4}
+              leftSection={<IconTree size={18} />}
+              label="Cây trồng chính"
+              description="Ví dụ: Lúa, Ngô, Khoai tây"
+              placeholder="Chọn thông tin"
+              data={[
+                { value: "rice", label: "Lúa" },
+                { value: "corn", label: "Ngô" },
+                { value: "potato", label: "Khoai tây" },
+              ]}
+            />
+            <MultiSelect
+              searchable
+              clearable
+              radius={4}
+              leftSection={<IconSandbox size={18} />}
+              label="Khu vực canh tác"
+              description="Ví dụ: Đồng bằng sông Cửu Long, Tây Nguyên"
+              placeholder="Chọn thông tin"
+              multiple
+              data={[
+                { value: "mekong_delta", label: "Đồng bằng sông Cửu Long" },
+                { value: "central_highlands", label: "Tây Nguyên" },
+              ]}
+            />
+            <MultiSelect
+              searchable
+              clearable
+              radius={4}
+              multiple
+              leftSection={<IconBrandMetabrainz size={18} />}
+              label="Vùng"
+              description="Ví dụ: Vùng A, Vùng B"
+              placeholder="Chọn thông tin"
+              data={[
+                { value: "region_a", label: "Vùng A" },
+                { value: "region_b", label: "Vùng B" },
+              ]}
+            />
+            <MultiSelect
+              searchable
+              clearable
+              radius={4}
+              multiple
+              leftSection={<IconBrandMetabrainz size={18} />}
+              label="Khu vực"
+              description="Ví dụ: Khu vực A, Khu vực B"
+              placeholder="Chọn thông tin"
+              data={[
+                { value: "area_a", label: "Khu vực A" },
+                { value: "area_b", label: "Khu vực B" },
+              ]}
+            />
+            <DatePickerInput
+              type="range"
+              radius={4}
+              label="Khoảng thời gian"
+              description="Ví dụ: 01/01/2023 - 31/12/2023"
+              placeholder="Chọn thông tin"
+              clearable
+              locale="vi"
+              value={[null, null]}
+              onChange={() => {}}
+            />
+          </SimpleGrid>
+
+          {/* Tóm tắt filter bằng chips (UI) */}
+          {keyword && (
+            <Group gap={8}>
+              {keyword && (
+                <Badge
+                  variant="light"
+                  rightSection={<CloseButton onClick={() => setKeyword("")} />}
+                >
+                  Từ khoá: {keyword}
+                </Badge>
+              )}
+
+              <ActionIcon
+                variant="subtle"
+                onClick={onClearAll}
+                title="Xoá tất cả"
+              >
+                <IconX size={16} />
+              </ActionIcon>
+            </Group>
+          )}
+        </Stack>
+      </Card>
       <Table columns={allocationColumns} data={allocationData} />
       <Modal
         opened={openedRowForm}

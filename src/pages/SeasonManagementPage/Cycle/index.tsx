@@ -1,16 +1,33 @@
-import { ActionIcon, Button, Group, Menu, Stack, Title } from "@mantine/core";
+import {
+  ActionIcon,
+  Badge,
+  Button,
+  Card,
+  CloseButton,
+  Group,
+  Menu,
+  Stack,
+  Text,
+  TextInput,
+  Title,
+  Tooltip,
+} from "@mantine/core";
 import {
   IconCopy,
   IconDotsVertical,
   IconEdit,
   IconEye,
   IconFileExcel,
+  IconRefresh,
+  IconSearch,
   IconTrash,
+  IconX,
 } from "@tabler/icons-react";
 import type { MRT_ColumnDef } from "mantine-react-table";
 import Table from "../../../components/Table";
 import { useNavigate } from "react-router-dom";
 import { PATH } from "../../../constants/path.constants";
+import { useState } from "react";
 
 type GrowthCycle = {
   id: string;
@@ -182,6 +199,10 @@ const growthCycleData: GrowthCycle[] = [
 
 const SeasonManagementCyclePage = () => {
   const navigate = useNavigate();
+  const [keyword, setKeyword] = useState("");
+  const onClearAll = () => {
+    setKeyword("");
+  };
   const onCycleDetail = () => {
     navigate(PATH.SEASON_CYCLE_DETAIL);
   };
@@ -254,7 +275,69 @@ const SeasonManagementCyclePage = () => {
           </Button>
         </Group>
       </Group>
+      <Card withBorder shadow="sm" radius={4} p="md">
+        {/* Header */}
+        <Group justify="space-between" align="center" mb="xs">
+          <Stack gap={0}>
+            <Title order={4}>Tìm kiếm chu kì sinh trưởng</Title>
+            <Text c="dimmed" size="sm">
+              Điền từ khóa
+            </Text>
+          </Stack>
 
+          <Group>
+            <Tooltip label="Xoá tất cả bộ lọc">
+              <Button
+                radius={4}
+                variant="default"
+                leftSection={<IconRefresh size={16} />}
+                onClick={onClearAll}
+              >
+                Làm mới
+              </Button>
+            </Tooltip>
+            <Button radius={4} leftSection={<IconSearch size={16} />}>
+              Lọc thông tin
+            </Button>
+          </Group>
+        </Group>
+
+        {/* Form */}
+        <Stack gap="sm">
+          {/* Khung tìm kiếm (keyword) */}
+          <TextInput
+            radius={4}
+            label="Khung tìm kiếm"
+            description="Ví dụ: Chu kì sinh trưởng Sầu Riêng Dona"
+            placeholder="Nhập thông tin"
+            leftSection={<IconSearch size={16} />}
+            value={keyword}
+            onChange={(e) => setKeyword(e.currentTarget.value)}
+          />
+
+          {/* Tóm tắt filter bằng chips (UI) */}
+          {keyword && (
+            <Group gap={8}>
+              {keyword && (
+                <Badge
+                  variant="light"
+                  rightSection={<CloseButton onClick={() => setKeyword("")} />}
+                >
+                  Từ khoá: {keyword}
+                </Badge>
+              )}
+
+              <ActionIcon
+                variant="subtle"
+                onClick={onClearAll}
+                title="Xoá tất cả"
+              >
+                <IconX size={16} />
+              </ActionIcon>
+            </Group>
+          )}
+        </Stack>
+      </Card>
       <Table columns={growthStageColumns} data={growthCycleData} />
     </Stack>
   );

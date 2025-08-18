@@ -2,22 +2,29 @@ import {
   ActionIcon,
   Badge,
   Button,
+  Card,
+  CloseButton,
   Group,
   Menu,
   Modal,
   MultiSelect,
   Radio,
+  SimpleGrid,
   Stack,
   Text,
   TextInput,
   Title,
+  Tooltip,
 } from "@mantine/core";
 import {
+  IconCalendar,
   IconCircleCheck,
   IconDotsVertical,
   IconFileExcel,
+  IconRefresh,
   IconSearch,
   IconTrash,
+  IconX,
 } from "@tabler/icons-react";
 import type { MRT_ColumnDef } from "mantine-react-table";
 import Table from "../../../components/Table";
@@ -26,6 +33,7 @@ import CreateBatmanTaskForm from "./components/CreateBatmanTaskForm";
 import { useState } from "react";
 import { EmployeeCardList } from "../../HRManagementPage/Team/Add/components/EmployeeCardList";
 import { DepartmentCardList } from "../../HRManagementPage/Team/Add/components/DepartmentCardList";
+import { DatePickerInput } from "@mantine/dates";
 type EmployeeTask = {
   employee: string;
   taskName: string;
@@ -67,9 +75,13 @@ const TaskManagementBatmanPage = () => {
     openedFilterEmployee,
     { open: openFilterEmployee, close: closeFilterEmployee },
   ] = useDisclosure(false);
+  const [keyword, setKeyword] = useState("");
   const [mode, setMode] = useState("");
   const [openedAddTask, { open: openAddTask, close: closeAddTask }] =
     useDisclosure(false);
+  const onClearAll = () => {
+    setKeyword("");
+  };
   const columns: MRT_ColumnDef<EmployeeTask>[] = [
     { accessorKey: "employee", header: "Nhân viên" },
     { accessorKey: "taskName", header: "Tên công việc" },
@@ -136,7 +148,117 @@ const TaskManagementBatmanPage = () => {
           </Button>
         </Group>
       </Group>
+      <Card withBorder shadow="sm" radius={4} p="md">
+        {/* Header */}
+        <Group justify="space-between" align="center" mb="xs">
+          <Stack gap={0}>
+            <Title order={4}>Tìm kiếm công việc BATMAN</Title>
+            <Text c="dimmed" size="sm">
+              Điền từ khóa hoặc chọn lọc trạng thái, thời gian, nhân viên,...
+            </Text>
+          </Stack>
 
+          <Group>
+            <Tooltip label="Xoá tất cả bộ lọc">
+              <Button
+                radius={4}
+                variant="default"
+                leftSection={<IconRefresh size={16} />}
+                onClick={onClearAll}
+              >
+                Làm mới
+              </Button>
+            </Tooltip>
+            <Button radius={4} leftSection={<IconSearch size={16} />}>
+              Lọc thông tin
+            </Button>
+          </Group>
+        </Group>
+
+        {/* Form */}
+        <Stack gap="sm">
+          {/* Khung tìm kiếm (keyword) */}
+          <TextInput
+            radius={4}
+            label="Khung tìm kiếm"
+            description="Ví dụ: Công việc tưới nước"
+            placeholder="Nhập thông tin"
+            leftSection={<IconSearch size={16} />}
+            value={keyword}
+            onChange={(e) => setKeyword(e.currentTarget.value)}
+          />
+
+          <SimpleGrid cols={{ base: 1, md: 2, lg: 3 }} spacing="sm">
+            <DatePickerInput
+              label="Khoảng thời gian"
+              description="Ví dụ: 18/8/2025 - 20/8/2025"
+              placeholder="Chọn thông tin"
+              radius={4}
+              type="range"
+              locale="vi"
+              leftSection={<IconCalendar size={18} />}
+            />
+            <MultiSelect
+              radius={4}
+              label="Trạng thái"
+              description="Ví dụ: Đang thực hiện, Đã hoàn thành"
+              placeholder="Chọn thông tin"
+              data={[
+                { value: "in_progress", label: "Đang thực hiện" },
+                { value: "completed", label: "Đã hoàn thành" },
+              ]}
+            />
+            <MultiSelect
+              radius={4}
+              label="Nhân viên"
+              description="Ví dụ: Nhân viên 1, Nhân viên 2"
+              placeholder="Chọn thông tin"
+              data={[
+                { value: "staff1", label: "Nhân viên 1" },
+                { value: "staff2", label: "Nhân viên 2" },
+                { value: "staff3", label: "Nhân viên 3" },
+              ]}
+              searchable
+              clearable
+            />
+
+            <MultiSelect
+              radius={4}
+              label="Người kiểm duyệt"
+              description="Ví dụ: Kiểm duyệt viên 1, Kiểm duyệt viên 2"
+              placeholder="Chọn thông tin"
+              data={[
+                { value: "inspector1", label: "Kiểm duyệt viên 1" },
+                { value: "inspector2", label: "Kiểm duyệt viên 2" },
+              ]}
+              searchable
+              clearable
+            />
+          </SimpleGrid>
+
+          {/* Tóm tắt filter bằng chips (UI) */}
+          {keyword && (
+            <Group gap={8}>
+              {keyword && (
+                <Badge
+                  variant="light"
+                  rightSection={<CloseButton onClick={() => setKeyword("")} />}
+                >
+                  Từ khoá: {keyword}
+                </Badge>
+              )}
+
+              <ActionIcon
+                variant="subtle"
+                onClick={onClearAll}
+                title="Xoá tất cả"
+              >
+                <IconX size={16} />
+              </ActionIcon>
+            </Group>
+          )}
+        </Stack>
+      </Card>
       <Table columns={columns} data={employeeTasks} />
       <Modal
         opened={openedAddTask}

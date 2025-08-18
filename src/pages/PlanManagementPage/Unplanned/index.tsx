@@ -2,11 +2,17 @@ import {
   ActionIcon,
   Badge,
   Button,
+  Card,
+  CloseButton,
   Group,
   Menu,
+  MultiSelect,
+  SimpleGrid,
   Stack,
   Text,
+  TextInput,
   Title,
+  Tooltip,
 } from "@mantine/core";
 import {
   IconCalendar,
@@ -14,13 +20,17 @@ import {
   IconEdit,
   IconEye,
   IconFileExcel,
+  IconRefresh,
+  IconSearch,
   IconTrash,
+  IconX,
 } from "@tabler/icons-react";
 import type { MRT_ColumnDef } from "mantine-react-table";
 import Table from "../../../components/Table";
 import { useNavigate } from "react-router-dom";
 import { PATH } from "../../../constants/path.constants";
-import { DateInput } from "@mantine/dates";
+import { DatePickerInput } from "@mantine/dates";
+import { useState } from "react";
 
 type Assignment = {
   name: string;
@@ -61,7 +71,10 @@ const assignmentData: Assignment[] = [
 
 const PlanManagementUnplannedPage = () => {
   const navigate = useNavigate();
-
+  const [keyword, setKeyword] = useState("");
+  const onClearAll = () => {
+    setKeyword("");
+  };
   const onAddUnplanned = () => navigate(PATH.PLAN_ADD_UNPLANNED);
   const onUnplannedDetail = (name: string) => {
     console.log("Xem chi tiết:", name);
@@ -169,18 +182,131 @@ const PlanManagementUnplannedPage = () => {
         </Group>
       </Group>
 
-      <Group>
-        <DateInput
-          leftSection={<IconCalendar size={18} />}
-          placeholder="Từ ngày"
-          radius={4}
-        />
-        <DateInput
-          leftSection={<IconCalendar size={18} />}
-          placeholder="Đến ngày"
-          radius={4}
-        />
-      </Group>
+      <Card withBorder shadow="sm" radius={4} p="md">
+        {/* Header */}
+        <Group justify="space-between" align="center" mb="xs">
+          <Stack gap={0}>
+            <Title order={4}>Tìm kiếm công việc phát sinh</Title>
+            <Text c="dimmed" size="sm">
+              Điền từ khóa hoặc chọn lọc khoản thời gian, phòng ban,...
+            </Text>
+          </Stack>
+
+          <Group>
+            <Tooltip label="Xoá tất cả bộ lọc">
+              <Button
+                radius={4}
+                variant="default"
+                leftSection={<IconRefresh size={16} />}
+                onClick={onClearAll}
+              >
+                Làm mới
+              </Button>
+            </Tooltip>
+            <Button radius={4} leftSection={<IconSearch size={16} />}>
+              Lọc thông tin
+            </Button>
+          </Group>
+        </Group>
+
+        {/* Form */}
+        <Stack gap="sm">
+          {/* Khung tìm kiếm (keyword) */}
+          <TextInput
+            radius={4}
+            label="Khung tìm kiếm"
+            description="Ví dụ: Công việc tưới nước"
+            placeholder="Nhập thông tin"
+            leftSection={<IconSearch size={16} />}
+            value={keyword}
+            onChange={(e) => setKeyword(e.currentTarget.value)}
+          />
+
+          <SimpleGrid cols={{ base: 1, md: 2, lg: 3 }} spacing="sm">
+            <DatePickerInput
+              label="Khoảng thời gian"
+              description="Ví dụ: 18/8/2025 - 20/8/2025"
+              placeholder="Chọn thông tin"
+              radius={4}
+              type="range"
+              locale="vi"
+              leftSection={<IconCalendar size={18} />}
+            />
+            <MultiSelect
+              radius={4}
+              label="Phòng ban"
+              description="Ví dụ: Phòng kỹ thuật, Phòng vận hành"
+              placeholder="Chọn thông tin"
+              data={[
+                { value: "dept1", label: "Phòng kỹ thuật" },
+                { value: "dept2", label: "Phòng vận hành" },
+                { value: "dept3", label: "Phòng nhân sự" },
+              ]}
+              searchable
+              clearable
+            />
+            <MultiSelect
+              radius={4}
+              label="Nhân sự"
+              description="Ví dụ: Nhân sự 1, Nhân sự 2"
+              placeholder="Chọn thông tin"
+              data={[
+                { value: "staff1", label: "Nhân sự 1" },
+                { value: "staff2", label: "Nhân sự 2" },
+                { value: "staff3", label: "Nhân sự 3" },
+              ]}
+              searchable
+              clearable
+            />
+            <MultiSelect
+              radius={4}
+              label="Người quản lý"
+              description="Ví dụ: Quản lý 1, Quản lý 2"
+              placeholder="Chọn thông tin"
+              data={[
+                { value: "manager1", label: "Quản lý 1" },
+                { value: "manager2", label: "Quản lý 2" },
+              ]}
+              searchable
+              clearable
+            />
+            <MultiSelect
+              radius={4}
+              label="Người kiểm định"
+              description="Ví dụ: Kiểm định 1, Kiểm định 2"
+              placeholder="Chọn thông tin"
+              data={[
+                { value: "inspector1", label: "Kiểm định 1" },
+                { value: "inspector2", label: "Kiểm định 2" },
+              ]}
+              searchable
+              clearable
+            />
+          </SimpleGrid>
+
+          {/* Tóm tắt filter bằng chips (UI) */}
+          {keyword && (
+            <Group gap={8}>
+              {keyword && (
+                <Badge
+                  variant="light"
+                  rightSection={<CloseButton onClick={() => setKeyword("")} />}
+                >
+                  Từ khoá: {keyword}
+                </Badge>
+              )}
+
+              <ActionIcon
+                variant="subtle"
+                onClick={onClearAll}
+                title="Xoá tất cả"
+              >
+                <IconX size={16} />
+              </ActionIcon>
+            </Group>
+          )}
+        </Stack>
+      </Card>
 
       <Table columns={assignmentColumns} data={assignmentData} />
     </Stack>
