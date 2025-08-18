@@ -1,22 +1,27 @@
 import {
   ActionIcon,
   Button,
+  Card,
   Group,
   Menu,
-  Select,
+  MultiSelect,
+  SimpleGrid,
   Stack,
+  Text,
+  TextInput,
   Title,
+  Tooltip,
 } from "@mantine/core";
-import { DateInput } from "@mantine/dates";
+import { DatePickerInput } from "@mantine/dates";
 import {
   IconCalendar,
-  IconContract,
   IconDotsVertical,
   IconEdit,
   IconEye,
   IconFileExcel,
+  IconRefresh,
+  IconSearch,
   IconTrash,
-  IconTypeface,
 } from "@tabler/icons-react";
 import type { MRT_ColumnDef } from "mantine-react-table";
 import Table from "../../components/Table";
@@ -151,34 +156,86 @@ const ContractManagementPage = () => {
           </Button>
         </Group>
       </Group>
-      <Group>
-        <DateInput
-          leftSection={<IconCalendar size={18} />}
-          placeholder="Ngày bắt đầu"
-          radius={4}
-        />
-        <DateInput
-          leftSection={<IconCalendar size={18} />}
-          placeholder="Ngày kết thúc"
-          radius={4}
-        />
-        <Select
-          searchable
-          clearable
-          radius={4}
-          leftSection={<IconContract size={18} />}
-          placeholder="Loại hợp đồng"
-          data={["Thu", "Mua"]}
-        />
-        <Select
-          searchable
-          clearable
-          radius={4}
-          leftSection={<IconTypeface size={18} />}
-          placeholder="Trạng thái"
-          data={["Chờ duyệt", "Đang hiệu lực", "Hết hiệu lực"]}
-        />
-      </Group>
+
+      <Card withBorder shadow="sm" radius={4} p="md">
+        {/* Header */}
+        <Group justify="space-between" align="center" mb="xs">
+          <Stack gap={0}>
+            <Title order={4}>Tìm kiếm hợp đồng</Title>
+            <Text c="dimmed" size="sm">
+              Điền từ khóa hoặc chọn lọc đối tác, loại, khoản thời gian
+            </Text>
+          </Stack>
+
+          <Group>
+            <Tooltip label="Xoá tất cả bộ lọc">
+              <Button
+                radius={4}
+                variant="default"
+                leftSection={<IconRefresh size={16} />}
+                onClick={() => {}}
+              >
+                Làm mới
+              </Button>
+            </Tooltip>
+            <Button radius={4} leftSection={<IconSearch size={16} />}>
+              Lọc thông tin
+            </Button>
+          </Group>
+        </Group>
+
+        {/* Form */}
+        <Stack gap="sm">
+          {/* Khung tìm kiếm (keyword) */}
+          <TextInput
+            radius={4}
+            label="Khung tìm kiếm"
+            description="Ví dụ: Hợp đồng thu mua sầu riêng"
+            placeholder="Nhập thông tin"
+            leftSection={<IconSearch size={16} />}
+          />
+
+          <SimpleGrid cols={{ base: 1, md: 2, lg: 3 }} spacing="sm">
+            <DatePickerInput
+              leftSection={<IconCalendar size={18} />}
+              label="Khoảng thời gian"
+              description="Ví dụ: 18/5/2025 - 18/6/2025"
+              placeholder="Chọn thông tin"
+              radius={4}
+              clearable
+              locale="vi"
+              type="range"
+            />
+            <MultiSelect
+              radius={4}
+              searchable
+              clearable
+              label="Đối tác"
+              description="Ví dụ: Công ty Nông sản ABC"
+              placeholder="Chọn thông tin"
+              data={["Đối tác 1", "Đối tác 2", "Đối tác 3"]}
+            />
+            <MultiSelect
+              radius={4}
+              searchable
+              clearable
+              label="Loại hợp đồng"
+              description="Ví dụ: Hợp đồng thu mua"
+              placeholder="Chọn thông tin"
+              data={["Loại 1", "Loại 2", "Loại 3"]}
+            />
+            <MultiSelect
+              radius={4}
+              searchable
+              clearable
+              label="Trạng thái"
+              description="Ví dụ: Đang hiệu lực"
+              placeholder="Chọn thông tin"
+              data={["Chờ duyệt", "Đang hiệu lực", "Hết hiệu lực"]}
+            />
+          </SimpleGrid>
+        </Stack>
+      </Card>
       <Table columns={contractColumns} data={contractData} />
     </Stack>
   );

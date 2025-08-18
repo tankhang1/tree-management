@@ -1,18 +1,24 @@
 import {
   ActionIcon,
   Button,
+  Card,
   Group,
   Menu,
-  Select,
+  MultiSelect,
+  SimpleGrid,
   Stack,
+  Text,
+  TextInput,
   Title,
+  Tooltip,
 } from "@mantine/core";
 import {
-  IconCar,
   IconDotsVertical,
   IconEdit,
   IconEye,
   IconFileExcel,
+  IconRefresh,
+  IconSearch,
   IconTrash,
 } from "@tabler/icons-react";
 import type { MRT_ColumnDef } from "mantine-react-table";
@@ -196,16 +202,62 @@ const MachineManagementMainPage = () => {
           </Button>
         </Group>
       </Group>
-      <Group>
-        <Select
-          searchable
-          clearable
-          radius={4}
-          leftSection={<IconCar size={18} />}
-          placeholder="Tìm kiếm loại xe"
-          data={["Xe tải", "Xe hơi", "Xe ôtô"]}
-        />
-      </Group>
+      <Card withBorder shadow="sm" radius={4} p="md">
+        {/* Header */}
+        <Group justify="space-between" align="center" mb="xs">
+          <Stack gap={0}>
+            <Title order={4}>Tìm kiếm máy móc</Title>
+            <Text c="dimmed" size="sm">
+              Điền từ khóa hoặc chọn lọc loại xe, trạng thái
+            </Text>
+          </Stack>
+
+          <Group>
+            <Tooltip label="Xoá tất cả bộ lọc">
+              <Button
+                radius={4}
+                variant="default"
+                leftSection={<IconRefresh size={16} />}
+                onClick={() => {}}
+              >
+                Làm mới
+              </Button>
+            </Tooltip>
+            <Button radius={4} leftSection={<IconSearch size={16} />}>
+              Lọc thông tin
+            </Button>
+          </Group>
+        </Group>
+
+        {/* Form */}
+        <Stack gap="sm">
+          {/* Khung tìm kiếm (keyword) */}
+          <TextInput
+            radius={4}
+            label="Khung tìm kiếm"
+            description="Ví dụ: Xe tải Hino"
+            placeholder="Nhập thông tin"
+            leftSection={<IconSearch size={16} />}
+          />
+
+          <SimpleGrid cols={{ base: 1, md: 2, lg: 3 }} spacing="sm">
+            <MultiSelect
+              radius={4}
+              label="Loại xe"
+              description="Ví dụ: Xe tải, Xe ben"
+              placeholder="Chọn thông tin"
+              data={["Xe tải", "Xe ben", "Xe con"]}
+            />
+            <MultiSelect
+              radius={4}
+              label="Trạng thái"
+              description="Ví dụ: Đang hoạt động, Bảo trì"
+              placeholder="Chọn thông tin"
+              data={["Đang hoạt động", "Bảo trì", "Ngừng hoạt động"]}
+            />
+          </SimpleGrid>
+        </Stack>
+      </Card>
       <Table columns={machineColumns} data={machines} />
     </Stack>
   );

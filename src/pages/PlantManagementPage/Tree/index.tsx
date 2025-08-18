@@ -1,13 +1,17 @@
 import {
   ActionIcon,
   Button,
+  Card,
   Group,
   Image,
   Menu,
-  Select,
+  MultiSelect,
+  SimpleGrid,
   Stack,
   Text,
+  TextInput,
   Title,
+  Tooltip,
 } from "@mantine/core";
 import {
   IconDotsVertical,
@@ -15,6 +19,8 @@ import {
   IconEye,
   IconFileExcel,
   IconGrowth,
+  IconRefresh,
+  IconSearch,
   IconSeedling,
   IconTractor,
   IconTrash,
@@ -174,49 +180,97 @@ const PlantManagementTreePage = () => {
           </Button>
         </Group>
       </Group>
-      <Group>
-        <Select
-          searchable
-          clearable
-          radius={4}
-          leftSection={<IconSeedling size={18} />}
-          placeholder="Hạt giống"
-          data={[
-            "Hạt lai F1",
-            "Ghép cành",
-            "Chồi cây",
-            "Hạt giống Robusta",
-            "Hạt giống Thái",
-          ]}
-        />
-        <Select
-          searchable
-          clearable
-          radius={4}
-          leftSection={<IconTractor size={18} />}
-          placeholder="Hình thức thu hoạch"
-          data={[
-            "Thu hoạch thủ công",
-            "Thu hoạch bằng sào",
-            "Thu hoạch cuống",
-            "Thu hoạch bằng tay",
-          ]}
-        />
-        <Select
-          searchable
-          clearable
-          radius={4}
-          leftSection={<IconGrowth size={18} />}
-          placeholder="Chu kì sinh trưởng"
-          data={[
-            "Chu kỳ dài (5-7 năm)",
-            "Chu kỳ trung bình (3-5 năm)",
-            "Chu kỳ ngắn (9-12 tháng)",
-            "Chu kỳ dài (4-5 năm)",
-            "Chu kỳ trung bình (3-4 năm)",
-          ]}
-        />
-      </Group>
+
+      <Card withBorder shadow="sm" radius={4} p="md">
+        {/* Header */}
+        <Group justify="space-between" align="center" mb="xs">
+          <Stack gap={0}>
+            <Title order={4}>Tìm kiếm cây trồng</Title>
+            <Text c="dimmed" size="sm">
+              Điền từ khóa hoặc chọn lọc loại cây, hình thức thu hoạch, chu kỳ
+              sinh trưởng
+            </Text>
+          </Stack>
+
+          <Group>
+            <Tooltip label="Xoá tất cả bộ lọc">
+              <Button
+                radius={4}
+                variant="default"
+                leftSection={<IconRefresh size={16} />}
+                onClick={() => {}}
+              >
+                Làm mới
+              </Button>
+            </Tooltip>
+            <Button radius={4} leftSection={<IconSearch size={16} />}>
+              Lọc thông tin
+            </Button>
+          </Group>
+        </Group>
+
+        {/* Form */}
+        <Stack gap="sm">
+          {/* Khung tìm kiếm (keyword) */}
+          <TextInput
+            radius={4}
+            label="Khung tìm kiếm"
+            description="Ví dụ: Sầu riêng, Xoài"
+            placeholder="Nhập thông tin"
+            leftSection={<IconSearch size={16} />}
+          />
+
+          <SimpleGrid cols={{ base: 1, md: 2, lg: 3 }} spacing="sm">
+            <MultiSelect
+              searchable
+              clearable
+              radius={4}
+              leftSection={<IconSeedling size={18} />}
+              label="Loại cây"
+              description="Ví dụ: Hạt lai F1, Ghép cành"
+              placeholder="Chọn thông tin"
+              data={[
+                "Hạt lai F1",
+                "Ghép cành",
+                "Chồi cây",
+                "Hạt giống Robusta",
+                "Hạt giống Thái",
+              ]}
+            />
+            <MultiSelect
+              searchable
+              clearable
+              radius={4}
+              leftSection={<IconTractor size={18} />}
+              label="Hình thức thu hoạch"
+              description="Ví dụ: Thu hoạch thủ công, Thu hoạch bằng sào"
+              placeholder="Chọn thông tin"
+              data={[
+                "Thu hoạch thủ công",
+                "Thu hoạch bằng sào",
+                "Thu hoạch cuống",
+                "Thu hoạch bằng tay",
+              ]}
+            />
+            <MultiSelect
+              searchable
+              clearable
+              radius={4}
+              leftSection={<IconGrowth size={18} />}
+              label="Chu kỳ sinh trưởng"
+              description="Ví dụ: Chu kỳ dài (5-7 năm), Chu kỳ trung bình (3-5 năm)"
+              placeholder="Chọn thông tin"
+              data={[
+                "Chu kỳ dài (5-7 năm)",
+                "Chu kỳ trung bình (3-5 năm)",
+                "Chu kỳ ngắn (9-12 tháng)",
+                "Chu kỳ dài (4-5 năm)",
+                "Chu kỳ trung bình (3-4 năm)",
+              ]}
+            />
+          </SimpleGrid>
+        </Stack>
+      </Card>
       <Table columns={treeCropColumns} data={treeCropData} />
     </Stack>
   );

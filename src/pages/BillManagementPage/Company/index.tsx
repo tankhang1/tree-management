@@ -1,20 +1,24 @@
 import {
   ActionIcon,
-  Autocomplete,
   Badge,
   Button,
+  Card,
   Group,
   Menu,
-  Select,
+  MultiSelect,
+  SimpleGrid,
   Stack,
   Text,
+  TextInput,
   Title,
+  Tooltip,
 } from "@mantine/core";
 import {
   IconCalendar,
   IconDotsVertical,
   IconEye,
   IconFileExcel,
+  IconRefresh,
   IconSearch,
 } from "@tabler/icons-react";
 import type { MRT_ColumnDef } from "mantine-react-table";
@@ -182,32 +186,71 @@ const BillManagementCompanyPage = () => {
           </Button>
         </Group>
       </Group>
-      <Group gap="md">
-        <Autocomplete
-          leftSection={<IconSearch size={18} />}
-          placeholder="Tìm kiếm mã hóa đơn hoặc mã đơn hàng"
-          radius={4}
-          data={billDataset.map((bill) => bill.billId)} // Lấy danh sách mã hóa đơn
-        />
+      <Card withBorder shadow="sm" radius={4} p="md">
+        {/* Header */}
+        <Group justify="space-between" align="center" mb="xs">
+          <Stack gap={0}>
+            <Title order={4}>Tìm kiếm hóa đơn doanh nghiệp</Title>
+            <Text c="dimmed" size="sm">
+              Điền từ khóa hoặc chọn lọc khoản thời gian, trạng thái
+            </Text>
+          </Stack>
 
-        <Select
-          placeholder="Trạng thái"
-          radius={4}
-          data={["Đã thanh toán", "Chưa thanh toán", "Đã hủy"]} // Danh sách trạng thái
-        />
-        <DatePickerInput
-          placeholder="Ngày bắt đầu"
-          locale="vi"
-          radius={4}
-          leftSection={<IconCalendar size={18} />}
-        />
-        <DatePickerInput
-          placeholder="Ngày kết thúc"
-          radius={4}
-          locale="vi"
-          leftSection={<IconCalendar size={18} />}
-        />
-      </Group>
+          <Group>
+            <Tooltip label="Xoá tất cả bộ lọc">
+              <Button
+                radius={4}
+                variant="default"
+                leftSection={<IconRefresh size={16} />}
+                onClick={() => {}}
+              >
+                Làm mới
+              </Button>
+            </Tooltip>
+            <Button radius={4} leftSection={<IconSearch size={16} />}>
+              Lọc thông tin
+            </Button>
+          </Group>
+        </Group>
+
+        {/* Form */}
+        <Stack gap="sm">
+          {/* Khung tìm kiếm (keyword) */}
+          <TextInput
+            radius={4}
+            label="Khung tìm kiếm"
+            description="Ví dụ: 0RD001"
+            placeholder="Nhập thông tin"
+            leftSection={<IconSearch size={16} />}
+          />
+
+          <SimpleGrid cols={{ base: 1, md: 2, lg: 3 }} spacing="sm">
+            <DatePickerInput
+              leftSection={<IconCalendar size={18} />}
+              label="Khoảng thời gian"
+              description="Ví dụ: 18/5/2025 - 18/6/2025"
+              placeholder="Chọn thông tin"
+              radius={4}
+              clearable
+              locale="vi"
+              type="range"
+            />
+
+            <MultiSelect
+              searchable
+              radius={4}
+              label="Trạng thái"
+              description="Ví dụ: Đã thanh toán, Chưa thanh toán, Đã hủy"
+              placeholder="Chọn thông tin"
+              data={[
+                { value: "paid", label: "Đã thanh toán" },
+                { value: "unpaid", label: "Chưa thanh toán" },
+                { value: "canceled", label: "Đã hủy" },
+              ]}
+            />
+          </SimpleGrid>
+        </Stack>
+      </Card>
       <Table columns={billColumns} data={billDataset} />
     </Stack>
   );

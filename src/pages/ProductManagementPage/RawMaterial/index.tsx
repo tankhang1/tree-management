@@ -1,9 +1,24 @@
-import { ActionIcon, Button, Group, Menu, Stack, Title } from "@mantine/core";
+import {
+  ActionIcon,
+  Button,
+  Card,
+  Group,
+  Menu,
+  MultiSelect,
+  SimpleGrid,
+  Stack,
+  Text,
+  TextInput,
+  Title,
+  Tooltip,
+} from "@mantine/core";
 import {
   IconDotsVertical,
   IconEdit,
   IconEye,
   IconFileExcel,
+  IconRefresh,
+  IconSearch,
   IconTrash,
 } from "@tabler/icons-react";
 import type { MRT_ColumnDef } from "mantine-react-table";
@@ -107,7 +122,66 @@ const ProductManagementRawMaterialPage = () => {
           </Button>
         </Group>
       </Group>
+      <Card withBorder shadow="sm" radius={4} p="md">
+        {/* Header */}
+        <Group justify="space-between" align="center" mb="xs">
+          <Stack gap={0}>
+            <Title order={4}>Tìm kiếm nguyên vật liệu</Title>
+            <Text c="dimmed" size="sm">
+              Điền từ khóa hoặc chọn lọc loại nguyên vật liệu, nhà cung cấp
+            </Text>
+          </Stack>
 
+          <Group>
+            <Tooltip label="Xoá tất cả bộ lọc">
+              <Button
+                radius={4}
+                variant="default"
+                leftSection={<IconRefresh size={16} />}
+                onClick={() => {}}
+              >
+                Làm mới
+              </Button>
+            </Tooltip>
+            <Button radius={4} leftSection={<IconSearch size={16} />}>
+              Lọc thông tin
+            </Button>
+          </Group>
+        </Group>
+
+        {/* Form */}
+        <Stack gap="sm">
+          {/* Khung tìm kiếm (keyword) */}
+          <TextInput
+            radius={4}
+            label="Khung tìm kiếm"
+            description="Ví dụ: Sầu riêng Ri6, Hộp thiếc"
+            placeholder="Nhập thông tin"
+            leftSection={<IconSearch size={16} />}
+          />
+
+          <SimpleGrid cols={{ base: 1, md: 2, lg: 3 }} spacing="sm">
+            <MultiSelect
+              radius={4}
+              label="Loại nguyên vật liệu"
+              placeholder="Chọn loại"
+              data={["Nguyên liệu", "Bao bì", "Phụ kiện"]}
+              description="Ví dụ: Nguyên liệu, Bao bì, Phụ kiện"
+              searchable
+              clearable
+            />
+            <MultiSelect
+              radius={4}
+              label="Nhà cung cấp"
+              placeholder="Chọn nhà cung cấp"
+              data={["Công ty A", "Công ty B", "Công ty C"]}
+              description="Ví dụ: Công ty A, Công ty B, Công ty C"
+              searchable
+              clearable
+            />
+          </SimpleGrid>
+        </Stack>
+      </Card>
       <Table columns={materialColumns} data={materialsData} />
     </Stack>
   );

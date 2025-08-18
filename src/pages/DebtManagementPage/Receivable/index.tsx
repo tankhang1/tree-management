@@ -7,19 +7,27 @@ import {
   Badge,
   Menu,
   ActionIcon,
-  Select,
+  Card,
+  Tooltip,
+  TextInput,
+  SimpleGrid,
+  MultiSelect,
 } from "@mantine/core";
 import {
+  IconCalendar,
   IconDotsVertical,
   IconEdit,
   IconEye,
   IconFileExcel,
+  IconRefresh,
+  IconSearch,
   IconTrash,
 } from "@tabler/icons-react";
 import type { MRT_ColumnDef } from "mantine-react-table";
 import Table from "../../../components/Table";
 import { useNavigate } from "react-router-dom";
 import { PATH } from "../../../constants/path.constants";
+import { DateTimePicker } from "@mantine/dates";
 
 type DebtPayable = {
   id: string; // Mã công nợ
@@ -165,31 +173,78 @@ const DebtManagementReceivablePage = () => {
           </Button>
         </Group>
       </Group>
-      <Group>
-        <Select
-          searchable
-          clearable
-          label="Phân loại"
-          placeholder="Phân loại"
-          data={[
-            { value: "customer", label: "Khách hàng" },
-            { value: "partner", label: "Đối tác" },
-          ]}
-          radius={4}
-        />
-        <Select
-          searchable
-          clearable
-          label="Trạng thái"
-          placeholder="Trạng thái"
-          data={[
-            { value: "paid", label: "Đã thanh toán" },
-            { value: "unpaid", label: "Chưa thanh toán" },
-            { value: "processing", label: "Đang xử lý" },
-          ]}
-          radius={4}
-        />
-      </Group>
+      <Card withBorder shadow="sm" radius={4} p="md">
+        {/* Header */}
+        <Group justify="space-between" align="center" mb="xs">
+          <Stack gap={0}>
+            <Title order={4}>Tìm kiếm công nợ phải thu</Title>
+            <Text c="dimmed" size="sm">
+              Điền từ khóa hoặc chọn lọc đối tượng, trạng thái, khoản thời gian
+            </Text>
+          </Stack>
+
+          <Group>
+            <Tooltip label="Xoá tất cả bộ lọc">
+              <Button
+                radius={4}
+                variant="default"
+                leftSection={<IconRefresh size={16} />}
+                onClick={() => {}}
+              >
+                Làm mới
+              </Button>
+            </Tooltip>
+            <Button radius={4} leftSection={<IconSearch size={16} />}>
+              Lọc thông tin
+            </Button>
+          </Group>
+        </Group>
+
+        {/* Form */}
+        <Stack gap="sm">
+          {/* Khung tìm kiếm (keyword) */}
+          <TextInput
+            radius={4}
+            label="Khung tìm kiếm"
+            description="Ví dụ: 0RD001"
+            placeholder="Nhập thông tin"
+            leftSection={<IconSearch size={16} />}
+          />
+
+          <SimpleGrid cols={{ base: 1, md: 2, lg: 3 }} spacing="sm">
+            <DateTimePicker
+              radius={4}
+              label="Khoản thời gian"
+              placeholder="Chọn thời gian"
+              description="Ví dụ: 01/01/2023 - 01/01/2025"
+              leftSection={<IconCalendar size={18} />}
+            />
+            <MultiSelect
+              label="Phân loại"
+              data={[
+                { value: "category1", label: "Phân loại 1" },
+                { value: "category2", label: "Phân loại 2" },
+                { value: "category3", label: "Phân loại 3" },
+              ]}
+              placeholder="Chọn thông tin"
+              searchable
+              description="Ví dụ: Khách hàng, Đối tác, Nhà cung cấp"
+              radius={4}
+            />
+            <MultiSelect
+              label="Trạng thái"
+              description="Ví dụ: Đã thanh toán, Chưa thanh toán, Đang xử lý"
+              data={[
+                { value: "pending", label: "Chưa thanh toán" },
+                { value: "paid", label: "Đã thanh toán" },
+                { value: "processing", label: "Đang xử lý" },
+              ]}
+              placeholder="Chọn trạng thái"
+              radius={4}
+            />
+          </SimpleGrid>
+        </Stack>
+      </Card>
       <Table columns={debtPayableColumns} data={debtPayableDataset} />
     </Stack>
   );

@@ -1,13 +1,16 @@
 import {
   ActionIcon,
-  Autocomplete,
   Button,
+  Card,
   Group,
   Image,
   Menu,
   Modal,
+  MultiSelect,
+  SimpleGrid,
   Stack,
   Text,
+  TextInput,
   Title,
   Tooltip,
 } from "@mantine/core";
@@ -16,8 +19,9 @@ import {
   IconEdit,
   IconEye,
   IconFileExcel,
+  IconRefresh,
+  IconSearch,
   IconTrash,
-  IconTree,
 } from "@tabler/icons-react";
 import type { MRT_ColumnDef } from "mantine-react-table";
 import Table from "../../../components/Table";
@@ -186,30 +190,68 @@ const PlantManagementVarietyPage = () => {
           </Button>
         </Group>
       </Group>
-      <Group>
-        <Autocomplete
-          radius={4}
-          leftSection={<IconTree size={18} />}
-          placeholder="Cây trồng"
-          data={[
-            "Sầu riêng",
-            "Xoài",
-            "Chuối",
-            "Cà phê",
-            "Mít",
-            "Bưởi",
-            "Dừa",
-            "Cam",
-            "Chanh",
-            "Ổi",
-            "Táo",
-            "Lê",
-            "Mận",
-            "Vải",
-            "Nhãn",
-          ]}
-        />
-      </Group>
+      <Card withBorder shadow="sm" radius={4} p="md">
+        {/* Header */}
+        <Group justify="space-between" align="center" mb="xs">
+          <Stack gap={0}>
+            <Title order={4}>Tìm kiếm giống cây</Title>
+            <Text c="dimmed" size="sm">
+              Điền từ khóa hoặc chọn lọc loại cây, cây trồng
+            </Text>
+          </Stack>
+
+          <Group>
+            <Tooltip label="Xoá tất cả bộ lọc">
+              <Button
+                radius={4}
+                variant="default"
+                leftSection={<IconRefresh size={16} />}
+                onClick={() => {}}
+              >
+                Làm mới
+              </Button>
+            </Tooltip>
+            <Button radius={4} leftSection={<IconSearch size={16} />}>
+              Lọc thông tin
+            </Button>
+          </Group>
+        </Group>
+
+        {/* Form */}
+        <Stack gap="sm">
+          {/* Khung tìm kiếm (keyword) */}
+          <TextInput
+            radius={4}
+            label="Khung tìm kiếm"
+            description="Ví dụ: Sầu riêng Ri6, Xoài Cát Chu"
+            placeholder="Nhập thông tin"
+            leftSection={<IconSearch size={16} />}
+          />
+
+          <SimpleGrid cols={{ base: 1, md: 2, lg: 3 }} spacing="sm">
+            <MultiSelect
+              radius={4}
+              label="Loại cây trồng"
+              description="Ví dụ: Hạt lai F1, Ghép cành"
+              placeholder="Chọn thông tin"
+              data={[
+                "Hạt lai F1",
+                "Ghép cành",
+                "Chồi cây",
+                "Hạt giống Robusta",
+                "Hạt giống Thái",
+              ]}
+            />
+            <MultiSelect
+              label="Cây trồng"
+              description="Ví dụ: Sầu riêng Ri6, Xoài Cát Chu"
+              placeholder="Chọn thông tin"
+              data={["Sầu riêng", "Xoài", "Bưởi", "Chôm chôm", "Măng cụt"]}
+              radius={4}
+            />
+          </SimpleGrid>
+        </Stack>
+      </Card>
       <Table columns={cropVarietyColumns} data={cropVarieties} />
       <Modal
         opened={openedVarietyForm}

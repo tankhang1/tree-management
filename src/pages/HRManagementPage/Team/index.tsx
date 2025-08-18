@@ -2,12 +2,16 @@ import {
   ActionIcon,
   Badge,
   Button,
+  Card,
   Group,
   Menu,
-  Select,
+  MultiSelect,
+  SimpleGrid,
   Stack,
   Text,
+  TextInput,
   Title,
+  Tooltip,
 } from "@mantine/core";
 import {
   IconDotsVertical,
@@ -15,6 +19,8 @@ import {
   IconEye,
   IconFileExcel,
   IconHome,
+  IconRefresh,
+  IconSearch,
   IconTrash,
 } from "@tabler/icons-react";
 import type { MRT_ColumnDef } from "mantine-react-table";
@@ -166,16 +172,79 @@ const HRManagementTeamPage = () => {
           </Button>
         </Group>
       </Group>
-      <Group>
-        <Select
-          searchable
-          clearable
-          radius={4}
-          leftSection={<IconHome size={18} />}
-          placeholder="Chọn bộ phận"
-          data={["Mùa vụ A", "Mùa vụ B", "Mùa vụ C"]}
-        />
-      </Group>
+      <Card withBorder shadow="sm" radius={4} p="md">
+        {/* Header */}
+        <Group justify="space-between" align="center" mb="xs">
+          <Stack gap={0}>
+            <Title order={4}>Tìm kiếm đội nhóm</Title>
+            <Text c="dimmed" size="sm">
+              Điền từ khóa hoặc chọn lọc phòng ban, vai trò
+            </Text>
+          </Stack>
+
+          <Group>
+            <Tooltip label="Xoá tất cả bộ lọc">
+              <Button
+                radius={4}
+                variant="default"
+                leftSection={<IconRefresh size={16} />}
+                onClick={() => {}}
+              >
+                Làm mới
+              </Button>
+            </Tooltip>
+            <Button radius={4} leftSection={<IconSearch size={16} />}>
+              Lọc thông tin
+            </Button>
+          </Group>
+        </Group>
+
+        {/* Form */}
+        <Stack gap="sm">
+          {/* Khung tìm kiếm (keyword) */}
+          <TextInput
+            radius={4}
+            label="Khung tìm kiếm"
+            description="Ví dụ: Nguyễn Văn A"
+            placeholder="Nhập thông tin"
+            leftSection={<IconSearch size={16} />}
+          />
+
+          <SimpleGrid cols={{ base: 1, md: 2, lg: 3 }} spacing="sm">
+            <MultiSelect
+              searchable
+              clearable
+              radius={4}
+              leftSection={<IconHome size={18} />}
+              label="Phòng ban"
+              description="Ví dụ: Phòng Nông Nghiệp, Phòng Kỹ Thuật"
+              placeholder="Chọn thông tin"
+              data={[
+                "Phòng Nông Nghiệp",
+                "Phòng Kỹ Thuật",
+                "Phòng Nhân Sự",
+                "Phòng Kế Toán",
+                "Phòng Quản Lý",
+              ]}
+            />
+            <MultiSelect
+              searchable
+              clearable
+              radius={4}
+              label="Vai trò"
+              description="Ví dụ: Kỹ sư canh tác, Giám sát hiện trường"
+              placeholder="Chọn thông tin"
+              data={[
+                "Kỹ sư canh tác",
+                "Giám sát hiện trường",
+                "Nhân viên hành chính",
+                "Kế toán",
+                "Quản lý",
+              ]}
+            />
+          </SimpleGrid>
+        </Stack>
+      </Card>
       <Table columns={groupColumns} data={groupData} />
     </Stack>
   );

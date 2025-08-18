@@ -3,14 +3,18 @@ import {
   Avatar,
   Badge,
   Button,
+  Card,
   Group,
   Menu,
   MultiSelect,
-  Select,
+  SimpleGrid,
   Stack,
+  Text,
+  TextInput,
   Title,
+  Tooltip,
 } from "@mantine/core";
-import { DateInput } from "@mantine/dates";
+import { DatePickerInput } from "@mantine/dates";
 import {
   IconCalendar,
   IconDotsVertical,
@@ -18,6 +22,8 @@ import {
   IconEye,
   IconFileExcel,
   IconHome,
+  IconRefresh,
+  IconSearch,
   IconTrash,
 } from "@tabler/icons-react";
 import type { MRT_ColumnDef } from "mantine-react-table";
@@ -147,55 +153,104 @@ const HRManagementEmployeePage = () => {
           </Button>
         </Group>
       </Group>
-      <Group>
-        <DateInput
-          leftSection={<IconCalendar size={18} />}
-          placeholder="Ngày tạo"
-          radius={4}
-        />
-        <DateInput
-          leftSection={<IconCalendar size={18} />}
-          placeholder="Ngày kết thúc"
-          radius={4}
-        />
-        <Select
-          searchable
-          clearable
-          radius={4}
-          leftSection={<IconHome size={18} />}
-          placeholder="Chọn phòng ban"
-          data={[
-            "Phòng Nông Nghiệp",
-            "Phòng Kỹ Thuật",
-            "Phòng Nhân Sự",
-            "Phòng Kế Toán",
-            "Phòng Quản Lý",
-          ]}
-        />
-        <Select
-          searchable
-          clearable
-          radius={4}
-          placeholder="Chọn vai trò"
-          data={[
-            "Kỹ sư canh tác",
-            "Giám sát hiện trường",
-            "Nhân viên hành chính",
-            "Kế toán",
-            "Quản lý",
-          ]}
-        />
-        <MultiSelect
-          searchable
-          radius={4}
-          placeholder="Trạng thái"
-          data={[
-            { value: "active", label: "Đang làm việc" },
-            { value: "inactive", label: "Nghỉ việc" },
-            { value: "probation", label: "Thử việc" },
-          ]}
-        />
-      </Group>
+
+      <Card withBorder shadow="sm" radius={4} p="md">
+        {/* Header */}
+        <Group justify="space-between" align="center" mb="xs">
+          <Stack gap={0}>
+            <Title order={4}>Tìm kiếm nhân viên</Title>
+            <Text c="dimmed" size="sm">
+              Điền từ khóa hoặc chọn lọc khoản thời gian, phòng ban, vai trò,
+              trạng thái
+            </Text>
+          </Stack>
+
+          <Group>
+            <Tooltip label="Xoá tất cả bộ lọc">
+              <Button
+                radius={4}
+                variant="default"
+                leftSection={<IconRefresh size={16} />}
+                onClick={() => {}}
+              >
+                Làm mới
+              </Button>
+            </Tooltip>
+            <Button radius={4} leftSection={<IconSearch size={16} />}>
+              Lọc thông tin
+            </Button>
+          </Group>
+        </Group>
+
+        {/* Form */}
+        <Stack gap="sm">
+          {/* Khung tìm kiếm (keyword) */}
+          <TextInput
+            radius={4}
+            label="Khung tìm kiếm"
+            description="Ví dụ: Nguyễn Văn A"
+            placeholder="Nhập thông tin"
+            leftSection={<IconSearch size={16} />}
+          />
+
+          <SimpleGrid cols={{ base: 1, md: 2, lg: 3 }} spacing="sm">
+            <DatePickerInput
+              leftSection={<IconCalendar size={18} />}
+              label="Khoảng thời gian"
+              description="Ví dụ: 18/5/2025 - 18/6/2025"
+              placeholder="Chọn thông tin"
+              radius={4}
+              clearable
+              locale="vi"
+              type="range"
+            />
+
+            <MultiSelect
+              searchable
+              clearable
+              radius={4}
+              leftSection={<IconHome size={18} />}
+              label="Phòng ban"
+              description="Ví dụ: Phòng Nông Nghiệp, Phòng Kỹ Thuật"
+              placeholder="Chọn thông tin"
+              data={[
+                "Phòng Nông Nghiệp",
+                "Phòng Kỹ Thuật",
+                "Phòng Nhân Sự",
+                "Phòng Kế Toán",
+                "Phòng Quản Lý",
+              ]}
+            />
+            <MultiSelect
+              searchable
+              clearable
+              radius={4}
+              label="Vai trò"
+              description="Ví dụ: Kỹ sư canh tác, Giám sát hiện trường"
+              placeholder="Chọn thông tin"
+              data={[
+                "Kỹ sư canh tác",
+                "Giám sát hiện trường",
+                "Nhân viên hành chính",
+                "Kế toán",
+                "Quản lý",
+              ]}
+            />
+            <MultiSelect
+              searchable
+              radius={4}
+              label="Trạng thái"
+              description="Ví dụ: Đang làm việc, Nghỉ việc"
+              placeholder="Chọn thông tin"
+              data={[
+                { value: "active", label: "Đang làm việc" },
+                { value: "inactive", label: "Nghỉ việc" },
+                { value: "probation", label: "Thử việc" },
+              ]}
+            />
+          </SimpleGrid>
+        </Stack>
+      </Card>
       <Table columns={staffColumns} data={staffDataset} />
     </Stack>
   );

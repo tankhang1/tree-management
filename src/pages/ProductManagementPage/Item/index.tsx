@@ -2,20 +2,26 @@ import {
   ActionIcon,
   Badge,
   Button,
+  Card,
   Divider,
   Group,
   Menu,
   Modal,
-  Select,
+  MultiSelect,
+  SimpleGrid,
   Stack,
   Text,
+  TextInput,
   Title,
+  Tooltip,
 } from "@mantine/core";
 import {
   IconDotsVertical,
   IconEdit,
   IconEye,
   IconFileExcel,
+  IconRefresh,
+  IconSearch,
   IconTrash,
 } from "@tabler/icons-react";
 import type { MRT_ColumnDef } from "mantine-react-table";
@@ -137,15 +143,66 @@ const ProductManagementItemPage = () => {
           </Button>
         </Group>
       </Group>
-      <Group>
-        <Select
-          data={["Công khai", "Không"]}
-          radius={4}
-          searchable
-          clearable
-          placeholder={"Công khai"}
-        />
-      </Group>
+      <Card withBorder shadow="sm" radius={4} p="md">
+        {/* Header */}
+        <Group justify="space-between" align="center" mb="xs">
+          <Stack gap={0}>
+            <Title order={4}>Tìm kiếm sản phẩm</Title>
+            <Text c="dimmed" size="sm">
+              Điền từ khóa hoặc chọn lọc loại sản phẩm, trạng thái
+            </Text>
+          </Stack>
+
+          <Group>
+            <Tooltip label="Xoá tất cả bộ lọc">
+              <Button
+                radius={4}
+                variant="default"
+                leftSection={<IconRefresh size={16} />}
+                onClick={() => {}}
+              >
+                Làm mới
+              </Button>
+            </Tooltip>
+            <Button radius={4} leftSection={<IconSearch size={16} />}>
+              Lọc thông tin
+            </Button>
+          </Group>
+        </Group>
+
+        {/* Form */}
+        <Stack gap="sm">
+          {/* Khung tìm kiếm (keyword) */}
+          <TextInput
+            radius={4}
+            label="Khung tìm kiếm"
+            description="Ví dụ: Mứt sầu riêng Ri6"
+            placeholder="Nhập thông tin"
+            leftSection={<IconSearch size={16} />}
+          />
+
+          <SimpleGrid cols={{ base: 1, md: 2, lg: 3 }} spacing="sm">
+            <MultiSelect
+              radius={4}
+              searchable
+              clearable
+              label="Loại sản phẩm"
+              description="Ví dụ: Thực phẩm chế biến, Đồ uống"
+              placeholder="Chọn thông tin"
+              data={["Thực phẩm chế biến", "Đồ uống", "Thực phẩm sấy"]}
+            />
+            <MultiSelect
+              radius={4}
+              searchable
+              clearable
+              label="Trạng thái"
+              description="Ví dụ: Còn hàng, Hết hàng"
+              placeholder="Chọn thông tin"
+              data={["Còn hàng", "Hết hàng"]}
+            />
+          </SimpleGrid>
+        </Stack>
+      </Card>
 
       <Table columns={productColumns} data={productData} />
       <Modal

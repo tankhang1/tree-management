@@ -1,24 +1,32 @@
 import {
   ActionIcon,
   Button,
+  Card,
   Group,
   Menu,
   Modal,
+  MultiSelect,
+  SimpleGrid,
   Stack,
   Text,
+  TextInput,
   Title,
+  Tooltip,
 } from "@mantine/core";
 import {
   IconDotsVertical,
   IconEdit,
   IconEye,
   IconFileExcel,
+  IconRefresh,
+  IconSearch,
   IconTrash,
 } from "@tabler/icons-react";
 import type { MRT_ColumnDef } from "mantine-react-table";
 import Table from "../../../components/Table";
 import { useDisclosure } from "@mantine/hooks";
 import AddFertilizerUsageForm from "./components/AddFertilizerUsageForm";
+import { DatePickerInput } from "@mantine/dates";
 
 type FertilizerUsageRecord = {
   id: string;
@@ -143,7 +151,65 @@ const FertilizerManagementUsageHistoryPage = () => {
           </Button>
         </Group>
       </Group>
+      <Card withBorder shadow="sm" radius={4} p="md">
+        {/* Header */}
+        <Group justify="space-between" align="center" mb="xs">
+          <Stack gap={0}>
+            <Title order={4}>Tìm kiếm lịch sử sử dụng phân bón</Title>
+            <Text c="dimmed" size="sm">
+              Điền từ khóa hoặc chọn lọc khoản thời gian, loại phân bón
+            </Text>
+          </Stack>
 
+          <Group>
+            <Tooltip label="Xoá tất cả bộ lọc">
+              <Button
+                radius={4}
+                variant="default"
+                leftSection={<IconRefresh size={16} />}
+                onClick={() => {}}
+              >
+                Làm mới
+              </Button>
+            </Tooltip>
+            <Button radius={4} leftSection={<IconSearch size={16} />}>
+              Lọc thông tin
+            </Button>
+          </Group>
+        </Group>
+
+        {/* Form */}
+        <Stack gap="sm">
+          {/* Khung tìm kiếm (keyword) */}
+          <TextInput
+            radius={4}
+            label="Khung tìm kiếm"
+            description="Ví dụ: Phân NPK"
+            placeholder="Nhập thông tin"
+            leftSection={<IconSearch size={16} />}
+          />
+
+          <SimpleGrid cols={{ base: 1, md: 2, lg: 3 }} spacing="sm">
+            <DatePickerInput
+              type="range"
+              radius={4}
+              label="Khoảng thời gian"
+              description="Ví dụ: 15/5/2025 - 18/5/2025"
+              placeholder="Ví dụ: 15/5/2025 - 18/5/2025"
+              clearable
+            />
+            <MultiSelect
+              label="Loại phân bón"
+              description="Ví dụ: Phân NPK, Phân hữu cơ"
+              placeholder="Chọn thông tin"
+              data={["Phân NPK", "Phân hữu cơ", "Phân vi sinh"]}
+              searchable
+              clearable
+              radius={4}
+            />
+          </SimpleGrid>
+        </Stack>
+      </Card>
       <Table columns={usageColumns} data={usageRecords} />
       <Modal
         opened={openedAddFertilizerUsage}

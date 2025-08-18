@@ -1,14 +1,18 @@
 import {
   ActionIcon,
   Button,
+  Card,
   Group,
   Image,
   Menu,
   Modal,
-  Select,
+  MultiSelect,
+  SimpleGrid,
   Stack,
   Text,
+  TextInput,
   Title,
+  Tooltip,
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import {
@@ -16,9 +20,9 @@ import {
   IconEdit,
   IconEye,
   IconFileExcel,
-  IconHome,
+  IconRefresh,
+  IconSearch,
   IconTrash,
-  IconWorld,
 } from "@tabler/icons-react";
 import type { MRT_ColumnDef } from "mantine-react-table";
 import Table from "../../../components/Table";
@@ -216,40 +220,73 @@ const PlantManagementSeedPage = () => {
           </Button>
         </Group>
       </Group>
-      <Group>
-        <Select
-          searchable
-          clearable
-          radius={4}
-          leftSection={<IconHome size={18} />}
-          placeholder="Nhà cung cấp"
-          data={[
-            "Công ty Nông sản Việt",
-            "Công ty Mekong Seed",
-            "Green Seed Co.",
-            "Đại lý A",
-            "Đại lý B",
-            "Đại lý C",
-          ]}
-        />
-        <Select
-          searchable
-          clearable
-          radius={4}
-          leftSection={<IconWorld size={18} />}
-          placeholder="Xuất xứ"
-          data={[
-            "Việt Nam",
-            "Thái Lan",
-            "Indonesia",
-            "Malaysia",
-            "Philippines",
-            "Ấn Độ",
-            "Trung Quốc",
-            "Nhật Bản",
-          ]}
-        />
-      </Group>
+      <Card withBorder shadow="sm" radius={4} p="md">
+        {/* Header */}
+        <Group justify="space-between" align="center" mb="xs">
+          <Stack gap={0}>
+            <Title order={4}>Tìm kiếm hạt giống cây</Title>
+            <Text c="dimmed" size="sm">
+              Điền từ khóa hoặc chọn lọc nhà cung cấp, xuất xứ
+            </Text>
+          </Stack>
+
+          <Group>
+            <Tooltip label="Xoá tất cả bộ lọc">
+              <Button
+                radius={4}
+                variant="default"
+                leftSection={<IconRefresh size={16} />}
+                onClick={() => {}}
+              >
+                Làm mới
+              </Button>
+            </Tooltip>
+            <Button radius={4} leftSection={<IconSearch size={16} />}>
+              Lọc thông tin
+            </Button>
+          </Group>
+        </Group>
+
+        {/* Form */}
+        <Stack gap="sm">
+          {/* Khung tìm kiếm (keyword) */}
+          <TextInput
+            radius={4}
+            label="Khung tìm kiếm"
+            description="Ví dụ: Giống Ri6, Giống Xoài Miền Tây"
+            placeholder="Nhập thông tin"
+            leftSection={<IconSearch size={16} />}
+          />
+
+          <SimpleGrid cols={{ base: 1, md: 2, lg: 3 }} spacing="sm">
+            <MultiSelect
+              radius={4}
+              label="Nhà cung cấp"
+              description="Ví dụ: Công ty TNHH ABC, Công ty CP XYZ"
+              placeholder="Chọn thông tin"
+              data={[
+                "Công ty TNHH ABC",
+                "Công ty CP XYZ",
+                "Công ty TNHH MTV DEF",
+                "Công ty TNHH GHI",
+              ]}
+            />
+            <MultiSelect
+              radius={4}
+              label="Xuất xứ"
+              description="Ví dụ: Việt Nam, Thái Lan, Indonesia"
+              placeholder="Chọn thông tin"
+              data={[
+                "Việt Nam",
+                "Thái Lan",
+                "Indonesia",
+                "Malaysia",
+                "Campuchia",
+              ]}
+            />
+          </SimpleGrid>
+        </Stack>
+      </Card>
       <Table columns={seedColumns} data={seedDataset} />
       <Modal
         opened={openedSeedForm}
