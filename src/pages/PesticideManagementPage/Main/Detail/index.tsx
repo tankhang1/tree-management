@@ -25,11 +25,18 @@ import {
   Tooltip,
 } from "@mantine/core";
 import { DatePickerInput } from "@mantine/dates";
-import { IconPencil, IconPlus, IconTrash } from "@tabler/icons-react";
+import {
+  IconArrowLeft,
+  IconPencil,
+  IconPlus,
+  IconTrash,
+} from "@tabler/icons-react";
 import type { MRT_ColumnDef } from "mantine-react-table";
 import Table from "../../../../components/Table";
 import dayjs from "dayjs";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { CompanyList } from "../../../../components/CompanyList";
 
 type ActiveIngredient = { name: string; concentration: string; moA?: string };
 type CropUse = { crop: string; target: string; rate: string; phi: string };
@@ -136,7 +143,7 @@ const Section = ({
   right?: React.ReactNode;
   children: React.ReactNode;
 }) => (
-  <Card withBorder radius="md" p="md">
+  <Card withBorder radius={4} p="md">
     <Group justify="space-between" mb="xs">
       <Title order={5}>{title}</Title>
       <Group gap="xs">
@@ -144,7 +151,7 @@ const Section = ({
         {onEdit && (
           <Button
             size="xs"
-            radius="md"
+            radius={4}
             leftSection={<IconPencil size={14} />}
             onClick={onEdit}
           >
@@ -345,7 +352,7 @@ export default function PesticideManagementMainDetailPage() {
 
   const supplierCols: MRT_ColumnDef<Supplier>[] = [
     { accessorKey: "id", header: "Mã NCC" },
-    { accessorKey: "name", header: "Nhà cung cấp" },
+    { accessorKey: "name", header: "Doan nghiệp/ Nông hộ" },
     { accessorKey: "contact", header: "Liên hệ" },
     { accessorKey: "phone", header: "SĐT" },
     { accessorKey: "email", header: "Email" },
@@ -354,7 +361,6 @@ export default function PesticideManagementMainDetailPage() {
     { accessorKey: "code", header: "Mã quy cách" },
     { accessorKey: "unit", header: "ĐVT" },
     { accessorKey: "pack", header: "Quy cách" },
-    { accessorKey: "barcode", header: "Mã vạch" },
   ];
   const priceCols: MRT_ColumnDef<PriceTier>[] = [
     { accessorKey: "pkgCode", header: "Quy cách" },
@@ -373,11 +379,19 @@ export default function PesticideManagementMainDetailPage() {
     { accessorKey: "reserved", header: "Đã giữ" },
     { accessorKey: "uom", header: "ĐVT" },
   ];
-
+  const navigate = useNavigate();
   return (
-    <>
+    <Card shadow="sm" padding="lg" radius="md" withBorder>
       <Stack gap="lg">
-        <Group justify="space-between">
+        <Group>
+          <Button
+            variant="subtle"
+            radius={4}
+            leftSection={<IconArrowLeft size={18} />}
+            onClick={() => navigate(-1)}
+          >
+            Quay lại
+          </Button>
           <Title order={3}>Chi tiết thuốc BVTV</Title>
           <Group>
             <Badge
@@ -386,9 +400,6 @@ export default function PesticideManagementMainDetailPage() {
             >
               {data.audit.status}
             </Badge>
-            <Button radius="md" onClick={() => openEdit("basic")}>
-              Sửa nhanh
-            </Button>
           </Group>
         </Group>
 
@@ -417,7 +428,7 @@ export default function PesticideManagementMainDetailPage() {
                   <Grid.Col span={{ base: 12, md: 4 }}>
                     <Image
                       src={data.image}
-                      radius="md"
+                      radius={4}
                       h={160}
                       fit="cover"
                       alt={data.name}
@@ -498,38 +509,37 @@ export default function PesticideManagementMainDetailPage() {
                   })
                 }
               >
-               
-                    <Title order={6}>Hướng dẫn</Title>
-                    <Divider my="xs" />
-                    <List spacing={4} size="sm">
-                      <List.Item>
-                        Pha loãng: <b>{data.dilution}</b>
-                      </List.Item>
-                      <List.Item>
-                        IRAC: <b>{data.iracGroup}</b>
-                      </List.Item>
-                      <List.Item>
-                        REI: <b>{data.rei}</b>
-                      </List.Item>
-                    </List>
-                    <Box mt="xs" p="sm" bg="gray.0" style={{ borderRadius: 8 }}>
-                      <Text size="sm">{data.usageNote}</Text>
-                    </Box>
-                    <Title order={6} mt="sm">
-                      Liều dùng theo cây trồng
-                    </Title>
-                    <Divider my="xs" />
-                    <List spacing={4} size="sm">
-                      {data.crops.map((c, i) => (
-                        <List.Item key={i}>
-                          {c.crop}: <b>{c.rate}</b>
-                        </List.Item>
-                      ))}
-                    </List>
-                  </Section>
+                <Title order={6}>Hướng dẫn</Title>
+                <Divider my="xs" />
+                <List spacing={4} size="sm">
+                  <List.Item>
+                    Pha loãng: <b>{data.dilution}</b>
+                  </List.Item>
+                  <List.Item>
+                    IRAC: <b>{data.iracGroup}</b>
+                  </List.Item>
+                  <List.Item>
+                    REI: <b>{data.rei}</b>
+                  </List.Item>
+                </List>
+                <Box mt="xs" p="sm" bg="gray.0" style={{ borderRadius: 8 }}>
+                  <Text size="sm">{data.usageNote}</Text>
+                </Box>
+                <Title order={6} mt="sm">
+                  Liều dùng theo cây trồng
+                </Title>
+                <Divider my="xs" />
+                <List spacing={4} size="sm">
+                  {data.crops.map((c, i) => (
+                    <List.Item key={i}>
+                      {c.crop}: <b>{c.rate}</b>
+                    </List.Item>
+                  ))}
+                </List>
+              </Section>
 
               <Section
-                title="Nhà cung cấp & Quy cách"
+                title="Doan nghiệp/ Nông hộ & Quy cách"
                 onEdit={() =>
                   openEdit("sup", {
                     suppliers: data.suppliers,
@@ -540,6 +550,7 @@ export default function PesticideManagementMainDetailPage() {
                 right={
                   <Button
                     size="xs"
+                    radius={4}
                     leftSection={<IconPlus size={14} />}
                     onClick={() =>
                       openEdit("sup", {
@@ -555,7 +566,7 @@ export default function PesticideManagementMainDetailPage() {
               >
                 <Tabs defaultValue="suppliers" keepMounted={false}>
                   <Tabs.List>
-                    <Tabs.Tab value="suppliers">Nhà cung cấp</Tabs.Tab>
+                    <Tabs.Tab value="suppliers">Doan nghiệp/ Nông hộ</Tabs.Tab>
                     <Tabs.Tab value="packages">Quy cách</Tabs.Tab>
                     <Tabs.Tab value="prices">Bảng giá</Tabs.Tab>
                   </Tabs.List>
@@ -622,7 +633,7 @@ export default function PesticideManagementMainDetailPage() {
                       </Tabs.List>
                       <Tabs.Panel value="pdf" pt="sm">
                         {data.techPdf ? (
-                          <Paper withBorder radius="md" p="sm" bg="gray.0">
+                          <Paper withBorder radius={4} p="sm" bg="gray.0">
                             <iframe
                               src={data.techPdf.url}
                               width="100%"
@@ -638,7 +649,7 @@ export default function PesticideManagementMainDetailPage() {
                         )}
                       </Tabs.Panel>
                       <Tabs.Panel value="html" pt="sm">
-                        <Paper withBorder radius="md" p="sm" bg="gray.0">
+                        <Paper withBorder radius={4} p="sm" bg="gray.0">
                           <Box
                             dangerouslySetInnerHTML={{
                               __html:
@@ -731,11 +742,6 @@ export default function PesticideManagementMainDetailPage() {
             </Stack>
           </Grid.Col>
         </Grid>
-
-        <Group justify="flex-end">
-          <Button variant="default">Huỷ</Button>
-          <Button>Lưu thay đổi</Button>
-        </Group>
       </Stack>
 
       <Modal
@@ -743,7 +749,7 @@ export default function PesticideManagementMainDetailPage() {
         onClose={closeEdit}
         title="Sửa thông tin cơ bản"
         size="lg"
-        radius="md"
+        radius={4}
         centered
       >
         <Stack>
@@ -855,7 +861,7 @@ export default function PesticideManagementMainDetailPage() {
         onClose={closeEdit}
         title="Sửa hoạt chất & công dụng"
         size="xl"
-        radius="md"
+        radius={4}
         centered
       >
         <Stack>
@@ -946,10 +952,12 @@ export default function PesticideManagementMainDetailPage() {
                       arr[i] = { ...c, crop: e.currentTarget.value };
                       setDraft({ ...draft, crops: arr });
                     }}
+                    radius={4}
                   />
                 </Grid.Col>
                 <Grid.Col span={3}>
                   <TextInput
+                    radius={4}
                     label="Đối tượng"
                     defaultValue={c.target}
                     onChange={(e) => {
@@ -961,6 +969,7 @@ export default function PesticideManagementMainDetailPage() {
                 </Grid.Col>
                 <Grid.Col span={4}>
                   <TextInput
+                    radius={4}
                     label="Liều lượng"
                     defaultValue={c.rate}
                     onChange={(e) => {
@@ -983,6 +992,7 @@ export default function PesticideManagementMainDetailPage() {
                 </Grid.Col>
                 <Grid.Col span={1}>
                   <ActionIcon
+                    radius={4}
                     variant="light"
                     color="red"
                     onClick={() => {
@@ -997,6 +1007,7 @@ export default function PesticideManagementMainDetailPage() {
               </Grid>
             ))}
             <Button
+              radius={4}
               size="xs"
               leftSection={<IconPlus size={14} />}
               variant="light"
@@ -1017,6 +1028,7 @@ export default function PesticideManagementMainDetailPage() {
           <Grid>
             <Grid.Col span={6}>
               <TextInput
+                radius={4}
                 label="Pha loãng"
                 defaultValue={draft.dilution}
                 onChange={(e) =>
@@ -1026,6 +1038,7 @@ export default function PesticideManagementMainDetailPage() {
             </Grid.Col>
             <Grid.Col span={3}>
               <TextInput
+                radius={4}
                 label="IRAC"
                 defaultValue={draft.iracGroup}
                 onChange={(e) =>
@@ -1035,6 +1048,7 @@ export default function PesticideManagementMainDetailPage() {
             </Grid.Col>
             <Grid.Col span={3}>
               <TextInput
+                radius={4}
                 label="REI"
                 defaultValue={draft.rei}
                 onChange={(e) =>
@@ -1044,6 +1058,7 @@ export default function PesticideManagementMainDetailPage() {
             </Grid.Col>
           </Grid>
           <Textarea
+            radius={4}
             label="Ghi chú sử dụng"
             minRows={2}
             defaultValue={draft.usageNote}
@@ -1052,10 +1067,12 @@ export default function PesticideManagementMainDetailPage() {
             }
           />
           <Group justify="flex-end">
-            <Button variant="default" onClick={closeEdit}>
+            <Button radius={4} variant="default" onClick={closeEdit}>
               Huỷ
             </Button>
-            <Button onClick={saveEdit}>Cập nhật</Button>
+            <Button radius={4} onClick={saveEdit}>
+              Cập nhật
+            </Button>
           </Group>
         </Stack>
       </Modal>
@@ -1064,13 +1081,14 @@ export default function PesticideManagementMainDetailPage() {
         opened={modal.key === "safety"}
         onClose={closeEdit}
         title="Sửa an toàn & bảo quản"
-        radius="md"
+        radius={4}
         centered
       >
         <Stack>
           <Grid>
             <Grid.Col span={6}>
               <TextInput
+                radius={4}
                 label="Độc tính"
                 defaultValue={draft.toxicityClass}
                 onChange={(e) =>
@@ -1081,6 +1099,7 @@ export default function PesticideManagementMainDetailPage() {
             <Grid.Col span={6}>
               <TextInput
                 label="WHO"
+                radius={4}
                 defaultValue={draft.whoClass}
                 onChange={(e) =>
                   setDraft({ ...draft, whoClass: e.currentTarget.value })
@@ -1090,6 +1109,7 @@ export default function PesticideManagementMainDetailPage() {
           </Grid>
           <MultiSelect
             label="PPE"
+            radius={4}
             data={["Găng tay", "Khẩu trang", "Kính", "Ủng", "Áo choàng"]}
             defaultValue={draft.ppe}
             onChange={(v) => setDraft({ ...draft, ppe: v })}
@@ -1098,6 +1118,7 @@ export default function PesticideManagementMainDetailPage() {
           <Textarea
             label="Nguy cơ"
             minRows={2}
+            radius={4}
             defaultValue={draft.hazards?.join("\n")}
             onChange={(e) =>
               setDraft({
@@ -1109,6 +1130,7 @@ export default function PesticideManagementMainDetailPage() {
           <Textarea
             label="Sơ cứu"
             minRows={2}
+            radius={4}
             defaultValue={draft.firstAid}
             onChange={(e) =>
               setDraft({ ...draft, firstAid: e.currentTarget.value })
@@ -1117,6 +1139,7 @@ export default function PesticideManagementMainDetailPage() {
           <Textarea
             label="Bảo quản"
             minRows={2}
+            radius={4}
             defaultValue={draft.storage}
             onChange={(e) =>
               setDraft({ ...draft, storage: e.currentTarget.value })
@@ -1125,16 +1148,19 @@ export default function PesticideManagementMainDetailPage() {
           <Textarea
             label="Tương hợp"
             minRows={2}
+            radius={4}
             defaultValue={draft.compatibility}
             onChange={(e) =>
               setDraft({ ...draft, compatibility: e.currentTarget.value })
             }
           />
           <Group justify="flex-end">
-            <Button variant="default" onClick={closeEdit}>
+            <Button radius={4} variant="default" onClick={closeEdit}>
               Huỷ
             </Button>
-            <Button onClick={saveEdit}>Cập nhật</Button>
+            <Button radius={4} onClick={saveEdit}>
+              Cập nhật
+            </Button>
           </Group>
         </Stack>
       </Modal>
@@ -1144,13 +1170,14 @@ export default function PesticideManagementMainDetailPage() {
         onClose={closeEdit}
         title="Tài liệu & pháp lý"
         size="lg"
-        radius="md"
+        radius={4}
         centered
       >
         <Stack>
           <Grid>
             <Grid.Col span={6}>
               <TextInput
+                radius={4}
                 label="Số đăng ký"
                 defaultValue={draft.registrationNo}
                 onChange={(e) =>
@@ -1160,6 +1187,7 @@ export default function PesticideManagementMainDetailPage() {
             </Grid.Col>
             <Grid.Col span={6}>
               <DatePickerInput
+                radius={4}
                 label="Ngày đăng ký"
                 value={new Date(draft.registrationDate)}
                 onChange={(d) =>
@@ -1181,6 +1209,7 @@ export default function PesticideManagementMainDetailPage() {
               <Grid>
                 <Grid.Col span={6}>
                   <TextInput
+                    radius={4}
                     label="MSDS label"
                     defaultValue={draft.msds?.label}
                     onChange={(e) =>
@@ -1197,6 +1226,7 @@ export default function PesticideManagementMainDetailPage() {
                 <Grid.Col span={6}>
                   <TextInput
                     label="MSDS URL"
+                    radius={4}
                     defaultValue={draft.msds?.url}
                     onChange={(e) =>
                       setDraft({
@@ -1211,6 +1241,7 @@ export default function PesticideManagementMainDetailPage() {
                 </Grid.Col>
                 <Grid.Col span={6}>
                   <TextInput
+                    radius={4}
                     label="Tech PDF label"
                     defaultValue={draft.techPdf?.label}
                     onChange={(e) =>
@@ -1226,6 +1257,7 @@ export default function PesticideManagementMainDetailPage() {
                 </Grid.Col>
                 <Grid.Col span={6}>
                   <TextInput
+                    radius={4}
                     label="Tech PDF URL"
                     defaultValue={draft.techPdf?.url}
                     onChange={(e) =>
@@ -1243,6 +1275,7 @@ export default function PesticideManagementMainDetailPage() {
             </Tabs.Panel>
             <Tabs.Panel value="html" pt="sm">
               <Textarea
+                radius={4}
                 label="Tech HTML"
                 minRows={6}
                 defaultValue={draft.techHtml}
@@ -1253,10 +1286,12 @@ export default function PesticideManagementMainDetailPage() {
             </Tabs.Panel>
           </Tabs>
           <Group justify="flex-end">
-            <Button variant="default" onClick={closeEdit}>
+            <Button radius={4} variant="default" onClick={closeEdit}>
               Huỷ
             </Button>
-            <Button onClick={saveEdit}>Cập nhật</Button>
+            <Button radius={4} onClick={saveEdit}>
+              Cập nhật
+            </Button>
           </Group>
         </Stack>
       </Modal>
@@ -1264,99 +1299,13 @@ export default function PesticideManagementMainDetailPage() {
       <Modal
         opened={modal.key === "sup"}
         onClose={closeEdit}
-        title="Nhà cung cấp & Quy cách & Giá"
+        title="Doan nghiệp/ Nông hộ & Quy cách & Giá"
         size="xl"
-        radius="md"
+        radius={4}
         centered
       >
         <Stack>
-          <Title order={6}>Nhà cung cấp</Title>
-          <Table
-            columns={[
-              ...supplierCols,
-              {
-                id: "actions",
-                header: "",
-                Cell: ({ row }) => (
-                  <Group gap={6}>
-                    <ActionIcon
-                      variant="light"
-                      color="red"
-                      onClick={() => {
-                        const arr = [...(draft.suppliers || data.suppliers)];
-                        arr.splice(row.index, 1);
-                        setDraft({ ...draft, suppliers: arr });
-                      }}
-                    >
-                      <IconTrash size={16} />
-                    </ActionIcon>
-                  </Group>
-                ),
-              },
-            ]}
-            data={draft.suppliers || data.suppliers}
-          />
-          <Grid>
-            <Grid.Col span={3}>
-              <TextInput
-                placeholder="Mã NCC"
-                onChange={(e) =>
-                  setDraft({ ...draft, _sid: e.currentTarget.value })
-                }
-              />
-            </Grid.Col>
-            <Grid.Col span={3}>
-              <TextInput
-                placeholder="Tên NCC"
-                onChange={(e) =>
-                  setDraft({ ...draft, _sname: e.currentTarget.value })
-                }
-              />
-            </Grid.Col>
-            <Grid.Col span={3}>
-              <TextInput
-                placeholder="Liên hệ"
-                onChange={(e) =>
-                  setDraft({ ...draft, _scontact: e.currentTarget.value })
-                }
-              />
-            </Grid.Col>
-            <Grid.Col span={2}>
-              <TextInput
-                placeholder="SĐT"
-                onChange={(e) =>
-                  setDraft({ ...draft, _sphone: e.currentTarget.value })
-                }
-              />
-            </Grid.Col>
-            <Grid.Col span={1}>
-              <Button
-                fullWidth
-                variant="light"
-                onClick={() => {
-                  const arr = [...(draft.suppliers || data.suppliers)];
-                  arr.push({
-                    id: draft._sid || "NEW",
-                    name: draft._sname || "NCC mới",
-                    contact: draft._scontact || "",
-                    phone: draft._sphone || "",
-                    email: "",
-                  });
-                  setDraft({
-                    ...draft,
-                    suppliers: arr,
-                    _sid: "",
-                    _sname: "",
-                    _scontact: "",
-                    _sphone: "",
-                  });
-                }}
-              >
-                Thêm
-              </Button>
-            </Grid.Col>
-          </Grid>
-
+          <CompanyList isMultiple />
           <Title order={6}>Quy cách</Title>
           <Table
             columns={[
@@ -1381,54 +1330,45 @@ export default function PesticideManagementMainDetailPage() {
             ]}
             data={draft.packages || data.packages}
           />
-          <Grid>
-            <Grid.Col span={3}>
-              <TextInput
-                placeholder="Mã"
-                onChange={(e) =>
-                  setDraft({ ...draft, _pcode: e.currentTarget.value })
-                }
-              />
-            </Grid.Col>
-            <Grid.Col span={3}>
-              <Select
-                placeholder="ĐVT"
-                data={uoms}
-                onChange={(v) => setDraft({ ...draft, _punit: v })}
-              />
-            </Grid.Col>
-            <Grid.Col span={4}>
-              <TextInput
-                placeholder="Quy cách (ví dụ 500ml)"
-                onChange={(e) =>
-                  setDraft({ ...draft, _ppack: e.currentTarget.value })
-                }
-              />
-            </Grid.Col>
-            <Grid.Col span={1}>
-              <Button
-                fullWidth
-                variant="light"
-                onClick={() => {
-                  const arr = [...(draft.packages || data.packages)];
-                  arr.push({
-                    code: draft._pcode || "NEW",
-                    unit: draft._punit || "Chai",
-                    pack: draft._ppack || "—",
-                  });
-                  setDraft({
-                    ...draft,
-                    packages: arr,
-                    _pcode: "",
-                    _punit: "",
-                    _ppack: "",
-                  });
-                }}
-              >
-                Thêm
-              </Button>
-            </Grid.Col>
-          </Grid>
+
+          <Group>
+            <Select
+              radius={4}
+              placeholder="ĐVT"
+              data={uoms}
+              onChange={(v) => setDraft({ ...draft, _punit: v })}
+            />
+
+            <TextInput
+              radius={4}
+              placeholder="Quy cách (ví dụ 500ml)"
+              onChange={(e) =>
+                setDraft({ ...draft, _ppack: e.currentTarget.value })
+              }
+            />
+
+            <Button
+              radius={4}
+              variant="light"
+              onClick={() => {
+                const arr = [...(draft.packages || data.packages)];
+                arr.push({
+                  code: draft._pcode || "NEW",
+                  unit: draft._punit || "Chai",
+                  pack: draft._ppack || "—",
+                });
+                setDraft({
+                  ...draft,
+                  packages: arr,
+                  _pcode: "",
+                  _punit: "",
+                  _ppack: "",
+                });
+              }}
+            >
+              Thêm
+            </Button>
+          </Group>
 
           <Title order={6}>Bảng giá</Title>
           <Table
@@ -1519,7 +1459,7 @@ export default function PesticideManagementMainDetailPage() {
         onClose={closeEdit}
         title="Sửa tồn kho"
         size="lg"
-        radius="md"
+        radius={4}
         centered
       >
         <Stack>
@@ -1618,6 +1558,6 @@ export default function PesticideManagementMainDetailPage() {
           </Group>
         </Stack>
       </Modal>
-    </>
+    </Card>
   );
 }

@@ -65,6 +65,9 @@ const mockFertilizers: Fertilizer[] = [
 ];
 const FertilizerManagementMainPage = () => {
   const navigate = useNavigate();
+  const onFertilizerDetail = () => {
+    navigate(PATH.FERTILIZER_MAIN_DETAIL);
+  };
   const fertilizerColumns: MRT_ColumnDef<Fertilizer>[] = [
     {
       accessorKey: "id",
@@ -117,7 +120,10 @@ const FertilizerManagementMainPage = () => {
           </Menu.Target>
 
           <Menu.Dropdown>
-            <Menu.Item leftSection={<IconEye size={18} color="gray" />}>
+            <Menu.Item
+              onClick={onFertilizerDetail}
+              leftSection={<IconEye size={18} color="gray" />}
+            >
               Chi tiết
             </Menu.Item>
             <Menu.Item leftSection={<IconEdit size={18} color="green" />}>

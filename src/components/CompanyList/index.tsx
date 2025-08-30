@@ -7,6 +7,7 @@ import {
   ActionIcon,
   Tooltip,
   Autocomplete,
+  Checkbox,
 } from "@mantine/core";
 import {
   IconUser,
@@ -85,9 +86,22 @@ const data = [
     address: "Ấp 4, xã Tân Phước, huyện Phú Riềng, Bình Phước",
   },
 ];
-
-export function CompanyList() {
-  const [selectedId, setSelectedId] = useState("");
+type TCompanyList = {
+  isMultiple?: boolean;
+};
+export function CompanyList({ isMultiple = false }: TCompanyList) {
+  const [selectedId, setSelectedId] = useState<string[]>([]);
+  const onSelect = (id: string) => {
+    if (isMultiple) {
+      if (selectedId.includes(id)) {
+        setSelectedId((prev) => prev.filter((item) => item !== id));
+      } else {
+        setSelectedId((prev) => [...prev, id]);
+      }
+    } else {
+      setSelectedId([id]);
+    }
+  };
   return (
     <Stack gap={"xs"}>
       <Text fw={500} fz={15}>
@@ -108,12 +122,12 @@ export function CompanyList() {
               radius={4}
               miw={500}
               h={300}
-              onClick={() => setSelectedId(item.id)}
+              onClick={() => onSelect(item.id)}
               withBorder
               style={{
                 position: "relative",
                 transition: "transform 0.2s ease",
-                borderColor: selectedId === item.id ? "green" : undefined,
+                borderColor: selectedId.includes(item.id) ? "green" : undefined,
                 cursor: "pointer",
               }}
               onMouseEnter={(e) =>
@@ -130,9 +144,17 @@ export function CompanyList() {
                     <Text size="lg" fw={700}>
                       {item.name}
                     </Text>
-                    <Badge color="green" variant="light" mt={4}>
-                      {item.type}
-                    </Badge>
+                    <Group>
+                      <Badge color="green" variant="light" mt={4}>
+                        {item.type}
+                      </Badge>
+                      {isMultiple && (
+                        <Checkbox
+                          checked={selectedId.includes(item.id)}
+                          radius={4}
+                        />
+                      )}
+                    </Group>
                   </div>
                 </Group>
 

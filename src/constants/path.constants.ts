@@ -199,6 +199,7 @@ export const PATH = {
   FERTILIZER_TYPE: "/fertilizer-management/type",
   FERTILIZER_MAIN: "/fertilizer-management/main",
   FERTILIZER_MAIN_ADD: "/fertilizer-management/main/add",
+  FERTILIZER_MAIN_DETAIL: "/fertilizer-management/main/detail",
   FERTILIZER_HISTORY: "/fertilizer-management/history",
   FERTILIZER_DISPOSAL_HISTORY: "/fertilizer-management/disposal-history",
   // Stock Management

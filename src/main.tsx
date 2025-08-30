@@ -21,6 +21,7 @@ import {
 import { ModalsProvider } from "@mantine/modals";
 import { PATH } from "./constants/path.constants";
 import Loading from "./assets/loading.svg";
+import FertilizerManagementMainDetailPage from "./pages/FertilizerManagementPage/Main/Detail";
 // =============================
 // Theme (giữ nguyên như bạn có)
 // =============================
@@ -1527,6 +1528,11 @@ const ROUTES = [
     key="fertilizer_main_add"
     path={PATH.FERTILIZER_MAIN_ADD}
     element={withSuspense(<FertilizerManagementMainAddPage />)}
+  />,
+  <Route
+    key="fertilizer_main_detail"
+    path={PATH.FERTILIZER_MAIN_DETAIL}
+    element={withSuspense(<FertilizerManagementMainDetailPage />)}
   />,
   <Route
     key="fertilizer_usage_history"
