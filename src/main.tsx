@@ -285,7 +285,10 @@ const HarvestManagementReportPage = L(
 const HarvestManagementQueryMapPage = L(
   () => import("./pages/HarvestManagementPage/QueryMap")
 );
-
+// Production forecast
+const ProductionForecastPage = L(
+  () => import("./pages/ProductionForecastPage")
+);
 // Product Management
 const ProductManagementPage = L(() => import("./pages/ProductManagementPage"));
 const ProductManagementItemPage = L(
@@ -1155,7 +1158,12 @@ const ROUTES = [
     path={PATH.HARVEST_QUERY}
     element={withSuspense(<HarvestManagementQueryMapPage />)}
   />,
-
+  // Production forecast
+  <Route
+    key="production_forecast"
+    path={PATH.PRODUCTION_FORECAST}
+    element={withSuspense(<ProductionForecastPage />)}
+  />,
   // Product
   <Route
     key="product_mgmt"

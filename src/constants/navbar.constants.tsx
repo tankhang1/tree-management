@@ -168,6 +168,11 @@ export const NAV_BAR = [
     ],
   },
   {
+    label: "Dự báo sản lượng",
+    icon: IconReportAnalytics,
+    link: PATH.PRODUCTION_FORECAST,
+  },
+  {
     label: "Sản phẩm kinh doanh",
     icon: IconPackage,
     link: PATH.PRODUCT_MANAGEMENT,

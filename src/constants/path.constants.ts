@@ -120,7 +120,8 @@ export const PATH = {
   HARVEST_MANAGEMENT: "/harvest-management",
   HARVEST_REPORT: "/harvest-management/report",
   HARVEST_QUERY: "/harvest-management/query-map",
-
+  // Production Forecast
+  PRODUCTION_FORECAST: "/production-forecast",
   // Product Management
   PRODUCT_MANAGEMENT: "/product-management",
   PRODUCT_ITEM: "/product-management/item",

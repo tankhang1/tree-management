@@ -28,6 +28,8 @@
     "@tabler/icons-react": "^3.34.0",
     "clsx": "^2.1.1",
     "dayjs": "^1.11.13",
+    "jspdf": "^3.0.2",
+    "jspdf-autotable": "^5.0.2",
     "leaflet": "^1.9.4",
     "lodash": "^4.17.21",
     "mantine-react-table": "^2.0.0-beta.9",
@@ -39,7 +41,8 @@
     "react-router-dom": "^7.6.2",
     "recharts": "^2.15.3",
     "suneditor": "^2.47.5",
-    "suneditor-react": "^3.6.1"
+    "suneditor-react": "^3.6.1",
+    "xlsx": "^0.18.5"
   },
   "devDependencies": {
     "@eslint/js": "^9.25.0",
