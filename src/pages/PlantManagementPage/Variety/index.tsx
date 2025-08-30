@@ -28,6 +28,7 @@ import Table from "../../../components/Table";
 import { useDisclosure } from "@mantine/hooks";
 import AddVarietyForm from "./components/AddVarietyForm";
 import { Link } from "react-router-dom";
+import VarietyDetailModal from "./components/VarietyDetailModal";
 
 type CropVariety = {
   id: string;
@@ -95,6 +96,10 @@ const PlantManagementVarietyPage = () => {
     openedVarietyForm,
     { open: openVarietyForm, close: closeVarietyForm },
   ] = useDisclosure(false);
+  const [
+    openedVarietyDetailForm,
+    { open: openVarietyDetailForm, close: closeVarietyDetailForm },
+  ] = useDisclosure(false);
   const cropVarietyColumns: MRT_ColumnDef<CropVariety>[] = [
     {
       accessorKey: "imgUrl",
@@ -161,7 +166,10 @@ const PlantManagementVarietyPage = () => {
             </ActionIcon>
           </Menu.Target>
           <Menu.Dropdown>
-            <Menu.Item leftSection={<IconEye size={18} color="gray" />}>
+            <Menu.Item
+              onClick={openVarietyDetailForm}
+              leftSection={<IconEye size={18} color="gray" />}
+            >
               Chi tiết
             </Menu.Item>
             <Menu.Item leftSection={<IconEdit size={18} color="green" />}>
@@ -261,6 +269,10 @@ const PlantManagementVarietyPage = () => {
       >
         <AddVarietyForm />
       </Modal>
+      <VarietyDetailModal
+        opened={openedVarietyDetailForm}
+        onClose={closeVarietyDetailForm}
+      />
     </Stack>
   );
 };

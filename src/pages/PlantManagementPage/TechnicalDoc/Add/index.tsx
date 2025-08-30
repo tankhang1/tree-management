@@ -1,401 +1,373 @@
 import {
+  ActionIcon,
   Button,
-  Group,
-  Stack,
-  Title,
-  Text,
   Card,
-  Select,
+  Divider,
+  FileInput,
+  Group,
+  Image,
   Input,
-  Radio,
+  MultiSelect,
+  NumberInput,
+  Stack,
+  Tabs,
+  Text,
+  TextInput,
+  Textarea,
+  Title,
 } from "@mantine/core";
-import { Dropzone } from "@mantine/dropzone";
 import { useForm } from "@mantine/form";
+import { Dropzone, IMAGE_MIME_TYPE } from "@mantine/dropzone";
 import {
   IconArrowLeft,
   IconPhoto,
+  IconPlus,
+  IconTrash,
   IconUpload,
-  IconX,
 } from "@tabler/icons-react";
-import { useNavigate } from "react-router-dom";
+import { useMemo, useState } from "react";
 import SunEditor from "suneditor-react";
+import { useNavigate } from "react-router-dom";
+
+type Attachment = { name: string; href: string };
+type SpecRow = { k: string; v: string };
+
+const initialValues = {
+  templateCode: "TMP-NEW-01",
+  imageUrl: "https://img.freepik.com/free-vector/tree_1308-36471.jpg",
+  cropName: "Sầu riêng",
+  variety: "Ri6",
+  seasonality: ["Mùa mưa", "Mùa nắng sớm"],
+  difficultyPct: 35,
+  tags: ["VietGAP", "Hữu cơ", "Phòng bệnh", "Tưới tiêu"],
+  quickChecklist: [
+    "Làm đất, lên líp, thoát nước tốt",
+    "Hữu cơ 10–15kg/gốc trước mùa mưa",
+    "Bẫy côn trùng sinh học",
+    "Tưới nhỏ giọt, che gốc khi mưa lớn",
+  ],
+  specTable: [
+    { k: "Mật độ trồng", v: "6 x 6 m (≈278 cây/ha)" },
+    { k: "Độ pH đất", v: "5.5 – 6.5" },
+    { k: "Nước tưới", v: "3–5 lít/gốc/ngày (tuỳ thời tiết)" },
+    { k: "Phủ gốc", v: "Rơm khô/compost 5–10 cm" },
+  ] as SpecRow[],
+  cultivationTechniques:
+    "<ul><li>Trồng theo mô hình VietGAP</li><li>Bón phân hữu cơ định kỳ 3 tháng/lần</li></ul>",
+  standards:
+    "<p>Áp dụng tiêu chuẩn <strong>VietGAP</strong> và <em>GlobalGAP</em></p>",
+  pestSolutions:
+    "<p><strong>Rầy nâu:</strong> Sử dụng thuốc sinh học</p><p><strong>Thối rễ:</strong> Xử lý bằng vôi bột và thoát nước tốt</p>",
+  author: "AgriLab Team",
+};
 
 const PlantManagementTechnicalDocAddPage = () => {
   const navigate = useNavigate();
+  const [attachments, setAttachments] = useState<Attachment[]>([
+    { name: "Quy trình VietGAP.pdf", href: "#" },
+    { name: "Lịch bón phân mẫu.xlsx", href: "#" },
+  ]);
+  const [imagePreview, setImagePreview] = useState<string | null>(null);
+
   const form = useForm({
-    initialValues: {
-      templateCode: "",
-      image: null as File | null,
-      cultivationTechniques: "",
-      standards: "",
-      pestSolutions: "",
-      techinicalDocType: "file", // or "editor"
-      standardDocType: "file", // or "editor"
-      pestDocType: "file", // or "editor"
+    initialValues,
+    validate: {
+      templateCode: (v) => (!v ? "Bắt buộc" : null),
+      cropName: (v) => (!v ? "Bắt buộc" : null),
+      variety: (v) => (!v ? "Bắt buộc" : null),
+      difficultyPct: (v) => (v >= 0 && v <= 100 ? null : "0–100"),
     },
   });
 
+  const onDropImage = (files: File[]) => {
+    const f = files?.[0];
+    if (!f) return;
+    const r = new FileReader();
+    r.onload = () => {
+      const url = String(r.result);
+      setImagePreview(url);
+      form.setFieldValue("imageUrl", url);
+    };
+    r.readAsDataURL(f);
+  };
+
+  const addSpecRow = () =>
+    form.setFieldValue("specTable", [
+      ...form.values.specTable,
+      { k: "Thông số", v: "Giá trị" },
+    ]);
+  const removeSpecRow = (i: number) =>
+    form.setFieldValue(
+      "specTable",
+      form.values.specTable.filter((_, idx) => idx !== i)
+    );
+
+  const addAttachment = () =>
+    setAttachments((a) => [...a, { name: "Tài liệu mới.pdf", href: "#" }]);
+  const removeAttachment = (i: number) =>
+    setAttachments((a) => a.filter((_, idx) => idx !== i));
+
+  const difficultyVal = useMemo(
+    () => Math.round(form.values.difficultyPct),
+    [form.values.difficultyPct]
+  );
+
   const handleSubmit = (values: typeof form.values) => {
-    console.log("📝 Dữ liệu kỹ thuật:", values);
+    const payload = { ...values, attachments };
+    console.log("CREATE_PAYLOAD:", payload);
+    alert("Đã tạo bản nháp tài liệu kỹ thuật!");
   };
 
   return (
-    <Card withBorder shadow="sm" radius={8} p="md">
-      <Group mb={"md"}>
-        <Button
-          variant="subtle"
-          radius={4}
-          leftSection={<IconArrowLeft size={18} />}
-          onClick={() => navigate(-1)}
-        >
-          Quay lại
-        </Button>
-        <Title order={3}>🧾 Thêm tài liệu kỹ thuật</Title>
-      </Group>
-      <form onSubmit={form.onSubmit(handleSubmit)}>
-        <Stack gap="xs">
-          <Select
-            searchable
-            clearable
-            label="Mã mẫu cây"
-            placeholder="TMP-01"
-            radius={4}
-            data={["TMP-01", "TMP-02", "TMP-03"]}
-            {...form.getInputProps("templateCode")}
-          />
-
-          <Input.Wrapper label="Hình ảnh minh hoạ">
-            <Dropzone
-              onDrop={(files) => console.log("accepted files", files)}
-              onReject={(files) => console.log("rejected files", files)}
-              maxSize={5 * 1024 ** 2}
-              accept={["application/pdf"]}
+    <form onSubmit={form.onSubmit(handleSubmit)}>
+      <Card withBorder radius="md" shadow="sm" p="lg">
+        <Stack gap="md">
+          <Group>
+            <Button
+              radius={4}
+              variant="subtle"
+              leftSection={<IconArrowLeft size={18} />}
+              onClick={() => navigate(-1)}
             >
-              <Group
-                justify="center"
-                gap="xl"
-                mih={220}
-                style={{ pointerEvents: "none" }}
-              >
-                <Dropzone.Accept>
-                  <IconUpload
-                    size={52}
-                    color="var(--mantine-color-blue-6)"
-                    stroke={1.5}
-                  />
-                </Dropzone.Accept>
-                <Dropzone.Reject>
-                  <IconX
-                    size={52}
-                    color="var(--mantine-color-red-6)"
-                    stroke={1.5}
-                  />
-                </Dropzone.Reject>
-                <Dropzone.Idle>
-                  <IconPhoto
-                    size={52}
-                    color="var(--mantine-color-dimmed)"
-                    stroke={1.5}
-                  />
-                </Dropzone.Idle>
+              Quay lại
+            </Button>
+            <Title order={3}>✨ Tạo tài liệu kỹ thuật cây trồng</Title>
+          </Group>
+          <Tabs defaultValue="general">
+            <Tabs.List grow>
+              <Tabs.Tab value="general">Thông tin chung</Tabs.Tab>
+              <Tabs.Tab value="specs">Thông số</Tabs.Tab>
+              <Tabs.Tab value="content">Nội dung</Tabs.Tab>
+              <Tabs.Tab value="files">Tệp</Tabs.Tab>
+            </Tabs.List>
 
-                <div>
-                  <Text size="xl" inline>
-                    Bỏ và thả ảnh minh hoạ tại đây
-                  </Text>
-                  <Text size="sm" c="dimmed" inline mt={7}>
-                    Đính kèm ảnh minh hoạ (tối đa 5MB)
-                  </Text>
-                </div>
-              </Group>
-            </Dropzone>
-          </Input.Wrapper>
+            <Tabs.Panel value="general" pt="md">
+              <Stack gap="sm">
+                <Group grow>
+                  <TextInput
+                    radius={4}
+                    label="Mã mẫu"
+                    {...form.getInputProps("templateCode")}
+                  />
+                  <TextInput
+                    radius={4}
+                    label="Cây trồng"
+                    {...form.getInputProps("cropName")}
+                  />
+                  <TextInput
+                    radius={4}
+                    label="Giống"
+                    {...form.getInputProps("variety")}
+                  />
+                </Group>
+                <Group grow>
+                  <MultiSelect
+                    radius={4}
+                    label="Mùa vụ"
+                    data={["Mùa mưa", "Mùa nắng sớm", "Chính vụ", "Nghịch vụ"]}
+                    {...form.getInputProps("seasonality")}
+                  />
+                  <NumberInput
+                    label="Mức độ áp dụng (%)"
+                    min={0}
+                    max={100}
+                    {...form.getInputProps("difficultyPct")}
+                  />
+                </Group>
+                <MultiSelect
+                  radius={4}
+                  label="Từ khoá"
+                  data={form.values.tags}
+                  {...form.getInputProps("tags")}
+                />
+                <Textarea
+                  radius={4}
+                  label="Tóm tắt nhanh (mỗi dòng một mục)"
+                  minRows={2}
+                  value={form.values.quickChecklist.join("\n")}
+                  onChange={(e) =>
+                    form.setFieldValue(
+                      "quickChecklist",
+                      e.currentTarget.value.split("\n").filter(Boolean)
+                    )
+                  }
+                />
+                <Input.Wrapper label="Ảnh minh hoạ">
+                  <Dropzone
+                    onDrop={onDropImage}
+                    onReject={() => {}}
+                    maxSize={5 * 1024 ** 2}
+                    accept={IMAGE_MIME_TYPE}
+                  >
+                    <Group
+                      justify="center"
+                      gap="xl"
+                      mih={140}
+                      style={{ pointerEvents: "none" }}
+                    >
+                      <Dropzone.Accept>
+                        <IconUpload size={40} />
+                      </Dropzone.Accept>
+                      <Dropzone.Reject>
+                        <IconTrash size={40} />
+                      </Dropzone.Reject>
+                      <Dropzone.Idle>
+                        <IconPhoto size={40} />
+                      </Dropzone.Idle>
+                      <Text size="sm">Kéo & thả ảnh (tối đa 5MB)</Text>
+                    </Group>
+                  </Dropzone>
+                </Input.Wrapper>
+                {(imagePreview || form.values.imageUrl) && (
+                  <Image
+                    src={imagePreview || form.values.imageUrl}
+                    h={140}
+                    fit="contain"
+                    radius="md"
+                  />
+                )}
+              </Stack>
+            </Tabs.Panel>
 
-          <Radio.Group
-            label="Kỹ thuật canh tác"
-            value={form.getValues().techinicalDocType}
-            onChange={(val) => form.setFieldValue("techinicalDocType", val)}
-          >
-            <Group mt="xs">
-              <Radio value="file" label="Tải file PDF" />
-              <Radio value="editor" label="Kỹ thuật canh tác" />
-            </Group>
-          </Radio.Group>
+            <Tabs.Panel value="specs" pt="md">
+              <Stack gap="sm">
+                {form.values.specTable.map((row, i) => (
+                  <Group key={`${row.k}-${i}`} align="flex-end">
+                    <TextInput
+                      radius={4}
+                      label="Thông số"
+                      style={{ flex: 1 }}
+                      value={row.k}
+                      onChange={(e) => {
+                        const next = [...form.values.specTable];
+                        next[i] = { ...row, k: e.currentTarget.value };
+                        form.setFieldValue("specTable", next);
+                      }}
+                    />
+                    <TextInput
+                      radius={4}
+                      label="Giá trị"
+                      style={{ flex: 2 }}
+                      value={row.v}
+                      onChange={(e) => {
+                        const next = [...form.values.specTable];
+                        next[i] = { ...row, v: e.currentTarget.value };
+                        form.setFieldValue("specTable", next);
+                      }}
+                    />
+                    <ActionIcon
+                      color="red"
+                      variant="light"
+                      onClick={() => removeSpecRow(i)}
+                    >
+                      <IconTrash size={16} />
+                    </ActionIcon>
+                  </Group>
+                ))}
+                <Button
+                  radius={4}
+                  variant="outline"
+                  leftSection={<IconPlus size={16} />}
+                  onClick={addSpecRow}
+                >
+                  Thêm dòng
+                </Button>
+              </Stack>
+            </Tabs.Panel>
 
-          {form.getValues().techinicalDocType === "file" ? (
-            <Dropzone
-              onDrop={(files) => console.log("accepted files", files)}
-              onReject={(files) => console.log("rejected files", files)}
-              maxSize={5 * 1024 ** 2}
-              accept={["application/pdf"]}
+            <Tabs.Panel value="content" pt="md">
+              <Stack gap="md">
+                <Stack gap={6}>
+                  <Text fw={600}>🌿 Kỹ thuật canh tác</Text>
+                  <SunEditor
+                    setOptions={{ height: "200px" }}
+                    setContents={form.values.cultivationTechniques}
+                    onChange={(v) =>
+                      form.setFieldValue("cultivationTechniques", v)
+                    }
+                  />
+                </Stack>
+                <Stack gap={6}>
+                  <Text fw={600}>🏷️ Tiêu chuẩn chất lượng</Text>
+                  <SunEditor
+                    setOptions={{ height: "180px" }}
+                    setContents={form.values.standards}
+                    onChange={(v) => form.setFieldValue("standards", v)}
+                  />
+                </Stack>
+                <Stack gap={6}>
+                  <Text fw={600}>🐛 Sâu bệnh & Giải pháp</Text>
+                  <SunEditor
+                    setOptions={{ height: "180px" }}
+                    setContents={form.values.pestSolutions}
+                    onChange={(v) => form.setFieldValue("pestSolutions", v)}
+                  />
+                </Stack>
+              </Stack>
+            </Tabs.Panel>
+
+            <Tabs.Panel value="files" pt="md">
+              <Stack gap="sm">
+                {attachments.map((a, i) => (
+                  <Group key={`${a.name}-${i}`} align="flex-end">
+                    <TextInput
+                      radius={4}
+                      label="Tên tệp"
+                      style={{ flex: 2 }}
+                      value={a.name}
+                      onChange={(e) =>
+                        setAttachments((arr) =>
+                          arr.map((x, idx) =>
+                            idx === i
+                              ? { ...x, name: e.currentTarget.value }
+                              : x
+                          )
+                        )
+                      }
+                    />
+                    <FileInput
+                      radius={4}
+                      label="Liên kết"
+                      style={{ flex: 3 }}
+                    />
+                    <ActionIcon
+                      radius={4}
+                      color="red"
+                      variant="light"
+                      onClick={() => removeAttachment(i)}
+                    >
+                      <IconTrash size={16} />
+                    </ActionIcon>
+                  </Group>
+                ))}
+                <Button
+                  radius={4}
+                  variant="outline"
+                  leftSection={<IconPlus size={16} />}
+                  onClick={addAttachment}
+                >
+                  Thêm tệp
+                </Button>
+              </Stack>
+            </Tabs.Panel>
+          </Tabs>
+
+          <Divider />
+          <Group justify="flex-end">
+            <Button
+              radius={4}
+              variant="default"
+              onClick={() => alert("Đã lưu nháp!")}
             >
-              <Group
-                justify="center"
-                gap="xl"
-                mih={220}
-                style={{ pointerEvents: "none" }}
-              >
-                <Dropzone.Accept>
-                  <IconUpload
-                    size={52}
-                    color="var(--mantine-color-blue-6)"
-                    stroke={1.5}
-                  />
-                </Dropzone.Accept>
-                <Dropzone.Reject>
-                  <IconX
-                    size={52}
-                    color="var(--mantine-color-red-6)"
-                    stroke={1.5}
-                  />
-                </Dropzone.Reject>
-                <Dropzone.Idle>
-                  <IconPhoto
-                    size={52}
-                    color="var(--mantine-color-dimmed)"
-                    stroke={1.5}
-                  />
-                </Dropzone.Idle>
-
-                <div>
-                  <Text size="xl" inline>
-                    Bỏ và thả nội dung kỹ thuật canh tác
-                  </Text>
-                  <Text size="sm" c="dimmed" inline mt={7}>
-                    Đính kèm nội dung kỹ thuật canh tác (tối đa 5MB)
-                  </Text>
-                </div>
-              </Group>
-            </Dropzone>
-          ) : (
-            <div>
-              <label style={{ fontSize: 14, fontWeight: 500 }}>
-                Kỹ thuật canh tác
-              </label>
-              <SunEditor
-                setOptions={{
-                  height: "200px",
-                  buttonList: [
-                    ["undo", "redo"],
-                    ["font", "fontSize", "formatBlock"],
-                    ["paragraphStyle", "blockquote"],
-                    [
-                      "bold",
-                      "underline",
-                      "italic",
-                      "strike",
-                      "subscript",
-                      "superscript",
-                    ],
-                    ["fontColor", "hiliteColor", "textStyle"],
-                    ["removeFormat"],
-                    "/", // Line break
-                    ["outdent", "indent"],
-                    ["align", "horizontalRule", "list", "lineHeight"],
-                    ["table", "link", "image", "video", "audio" /** ,'math' */], // You must add the 'katex' library at options to use the 'math' plugin.
-                    /** ['imageGallery'] */ // You must add the "imageGalleryUrl".
-                    ["fullScreen", "showBlocks", "codeView"],
-                    ["preview", "print"],
-                    ["save", "template"],
-                    /** ['dir', 'dir_ltr', 'dir_rtl'] */ // "dir": Toggle text direction, "dir_ltr": Right to Left, "dir_rtl": Left to Right
-                  ],
-                }}
-              />
-            </div>
-          )}
-          <Radio.Group
-            label="Tiêu chuẩn chất lượng"
-            value={form.getValues().standardDocType}
-            onChange={(val) => form.setFieldValue("standardDocType", val)}
-          >
-            <Group mt="xs">
-              <Radio value="file" label="Tải file PDF" />
-              <Radio value="editor" label="Tiêu chuẩn chất lượng" />
-            </Group>
-          </Radio.Group>
-
-          {form.getValues().standardDocType === "file" ? (
-            <Dropzone
-              onDrop={(files) => console.log("accepted files", files)}
-              onReject={(files) => console.log("rejected files", files)}
-              maxSize={5 * 1024 ** 2}
-              accept={["application/pdf"]}
-            >
-              <Group
-                justify="center"
-                gap="xl"
-                mih={220}
-                style={{ pointerEvents: "none" }}
-              >
-                <Dropzone.Accept>
-                  <IconUpload
-                    size={52}
-                    color="var(--mantine-color-blue-6)"
-                    stroke={1.5}
-                  />
-                </Dropzone.Accept>
-                <Dropzone.Reject>
-                  <IconX
-                    size={52}
-                    color="var(--mantine-color-red-6)"
-                    stroke={1.5}
-                  />
-                </Dropzone.Reject>
-                <Dropzone.Idle>
-                  <IconPhoto
-                    size={52}
-                    color="var(--mantine-color-dimmed)"
-                    stroke={1.5}
-                  />
-                </Dropzone.Idle>
-
-                <div>
-                  <Text size="xl" inline>
-                    Bỏ và thả nội dung tiêu chuẩn chất lượng
-                  </Text>
-                  <Text size="sm" c="dimmed" inline mt={7}>
-                    Đính kèm nội dung tiêu chuẩn chất lượng (tối đa 5MB)
-                  </Text>
-                </div>
-              </Group>
-            </Dropzone>
-          ) : (
-            <div>
-              <label style={{ fontSize: 14, fontWeight: 500 }}>
-                Tiêu chuẩn chất lượng
-              </label>
-              <SunEditor
-                setOptions={{
-                  height: "200px",
-                  buttonList: [
-                    ["undo", "redo"],
-                    ["font", "fontSize", "formatBlock"],
-                    ["paragraphStyle", "blockquote"],
-                    [
-                      "bold",
-                      "underline",
-                      "italic",
-                      "strike",
-                      "subscript",
-                      "superscript",
-                    ],
-                    ["fontColor", "hiliteColor", "textStyle"],
-                    ["removeFormat"],
-                    "/", // Line break
-                    ["outdent", "indent"],
-                    ["align", "horizontalRule", "list", "lineHeight"],
-                    ["table", "link", "image", "video", "audio" /** ,'math' */], // You must add the 'katex' library at options to use the 'math' plugin.
-                    /** ['imageGallery'] */ // You must add the "imageGalleryUrl".
-                    ["fullScreen", "showBlocks", "codeView"],
-                    ["preview", "print"],
-                    ["save", "template"],
-                    /** ['dir', 'dir_ltr', 'dir_rtl'] */ // "dir": Toggle text direction, "dir_ltr": Right to Left, "dir_rtl": Left to Right
-                  ],
-                }}
-              />
-            </div>
-          )}
-          <Radio.Group
-            label="Giải pháp phòng trừ sâu bệnh"
-            value={form.getValues().pestDocType}
-            onChange={(val) => form.setFieldValue("pestDocType", val)}
-          >
-            <Group mt="xs">
-              <Radio value="file" label="Tải file PDF" />
-              <Radio value="editor" label="Giải pháp phòng trừ sâu bệnh" />
-            </Group>
-          </Radio.Group>
-
-          {form.getValues().pestDocType === "file" ? (
-            <Dropzone
-              onDrop={(files) => console.log("accepted files", files)}
-              onReject={(files) => console.log("rejected files", files)}
-              maxSize={5 * 1024 ** 2}
-              accept={["application/pdf"]}
-            >
-              <Group
-                justify="center"
-                gap="xl"
-                mih={220}
-                style={{ pointerEvents: "none" }}
-              >
-                <Dropzone.Accept>
-                  <IconUpload
-                    size={52}
-                    color="var(--mantine-color-blue-6)"
-                    stroke={1.5}
-                  />
-                </Dropzone.Accept>
-                <Dropzone.Reject>
-                  <IconX
-                    size={52}
-                    color="var(--mantine-color-red-6)"
-                    stroke={1.5}
-                  />
-                </Dropzone.Reject>
-                <Dropzone.Idle>
-                  <IconPhoto
-                    size={52}
-                    color="var(--mantine-color-dimmed)"
-                    stroke={1.5}
-                  />
-                </Dropzone.Idle>
-
-                <div>
-                  <Text size="xl" inline>
-                    Bỏ và thả nội dung giải pháp phòng trừ sâu bệnh
-                  </Text>
-                  <Text size="sm" c="dimmed" inline mt={7}>
-                    Đính kèm nội dung giải pháp phòng trừ sâu bệnh (tối đa 5MB)
-                  </Text>
-                </div>
-              </Group>
-            </Dropzone>
-          ) : (
-            <div>
-              <label style={{ fontSize: 14, fontWeight: 500 }}>
-                Giải pháp phòng trừ sâu bệnh
-              </label>
-              <SunEditor
-                setOptions={{
-                  height: "200px",
-                  buttonList: [
-                    ["undo", "redo"],
-                    ["font", "fontSize", "formatBlock"],
-                    ["paragraphStyle", "blockquote"],
-                    [
-                      "bold",
-                      "underline",
-                      "italic",
-                      "strike",
-                      "subscript",
-                      "superscript",
-                    ],
-                    ["fontColor", "hiliteColor", "textStyle"],
-                    ["removeFormat"],
-                    "/", // Line break
-                    ["outdent", "indent"],
-                    ["align", "horizontalRule", "list", "lineHeight"],
-                    ["table", "link", "image", "video", "audio" /** ,'math' */], // You must add the 'katex' library at options to use the 'math' plugin.
-                    /** ['imageGallery'] */ // You must add the "imageGalleryUrl".
-                    ["fullScreen", "showBlocks", "codeView"],
-                    ["preview", "print"],
-                    ["save", "template"],
-                    /** ['dir', 'dir_ltr', 'dir_rtl'] */ // "dir": Toggle text direction, "dir_ltr": Right to Left, "dir_rtl": Left to Right
-                  ],
-                }}
-              />
-            </div>
-          )}
-
-          <Group justify="flex-end" mt="md">
-            <Button type="submit" radius={4}>
-              Lưu
+              Lưu nháp
+            </Button>
+            <Button radius={4} type="submit" color="green">
+              Tạo tài liệu
             </Button>
           </Group>
         </Stack>
-      </form>
-    </Card>
+      </Card>
+    </form>
   );
 };
 

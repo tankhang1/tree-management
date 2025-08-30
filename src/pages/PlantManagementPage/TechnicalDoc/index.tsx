@@ -114,6 +114,12 @@ const PlantManagementTechnicalDocPage = () => {
           <Button variant="outline" radius={4} leftSection={<IconFileExcel />}>
             Xuất File
           </Button>
+          <Button
+            radius={4}
+            onClick={() => navigate(PATH.PLANT_ADD_TECHNICAL_DOC)}
+          >
+            Thêm mới
+          </Button>
         </Group>
       </Group>
 
