@@ -11,7 +11,6 @@ import {
 import {
   IconDotsVertical,
   IconEdit,
-  IconEye,
   IconFileExcel,
   IconTrash,
 } from "@tabler/icons-react";
@@ -73,9 +72,6 @@ const MachineManagementCategoryPage = () => {
           </Menu.Target>
 
           <Menu.Dropdown>
-            <Menu.Item leftSection={<IconEye size={18} color="gray" />}>
-              Chi tiết
-            </Menu.Item>
             <Menu.Item leftSection={<IconEdit size={18} color="green" />}>
               Chỉnh sửa
             </Menu.Item>
