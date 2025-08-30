@@ -8,6 +8,7 @@ import {
   SimpleGrid,
   Stack,
   Text,
+  ThemeIcon,
   Title,
 } from "@mantine/core";
 import {
@@ -15,8 +16,13 @@ import {
   IconTool,
   IconVaccine,
   IconArrowLeft,
+  IconClockHour4,
+  IconUser,
+  IconUsers,
 } from "@tabler/icons-react";
 import { useNavigate } from "react-router-dom";
+import { ResourceCard, TagList, type Resource } from "../../Assign/Detail";
+import Scrollable from "../../../../components/Scrollable";
 
 // 🔸 Dữ liệu mẫu cho trang chi tiết
 const mockPlan = {
@@ -26,24 +32,123 @@ const mockPlan = {
   zone: "Vùng Trồng Tây Nguyên",
   area: "Khu vực Buôn Hồ",
   plot: "Lô A1-01",
-  cycles: [
-    {
-      stages: [
-        {
-          stageName: "Nảy mầm",
-          materials: [{ item: "Phân NPK", quantity: 10 }],
-          equipment: [{ item: "Bình tưới", quantity: 2 }],
-          pesticides: [{ item: "Confidor", quantity: 3 }],
-        },
-        {
-          stageName: "Ra hoa",
-          materials: [{ item: "Vôi bột", quantity: 5 }],
-          equipment: [{ item: "Máy xịt", quantity: 1 }],
-          pesticides: [{ item: "Radiant", quantity: 2 }],
-        },
-      ],
-    },
-  ],
+   cycles: [
+          {
+            name: "Chu kỳ 1",
+            stages: [
+              {
+                name: "Nảy mầm",
+                duration: 5,
+                documentType: "file" as "file" | "editor",
+                document: "Tài liệu gieo hạt.pdf",
+                materials: ["Phân NPK"],
+                equipment: ["Bình tưới"],
+                pesticides: [],
+                leader: "Nguyễn Văn A",
+                members: ["Nguyễn Văn A", "Trần Thị B"],
+                resources: [
+                  {
+                    type: "Thiết bị",
+                    name: "Máy cày Kubota L3218",
+                    quantity: 3,
+                    unit: "cái",
+                    img: "https://kubotadailoi.com/uploads/images/P-1176_L3218_slide.jpg",
+                  },
+                  {
+                    type: "Thiết bị",
+                    name: "Máy bay nông nghiệp DJI Agras",
+                    quantity: 1,
+                    unit: "cái",
+                    img: "https://agridrone.vn/wp-content/uploads/2023/02/16887_T50_%E6%AD%A3%E4%BE%A7.jpg",
+                  },
+                  {
+                    type: "Vật tư",
+                    name: "Béc tưới nhỏ giọt 8L/h",
+                    quantity: 1200,
+                    unit: "cái",
+                    img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSXj6nfv7JlBEuVoQo0o9DUUXGAnLXXec-JLg&s",
+                  },
+                  {
+                    type: "Vật tư",
+                    name: "Ống HDPE Φ16",
+                    quantity: 800,
+                    unit: "m",
+                    img: "https://bizweb.dktcdn.net/thumb/1024x1024/100/348/321/products/ong-hdpe-wata-20.jpg?v=1669780765193",
+                  },
+                  {
+                    type: "Thuốc BVTV",
+                    name: "Thuốc trừ sâu Emamectin 5%",
+                    quantity: 40,
+                    unit: "chai",
+                    img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRV9s4k_p9Y4CZNPLFlRhbQPc4GZZvVNSoGVg&s",
+                  },
+                  {
+                    type: "Thuốc BVTV",
+                    name: "Thuốc trừ nấm Mancozeb 80WP",
+                    quantity: 8,
+                    unit: "gói",
+                    img: "https://nongduochai.vn/images/products/2021/04/13/original/manozeb-80wp_xanh_1kg_1618288208.png",
+                  },
+                ] as Resource[],
+              },
+              {
+                name: "Ra hoa",
+                duration: 10,
+                documentType: "editor" as "file" | "editor",
+                document: "Giai đoạn ra lá cần đủ ánh sáng và độ ẩm.",
+                materials: ["Vôi bột"],
+                equipment: ["Máy xịt"],
+                pesticides: ["Confidor"],
+                leader: "Trần Thị B",
+                members: ["Lê Văn C"],
+                resources: [
+                  {
+                    type: "Thiết bị",
+                    name: "Máy cày Kubota L3218",
+                    quantity: 3,
+                    unit: "cái",
+                    img: "https://kubotadailoi.com/uploads/images/P-1176_L3218_slide.jpg",
+                  },
+                  {
+                    type: "Thiết bị",
+                    name: "Máy bay nông nghiệp DJI Agras",
+                    quantity: 1,
+                    unit: "cái",
+                    img: "https://agridrone.vn/wp-content/uploads/2023/02/16887_T50_%E6%AD%A3%E4%BE%A7.jpg",
+                  },
+                  {
+                    type: "Vật tư",
+                    name: "Béc tưới nhỏ giọt 8L/h",
+                    quantity: 1200,
+                    unit: "cái",
+                    img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSXj6nfv7JlBEuVoQo0o9DUUXGAnLXXec-JLg&s",
+                  },
+                  {
+                    type: "Vật tư",
+                    name: "Ống HDPE Φ16",
+                    quantity: 800,
+                    unit: "m",
+                    img: "https://bizweb.dktcdn.net/thumb/1024x1024/100/348/321/products/ong-hdpe-wata-20.jpg?v=1669780765193",
+                  },
+                  {
+                    type: "Thuốc BVTV",
+                    name: "Thuốc trừ sâu Emamectin 5%",
+                    quantity: 40,
+                    unit: "chai",
+                    img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRV9s4k_p9Y4CZNPLFlRhbQPc4GZZvVNSoGVg&s",
+                  },
+                  {
+                    type: "Thuốc BVTV",
+                    name: "Thuốc trừ nấm Mancozeb 80WP",
+                    quantity: 8,
+                    unit: "gói",
+                    img: "https://nongduochai.vn/images/products/2021/04/13/original/manozeb-80wp_xanh_1kg_1618288208.png",
+                  },
+                ] as Resource[],
+              },
+            ],
+          },
+        ],
 };
 
 const PlanManagementMainDetailPage = () => {
@@ -167,64 +272,58 @@ const PlanManagementMainDetailPage = () => {
         <Divider label="Thông tin mùa vụ" labelPosition="center" />
 
         {/* Danh sách chu kỳ */}
-        {plan.cycles.map((cycle, cycleIndex) => (
-          <Card withBorder key={cycleIndex} radius="md" shadow="sm" p="md">
-            <Stack gap="xs">
-              <Title order={5}>Chu kỳ {cycleIndex + 1}</Title>
+      {mockPlan.cycles.map((cycle) => (
+        <Stack key={cycle.name} gap="lg">
+          <Title order={4}>{cycle.name}</Title>
 
-              <SimpleGrid cols={{ base: 1, sm: 2, md: 3 }} spacing="md">
-                {cycle.stages.map((stage, stageIndex) => (
-                  <Card
-                    key={stageIndex}
-                    withBorder
-                    radius="md"
-                    shadow="xs"
-                    p="sm"
-                  >
-                    <Stack gap="xs">
-                      <Group justify="space-between">
-                        <Title order={6}>{stage.stageName}</Title>
-                        <Text size="sm" c="dimmed">
-                          30 ngày
+          <Scrollable h={600}>
+            <Group wrap="nowrap" align="stretch">
+              {cycle.stages.map((stage) => (
+                <Card
+                  key={`${cycle.name}-${stage.name}`}
+                  shadow="sm"
+                  w={700}
+                  withBorder
+                  radius={4}
+                  p="md"
+                >
+                  <Stack gap="xs">
+                    {/* Header */}
+                    <Group justify="space-between" align="center">
+                      <Group gap="xs">
+                        <ThemeIcon color="blue" variant="light" radius="md">
+                          <IconClockHour4 size={18} />
+                        </ThemeIcon>
+                        <Text fw={700}>
+                          {stage.name} ({stage.duration} ngày)
                         </Text>
                       </Group>
-                      <Badge variant="light">Vật tư</Badge>
-                      <List spacing={4} size="sm" icon={<IconBox size={14} />}>
-                        {stage.materials.map((mat, i) => (
-                          <List.Item key={i}>
-                            {mat.item} - {mat.quantity}
-                          </List.Item>
-                        ))}
-                      </List>
+                      <Badge variant="light" color="blue">
+                        {cycle.name}
+                      </Badge>
+                    </Group>
 
-                      <Badge variant="light">Thiết bị</Badge>
-                      <List spacing={4} size="sm" icon={<IconTool size={14} />}>
-                        {stage.equipment.map((eq, i) => (
-                          <List.Item key={i}>
-                            {eq.item} - {eq.quantity}
-                          </List.Item>
-                        ))}
-                      </List>
+                   
+                    {/* Materials / Equipment / Pesticides (danh sách tên) */}
+                    <Divider label="Hạng mục sử dụng" labelPosition="left" />
 
-                      <Badge variant="light">Thuốc BVTV</Badge>
-                      <List
-                        spacing={4}
-                        size="sm"
-                        icon={<IconVaccine size={14} />}
-                      >
-                        {stage.pesticides.map((ps, i) => (
-                          <List.Item key={i}>
-                            {ps.item} - {ps.quantity}
-                          </List.Item>
-                        ))}
-                      </List>
-                    </Stack>
-                  </Card>
-                ))}
-              </SimpleGrid>
-            </Stack>
-          </Card>
-        ))}
+                    {/* Resources (có số lượng) */}
+                    {stage.resources?.length ? (
+                      <>
+                        <SimpleGrid cols={2} spacing="sm" verticalSpacing="sm">
+                          {stage.resources.map((r, i) => (
+                            <ResourceCard key={i} r={r} />
+                          ))}
+                        </SimpleGrid>
+                      </>
+                    ) : null}
+                  </Stack>
+                </Card>
+              ))}
+            </Group>
+          </Scrollable>
+        </Stack>
+      ))}
       </Stack>
     </Card>
   );

@@ -88,7 +88,7 @@ const MapManagementDetailPlotPage = () => {
 
       <Divider my="lg" label="Danh sách hàng" labelPosition="center" />
 
-      <Stack gap="md">
+      <Group gap="md">
         {block.rows.map((row, index) => (
           <Box
             key={index}
@@ -103,7 +103,7 @@ const MapManagementDetailPlotPage = () => {
             </Text>
           </Box>
         ))}
-      </Stack>
+      </Group>
     </Card>
   );
 };

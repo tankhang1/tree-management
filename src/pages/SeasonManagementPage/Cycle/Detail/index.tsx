@@ -77,9 +77,9 @@ const SeasonManagementCycleDetailPage = () => {
 
       <Divider my="lg" label="Danh sách giai đoạn" labelPosition="center" />
 
-      <Stack>
+      <Group wrap="wrap" gap="md" mb="md" align="flex-start">
         {sampleData.stages.map((stage, idx) => (
-          <Paper key={idx} withBorder shadow="xs" radius={4} p="md">
+          <Paper h={130} key={idx} withBorder shadow="xs" radius={4} p="md">
             <Group justify="space-between" mb={4}>
               <Text fw={600}>
                 Giai đoạn {idx + 1}: {stage.name}
@@ -110,7 +110,7 @@ const SeasonManagementCycleDetailPage = () => {
             )}
           </Paper>
         ))}
-      </Stack>
+      </Group>
     </Card>
   );
 };

@@ -342,6 +342,7 @@ const AreaManagementTreePage = () => {
       <Modal
         opened={openedRowForm}
         onClose={closeRowForm}
+        size={'lg'}
         title={<Text fw={"bold"}>Chi tiết phân bổ</Text>}
       >
         <TreeDetailView tree={tree} />
