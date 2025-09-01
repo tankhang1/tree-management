@@ -341,209 +341,201 @@ const ProductionForecastPage = () => {
   ]);
   return (
     <>
-      <Card withBorder radius={4} shadow="sm" p="lg">
-        <Stack gap="md">
-          <Group justify="space-between" align="flex-start">
-            <Group>
-              <Stack gap={2}>
-                <Title order={3}>📈 Dự báo sản lượng</Title>
-                <Group gap="xs">
-                  <Badge variant="dot" color="gray">
-                    {region.name}
-                  </Badge>
-                  <Badge>Diện tích: {region.areaHa} ha</Badge>
-                  <Badge>{region.trees} cây</Badge>
-                  <Badge>TB: {region.avgYieldPerHa} kg/ha</Badge>
-                </Group>
-              </Stack>
-            </Group>
-            <Group gap="xs">
-              <Button
-                radius={4}
-                variant="light"
-                leftSection={<IconRefresh size={16} />}
-                onClick={() => setOverrides({})}
-              >
-                Reset điều chỉnh
-              </Button>
-              <ExportButtons
-                rows={rows}
-                meta={{ region, period: periodText, policyText }}
-              />
-            </Group>
+      <Stack gap="md">
+        <Group justify="space-between" align="flex-start">
+          <Group>
+            <Stack gap={2}>
+              <Title order={3}>📈 Dự báo sản lượng</Title>
+              <Group gap="xs">
+                <Badge variant="dot" color="gray">
+                  {region.name}
+                </Badge>
+                <Badge>Diện tích: {region.areaHa} ha</Badge>
+                <Badge>{region.trees} cây</Badge>
+                <Badge>TB: {region.avgYieldPerHa} kg/ha</Badge>
+              </Group>
+            </Stack>
           </Group>
+          <Group gap="xs">
+            <Button
+              radius={4}
+              variant="light"
+              leftSection={<IconRefresh size={16} />}
+              onClick={() => setOverrides({})}
+            >
+              Reset điều chỉnh
+            </Button>
+            <ExportButtons
+              rows={rows}
+              meta={{ region, period: periodText, policyText }}
+            />
+          </Group>
+        </Group>
 
-          <Card withBorder radius={4} p="md">
-            <Group align="flex-end">
+        <Card withBorder radius={4} p="md">
+          <Group align="flex-end">
+            <Select
+              radius={4}
+              flex={1}
+              label="Vùng trồng"
+              value={regionId}
+              onChange={(v) => setRegionId(v!)}
+              data={REGIONS.map((r) => ({ value: r.id, label: r.name }))}
+            />
+            <SegmentedControl
+              radius={4}
+              value={granularity}
+              onChange={(v: any) => setGranularity(v)}
+              data={[
+                { value: "day", label: "Ngày" },
+                { value: "week", label: "Tuần" },
+                { value: "month", label: "Tháng" },
+                { value: "year", label: "Năm" },
+              ]}
+            />
+            <DatePickerInput
+              radius={4}
+              flex={1}
+              type="range"
+              label="Khoảng thời gian"
+              value={range}
+              locale="vi"
+              onChange={(value) =>
+                setRange([new Date(value[0]), new Date(value[1])])
+              }
+              leftSection={<IconCalendar size={16} />}
+            />
+            <Group gap="xs" align="end">
               <Select
                 radius={4}
                 flex={1}
-                label="Vùng trồng"
-                value={regionId}
-                onChange={(v) => setRegionId(v!)}
-                data={REGIONS.map((r) => ({ value: r.id, label: r.name }))}
-              />
-              <SegmentedControl
-                radius={4}
-                value={granularity}
-                onChange={(v: any) => setGranularity(v)}
+                label="Chính sách"
+                value={policy}
+                onChange={(v: any) => setPolicy(v)}
                 data={[
-                  { value: "day", label: "Ngày" },
-                  { value: "week", label: "Tuần" },
-                  { value: "month", label: "Tháng" },
-                  { value: "year", label: "Năm" },
+                  { value: "average", label: "Bình quân" },
+                  { value: "growth10", label: "Tăng trưởng 10%" },
+                  { value: "seasonal", label: "Theo mùa vụ" },
+                  { value: "customFactor", label: "Hệ số tuỳ chỉnh" },
                 ]}
               />
-              <DatePickerInput
+              <NumberInput
                 radius={4}
-                flex={1}
-                type="range"
-                label="Khoảng thời gian"
-                value={range}
-                locale="vi"
-                onChange={(value) =>
-                  setRange([new Date(value[0]), new Date(value[1])])
-                }
-                leftSection={<IconCalendar size={16} />}
+                label="Hệ số"
+                value={customFactor}
+                onChange={(v) => setCustomFactor(Number(v))}
+                min={0.1}
+                step={0.1}
+                disabled={policy !== "customFactor"}
               />
-              <Group gap="xs" align="end">
-                <Select
-                  radius={4}
-                  flex={1}
-                  label="Chính sách"
-                  value={policy}
-                  onChange={(v: any) => setPolicy(v)}
-                  data={[
-                    { value: "average", label: "Bình quân" },
-                    { value: "growth10", label: "Tăng trưởng 10%" },
-                    { value: "seasonal", label: "Theo mùa vụ" },
-                    { value: "customFactor", label: "Hệ số tuỳ chỉnh" },
-                  ]}
-                />
-                <NumberInput
-                  radius={4}
-                  label="Hệ số"
-                  value={customFactor}
-                  onChange={(v) => setCustomFactor(Number(v))}
-                  min={0.1}
-                  step={0.1}
-                  disabled={policy !== "customFactor"}
-                />
-              </Group>
             </Group>
-          </Card>
+          </Group>
+        </Card>
 
-          <Grid gutter="md">
-            <Grid.Col span={{ base: 12, md: 7 }}>
-              <Card withBorder radius={4} p="md" h="100%">
-                <Title order={5} mb="xs">
-                  Biểu đồ dự báo (kg)
-                </Title>
-                <Stack h={300}>
-                  <ResponsiveContainer width="100%" height="100%">
-                    <BarChart data={rows}>
-                      <CartesianGrid strokeDasharray="3 3" />
-                      <XAxis dataKey="label" />
-                      <YAxis />
-                      <RTooltip />
-                      <Legend />
-                      <Bar dataKey="baseline" name="Cơ sở" fill="#8884d8" />
-                      <Bar dataKey="forecast" name="Dự báo" fill="#82ca9d" />
-                      <Bar
-                        dataKey="adjusted"
-                        name="Điều chỉnh"
-                        fill="#ffc658"
-                      />
-                    </BarChart>
-                  </ResponsiveContainer>
+        <Grid gutter="md">
+          <Grid.Col span={{ base: 12, md: 7 }}>
+            <Card withBorder radius={4} p="md" h="100%">
+              <Title order={5} mb="xs">
+                Biểu đồ dự báo (kg)
+              </Title>
+              <Stack h={300}>
+                <ResponsiveContainer width="100%" height="100%">
+                  <BarChart data={rows}>
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <XAxis dataKey="label" />
+                    <YAxis />
+                    <RTooltip />
+                    <Legend />
+                    <Bar dataKey="baseline" name="Cơ sở" fill="#8884d8" />
+                    <Bar dataKey="forecast" name="Dự báo" fill="#82ca9d" />
+                    <Bar dataKey="adjusted" name="Điều chỉnh" fill="#ffc658" />
+                  </BarChart>
+                </ResponsiveContainer>
+              </Stack>
+            </Card>
+          </Grid.Col>
+
+          <Grid.Col span={{ base: 12, md: 5 }}>
+            <Card withBorder radius={4} p="md" h="100%">
+              <Title order={5} mb="xs">
+                Tổng hợp
+              </Title>
+              <SimpleGrid cols={3}>
+                <Stack gap={2}>
+                  <Text size="xs" c="dimmed">
+                    Tổng cơ sở
+                  </Text>
+                  <Text fw={700}>{totals.base.toLocaleString("vi-VN")} kg</Text>
                 </Stack>
-              </Card>
-            </Grid.Col>
-
-            <Grid.Col span={{ base: 12, md: 5 }}>
-              <Card withBorder radius={4} p="md" h="100%">
-                <Title order={5} mb="xs">
-                  Tổng hợp
-                </Title>
-                <SimpleGrid cols={3}>
-                  <Stack gap={2}>
-                    <Text size="xs" c="dimmed">
-                      Tổng cơ sở
-                    </Text>
-                    <Text fw={700}>
-                      {totals.base.toLocaleString("vi-VN")} kg
-                    </Text>
-                  </Stack>
-                  <Stack gap={2}>
-                    <Text size="xs" c="dimmed">
-                      Tổng dự báo
-                    </Text>
-                    <Text fw={700} c="teal">
-                      {totals.fc.toLocaleString("vi-VN")} kg
-                    </Text>
-                  </Stack>
-                  <Stack gap={2}>
-                    <Text size="xs" c="dimmed">
-                      Tổng điều chỉnh
-                    </Text>
-                    <Text fw={700} c="blue">
-                      {totals.adj.toLocaleString("vi-VN")} kg
-                    </Text>
-                  </Stack>
-                </SimpleGrid>
-                <Divider my="sm" />
-                <Group gap="xs">
-                  <IconTrendingUp size={16} />
-                  <Text size="sm">
-                    Chênh lệch:{" "}
-                    {(totals.adj - totals.fc).toLocaleString("vi-VN")} kg
+                <Stack gap={2}>
+                  <Text size="xs" c="dimmed">
+                    Tổng dự báo
                   </Text>
-                </Group>
-                <Group gap="xs" mt="sm">
-                  <IconLock size={16} />
-                  <Text size="sm" c="dimmed">
-                    Quyền sửa: {canEdit ? "Được phép" : "Bị khoá"}
+                  <Text fw={700} c="teal">
+                    {totals.fc.toLocaleString("vi-VN")} kg
                   </Text>
-                </Group>
-              </Card>
-            </Grid.Col>
-          </Grid>
+                </Stack>
+                <Stack gap={2}>
+                  <Text size="xs" c="dimmed">
+                    Tổng điều chỉnh
+                  </Text>
+                  <Text fw={700} c="blue">
+                    {totals.adj.toLocaleString("vi-VN")} kg
+                  </Text>
+                </Stack>
+              </SimpleGrid>
+              <Divider my="sm" />
+              <Group gap="xs">
+                <IconTrendingUp size={16} />
+                <Text size="sm">
+                  Chênh lệch: {(totals.adj - totals.fc).toLocaleString("vi-VN")}{" "}
+                  kg
+                </Text>
+              </Group>
+              <Group gap="xs" mt="sm">
+                <IconLock size={16} />
+                <Text size="sm" c="dimmed">
+                  Quyền sửa: {canEdit ? "Được phép" : "Bị khoá"}
+                </Text>
+              </Group>
+            </Card>
+          </Grid.Col>
+        </Grid>
 
-          <Card withBorder radius={4} p="md">
-            <Title order={5} mb={"md"}>
-              Bảng dự báo (kg)
-            </Title>
+        <Card withBorder radius={4} p="md">
+          <Title order={5} mb={"md"}>
+            Bảng dự báo (kg)
+          </Title>
 
-            <Table
-              data={rows}
-              columns={[
-                { accessorKey: "label", header: "Kỳ" },
-                { accessorKey: "baseline", header: "Cơ sở" },
-                { accessorKey: "forecast", header: "Dự báo" },
-                { accessorKey: "adjusted", header: "Điều chỉnh" },
-                {
-                  accessorKey: "actions",
-                  header: "Hành động",
-                  accessorFn: (r) => r,
-                  Cell: () => {
-                    return (
-                      <Group gap={4}>
-                        <ActionIcon
-                          variant="light"
-                          disabled={!canEdit}
-                          aria-label="Edit"
-                        >
-                          <IconEdit size={16} />
-                        </ActionIcon>
-                      </Group>
-                    );
-                  },
+          <Table
+            data={rows}
+            columns={[
+              { accessorKey: "label", header: "Kỳ" },
+              { accessorKey: "baseline", header: "Cơ sở" },
+              { accessorKey: "forecast", header: "Dự báo" },
+              { accessorKey: "adjusted", header: "Điều chỉnh" },
+              {
+                accessorKey: "actions",
+                header: "Hành động",
+                accessorFn: (r) => r,
+                Cell: () => {
+                  return (
+                    <Group gap={4}>
+                      <ActionIcon
+                        variant="light"
+                        disabled={!canEdit}
+                        aria-label="Edit"
+                      >
+                        <IconEdit size={16} />
+                      </ActionIcon>
+                    </Group>
+                  );
                 },
-              ]}
-            />
-          </Card>
-        </Stack>
-      </Card>
+              },
+            ]}
+          />
+        </Card>
+      </Stack>
 
       <Modal
         opened={!!editRow}

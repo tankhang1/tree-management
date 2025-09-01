@@ -112,7 +112,9 @@ const ProductManagementItemPage = () => {
           <Menu.Dropdown>
             <Menu.Item
               leftSection={<IconEye size={18} color="gray" />}
-              onClick={() => setOpenedDetail(true)}
+              onClick={() => {
+                navigate(PATH.PRODUCT_ITEM_DETAIL);
+              }}
             >
               Chi tiết
             </Menu.Item>

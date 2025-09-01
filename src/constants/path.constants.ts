@@ -125,6 +125,7 @@ export const PATH = {
   // Product Management
   PRODUCT_MANAGEMENT: "/product-management",
   PRODUCT_ITEM: "/product-management/item",
+  PRODUCT_ITEM_DETAIL: "/product-management/item/detail",
   PRODUCT_TYPE: "/product-management/type",
   PRODUCT_ADD_ITEM: "/product-management/item/add",
   PRODUCT_BOM: "/product-management/bom",

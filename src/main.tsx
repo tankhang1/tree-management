@@ -303,6 +303,9 @@ const ProductManagementRawMaterialPage = L(
 const ProductManagementItemAddPage = L(
   () => import("./pages/ProductManagementPage/Item/Add")
 );
+const ProductManagementItemDetailPage = L(
+  () => import("./pages/ProductManagementPage/Item/Detail")
+);
 const ProductManagementRawMaterialTypePage = L(
   () => import("./pages/ProductManagementPage/RawMaterial/Type")
 );
@@ -1179,6 +1182,11 @@ const ROUTES = [
     key="product_add_item"
     path={PATH.PRODUCT_ADD_ITEM}
     element={withSuspense(<ProductManagementItemAddPage />)}
+  />,
+  <Route
+    key="product_item_detail"
+    path={PATH.PRODUCT_ITEM_DETAIL}
+    element={withSuspense(<ProductManagementItemDetailPage />)}
   />,
   <Route
     key="product_bom"
