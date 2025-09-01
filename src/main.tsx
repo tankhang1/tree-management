@@ -665,7 +665,10 @@ const CertificatePage = L(() => import("./pages/CertificatePage"));
 const CertificateAddPage = L(() => import("./pages/CertificatePage/Add"));
 
 const CompanyAddPage2 = CompanyAddPage; // alias giữ tên cũ
-
+const BusinessReportPage = L(() => import("./pages/BusinessReportPage"));
+const PurchaseReportPage = L(() => import("./pages/PurchaseReportPage"));
+const CashFlowReportPage = L(() => import("./pages/CashFlowReportPage"));
+const ProductionReportPage = L(() => import("./pages/ProductionReportPage"));
 // Map/Season/Plan History aliases (trong code gốc đều dùng AreaManagementHistoryPage)
 const MapHistoryPage = AreaManagementHistoryPage;
 const SeasonHistoryPage = AreaManagementHistoryPage;
@@ -1861,6 +1864,26 @@ const ROUTES = [
     key="certificate_add"
     path={PATH.CERTIFICATION_ADD}
     element={withSuspense(<CertificateAddPage />)}
+  />,
+  <Route
+    key="business_report"
+    path={PATH.BUSINESS_REPORT}
+    element={withSuspense(<BusinessReportPage />)}
+  />,
+  <Route
+    key="purchase_report"
+    path={PATH.PURCHASE_REPORT}
+    element={withSuspense(<PurchaseReportPage />)}
+  />,
+  <Route
+    key="cash_flow_report"
+    path={PATH.CASH_FLOW_REPORT}
+    element={withSuspense(<CashFlowReportPage />)}
+  />,
+  <Route
+    key="production_report"
+    path={PATH.PRODUCTION_REPORT}
+    element={withSuspense(<ProductionReportPage />)}
   />,
 ];
 

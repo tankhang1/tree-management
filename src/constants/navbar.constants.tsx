@@ -173,6 +173,26 @@ export const NAV_BAR = [
     link: PATH.PRODUCTION_FORECAST,
   },
   {
+    label: "Báo cáo kinh doanh",
+    icon: IconReportAnalytics,
+    link: PATH.BUSINESS_REPORT,
+  },
+  {
+    label: "Báo cáo thu mua",
+    icon: IconReportAnalytics,
+    link: PATH.PURCHASE_REPORT,
+  },
+  {
+    label: "Báo cáo dòng tiền",
+    icon: IconReportAnalytics,
+    link: PATH.CASH_FLOW_REPORT,
+  },
+  {
+    label: "Báo cáo sản xuất",
+    icon: IconReportAnalytics,
+    link: PATH.PRODUCTION_REPORT,
+  },
+  {
     label: "Sản phẩm kinh doanh",
     icon: IconPackage,
     link: PATH.PRODUCT_MANAGEMENT,

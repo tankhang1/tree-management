@@ -284,4 +284,9 @@ export const PATH = {
   // Certification
   CERTIFICATION: "/certification",
   CERTIFICATION_ADD: "/certification/add",
+  // Business Report
+  BUSINESS_REPORT: "/business-report",
+  PURCHASE_REPORT: "/purchase-report",
+  CASH_FLOW_REPORT: "/cash-flow-report",
+  PRODUCTION_REPORT: "/production-report",
 };
