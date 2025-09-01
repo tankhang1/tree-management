@@ -14,6 +14,7 @@ import {
   Input,
   Select,
   NumberInput,
+  Grid,
 } from "@mantine/core";
 import { Dropzone, IMAGE_MIME_TYPE } from "@mantine/dropzone";
 import { IconArrowLeft, IconPlus, IconSearch } from "@tabler/icons-react";
@@ -241,46 +242,71 @@ export default function ProductManagementRawMaterialAddPage() {
         <Stack gap="md">
           <Title order={4}>📝 Xác nhận thông tin</Title>
 
-          <Group align="flex-start">
-            <Card withBorder flex={1} h={300}>
-              <Stack>
-                <Title order={4}>Thông tin nguyên vật liệu</Title>
-                <Text>
-                  <strong>Mã nguyên vật liệu:</strong> {formData.code}
-                </Text>
-                <Text>
-                  <strong>Tên nguyên vật liệu:</strong> {formData.name}
-                </Text>
-                <Text>
-                  <strong>Loại nguyên vật liệu:</strong> Thiết bị tưới tiêu
-                </Text>
-                <Text>
-                  <strong>Quy cách:</strong> Bao 5kg, Thùng 20kg
-                </Text>
-
-                <Text>
-                  <strong>Ghi chú:</strong> {formData.note}
-                </Text>
-              </Stack>
-            </Card>
-            <Card withBorder flex={1} h={300}>
-              <Stack flex={1}>
-                <Title order={4}>Ảnh nguyên vật liệu</Title>
-                <Stack justify="center" align="center">
-                  <Image
-                    src={
-                      "https://encrypted-tbn3.gstatic.com/shopping?q=tbn:ANd9GcQHUVFr-uUHq8EgkgEc-KvQnK1Sw1jvIVax8B4kebK98FtujU5D2n3_mZ8ib6LoLZPk9eGKlOr3ZVslkIrWYU6VjTByZJiIpTvMqGqiK1Ds8kWIra4f2kxZ4w&usqp=CAc"
-                    }
-                    alt="Preview"
-                    radius="md"
-                    mt="sm"
-                    h={200}
-                    fit="contain"
-                  />
+          <Grid gutter="md" align="stretch">
+            <Grid.Col span={{ base: 12, md: 7 }}>
+              <Card withBorder radius={4} p="lg">
+                <Group justify="space-between" mb="xs">
+                  <Title order={5}>Thông tin nguyên vật liệu</Title>
+                  <Text size="sm" c="dimmed">
+                    Xem lại trước khi hoàn tất
+                  </Text>
+                </Group>
+                <Divider my="xs" />
+                <Stack gap={8}>
+                  <Group justify="space-between">
+                    <Text c="dimmed">Mã nguyên vật liệu</Text>
+                    <Text fw={600}>{formData.code || "—"}</Text>
+                  </Group>
+                  <Group justify="space-between">
+                    <Text c="dimmed">Tên nguyên vật liệu</Text>
+                    <Text fw={600}>{formData.name || "—"}</Text>
+                  </Group>
+                  <Group justify="space-between">
+                    <Text c="dimmed">Loại</Text>
+                    <Text fw={600}>Thiết bị tưới tiêu</Text>
+                  </Group>
+                  <Group justify="space-between">
+                    <Text c="dimmed">Quy cách</Text>
+                    <Text fw={600}>Bao 5kg • Thùng 20kg</Text>
+                  </Group>
+                  <Divider my={6} />
+                  <Stack gap={4}>
+                    <Text c="dimmed" size="sm">
+                      Ghi chú
+                    </Text>
+                    <Text>{formData.note || "Không có"}</Text>
+                  </Stack>
                 </Stack>
-              </Stack>
-            </Card>
-          </Group>
+              </Card>
+            </Grid.Col>
+
+            <Grid.Col span={{ base: 12, md: 5 }}>
+              <Card withBorder radius={4} p="lg">
+                <Title order={5} mb="xs">
+                  Ảnh nguyên vật liệu
+                </Title>
+                <Card.Section inheritPadding>
+                  <Stack align="center" justify="center" p="xs">
+                    <Image
+                      src="https://encrypted-tbn3.gstatic.com/shopping?q=tbn:ANd9GcQHUVFr-uUHq8EgkgEc-KvQnK1Sw1jvIVax8B4kebK98FtujU5D2n3_mZ8ib6LoLZPk9eGKlOr3ZVslkIrWYU6VjTByZJiIpTvMqGqiK1Ds8kWIra4f2kxZ4w&usqp=CAc"
+                      alt="Preview"
+                      radius="md"
+                      h={220}
+                      fit="contain"
+                    />
+                  </Stack>
+                </Card.Section>
+                <Divider my="sm" />
+                <Stack gap={4}>
+                  <Text c="dimmed" size="sm">
+                    Tóm tắt
+                  </Text>
+                  <Text size="sm">• Loại: Thiết bị tưới tiêu</Text>
+                  <Text size="sm">• Quy cách: Bao 5kg, Thùng 20kg</Text>
+                </Stack>
+              </Card>
+            </Grid.Col>
+          </Grid>
 
           <Divider label="🏪 Nhà cung cấp" labelPosition="center" />
 

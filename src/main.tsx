@@ -312,6 +312,9 @@ const ProductManagementRawMaterialTypePage = L(
 const ProductManagementRawMaterialAddPage = L(
   () => import("./pages/ProductManagementPage/RawMaterial/Add")
 );
+const ProductManagementRawMaterialDetailPage = L(
+  () => import("./pages/ProductManagementPage/RawMaterial/Detail")
+);
 const ProductManagementTypePage = L(
   () => import("./pages/ProductManagementPage/Type")
 );
@@ -419,6 +422,9 @@ const SupplyManagementPage = L(() => import("./pages/SupplyManagementPage"));
 const StockManagementPage = L(() => import("./pages/StockManagementPage"));
 const StockManagementSupplyPage = L(
   () => import("./pages/StockManagementPage/Supply")
+);
+const StockManagementSupplyDetailPage = L(
+  () => import("./pages/StockManagementPage/Supply/Detail")
 );
 const StockManagementPesticidePage = L(
   () => import("./pages/StockManagementPage/Pesticide")
@@ -1199,6 +1205,11 @@ const ROUTES = [
     element={withSuspense(<ProductManagementRawMaterialPage />)}
   />,
   <Route
+    key="product_raw_detail"
+    path={PATH.PRODUCT_RAW_MATERIAL_DETAIL}
+    element={withSuspense(<ProductManagementRawMaterialDetailPage />)}
+  />,
+  <Route
     key="product_raw_add"
     path={PATH.PRODUCT_RAW_MATERIAL_ADD}
     element={withSuspense(<ProductManagementRawMaterialAddPage />)}
@@ -1490,6 +1501,11 @@ const ROUTES = [
     key="stock_supply"
     path={PATH.STOCK_SUPPLY}
     element={withSuspense(<StockManagementSupplyPage />)}
+  />,
+  <Route
+    key="stock_management_supply_detail"
+    path={PATH.STOCK_SUPPLY_DETAIL}
+    element={withSuspense(<StockManagementSupplyDetailPage />)}
   />,
   <Route
     key="stock_management_io"

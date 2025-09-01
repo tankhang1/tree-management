@@ -107,7 +107,7 @@ export const warehouses = [
 ];
 
 const contracts = ["HD-001 - Công ty A", "HD-002 - Công ty B"];
-const assetTypes = [
+export const assetTypes = [
   {
     label: "Máy móc",
     value: "Máy móc",

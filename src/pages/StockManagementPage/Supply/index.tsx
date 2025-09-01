@@ -111,7 +111,10 @@ const StockManagementSupplyPage = () => {
           </Menu.Target>
 
           <Menu.Dropdown>
-            <Menu.Item leftSection={<IconEye size={18} color="gray" />}>
+            <Menu.Item
+              onClick={() => navigate(PATH.STOCK_SUPPLY_DETAIL)}
+              leftSection={<IconEye size={18} color="gray" />}
+            >
               Chi tiết
             </Menu.Item>
 

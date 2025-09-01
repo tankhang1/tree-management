@@ -131,6 +131,7 @@ export const PATH = {
   PRODUCT_BOM: "/product-management/bom",
   PRODUCT_RAW_MATERIAL: "/product-management/raw-material",
   PRODUCT_RAW_MATERIAL_ADD: "/product-management/raw-material/add",
+  PRODUCT_RAW_MATERIAL_DETAIL: "/product-management/raw-material/detail",
   PRODUCT_RAW_MATERIAL_TYPE: "/product-management/raw-material-type",
   PRODUCT_HISTORY: "/product-management/history",
   // Contract Management
@@ -213,6 +214,7 @@ export const PATH = {
   STOCK_ADD_DELIVERY: "/stock-delivery/add",
   STOCK_MANAGEMENT: "/stock-management",
   STOCK_SUPPLY: "/stock-management/supply",
+  STOCK_SUPPLY_DETAIL: "/stock-management/supply/detail",
   STOCK_MANAGEMENT_IO: "/stock-management/io",
   STOCK_PESTICIDE: "/stock-management/pesticide",
   STOCK_FERTILIZER: "/stock-management/fertilizer",

@@ -65,6 +65,9 @@ const materialsData: Material[] = [
 ];
 const ProductManagementRawMaterialPage = () => {
   const navigate = useNavigate();
+  const onMaterialDetail = () => {
+    navigate(PATH.PRODUCT_RAW_MATERIAL_DETAIL);
+  };
   const materialColumns: MRT_ColumnDef<Material>[] = [
     { accessorKey: "code", header: "Mã vật liệu" },
     { accessorKey: "name", header: "Tên vật liệu" },
@@ -90,7 +93,10 @@ const ProductManagementRawMaterialPage = () => {
           </Menu.Target>
 
           <Menu.Dropdown>
-            <Menu.Item leftSection={<IconEye size={18} color="gray" />}>
+            <Menu.Item
+              onClick={onMaterialDetail}
+              leftSection={<IconEye size={18} color="gray" />}
+            >
               Chi tiết
             </Menu.Item>
             <Menu.Item leftSection={<IconEdit size={18} color="green" />}>
