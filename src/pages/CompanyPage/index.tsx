@@ -1,4 +1,21 @@
-import { ActionIcon, Button, Group, Menu, Stack, Title } from "@mantine/core";
+import {
+  ActionIcon,
+  Badge,
+  Button,
+  Card,
+  Group,
+  Menu,
+  Stack,
+  Title,
+  Tooltip,
+  Text,
+  TextInput,
+  SimpleGrid,
+  Select,
+  MultiSelect,
+  NumberInput,
+  Checkbox,
+} from "@mantine/core";
 import {
   IconBuilding,
   IconDotsVertical,
@@ -8,11 +25,15 @@ import {
   IconHome,
   IconMap,
   IconTrash,
+  IconRefresh,
+  IconSearch,
 } from "@tabler/icons-react";
 import type { MRT_ColumnDef } from "mantine-react-table";
 import Table from "../../components/Table";
 import { useNavigate } from "react-router-dom";
 import { PATH } from "../../constants/path.constants";
+import { useMemo, useState } from "react";
+
 type FarmerEntity = {
   id: string;
   name: string;
@@ -22,13 +43,14 @@ type FarmerEntity = {
   phone: string;
   email?: string;
   address: string;
-  location: {
-    lat: number;
-    lng: number;
-  };
+  province: string;
+  location: { lat: number; lng: number };
   taxCode?: string;
   landCertificateNo?: string;
   note?: string;
+  crops: string[];
+  areaHa: number;
+  certifications?: string[];
 };
 
 const farmerDataset: FarmerEntity[] = [
@@ -41,10 +63,14 @@ const farmerDataset: FarmerEntity[] = [
     phone: "0912345678",
     email: "a.nongdan@example.com",
     address: "Ấp 1, xã Tân Lập, huyện Hớn Quản, Bình Phước",
+    province: "Bình Phước",
     location: { lat: 11.850812, lng: 106.674836 },
     taxCode: "",
     landCertificateNo: "CN123456789",
     note: "Canh tác theo mô hình VietGAP",
+    crops: ["Cây dược liệu", "Hồ tiêu"],
+    areaHa: 8.5,
+    certifications: ["VietGAP"],
   },
   {
     id: "F002",
@@ -55,22 +81,67 @@ const farmerDataset: FarmerEntity[] = [
     phone: "0938123456",
     email: "info@benvungcoop.vn",
     address: "Xã Phú Riềng, huyện Phú Riềng, Bình Phước",
+    province: "Bình Phước",
     location: { lat: 11.667091, lng: 106.985761 },
     taxCode: "0401234567",
     landCertificateNo: "HTX-987654321",
-    note: "Liên kết tiêu thụ sản phẩm với doanh nghiệp Nhật",
+    note: "Liên kết tiêu thụ với DN Nhật",
+    crops: ["Cây ăn trái", "Cây có múi"],
+    areaHa: 42,
+    certifications: ["GlobalG.A.P"],
   },
+  {
+    id: "F003",
+    name: "Công ty TNHH Nông sản HCM",
+    type: "doanh nghiệp",
+    ownerName: "Phạm Quốc C",
+    identityNumber: "079123456789",
+    phone: "0909123456",
+    email: "contact@hcmaf.com",
+    address: "KCN Hiệp Phước, H. Nhà Bè, TP. HCM",
+    province: "TP.HCM",
+    location: { lat: 10.607, lng: 106.743 },
+    taxCode: "0312345678",
+    landCertificateNo: "DN-556677",
+    note: "Chuỗi cung ứng lạnh",
+    crops: ["Rau màu", "Cây dược liệu"],
+    areaHa: 25,
+    certifications: [],
+  },
+];
+
+const PROVINCES = [
+  "TP.HCM",
+  "Bình Dương",
+  "Đồng Nai",
+  "Tây Ninh",
+  "Bình Phước",
+];
+const CROP_GROUPS = [
+  "Cây dược liệu",
+  "Cây ăn trái",
+  "Cây có múi",
+  "Rau màu",
+  "Cây công nghiệp",
+  "Lúa",
+  "Hồ tiêu",
 ];
 
 const CompanyPage = () => {
   const navigate = useNavigate();
+  const [rows, setRows] = useState<FarmerEntity[]>(farmerDataset);
 
-  const onAddCompany = () => {
-    navigate(PATH.COMPANY_ADD);
-  };
-  const onCompanyDetail = () => {
-    navigate(PATH.COMPANY_DETAIL);
-  };
+  const [keyword, setKeyword] = useState("");
+  const [types, setTypes] = useState<Array<FarmerEntity["type"]>>([]);
+  const [provinces, setProvinces] = useState<string[]>([]);
+  const [crops, setCrops] = useState<string[]>([]);
+  const [minArea, setMinArea] = useState<number | "">(0);
+  const [maxArea, setMaxArea] = useState<number | "">("");
+  const [hasCert, setHasCert] = useState(false);
+
+  const onAddCompany = () => navigate(PATH.COMPANY_ADD);
+  const onCompanyDetail = () => navigate(PATH.COMPANY_DETAIL);
+
   const farmerColumns: MRT_ColumnDef<FarmerEntity>[] = [
     { accessorKey: "name", header: "Tên đơn vị" },
     { accessorKey: "type", header: "Loại hình" },
@@ -88,11 +159,10 @@ const CompanyPage = () => {
       Cell: () => (
         <Menu shadow="md">
           <Menu.Target>
-            <ActionIcon variant="transparent" c={"gray"}>
+            <ActionIcon variant="transparent" c="gray">
               <IconDotsVertical />
             </ActionIcon>
           </Menu.Target>
-
           <Menu.Dropdown>
             <Menu.Item
               onClick={onCompanyDetail}
@@ -112,6 +182,54 @@ const CompanyPage = () => {
     },
   ];
 
+  const appliedCount = useMemo(
+    () =>
+      [
+        keyword,
+        types.length,
+        provinces.length,
+        crops.length,
+        minArea || minArea === 0 ? 1 : 0,
+        maxArea ? 1 : 0,
+        hasCert ? 1 : 0,
+      ].filter(Boolean).length,
+    [keyword, types, provinces, crops, minArea, maxArea, hasCert]
+  );
+
+  const resetFilters = () => {
+    setKeyword("");
+    setTypes([]);
+    setProvinces([]);
+    setCrops([]);
+    setMinArea(0);
+    setMaxArea("");
+    setHasCert(false);
+    setRows(farmerDataset);
+  };
+
+  const applyFilters = () => {
+    const kw = keyword.trim().toLowerCase();
+    const filtered = farmerDataset.filter((r) => {
+      const okKw =
+        !kw ||
+        r.name.toLowerCase().includes(kw) ||
+        r.id.toLowerCase().includes(kw) ||
+        r.ownerName.toLowerCase().includes(kw) ||
+        r.address.toLowerCase().includes(kw) ||
+        (r.taxCode || "").toLowerCase().includes(kw);
+      const okType = !types.length || types.includes(r.type);
+      const okProvince = !provinces.length || provinces.includes(r.province);
+      const okCrop = !crops.length || r.crops.some((c) => crops.includes(c));
+      const okArea =
+        (minArea === "" || r.areaHa >= Number(minArea)) &&
+        (maxArea === "" || r.areaHa <= Number(maxArea));
+      const okCert =
+        !hasCert || (r.certifications && r.certifications.length > 0);
+      return okKw && okType && okProvince && okCrop && okArea && okCert;
+    });
+    setRows(filtered);
+  };
+
   return (
     <Stack gap="lg">
       <Group justify="space-between">
@@ -127,31 +245,113 @@ const CompanyPage = () => {
           </Button>
         </Group>
       </Group>
-      <Group>
-        <Button
-          leftSection={<IconBuilding size={18} />}
-          variant="filled"
-          radius={4}
-        >
-          Doanh nghiệp
-        </Button>
-        <Button
-          leftSection={<IconHome size={18} />}
-          variant="outline"
-          radius={4}
-        >
-          Nông hộ
-        </Button>
-        <Button
-          leftSection={<IconMap size={18} />}
-          variant="outline"
-          radius={4}
-        >
-          Hợp tác xã
-        </Button>
-      </Group>
-      <Table columns={farmerColumns} data={farmerDataset} />
+
+      <Card withBorder shadow="sm" radius={4} p="md">
+        <Group justify="space-between" align="center" mb="xs">
+          <Stack gap={0}>
+            <Title order={4}>Tìm kiếm doanh nghiệp / nông hộ</Title>
+            <Text c="dimmed" size="sm">
+              Nhập từ khoá (VD: &quot;Nông hộ 1&quot;) hoặc áp dụng bộ lọc (VD:
+              &quot;HCM&quot;, &quot;Cây dược liệu&quot;).
+            </Text>
+          </Stack>
+          <Group>
+            <Tooltip label="Xoá tất cả bộ lọc">
+              <Button
+                radius={4}
+                variant="default"
+                leftSection={<IconRefresh size={16} />}
+                onClick={resetFilters}
+              >
+                Làm mới
+              </Button>
+            </Tooltip>
+            <Button
+              radius={4}
+              leftSection={<IconSearch size={16} />}
+              onClick={applyFilters}
+            >
+              Tìm kiếm
+            </Button>
+          </Group>
+        </Group>
+
+        <Stack gap="sm">
+          <TextInput
+            radius={4}
+            label="Từ khoá"
+            description='Ví dụ: "FARM001", "Hồ tiêu", "Phú Riềng"...'
+            placeholder="Nhập tên, mã, chủ sở hữu, địa chỉ..."
+            leftSection={<IconSearch size={16} />}
+            value={keyword}
+            onChange={(e) => setKeyword(e.currentTarget.value)}
+          />
+
+          <SimpleGrid cols={{ base: 1, md: 2, lg: 3 }} spacing="sm">
+            <MultiSelect
+              radius={4}
+              label="Tỉnh/Thành"
+              placeholder="Chọn"
+              data={PROVINCES}
+              searchable
+              clearable
+              value={provinces}
+              onChange={setProvinces}
+            />
+            <MultiSelect
+              radius={4}
+              label="Nhóm cây trồng"
+              placeholder="Chọn"
+              data={CROP_GROUPS}
+              searchable
+              clearable
+              value={crops}
+              onChange={setCrops}
+            />
+            <MultiSelect
+              radius={4}
+              label="Loại hình"
+              placeholder="Chọn"
+              data={[
+                { value: "doanh nghiệp", label: "Doanh nghiệp" },
+                { value: "hộ nông dân", label: "Hộ nông dân" },
+                { value: "hợp tác xã", label: "Hợp tác xã" },
+              ]}
+              searchable
+              clearable
+              value={types as any}
+              onChange={(v) => setTypes(v as any)}
+            />
+            <Group gap="xs" align="end">
+              <NumberInput
+                radius={4}
+                label="Diện tích tối thiểu (ha)"
+                value={minArea}
+                min={0}
+                step={0.5}
+              />
+              <NumberInput
+                radius={4}
+                label="Diện tích tối đa (ha)"
+                value={maxArea}
+                min={0}
+                step={0.5}
+              />
+            </Group>
+            <Checkbox
+              mt={28}
+              radius={4}
+              label="Có chứng nhận"
+              checked={hasCert}
+              onChange={(e) => setHasCert(e.currentTarget.checked)}
+            />
+          </SimpleGrid>
+        </Stack>
+      </Card>
+
+      <Table columns={farmerColumns} data={rows} />
     </Stack>
   );
 };
+
 export default CompanyPage;

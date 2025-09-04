@@ -35,6 +35,7 @@ import {
 } from "@tabler/icons-react";
 import dayjs from "dayjs";
 import isoWeek from "dayjs/plugin/isoWeek";
+import quarterOfYear from "dayjs/plugin/quarterOfYear";
 import { useEffect, useMemo, useRef, useState } from "react";
 import {
   Bar,
@@ -61,6 +62,7 @@ import * as htmlToImage from "html-to-image";
 import Table from "../../components/Table";
 
 dayjs.extend(isoWeek);
+dayjs.extend(quarterOfYear);
 
 type Region = { id: string; name: string };
 type Crop = { id: string; name: string };
@@ -70,6 +72,7 @@ type RegionCropDist = {
   trees: number;
   avgYieldPerHa: number;
 };
+type Granularity = "day" | "week" | "month" | "quarter" | "year";
 type Bucket = {
   key: string;
   label: string;
@@ -128,12 +131,24 @@ const kg = (n: number) => Math.round(n);
 const fmt = (n: number) => (n ?? 0).toLocaleString("vi-VN");
 
 const buildBuckets = (
-  granularity: "day" | "week" | "month" | "year",
+  granularity: Granularity,
   start: string,
   end: string
 ): Bucket[] => {
-  const s = dayjs(start).startOf(granularity === "week" ? "week" : granularity);
-  const e = dayjs(end).endOf(granularity === "week" ? "week" : granularity);
+  const s = dayjs(start).startOf(
+    granularity === "week"
+      ? "week"
+      : granularity === "quarter"
+      ? "quarter"
+      : granularity
+  );
+  const e = dayjs(end).endOf(
+    granularity === "week"
+      ? "week"
+      : granularity === "quarter"
+      ? "quarter"
+      : granularity
+  );
   const res: Bucket[] = [];
   let cur = s.clone();
   while (cur.isBefore(e) || cur.isSame(e)) {
@@ -169,6 +184,18 @@ const buildBuckets = (
         days: endM.diff(cur, "day") + 1,
       });
       cur = endM.add(1, "day");
+    } else if (granularity === "quarter") {
+      const q = cur.quarter();
+      const endQ = cur.endOf("quarter");
+      res.push({
+        key: `Q${q}-${cur.year()}`,
+        label: `Q${q}/${cur.year()}`,
+        start: cur.toISOString(),
+        end: endQ.toISOString(),
+        monthIndex: cur.month(),
+        days: endQ.diff(cur, "day") + 1,
+      });
+      cur = endQ.add(1, "day");
     } else {
       const endY = cur.endOf("year");
       res.push({
@@ -229,19 +256,30 @@ const computeForecast = ({
   policy,
   customFactor,
   overrides,
+  granularity,
 }: {
   buckets: Bucket[];
   basePerDay: number;
   policy: Policy;
   customFactor: number;
   overrides: Record<string, number | undefined>;
+  granularity: Granularity;
 }) => {
   let growthSeed = 1;
   return buckets.map((b, idx) => {
     let value = basePerDay * b.days;
     if (policy === "growth10") value *= Math.pow(1.1, idx);
-    else if (policy === "seasonal") value *= SEASONAL_FACTORS[b.monthIndex];
-    else if (policy === "customFactor") value *= customFactor;
+    else if (policy === "seasonal") {
+      if (granularity === "quarter") {
+        const startMonth = dayjs(b.start).month();
+        const m1 = SEASONAL_FACTORS[startMonth];
+        const m2 = SEASONAL_FACTORS[(startMonth + 1) % 12];
+        const m3 = SEASONAL_FACTORS[(startMonth + 2) % 12];
+        value *= (m1 + m2 + m3) / 3;
+      } else {
+        value *= SEASONAL_FACTORS[b.monthIndex];
+      }
+    } else if (policy === "customFactor") value *= customFactor;
     const manual = overrides[b.key];
     return {
       ...b,
@@ -259,12 +297,14 @@ const buildCropStack = ({
   policy,
   customFactor,
   totalsByBucket,
+  granularity,
 }: {
   buckets: Bucket[];
   perCropPerDay: Record<string, number>;
   policy: Policy;
   customFactor: number;
   totalsByBucket: { key: string; forecast: number; adjusted: number }[];
+  granularity: Granularity;
 }) => {
   const cropIds = Object.keys(perCropPerDay);
   const stacked = buckets.map((b, bi) => {
@@ -273,8 +313,17 @@ const buildCropStack = ({
     cropIds.forEach((cid) => {
       let v = perCropPerDay[cid] * b.days;
       if (policy === "growth10") v *= Math.pow(1.1, bi);
-      else if (policy === "seasonal") v *= SEASONAL_FACTORS[b.monthIndex];
-      else if (policy === "customFactor") v *= customFactor;
+      else if (policy === "seasonal") {
+        if (granularity === "quarter") {
+          const startMonth = dayjs(b.start).month();
+          const m1 = SEASONAL_FACTORS[startMonth];
+          const m2 = SEASONAL_FACTORS[(startMonth + 1) % 12];
+          const m3 = SEASONAL_FACTORS[(startMonth + 2) % 12];
+          v *= (m1 + m2 + m3) / 3;
+        } else {
+          v *= SEASONAL_FACTORS[b.monthIndex];
+        }
+      } else if (policy === "customFactor") v *= customFactor;
       row[cid] = kg(v);
       bucketForecastTotal += v;
     });
@@ -329,7 +378,7 @@ const ExportButtons = ({
     ]);
     autoTable(doc, {
       startY: 118,
-      head: [["Thời gian", "Cơ sở (kg)", "Dự báo (kg)", "Điều chỉnh (kg)"]],
+      head: [["Kỳ", "Cơ sở (kg)", "Dự báo (kg)", "Điều chỉnh (kg)"]],
       body,
       styles: { fontSize: 9 },
       headStyles: { fillColor: [17, 122, 101] },
@@ -345,7 +394,7 @@ const ExportButtons = ({
       [`Khoảng thời gian: ${meta.period}`],
       [`Chính sách: ${meta.policyText}`],
       [],
-      ["Thời gian", "Cơ sở (kg)", "Dự báo (kg)", "Điều chỉnh (kg)"],
+      ["Kỳ", "Cơ sở (kg)", "Dự báo (kg)", "Điều chỉnh (kg)"],
       ...rows.map((r) => [r.label, r.baseline, r.forecast, r.adjusted]),
     ]);
     const wb = XLSX.utils.book_new();
@@ -797,9 +846,7 @@ const ProductionForecastPage = () => {
     REGIONS.map((r) => r.id)
   );
   const [cropIds, setCropIds] = useState<string[]>([]);
-  const [granularity, setGranularity] = useState<
-    "day" | "week" | "month" | "year"
-  >("month");
+  const [granularity, setGranularity] = useState<Granularity>("month");
   const [range, setRange] = useState<[Date, Date]>([
     dayjs().startOf("month").toDate(),
     dayjs().endOf("month").toDate(),
@@ -848,6 +895,7 @@ const ProductionForecastPage = () => {
     () => aggregateSelection(regionIds, cropIds),
     [regionIds, cropIds]
   );
+
   const rows = useMemo(
     () =>
       computeForecast({
@@ -856,8 +904,9 @@ const ProductionForecastPage = () => {
         policy,
         customFactor,
         overrides,
+        granularity,
       }),
-    [buckets, agg.basePerDay, policy, customFactor, overrides]
+    [buckets, agg.basePerDay, policy, customFactor, overrides, granularity]
   );
 
   const totals = useMemo(() => {
@@ -870,7 +919,17 @@ const ProductionForecastPage = () => {
   const periodText = useMemo(() => {
     const s = dayjs(range[0] ?? new Date()).format("DD/MM/YYYY");
     const e = dayjs(range[1] ?? range[0] ?? new Date()).format("DD/MM/YYYY");
-    return `${s} → ${e} (${granularity})`;
+    const label =
+      granularity === "day"
+        ? "ngày"
+        : granularity === "week"
+        ? "tuần"
+        : granularity === "month"
+        ? "tháng"
+        : granularity === "quarter"
+        ? "quý"
+        : "năm";
+    return `${s} → ${e} (${label})`;
   }, [range, granularity]);
 
   const policyText = useMemo(() => {
@@ -920,8 +979,9 @@ const ProductionForecastPage = () => {
           forecast: r.forecast,
           adjusted: r.adjusted,
         })),
+        granularity,
       }),
-    [buckets, agg.perCropPerDay, policy, customFactor, rows]
+    [buckets, agg.perCropPerDay, policy, customFactor, rows, granularity]
   );
 
   useEffect(() => {
@@ -996,19 +1056,21 @@ const ProductionForecastPage = () => {
               />
             </Grid.Col>
             <Grid.Col span={{ base: 12, md: 4 }}>
-              <DatePickerInput
-                radius={4}
-                type="range"
-                label="Khoảng thời gian"
-                value={range}
-                locale="vi"
-                onChange={(value) => {
-                  if (!value) return;
-                  const [s, e] = value as any;
-                  if (s && e) setRange([new Date(s), new Date(e)]);
-                }}
-                leftSection={<IconCalendar size={16} />}
-              />
+              <Group align="end" wrap="nowrap">
+                <DatePickerInput
+                  radius={4}
+                  type="range"
+                  label="Khoảng thời gian"
+                  value={range}
+                  locale="vi"
+                  onChange={(value) => {
+                    if (!value) return;
+                    const [s, e] = value as any;
+                    if (s && e) setRange([new Date(s), new Date(e)]);
+                  }}
+                  leftSection={<IconCalendar size={16} />}
+                />
+              </Group>
             </Grid.Col>
           </Grid>
 
@@ -1023,6 +1085,7 @@ const ProductionForecastPage = () => {
                 { value: "day", label: "Ngày" },
                 { value: "week", label: "Tuần" },
                 { value: "month", label: "Tháng" },
+                { value: "quarter", label: "Quý" },
                 { value: "year", label: "Năm" },
               ]}
             />
@@ -1055,8 +1118,34 @@ const ProductionForecastPage = () => {
         <Grid gutter="md" mt="md">
           <Grid.Col span={{ base: 12, lg: 8 }}>
             <CropStackedChart
-              stacked={stacked}
-              seriesCropIds={seriesCropIds}
+              stacked={
+                buildCropStack({
+                  buckets,
+                  perCropPerDay: agg.perCropPerDay,
+                  policy,
+                  customFactor,
+                  totalsByBucket: rows.map((r) => ({
+                    key: r.key,
+                    forecast: r.forecast,
+                    adjusted: r.adjusted,
+                  })),
+                  granularity,
+                }).stacked
+              }
+              seriesCropIds={
+                buildCropStack({
+                  buckets,
+                  perCropPerDay: agg.perCropPerDay,
+                  policy,
+                  customFactor,
+                  totalsByBucket: rows.map((r) => ({
+                    key: r.key,
+                    forecast: r.forecast,
+                    adjusted: r.adjusted,
+                  })),
+                  granularity,
+                }).cropIds
+              }
               cropName={(id) => CROPS.find((c) => c.id === id)?.name || id}
               normalized={normalized}
               onToggleNormalized={setNormalized}
@@ -1068,7 +1157,20 @@ const ProductionForecastPage = () => {
           </Grid.Col>
           <Grid.Col span={{ base: 12, lg: 4 }}>
             <CropPie
-              totalMap={totalPerCropAdjusted}
+              totalMap={
+                buildCropStack({
+                  buckets,
+                  perCropPerDay: agg.perCropPerDay,
+                  policy,
+                  customFactor,
+                  totalsByBucket: rows.map((r) => ({
+                    key: r.key,
+                    forecast: r.forecast,
+                    adjusted: r.adjusted,
+                  })),
+                  granularity,
+                }).totalPerCropAdjusted
+              }
               totalsAdj={totals.adj}
               cropName={(id) => CROPS.find((c) => c.id === id)?.name || id}
             />
@@ -1165,7 +1267,7 @@ const ProductionForecastPage = () => {
           <Table
             data={rows}
             columns={[
-              { accessorKey: "label", header: "Thời gian" },
+              { accessorKey: "label", header: "Kỳ" },
               { accessorKey: "baseline", header: "Cơ sở" },
               { accessorKey: "forecast", header: "Dự báo" },
               {
@@ -1175,8 +1277,6 @@ const ProductionForecastPage = () => {
                   const r = row.original;
                   return (
                     <NumberInput
-                      w={120}
-                      radius={4}
                       value={r.adjusted}
                       onChange={(v) =>
                         setOverrides((m) => ({ ...m, [r.key]: Number(v) }))
@@ -1184,6 +1284,8 @@ const ProductionForecastPage = () => {
                       disabled={!canEdit}
                       min={0}
                       step={100}
+                      w={100}
+                      radius={4}
                     />
                   );
                 },
@@ -1217,21 +1319,35 @@ const ProductionForecastPage = () => {
             Bảng chi tiết theo cây
           </Title>
           <Table
-            data={seriesCropIds
-              .map((cid) => ({
-                crop: CROPS.find((x) => x.id === cid)?.name || cid,
-                area: agg.perCropArea[cid] || 0,
-                trees: agg.perCropTrees[cid] || 0,
-                forecast: totalPerCropForecast[cid] || 0,
-                adjusted: totalPerCropAdjusted[cid] || 0,
-                share:
-                  (100 * (totalPerCropAdjusted[cid] || 0)) /
-                  (Object.values(totalPerCropAdjusted).reduce(
-                    (a, b) => a + b,
-                    0
-                  ) || 1),
-              }))
-              .sort((a, b) => b.adjusted - a.adjusted)}
+            data={(() => {
+              const computed = buildCropStack({
+                buckets,
+                perCropPerDay: agg.perCropPerDay,
+                policy,
+                customFactor,
+                totalsByBucket: rows.map((r) => ({
+                  key: r.key,
+                  forecast: r.forecast,
+                  adjusted: r.adjusted,
+                })),
+                granularity,
+              });
+              return computed.cropIds
+                .map((cid) => ({
+                  crop: CROPS.find((x) => x.id === cid)?.name || cid,
+                  area: agg.perCropArea[cid] || 0,
+                  trees: agg.perCropTrees[cid] || 0,
+                  forecast: computed.totalPerCropForecast[cid] || 0,
+                  adjusted: computed.totalPerCropAdjusted[cid] || 0,
+                  share:
+                    (100 * (computed.totalPerCropAdjusted[cid] || 0)) /
+                    (Object.values(computed.totalPerCropAdjusted).reduce(
+                      (a, b) => a + b,
+                      0
+                    ) || 1),
+                }))
+                .sort((a, b) => b.adjusted - a.adjusted);
+            })()}
             columns={[
               { accessorKey: "crop", header: "Cây" },
               { accessorKey: "area", header: "Diện tích (ha)" },
