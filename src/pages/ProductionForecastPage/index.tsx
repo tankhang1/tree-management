@@ -9,18 +9,18 @@ import {
   Modal,
   NumberInput,
   Paper,
-  ScrollArea,
   SegmentedControl,
   Select,
   SimpleGrid,
   Stack,
+  Switch,
   Text,
   Title,
+  MultiSelect,
 } from "@mantine/core";
 import { DatePickerInput } from "@mantine/dates";
 import { useDisclosure } from "@mantine/hooks";
 import {
-  IconArrowLeft,
   IconCalendar,
   IconEdit,
   IconFileSpreadsheet,
@@ -28,10 +28,14 @@ import {
   IconLock,
   IconRefresh,
   IconTrendingUp,
+  IconDownload,
+  IconChartBar,
+  IconChartLine,
+  IconChartArea,
 } from "@tabler/icons-react";
 import dayjs from "dayjs";
 import isoWeek from "dayjs/plugin/isoWeek";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import {
   Bar,
   BarChart,
@@ -41,18 +45,27 @@ import {
   Tooltip as RTooltip,
   XAxis,
   YAxis,
+  Line,
+  ComposedChart,
+  ReferenceLine,
+  Area,
+  AreaChart,
+  PieChart,
+  Pie,
+  Cell,
 } from "recharts";
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
 import * as XLSX from "xlsx";
+import * as htmlToImage from "html-to-image";
 import Table from "../../components/Table";
-import { useNavigate } from "react-router-dom";
 
 dayjs.extend(isoWeek);
 
-type Region = {
-  id: string;
-  name: string;
+type Region = { id: string; name: string };
+type Crop = { id: string; name: string };
+type RegionCropDist = {
+  cropId: string;
   areaHa: number;
   trees: number;
   avgYieldPerHa: number;
@@ -68,34 +81,51 @@ type Bucket = {
 type Policy = "average" | "growth10" | "seasonal" | "customFactor";
 
 const REGIONS: Region[] = [
-  {
-    id: "V01",
-    name: "Vùng 01 - Bình Dương",
-    areaHa: 25,
-    trees: 6800,
-    avgYieldPerHa: 1200,
-  },
-  {
-    id: "V02",
-    name: "Vùng 02 - Đồng Nai",
-    areaHa: 40,
-    trees: 11000,
-    avgYieldPerHa: 1350,
-  },
-  {
-    id: "V03",
-    name: "Vùng 03 - Tây Ninh",
-    areaHa: 15,
-    trees: 4200,
-    avgYieldPerHa: 1050,
-  },
+  { id: "V01", name: "Vùng 01 - Bình Dương" },
+  { id: "V02", name: "Vùng 02 - Đồng Nai" },
+  { id: "V03", name: "Vùng 03 - Tây Ninh" },
 ];
+
+const CROPS: Crop[] = [
+  { id: "C01", name: "Lúa" },
+  { id: "C02", name: "Xoài" },
+  { id: "C03", name: "Cà phê" },
+  { id: "C04", name: "Tiêu" },
+  { id: "C05", name: "Rau cải" },
+];
+
+const REGION_CROP: Record<string, RegionCropDist[]> = {
+  V01: [
+    { cropId: "C01", areaHa: 8, trees: 0, avgYieldPerHa: 5200 },
+    { cropId: "C02", areaHa: 5, trees: 3200, avgYieldPerHa: 9000 },
+    { cropId: "C05", areaHa: 12, trees: 0, avgYieldPerHa: 1800 },
+  ],
+  V02: [
+    { cropId: "C01", areaHa: 6, trees: 0, avgYieldPerHa: 5400 },
+    { cropId: "C03", areaHa: 18, trees: 9200, avgYieldPerHa: 2500 },
+    { cropId: "C04", areaHa: 16, trees: 14000, avgYieldPerHa: 2100 },
+  ],
+  V03: [
+    { cropId: "C02", areaHa: 4, trees: 2600, avgYieldPerHa: 8800 },
+    { cropId: "C03", areaHa: 7, trees: 3800, avgYieldPerHa: 2400 },
+    { cropId: "C04", areaHa: 4, trees: 3500, avgYieldPerHa: 2050 },
+  ],
+};
 
 const SEASONAL_FACTORS = [
   0.9, 0.95, 1.0, 1.05, 1.08, 1.12, 1.15, 1.1, 1.05, 1.0, 0.95, 0.92,
 ];
-
+const COLORS = [
+  "#4dabf7",
+  "#ffd43b",
+  "#63e6be",
+  "#b197fc",
+  "#ffa8a8",
+  "#66d9e8",
+  "#fab005",
+];
 const kg = (n: number) => Math.round(n);
+const fmt = (n: number) => (n ?? 0).toLocaleString("vi-VN");
 
 const buildBuckets = (
   granularity: "day" | "week" | "month" | "year",
@@ -106,12 +136,11 @@ const buildBuckets = (
   const e = dayjs(end).endOf(granularity === "week" ? "week" : granularity);
   const res: Bucket[] = [];
   let cur = s.clone();
-  while (cur.isBefore(e)) {
+  while (cur.isBefore(e) || cur.isSame(e)) {
     if (granularity === "day") {
-      const label = cur.format("DD/MM");
       res.push({
         key: cur.format("YYYY-MM-DD"),
-        label,
+        label: cur.format("DD/MM"),
         start: cur.toISOString(),
         end: cur.endOf("day").toISOString(),
         monthIndex: cur.month(),
@@ -156,32 +185,63 @@ const buildBuckets = (
   return res;
 };
 
+const aggregateSelection = (regionIds: string[], cropIds: string[]) => {
+  const cropSet = new Set(cropIds);
+  let totalArea = 0;
+  let totalTrees = 0;
+  let sumAnnual = 0;
+  const perCropAnnual: Record<string, number> = {};
+  const perCropArea: Record<string, number> = {};
+  const perCropTrees: Record<string, number> = {};
+
+  for (const rid of regionIds) {
+    const dists = REGION_CROP[rid] || [];
+    dists.forEach((d) => {
+      if (cropSet.size === 0 || cropSet.has(d.cropId)) {
+        totalArea += d.areaHa;
+        totalTrees += d.trees;
+        sumAnnual += d.areaHa * d.avgYieldPerHa;
+        perCropAnnual[d.cropId] =
+          (perCropAnnual[d.cropId] || 0) + d.areaHa * d.avgYieldPerHa;
+        perCropArea[d.cropId] = (perCropArea[d.cropId] || 0) + d.areaHa;
+        perCropTrees[d.cropId] = (perCropTrees[d.cropId] || 0) + d.trees;
+      }
+    });
+  }
+  const basePerDay = sumAnnual / 365;
+  const perCropPerDay: Record<string, number> = {};
+  Object.keys(perCropAnnual).forEach(
+    (cid) => (perCropPerDay[cid] = perCropAnnual[cid] / 365)
+  );
+  return {
+    totalArea,
+    totalTrees,
+    basePerDay,
+    perCropPerDay,
+    perCropArea,
+    perCropTrees,
+  };
+};
+
 const computeForecast = ({
   buckets,
-  region,
+  basePerDay,
   policy,
   customFactor,
   overrides,
 }: {
   buckets: Bucket[];
-  region: Region;
+  basePerDay: number;
   policy: Policy;
   customFactor: number;
   overrides: Record<string, number | undefined>;
 }) => {
-  const basePerDay = (region.areaHa * region.avgYieldPerHa) / 365;
   let growthSeed = 1;
   return buckets.map((b, idx) => {
     let value = basePerDay * b.days;
-    if (policy === "growth10") {
-      if (idx === 0) growthSeed = 1;
-      else growthSeed *= 1.1;
-      value *= growthSeed;
-    } else if (policy === "seasonal") {
-      value *= SEASONAL_FACTORS[b.monthIndex];
-    } else if (policy === "customFactor") {
-      value *= customFactor;
-    }
+    if (policy === "growth10") value *= Math.pow(1.1, idx);
+    else if (policy === "seasonal") value *= SEASONAL_FACTORS[b.monthIndex];
+    else if (policy === "customFactor") value *= customFactor;
     const manual = overrides[b.key];
     return {
       ...b,
@@ -193,21 +253,74 @@ const computeForecast = ({
   });
 };
 
+const buildCropStack = ({
+  buckets,
+  perCropPerDay,
+  policy,
+  customFactor,
+  totalsByBucket,
+}: {
+  buckets: Bucket[];
+  perCropPerDay: Record<string, number>;
+  policy: Policy;
+  customFactor: number;
+  totalsByBucket: { key: string; forecast: number; adjusted: number }[];
+}) => {
+  const cropIds = Object.keys(perCropPerDay);
+  const stacked = buckets.map((b, bi) => {
+    const row: any = { label: b.label, key: b.key };
+    let bucketForecastTotal = 0;
+    cropIds.forEach((cid) => {
+      let v = perCropPerDay[cid] * b.days;
+      if (policy === "growth10") v *= Math.pow(1.1, bi);
+      else if (policy === "seasonal") v *= SEASONAL_FACTORS[b.monthIndex];
+      else if (policy === "customFactor") v *= customFactor;
+      row[cid] = kg(v);
+      bucketForecastTotal += v;
+    });
+    row._forecastTotal = kg(bucketForecastTotal);
+    const t = totalsByBucket[bi];
+    row._adjustedTotal = t?.adjusted ?? row._forecastTotal;
+    return row;
+  });
+
+  const totalPerCropForecast: Record<string, number> = {};
+  const totalPerCropAdjusted: Record<string, number> = {};
+  stacked.forEach((r) => {
+    let sumFc = 0;
+    cropIds.forEach((cid) => (sumFc += r[cid]));
+    cropIds.forEach((cid) => {
+      const share = sumFc > 0 ? r[cid] / sumFc : 0;
+      const adj = kg(share * r._adjustedTotal);
+      totalPerCropForecast[cid] = (totalPerCropForecast[cid] || 0) + r[cid];
+      totalPerCropAdjusted[cid] = (totalPerCropAdjusted[cid] || 0) + adj;
+    });
+  });
+
+  return { stacked, cropIds, totalPerCropForecast, totalPerCropAdjusted };
+};
+
 const ExportButtons = ({
   rows,
   meta,
 }: {
   rows: ReturnType<typeof computeForecast>;
-  meta: { region: Region; period: string; policyText: string };
+  meta: {
+    regionText: string;
+    cropText: string;
+    period: string;
+    policyText: string;
+  };
 }) => {
   const exportPDF = () => {
     const doc = new jsPDF({ unit: "pt" });
     doc.setFontSize(14);
     doc.text("Báo cáo dự báo sản lượng", 40, 40);
     doc.setFontSize(10);
-    doc.text(`Vùng: ${meta.region.name}`, 40, 58);
-    doc.text(`Khoảng thời gian: ${meta.period}`, 40, 72);
-    doc.text(`Chính sách: ${meta.policyText}`, 40, 86);
+    doc.text(`Vùng: ${meta.regionText}`, 40, 58);
+    doc.text(`Cây: ${meta.cropText || "Tất cả"}`, 40, 72);
+    doc.text(`Khoảng thời gian: ${meta.period}`, 40, 86);
+    doc.text(`Chính sách: ${meta.policyText}`, 40, 100);
     const body = rows.map((r) => [
       r.label,
       r.baseline.toLocaleString("vi-VN"),
@@ -215,8 +328,8 @@ const ExportButtons = ({
       r.adjusted.toLocaleString("vi-VN"),
     ]);
     autoTable(doc, {
-      startY: 104,
-      head: [["Kỳ", "Cơ sở (kg)", "Dự báo (kg)", "Điều chỉnh (kg)"]],
+      startY: 118,
+      head: [["Thời gian", "Cơ sở (kg)", "Dự báo (kg)", "Điều chỉnh (kg)"]],
       body,
       styles: { fontSize: 9 },
       headStyles: { fillColor: [17, 122, 101] },
@@ -227,11 +340,12 @@ const ExportButtons = ({
   const exportExcel = () => {
     const ws = XLSX.utils.aoa_to_sheet([
       ["Báo cáo dự báo sản lượng"],
-      [`Vùng: ${meta.region.name}`],
+      [`Vùng: ${meta.regionText}`],
+      [`Cây: ${meta.cropText || "Tất cả"}`],
       [`Khoảng thời gian: ${meta.period}`],
       [`Chính sách: ${meta.policyText}`],
       [],
-      ["Kỳ", "Cơ sở (kg)", "Dự báo (kg)", "Điều chỉnh (kg)"],
+      ["Thời gian", "Cơ sở (kg)", "Dự báo (kg)", "Điều chỉnh (kg)"],
       ...rows.map((r) => [r.label, r.baseline, r.forecast, r.adjusted]),
     ]);
     const wb = XLSX.utils.book_new();
@@ -260,8 +374,429 @@ const ExportButtons = ({
   );
 };
 
+function LegendToggle({
+  items,
+  visible,
+  onToggle,
+}: {
+  items: { key: string; label: string; color: string }[];
+  visible: Record<string, boolean>;
+  onToggle: (key: string) => void;
+}) {
+  return (
+    <Group gap={8} wrap="wrap">
+      {items.map((it) => (
+        <Badge
+          key={it.key}
+          leftSection={
+            <span
+              style={{
+                display: "inline-block",
+                width: 10,
+                height: 10,
+                borderRadius: 2,
+                background: it.color,
+              }}
+            />
+          }
+          variant={visible[it.key] ? "light" : "outline"}
+          onClick={() => onToggle(it.key)}
+          style={{ cursor: "pointer" }}
+        >
+          {it.label}
+        </Badge>
+      ))}
+    </Group>
+  );
+}
+
+function CustomTooltip({ active, payload, label }: any) {
+  if (!active || !payload?.length) return null;
+  return (
+    <Paper p="sm" radius="md" withBorder>
+      <Text fw={600} mb={4}>
+        {label}
+      </Text>
+      <Stack gap={2}>
+        {payload.map((p: any, i: number) => (
+          <Group key={i} gap={8} justify="space-between">
+            <Group gap={8}>
+              <span
+                style={{
+                  width: 10,
+                  height: 10,
+                  borderRadius: 2,
+                  background: p.color,
+                }}
+              />
+              <Text size="sm">{p.name}</Text>
+            </Group>
+            <Text size="sm" fw={600}>
+              {fmt(p.value)} kg
+            </Text>
+          </Group>
+        ))}
+      </Stack>
+    </Paper>
+  );
+}
+
+function ChartCard({
+  title,
+  right,
+  children,
+  height = 340,
+}: {
+  title: string;
+  right?: React.ReactNode;
+  children: (ref: React.RefObject<HTMLDivElement>) => React.ReactNode;
+  height?: number;
+}) {
+  const ref = useRef<HTMLDivElement>(null);
+  const download = async () => {
+    if (!ref.current) return;
+    const dataUrl = await htmlToImage.toPng(ref.current, { pixelRatio: 2 });
+    const a = document.createElement("a");
+    a.href = dataUrl;
+    a.download = `${title.replace(/\s+/g, "-").toLowerCase()}.png`;
+    a.click();
+  };
+  return (
+    <Card withBorder radius={4} p="md" h="100%">
+      <Group justify="space-between" mb="xs">
+        <Title order={5}>{title}</Title>
+        <Group gap="xs">
+          {right}
+          <ActionIcon variant="light" onClick={download} title="Tải PNG">
+            <IconDownload size={16} />
+          </ActionIcon>
+        </Group>
+      </Group>
+      <div ref={ref} style={{ height }}>
+        {
+          //@ts-expect-error no check
+          children(ref)
+        }
+      </div>
+    </Card>
+  );
+}
+
+function OverviewChart({
+  rows,
+}: {
+  rows: Array<{
+    label: string;
+    baseline: number;
+    forecast: number;
+    adjusted: number;
+  }>;
+}) {
+  const avg = useMemo(
+    () =>
+      Math.round(
+        rows.reduce((a, b) => a + (b.forecast || 0), 0) / (rows.length || 1)
+      ),
+    [rows]
+  );
+  const [mode, setMode] = useState<"bar" | "line" | "area">("bar");
+  const [visible, setVisible] = useState<Record<string, boolean>>({
+    baseline: true,
+    forecast: true,
+    adjusted: true,
+  });
+  const toggle = (k: string) => setVisible((m) => ({ ...m, [k]: !m[k] }));
+  const legendItems = [
+    { key: "baseline", label: "Cơ sở", color: "#748ffc" },
+    { key: "forecast", label: "Dự báo", color: "#40c057" },
+    { key: "adjusted", label: "Điều chỉnh", color: "#fab005" },
+  ];
+
+  return (
+    <ChartCard
+      title="Tổng quan dự báo"
+      right={
+        <Group gap="xs">
+          <SegmentedControl
+            size="xs"
+            value={mode}
+            onChange={(v: any) => setMode(v)}
+            data={[
+              { value: "bar", label: <IconChartBar size={14} /> },
+              { value: "line", label: <IconChartLine size={14} /> },
+              { value: "area", label: <IconChartArea size={14} /> },
+            ]}
+          />
+          <LegendToggle
+            items={legendItems}
+            visible={visible}
+            onToggle={toggle}
+          />
+        </Group>
+      }
+    >
+      {() => (
+        <ResponsiveContainer width="100%" height="100%">
+          {mode === "bar" ? (
+            <BarChart data={rows}>
+              <defs>
+                <linearGradient id="gBaseline" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stopColor="#91a7ff" stopOpacity={1} />
+                  <stop offset="100%" stopColor="#748ffc" stopOpacity={0.8} />
+                </linearGradient>
+                <linearGradient id="gForecast" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stopColor="#69db7c" stopOpacity={1} />
+                  <stop offset="100%" stopColor="#40c057" stopOpacity={0.8} />
+                </linearGradient>
+                <linearGradient id="gAdjusted" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stopColor="#ffd43b" stopOpacity={1} />
+                  <stop offset="100%" stopColor="#fab005" stopOpacity={0.85} />
+                </linearGradient>
+              </defs>
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis dataKey="label" />
+              <YAxis tickFormatter={(v) => fmt(v)} />
+              <RTooltip content={<CustomTooltip />} />
+              {visible.baseline && (
+                <Bar dataKey="baseline" name="Cơ sở" fill="url(#gBaseline)" />
+              )}
+              {visible.forecast && (
+                <Bar dataKey="forecast" name="Dự báo" fill="url(#gForecast)" />
+              )}
+              {visible.adjusted && (
+                <Bar
+                  dataKey="adjusted"
+                  name="Điều chỉnh"
+                  fill="url(#gAdjusted)"
+                />
+              )}
+              <ReferenceLine
+                y={avg}
+                stroke="#868e96"
+                strokeDasharray="4 4"
+                label={{
+                  value: `TB ${fmt(avg)} kg`,
+                  position: "insideTopLeft",
+                  fill: "#868e96",
+                }}
+              />
+            </BarChart>
+          ) : mode === "line" ? (
+            <ComposedChart data={rows}>
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis dataKey="label" />
+              <YAxis tickFormatter={(v) => fmt(v)} />
+              <RTooltip content={<CustomTooltip />} />
+              {visible.baseline && (
+                <Line
+                  type="monotone"
+                  dataKey="baseline"
+                  name="Cơ sở"
+                  stroke="#748ffc"
+                  dot={false}
+                  strokeWidth={2}
+                />
+              )}
+              {visible.forecast && (
+                <Line
+                  type="monotone"
+                  dataKey="forecast"
+                  name="Dự báo"
+                  stroke="#40c057"
+                  dot={false}
+                  strokeWidth={2}
+                />
+              )}
+              {visible.adjusted && (
+                <Line
+                  type="monotone"
+                  dataKey="adjusted"
+                  name="Điều chỉnh"
+                  stroke="#fab005"
+                  dot={false}
+                  strokeWidth={2}
+                />
+              )}
+              <ReferenceLine y={avg} stroke="#868e96" strokeDasharray="4 4" />
+            </ComposedChart>
+          ) : (
+            <AreaChart data={rows}>
+              <defs>
+                <linearGradient id="aForecast" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stopColor="#63e6be" stopOpacity={0.8} />
+                  <stop offset="100%" stopColor="#12b886" stopOpacity={0.2} />
+                </linearGradient>
+                <linearGradient id="aAdjusted" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stopColor="#ffd43b" stopOpacity={0.8} />
+                  <stop offset="100%" stopColor="#fab005" stopOpacity={0.2} />
+                </linearGradient>
+                <linearGradient id="aBaseline" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stopColor="#91a7ff" stopOpacity={0.8} />
+                  <stop offset="100%" stopColor="#748ffc" stopOpacity={0.15} />
+                </linearGradient>
+              </defs>
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis dataKey="label" />
+              <YAxis tickFormatter={(v) => fmt(v)} />
+              <RTooltip content={<CustomTooltip />} />
+              {visible.baseline && (
+                <Area
+                  dataKey="baseline"
+                  name="Cơ sở"
+                  stroke="#748ffc"
+                  fill="url(#aBaseline)"
+                />
+              )}
+              {visible.forecast && (
+                <Area
+                  dataKey="forecast"
+                  name="Dự báo"
+                  stroke="#20c997"
+                  fill="url(#aForecast)"
+                />
+              )}
+              {visible.adjusted && (
+                <Area
+                  dataKey="adjusted"
+                  name="Điều chỉnh"
+                  stroke="#fab005"
+                  fill="url(#aAdjusted)"
+                />
+              )}
+              <ReferenceLine y={avg} stroke="#868e96" strokeDasharray="4 4" />
+            </AreaChart>
+          )}
+        </ResponsiveContainer>
+      )}
+    </ChartCard>
+  );
+}
+
+function CropStackedChart({
+  stacked,
+  seriesCropIds,
+  cropName,
+  normalized,
+  onToggleNormalized,
+  onToggleCrop,
+  visibleMap,
+}: {
+  stacked: any[];
+  seriesCropIds: string[];
+  cropName: (id: string) => string;
+  normalized: boolean;
+  onToggleNormalized: (v: boolean) => void;
+  onToggleCrop: (cid: string) => void;
+  visibleMap: Record<string, boolean>;
+}) {
+  const data = useMemo(() => {
+    if (!normalized) return stacked;
+    return stacked.map((r) => {
+      const sum = seriesCropIds.reduce((a, cid) => a + (r[cid] || 0), 0) || 1;
+      const nr: any = { ...r };
+      seriesCropIds.forEach(
+        (cid) => (nr[cid] = Math.round((100 * (r[cid] || 0)) / sum))
+      );
+      return nr;
+    });
+  }, [stacked, seriesCropIds, normalized]);
+
+  const legendItems = seriesCropIds.map((cid, i) => ({
+    key: cid,
+    label: cropName(cid),
+    color: COLORS[i % COLORS.length],
+  }));
+
+  return (
+    <ChartCard
+      title={`Đóng góp theo cây ${normalized ? "(%)" : "(kg)"}`}
+      right={
+        <Group gap="xs">
+          <Switch
+            size="xs"
+            onLabel="%"
+            offLabel="kg"
+            checked={normalized}
+            onChange={(e) => onToggleNormalized(e.currentTarget.checked)}
+          />
+          <LegendToggle
+            items={legendItems}
+            visible={visibleMap}
+            onToggle={onToggleCrop}
+          />
+        </Group>
+      }
+      height={340}
+    >
+      {() => (
+        <ResponsiveContainer width="100%" height="100%">
+          <BarChart data={data}>
+            <CartesianGrid strokeDasharray="3 3" />
+            <XAxis dataKey="label" />
+            <YAxis tickFormatter={(v) => (normalized ? `${v}%` : fmt(v))} />
+            <RTooltip content={<CustomTooltip />} />
+            {seriesCropIds.map((cid, i) =>
+              visibleMap[cid] ? (
+                <Bar
+                  key={cid}
+                  dataKey={cid}
+                  name={cropName(cid)}
+                  stackId="crop"
+                  fill={COLORS[i % COLORS.length]}
+                />
+              ) : null
+            )}
+          </BarChart>
+        </ResponsiveContainer>
+      )}
+    </ChartCard>
+  );
+}
+
+function CropPie({
+  totalMap,
+  totalsAdj,
+  cropName,
+}: {
+  totalMap: Record<string, number>;
+  totalsAdj: number;
+  cropName: (id: string) => string;
+}) {
+  const data = Object.keys(totalMap).map((cid) => ({
+    name: cropName(cid),
+    value: totalMap[cid],
+  }));
+  return (
+    <ChartCard title="Tỷ trọng điều chỉnh theo cây" height={300}>
+      {() => (
+        <ResponsiveContainer width="100%" height="100%">
+          <PieChart>
+            <Pie
+              data={data}
+              dataKey="value"
+              nameKey="name"
+              outerRadius={100}
+              label={(e) =>
+                `${e.name}: ${((e.value / (totalsAdj || 1)) * 100).toFixed(1)}%`
+              }
+            >
+              {data.map((d, i) => (
+                <Cell key={d.name} fill={COLORS[i % COLORS.length]} />
+              ))}
+            </Pie>
+            <Legend />
+          </PieChart>
+        </ResponsiveContainer>
+      )}
+    </ChartCard>
+  );
+}
+
 const ProductionForecastPage = () => {
-  const [regionId, setRegionId] = useState(REGIONS[0].id);
+  const [regionIds, setRegionIds] = useState<string[]>(
+    REGIONS.map((r) => r.id)
+  );
+  const [cropIds, setCropIds] = useState<string[]>([]);
   const [granularity, setGranularity] = useState<
     "day" | "week" | "month" | "year"
   >("month");
@@ -281,10 +816,26 @@ const ProductionForecastPage = () => {
     label: string;
     value: number;
   } | null>(null);
+  const [normalized, setNormalized] = useState(false);
+  const [visibleCropMap, setVisibleCropMap] = useState<Record<string, boolean>>(
+    {}
+  );
 
-  const region = useMemo(
-    () => REGIONS.find((r) => r.id === regionId)!,
-    [regionId]
+  const selectedRegionText = useMemo(
+    () =>
+      regionIds.length === REGIONS.length
+        ? "Tất cả"
+        : REGIONS.filter((r) => regionIds.includes(r.id))
+            .map((r) => r.name.replace("Vùng ", "V").split(" - ")[0])
+            .join(", "),
+    [regionIds]
+  );
+  const selectedCropText = useMemo(
+    () =>
+      CROPS.filter((c) => cropIds.includes(c.id))
+        .map((c) => c.name)
+        .join(", "),
+    [cropIds]
   );
 
   const buckets = useMemo(() => {
@@ -293,9 +844,20 @@ const ProductionForecastPage = () => {
     return buildBuckets(granularity, s.toISOString(), e.toISOString());
   }, [granularity, range]);
 
+  const agg = useMemo(
+    () => aggregateSelection(regionIds, cropIds),
+    [regionIds, cropIds]
+  );
   const rows = useMemo(
-    () => computeForecast({ buckets, region, policy, customFactor, overrides }),
-    [buckets, region, policy, customFactor, overrides]
+    () =>
+      computeForecast({
+        buckets,
+        basePerDay: agg.basePerDay,
+        policy,
+        customFactor,
+        overrides,
+      }),
+    [buckets, agg.basePerDay, policy, customFactor, overrides]
   );
 
   const totals = useMemo(() => {
@@ -333,29 +895,60 @@ const ProductionForecastPage = () => {
   useEffect(() => {
     setOverrides({});
   }, [
-    regionId,
+    regionIds.join(","),
+    cropIds.join(","),
     policy,
     customFactor,
     granularity,
     range?.[0]?.toString() + range?.[1]?.toString(),
   ]);
+
+  const {
+    stacked,
+    cropIds: seriesCropIds,
+    totalPerCropForecast,
+    totalPerCropAdjusted,
+  } = useMemo(
+    () =>
+      buildCropStack({
+        buckets,
+        perCropPerDay: agg.perCropPerDay,
+        policy,
+        customFactor,
+        totalsByBucket: rows.map((r) => ({
+          key: r.key,
+          forecast: r.forecast,
+          adjusted: r.adjusted,
+        })),
+      }),
+    [buckets, agg.perCropPerDay, policy, customFactor, rows]
+  );
+
+  useEffect(() => {
+    setVisibleCropMap((prev) => {
+      const next: Record<string, boolean> = {};
+      seriesCropIds.forEach((id) => (next[id] = prev[id] ?? true));
+      return next;
+    });
+  }, [seriesCropIds.join(",")]);
+
   return (
     <>
       <Stack gap="md">
         <Group justify="space-between" align="flex-start">
-          <Group>
-            <Stack gap={2}>
-              <Title order={3}>📈 Dự báo sản lượng</Title>
-              <Group gap="xs">
-                <Badge variant="dot" color="gray">
-                  {region.name}
-                </Badge>
-                <Badge>Diện tích: {region.areaHa} ha</Badge>
-                <Badge>{region.trees} cây</Badge>
-                <Badge>TB: {region.avgYieldPerHa} kg/ha</Badge>
-              </Group>
-            </Stack>
-          </Group>
+          <Stack gap={2}>
+            <Title order={3}>📈 Dự báo sản lượng</Title>
+            <Group gap="xs" wrap="wrap">
+              <Badge variant="dot" color="gray">
+                Vùng: {selectedRegionText}
+              </Badge>
+              <Badge>Cây: {selectedCropText || "Tất cả"}</Badge>
+              <Badge>
+                Diện tích lọc: {agg.totalArea.toLocaleString("vi-VN")} ha
+              </Badge>
+              <Badge>Tổng cây: {agg.totalTrees.toLocaleString("vi-VN")}</Badge>
+            </Group>
+          </Stack>
           <Group gap="xs">
             <Button
               radius={4}
@@ -367,21 +960,61 @@ const ProductionForecastPage = () => {
             </Button>
             <ExportButtons
               rows={rows}
-              meta={{ region, period: periodText, policyText }}
+              meta={{
+                regionText: selectedRegionText,
+                cropText: selectedCropText,
+                period: periodText,
+                policyText,
+              }}
             />
           </Group>
         </Group>
 
         <Card withBorder radius={4} p="md">
+          <Grid align="end">
+            <Grid.Col span={{ base: 12, md: 4 }}>
+              <MultiSelect
+                radius={4}
+                label="Vùng trồng"
+                value={regionIds}
+                onChange={setRegionIds}
+                data={REGIONS.map((r) => ({ value: r.id, label: r.name }))}
+                searchable
+                clearable
+              />
+            </Grid.Col>
+            <Grid.Col span={{ base: 12, md: 4 }}>
+              <MultiSelect
+                radius={4}
+                label="Cây trồng"
+                value={cropIds}
+                onChange={setCropIds}
+                data={CROPS.map((c) => ({ value: c.id, label: c.name }))}
+                searchable
+                clearable
+                placeholder="Để trống = tất cả"
+              />
+            </Grid.Col>
+            <Grid.Col span={{ base: 12, md: 4 }}>
+              <DatePickerInput
+                radius={4}
+                type="range"
+                label="Khoảng thời gian"
+                value={range}
+                locale="vi"
+                onChange={(value) => {
+                  if (!value) return;
+                  const [s, e] = value as any;
+                  if (s && e) setRange([new Date(s), new Date(e)]);
+                }}
+                leftSection={<IconCalendar size={16} />}
+              />
+            </Grid.Col>
+          </Grid>
+
+          <Divider my="md" />
+
           <Group align="flex-end">
-            <Select
-              radius={4}
-              flex={1}
-              label="Vùng trồng"
-              value={regionId}
-              onChange={(v) => setRegionId(v!)}
-              data={REGIONS.map((r) => ({ value: r.id, label: r.name }))}
-            />
             <SegmentedControl
               radius={4}
               value={granularity}
@@ -393,63 +1026,86 @@ const ProductionForecastPage = () => {
                 { value: "year", label: "Năm" },
               ]}
             />
-            <DatePickerInput
+            <Select
               radius={4}
-              flex={1}
-              type="range"
-              label="Khoảng thời gian"
-              value={range}
-              locale="vi"
-              onChange={(value) =>
-                setRange([new Date(value[0]), new Date(value[1])])
-              }
-              leftSection={<IconCalendar size={16} />}
+              label="Chính sách"
+              value={policy}
+              onChange={(v: any) => setPolicy(v)}
+              data={[
+                { value: "average", label: "Bình quân" },
+                { value: "growth10", label: "Tăng trưởng 10%" },
+                { value: "seasonal", label: "Theo mùa vụ" },
+                { value: "customFactor", label: "Hệ số tuỳ chỉnh" },
+              ]}
             />
-            <Group gap="xs" align="end">
-              <Select
-                radius={4}
-                flex={1}
-                label="Chính sách"
-                value={policy}
-                onChange={(v: any) => setPolicy(v)}
-                data={[
-                  { value: "average", label: "Bình quân" },
-                  { value: "growth10", label: "Tăng trưởng 10%" },
-                  { value: "seasonal", label: "Theo mùa vụ" },
-                  { value: "customFactor", label: "Hệ số tuỳ chỉnh" },
-                ]}
-              />
-              <NumberInput
-                radius={4}
-                label="Hệ số"
-                value={customFactor}
-                onChange={(v) => setCustomFactor(Number(v))}
-                min={0.1}
-                step={0.1}
-                disabled={policy !== "customFactor"}
-              />
-            </Group>
+            <NumberInput
+              radius={4}
+              label="Hệ số"
+              value={customFactor}
+              onChange={(v) => setCustomFactor(Number(v))}
+              min={0.1}
+              step={0.1}
+              disabled={policy !== "customFactor"}
+            />
           </Group>
         </Card>
+
+        <OverviewChart rows={rows as any} />
+
+        <Grid gutter="md" mt="md">
+          <Grid.Col span={{ base: 12, lg: 8 }}>
+            <CropStackedChart
+              stacked={stacked}
+              seriesCropIds={seriesCropIds}
+              cropName={(id) => CROPS.find((c) => c.id === id)?.name || id}
+              normalized={normalized}
+              onToggleNormalized={setNormalized}
+              visibleMap={visibleCropMap}
+              onToggleCrop={(cid) =>
+                setVisibleCropMap((m) => ({ ...m, [cid]: !m[cid] }))
+              }
+            />
+          </Grid.Col>
+          <Grid.Col span={{ base: 12, lg: 4 }}>
+            <CropPie
+              totalMap={totalPerCropAdjusted}
+              totalsAdj={totals.adj}
+              cropName={(id) => CROPS.find((c) => c.id === id)?.name || id}
+            />
+          </Grid.Col>
+        </Grid>
 
         <Grid gutter="md">
           <Grid.Col span={{ base: 12, md: 7 }}>
             <Card withBorder radius={4} p="md" h="100%">
               <Title order={5} mb="xs">
-                Biểu đồ dự báo (kg)
+                Biểu đồ xu hướng
               </Title>
               <Stack h={300}>
                 <ResponsiveContainer width="100%" height="100%">
-                  <BarChart data={rows}>
+                  <ComposedChart data={rows}>
                     <CartesianGrid strokeDasharray="3 3" />
                     <XAxis dataKey="label" />
-                    <YAxis />
-                    <RTooltip />
-                    <Legend />
-                    <Bar dataKey="baseline" name="Cơ sở" fill="#8884d8" />
-                    <Bar dataKey="forecast" name="Dự báo" fill="#82ca9d" />
-                    <Bar dataKey="adjusted" name="Điều chỉnh" fill="#ffc658" />
-                  </BarChart>
+                    <YAxis tickFormatter={(v) => fmt(v)} />
+                    <RTooltip content={<CustomTooltip />} />
+                    <Bar dataKey="baseline" name="Cơ sở" fill="#91a7ff" />
+                    <Line
+                      type="monotone"
+                      dataKey="forecast"
+                      name="Dự báo"
+                      stroke="#40c057"
+                      dot={false}
+                      strokeWidth={2}
+                    />
+                    <Line
+                      type="monotone"
+                      dataKey="adjusted"
+                      name="Điều chỉnh"
+                      stroke="#fab005"
+                      dot={false}
+                      strokeWidth={2}
+                    />
+                  </ComposedChart>
                 </ResponsiveContainer>
               </Stack>
             </Card>
@@ -503,28 +1159,48 @@ const ProductionForecastPage = () => {
         </Grid>
 
         <Card withBorder radius={4} p="md">
-          <Title order={5} mb={"md"}>
+          <Title order={5} mb="md">
             Bảng dự báo (kg)
           </Title>
-
           <Table
             data={rows}
             columns={[
-              { accessorKey: "label", header: "Kỳ" },
+              { accessorKey: "label", header: "Thời gian" },
               { accessorKey: "baseline", header: "Cơ sở" },
               { accessorKey: "forecast", header: "Dự báo" },
-              { accessorKey: "adjusted", header: "Điều chỉnh" },
               {
-                accessorKey: "actions",
+                accessorKey: "adjusted",
+                header: "Điều chỉnh",
+                Cell: ({ row }: any) => {
+                  const r = row.original;
+                  return (
+                    <NumberInput
+                      w={120}
+                      radius={4}
+                      value={r.adjusted}
+                      onChange={(v) =>
+                        setOverrides((m) => ({ ...m, [r.key]: Number(v) }))
+                      }
+                      disabled={!canEdit}
+                      min={0}
+                      step={100}
+                    />
+                  );
+                },
+              },
+              {
+                id: "actions",
                 header: "Hành động",
                 accessorFn: (r) => r,
-                Cell: () => {
+                Cell: ({ row }: any) => {
+                  const r = row.original;
                   return (
                     <Group gap={4}>
                       <ActionIcon
                         variant="light"
                         disabled={!canEdit}
                         aria-label="Edit"
+                        onClick={() => onEdit(r)}
                       >
                         <IconEdit size={16} />
                       </ActionIcon>
@@ -535,10 +1211,45 @@ const ProductionForecastPage = () => {
             ]}
           />
         </Card>
+
+        <Card withBorder radius={4} p="md">
+          <Title order={5} mb="md">
+            Bảng chi tiết theo cây
+          </Title>
+          <Table
+            data={seriesCropIds
+              .map((cid) => ({
+                crop: CROPS.find((x) => x.id === cid)?.name || cid,
+                area: agg.perCropArea[cid] || 0,
+                trees: agg.perCropTrees[cid] || 0,
+                forecast: totalPerCropForecast[cid] || 0,
+                adjusted: totalPerCropAdjusted[cid] || 0,
+                share:
+                  (100 * (totalPerCropAdjusted[cid] || 0)) /
+                  (Object.values(totalPerCropAdjusted).reduce(
+                    (a, b) => a + b,
+                    0
+                  ) || 1),
+              }))
+              .sort((a, b) => b.adjusted - a.adjusted)}
+            columns={[
+              { accessorKey: "crop", header: "Cây" },
+              { accessorKey: "area", header: "Diện tích (ha)" },
+              { accessorKey: "trees", header: "Số cây" },
+              { accessorKey: "forecast", header: "Tổng dự báo (kg)" },
+              { accessorKey: "adjusted", header: "Tổng điều chỉnh (kg)" },
+              {
+                accessorKey: "share",
+                header: "Tỷ trọng",
+                Cell: ({ row }: any) => `${row.original.share.toFixed(1)}%`,
+              },
+            ]}
+          />
+        </Card>
       </Stack>
 
       <Modal
-        opened={!!editRow}
+        opened={editModal}
         onClose={close}
         centered
         radius={4}
@@ -554,13 +1265,17 @@ const ProductionForecastPage = () => {
             onChange={(v) =>
               setEditRow((s) => (s ? { ...s, value: Number(v) } : s))
             }
-            thousandSeparator="."
+            min={0}
+            step={100}
+            radius={4}
           />
           <Group justify="flex-end">
-            <Button variant="default" onClick={close}>
+            <Button variant="default" onClick={close} radius={4}>
               Hủy
             </Button>
-            <Button onClick={applyEdit}>Lưu</Button>
+            <Button onClick={applyEdit} radius={4}>
+              Lưu
+            </Button>
           </Group>
         </Stack>
       </Modal>
