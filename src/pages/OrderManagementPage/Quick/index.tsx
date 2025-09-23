@@ -30,7 +30,14 @@ import {
 } from "@tabler/icons-react";
 import { useState } from "react";
 import AdvancedFilterModal from "./components/AdvancedFilterModal";
+import OrderSuccessModal from "./components/OrderSuccessModal";
 const creditCards = [
+  {
+    id: "pay",
+    type: "Trực tiếp",
+    logo: "https://www.shutterstock.com/image-vector/direct-payment-icon-monochrome-simple-600nw-2155738975.jpg",
+    cardNumber: "Thanh toán khi nhận hàng",
+  },
   {
     id: "card1",
     type: "Visa",
@@ -451,7 +458,7 @@ const OrderManagementQuickPage = () => {
                 </Stack>
               </Card>
               <Button radius={4} fullWidth onClick={() => setActiveStep(1)}>
-                Giỏ hàng (0 sản phẩm)
+                Giỏ hàng (4 sản phẩm)
               </Button>
             </Stack>
           </Group>
@@ -755,7 +762,12 @@ const OrderManagementQuickPage = () => {
               {/* Phương thức thanh toán */}
               <Card withBorder radius={4} shadow="sm">
                 <Stack gap="xs">
-                  <Title order={4}>Phương thức thanh toán</Title>
+                  <Group justify="space-between">
+                    <Title order={4}>Phương thức thanh toán</Title>
+                    <Button radius={4} variant="light">
+                      Thay đổi
+                    </Button>
+                  </Group>
                   {creditCards.map((card, index) => (
                     <Group
                       key={card.id}
@@ -765,7 +777,7 @@ const OrderManagementQuickPage = () => {
                     >
                       <Group>
                         <Image src={card.logo} alt={card.type} w={50} h={50} />
-                        <Stack gap={"xs"}>
+                        <Stack gap={4}>
                           <Text fw={500}>{card.type}</Text>
                           <Text size="sm" c="dimmed">
                             {card.cardNumber}
@@ -1216,6 +1228,20 @@ const OrderManagementQuickPage = () => {
         ]}
         areaOptions={["Đà Lạt", "Đắk Lắk", "Tiền Giang", "TP.HCM", "Đà Nẵng"]}
       />
+      {/* <OrderSuccessModal
+        opened={true}
+        onClose={close}
+        orderId="MV-2025-000123"
+        totalPrice={1250000}
+        itemsCount={3}
+        paymentMethod="VNPay"
+        createdAt={new Date().toISOString()}
+        customer={{ name: "Nguyễn Văn A", email: "a@example.com" }}
+        shipping={{ address: "12 Nguyễn Huệ, Q.1, TP.HCM", eta: "24–48 giờ" }}
+        onViewOrder={() => console.log("go to order detail")}
+        onContinue={() => console.log("continue shopping")}
+        onDownloadInvoice={() => console.log("download invoice")}
+      /> */}
     </Stack>
   );
 };
