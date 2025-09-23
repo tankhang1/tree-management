@@ -315,7 +315,7 @@ export const NAV_BAR = [
     link: PATH.STOCK_MANAGEMENT,
     children: [
       { label: "Khu vực quản lý", link: PATH.STOCK_AREA },
-      { label: "Danh sách kho vận", link: PATH.STOCK_DELIVERY },
+      { label: "Danh sách cơ sở", link: PATH.STOCK_DELIVERY },
       { label: "Xuất/nhập vật tư nông nghiệp", link: PATH.STOCK_SUPPLY },
       { label: "Xuất/nhập máy móc - thiết bị", link: PATH.STOCK_MACHINE },
       { label: "Xuất/nhập thuốc BVTV", link: PATH.STOCK_PESTICIDE },

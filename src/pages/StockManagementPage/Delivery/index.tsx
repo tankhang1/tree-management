@@ -44,7 +44,7 @@ type WarehouseStockItem = {
 const warehouseStockDataset: WarehouseStockItem[] = [
   {
     id: "W001",
-    warehouseName: "Kho Long An",
+    warehouseName: "Cơ sở Long An",
     areaName: "Long An",
     group: "Phân bón",
     itemName: "Phân NPK 16-16-8",
@@ -55,7 +55,7 @@ const warehouseStockDataset: WarehouseStockItem[] = [
   },
   {
     id: "W002",
-    warehouseName: "Kho Tiền Giang",
+    warehouseName: "Cơ sở Tiền Giang",
     areaName: "Tiền Giang",
     group: "BVTV",
     itemName: "Thuốc trừ sâu Regent",
@@ -66,7 +66,7 @@ const warehouseStockDataset: WarehouseStockItem[] = [
   },
   {
     id: "W003",
-    warehouseName: "Kho Đà Nẵng",
+    warehouseName: "Cơ sở Đà Nẵng",
     areaName: "Đà Nẵng",
     group: "Máy móc",
     itemName: "Máy cày Kubota",
@@ -171,7 +171,7 @@ const StockManagementDeliveryPage = () => {
   const warehouseStockColumns: MRT_ColumnDef<WarehouseStockItem>[] = [
     {
       accessorKey: "warehouseName",
-      header: "Kho",
+      header: "Cơ sở",
       Cell: ({ cell }) => <Text fw={600}>{cell.getValue<string>()}</Text>,
     },
     {
@@ -245,7 +245,7 @@ const StockManagementDeliveryPage = () => {
     <Stack gap="lg">
       <Group justify="space-between">
         <Title flex={1} order={2}>
-          Quản lý kho vận
+          Quản lý cơ sở
         </Title>
         <Group>
           <Button variant="outline" radius={4} leftSection={<IconFileExcel />}>
@@ -260,9 +260,9 @@ const StockManagementDeliveryPage = () => {
       <Card withBorder shadow="sm" radius={4} p="md">
         <Group justify="space-between" align="center" mb="xs">
           <Stack gap={0}>
-            <Title order={4}>Tìm kiếm tồn kho</Title>
+            <Title order={4}>Tìm kiếm cơ sở</Title>
             <Text c="dimmed" size="sm">
-              Nhập từ khoá hoặc chọn Kho, Khu vực, Nhóm, Khoảng ngày tạo
+              Nhập từ khoá hoặc chọn Cơ sở, Khu vực, Nhóm
             </Text>
           </Stack>
 
@@ -284,23 +284,23 @@ const StockManagementDeliveryPage = () => {
         </Group>
 
         <Stack gap="sm">
-          {/* Từ khoá */}
+          {/* Từ cơ sởá */}
           <TextInput
             radius={4}
-            label="Từ khoá"
+            label="Từ cơ sở"
             placeholder="Nhập thông tin"
-            description="Tìm theo mã, tên vật tư, kho, khu vực, nhóm, đơn vị, quy cách. Ví dụ: Kubota, NPK 16-16-8, W002, Long An"
+            description="Tìm theo mã, tên vật tư, cơ sở, khu vực, nhóm, đơn vị, quy cách. Ví dụ: Kubota, NPK 16-16-8, W002, Long An"
             leftSection={<IconSearch size={16} />}
             value={keyword}
             onChange={(e) => setKeyword(e.currentTarget.value)}
           />
 
           <SimpleGrid cols={{ base: 1, md: 2, lg: 4 }} spacing="sm">
-            {/* Kho */}
+            {/* cơ sở */}
             <MultiSelect
-              label="Kho"
-              placeholder="Chọn kho"
-              description="Lọc theo tên kho chứa hàng. Có thể chọn nhiều kho. Ví dụ: Kho Long An, Kho Đà Nẵng"
+              label="Cơ sở"
+              placeholder="Chọn cơ sở"
+              description="Lọc theo tên cơ sở chứa hàng. Có thể chọn nhiều cơ sở. Ví dụ: cơ sở Long An, cơ sở Đà Nẵng"
               searchable
               radius={4}
               data={warehouseOptions}
@@ -312,7 +312,7 @@ const StockManagementDeliveryPage = () => {
             <MultiSelect
               label="Khu vực"
               placeholder="Chọn khu vực"
-              description="Lọc theo khu vực địa lý gắn với kho. Ví dụ: Long An, Tiền Giang, Đà Nẵng"
+              description="Lọc theo khu vực địa lý gắn với cơ sở. Ví dụ: Long An, Tiền Giang, Đà Nẵng"
               searchable
               radius={4}
               data={areaOptions}
@@ -331,13 +331,13 @@ const StockManagementDeliveryPage = () => {
               onChange={setSelectedGroups}
             />
 
-            {/* Khoảng ngày tạo */}
+            {/* cơ sởảng ngày tạo */}
             <DatePickerInput
               type="range"
               radius={4}
-              label="Khoảng ngày tạo"
-              placeholder="Chọn khoảng ngày"
-              description="Lọc theo ngày tạo/nhập kho (bao gồm ngày bắt đầu và kết thúc). Ví dụ: 01/07/2025 – 20/07/2025"
+              label="Ngày tạo"
+              placeholder="Chọn ngày"
+              description="Lọc theo ngày tạo/nhập cơ sở (bao gồm ngày bắt đầu và kết thúc). Ví dụ: 01/07/2025 – 20/07/2025"
               leftSection={<IconCalendar size={18} />}
               value={dateRange}
               onChange={setDateRange}
