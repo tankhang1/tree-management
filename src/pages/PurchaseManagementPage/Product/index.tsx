@@ -24,6 +24,7 @@ type MaterialUsage = {
   materialId: string; // Mã vật tư (VI.1)
   quantity: number; // Số lượng
   unit: string; // Đơn vị tính
+  company: string;
   staffId: string; // Mã nhân viên (XI)
   usageDate: string; // Ngày sử dụng
   returnDate?: string; // Ngày trả (nếu có)
@@ -37,6 +38,7 @@ const materialUsages: MaterialUsage[] = [
     quantity: 50,
     unit: "kg",
     staffId: "EMP001",
+    company: "Công ty TNHH Nông Nghiệp Xanh",
     usageDate: "2024-06-20",
     returnDate: "2024-06-25",
     type: "xuất",
@@ -48,6 +50,7 @@ const materialUsages: MaterialUsage[] = [
     quantity: 100,
     unit: "lit",
     staffId: "EMP002",
+    company: "Công ty TNHH Nông Nghiệp Xanh",
     usageDate: "2024-06-18",
     type: "nhập",
     note: "Nhập kho từ nhà cung cấp Tân Phú",
@@ -58,6 +61,7 @@ const materialUsages: MaterialUsage[] = [
     quantity: 10,
     unit: "cuộn",
     staffId: "EMP003",
+    company: "Công ty TNHH Nông Nghiệp Xanh",
     usageDate: "2024-06-19",
     type: "huỷ",
     note: "Bạt hỏng, không sử dụng được",
@@ -68,10 +72,12 @@ const PurchaseManagementProductPage = () => {
 
   const materialUsageColumns: MRT_ColumnDef<MaterialUsage>[] = [
     { accessorKey: "id", header: "Mã phiếu" },
+    { accessorKey: "company", header: "Nhà cung cấp" },
+    { accessorKey: "staffId", header: "Nhân viên (tiếp nhận)" },
     { accessorKey: "materialId", header: "Mã vật tư" },
     { accessorKey: "quantity", header: "Số lượng" },
     { accessorKey: "unit", header: "Đơn vị" },
-    { accessorKey: "staffId", header: "Nhân viên" },
+
     {
       accessorKey: "usageDate",
       header: "Ngày sử dụng",

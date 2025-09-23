@@ -56,7 +56,7 @@ const billDataset: Bill[] = [
       companyName: "Công ty TNHH ABC",
       taxCode: "123456789",
     },
-    status: "Đã thanh toán",
+    status: "Đóng gói",
   },
   {
     billId: "BILL002",
@@ -71,7 +71,7 @@ const billDataset: Bill[] = [
       companyName: "Công ty TNHH XYZ",
       taxCode: "987654321",
     },
-    status: "Chưa thanh toán",
+    status: "Giao hàng",
   },
   {
     billId: "BILL003",
@@ -86,7 +86,7 @@ const billDataset: Bill[] = [
       companyName: "Công ty TNHH DEF",
       taxCode: "456789123",
     },
-    status: "Đã hủy",
+    status: "Hoàn tất",
   },
 ];
 
@@ -131,11 +131,17 @@ const BillManagementUserPage = () => {
       Cell: ({ cell }) => {
         const status = cell.getValue<string>();
         const color =
-          status === "Đã thanh toán"
-            ? "green"
-            : status === "Chưa thanh toán"
+          status === "Nhận đơn"
+            ? "blue"
+            : status === "Đóng gói"
+            ? "orange"
+            : status === "Giao hàng"
             ? "yellow"
-            : "red";
+            : status === "Hoàn tất"
+            ? "green"
+            : status === "Huỷ đơn"
+            ? "red"
+            : "gray";
 
         return <Badge color={color}>{status}</Badge>;
       },
@@ -173,7 +179,7 @@ const BillManagementUserPage = () => {
     <Stack gap="lg">
       <Group justify="space-between">
         <Title flex={1} order={2}>
-          Quản lý hoá đơn cá nhân
+          Quản lý đơn hàng
         </Title>
         <Group>
           <Button variant="outline" radius={4} leftSection={<IconFileExcel />}>
@@ -186,7 +192,7 @@ const BillManagementUserPage = () => {
         {/* Header */}
         <Group justify="space-between" align="center" mb="xs">
           <Stack gap={0}>
-            <Title order={4}>Tìm kiếm hóa đơn cá nhân</Title>
+            <Title order={4}>Tìm kiếm đơn hàng</Title>
             <Text c="dimmed" size="sm">
               Điền từ khóa hoặc chọn lọc khoản thời gian, trạng thái
             </Text>
@@ -236,12 +242,14 @@ const BillManagementUserPage = () => {
               searchable
               radius={4}
               label="Trạng thái"
-              description="Ví dụ: Đã thanh toán, Chưa thanh toán, Đã hủy"
               placeholder="Chọn thông tin"
+              description="Ví dụ: Nhận đơn, Đóng gói, Giao hàng, Hoàn tất"
               data={[
-                { value: "paid", label: "Đã thanh toán" },
-                { value: "unpaid", label: "Chưa thanh toán" },
-                { value: "canceled", label: "Đã hủy" },
+                "Nhận đơn",
+                "Đóng gói",
+                "Giao hàng",
+                "Hoàn tất",
+                "Huỷ đơn",
               ]}
             />
           </SimpleGrid>

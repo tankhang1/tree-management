@@ -27,12 +27,14 @@ import {
   IconTrash,
   IconRefresh,
   IconSearch,
+  IconNotification,
 } from "@tabler/icons-react";
 import type { MRT_ColumnDef } from "mantine-react-table";
 import Table from "../../components/Table";
 import { useNavigate } from "react-router-dom";
 import { PATH } from "../../constants/path.constants";
 import { useMemo, useState } from "react";
+import NotificationModal from "./components/NotificationModal";
 
 type FarmerEntity = {
   id: string;
@@ -169,6 +171,12 @@ const CompanyPage = () => {
               leftSection={<IconEye size={18} color="gray" />}
             >
               Chi tiết
+            </Menu.Item>
+            <Menu.Item
+              onClick={onCompanyDetail}
+              leftSection={<IconNotification size={18} color="gray" />}
+            >
+              Thông báo
             </Menu.Item>
             <Menu.Item leftSection={<IconEdit size={18} color="green" />}>
               Chỉnh sửa
@@ -350,6 +358,7 @@ const CompanyPage = () => {
       </Card>
 
       <Table columns={farmerColumns} data={rows} />
+      {/* <NotificationModal opened={true} onClose={() => {}} onSend={() => {}} /> */}
     </Stack>
   );
 };

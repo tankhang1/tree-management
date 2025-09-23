@@ -81,16 +81,18 @@ const DebtManagementReceivableDetailPage = () => {
       <Stack gap="lg">
         {/* Header */}
         <Title order={3}></Title>
-        <Group>
-          <Button
-            variant="subtle"
-            radius={4}
-            leftSection={<IconArrowLeft size={18} />}
-            onClick={() => navigate(-1)}
-          >
-            Quay lại
-          </Button>
-          <Title order={3}>Chi tiết công nợ phải thu</Title>
+        <Group align="center" justify="space-between">
+          <Group>
+            <Button
+              variant="subtle"
+              radius={4}
+              leftSection={<IconArrowLeft size={18} />}
+              onClick={() => navigate(-1)}
+            >
+              Quay lại
+            </Button>
+            <Title order={3}>Chi tiết công nợ phải thu</Title>
+          </Group>
         </Group>
         <Stack gap="lg">
           {/* Phần 1: Thông tin khách hàng */}
