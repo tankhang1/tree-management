@@ -142,7 +142,7 @@ const HRManagementEmployeePage = () => {
     <Stack gap="lg">
       <Group justify="space-between">
         <Title flex={1} order={2}>
-          Quản lý nhân viên
+          Quản lý quản trị viên
         </Title>
         <Group>
           <Button variant="outline" radius={4} leftSection={<IconFileExcel />}>
@@ -158,7 +158,7 @@ const HRManagementEmployeePage = () => {
         {/* Header */}
         <Group justify="space-between" align="center" mb="xs">
           <Stack gap={0}>
-            <Title order={4}>Tìm kiếm nhân viên</Title>
+            <Title order={4}>Tìm kiếm quản trị viên</Title>
             <Text c="dimmed" size="sm">
               Điền từ khóa hoặc chọn lọc khoản thời gian, phòng ban, vai trò,
               trạng thái

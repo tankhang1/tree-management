@@ -669,6 +669,8 @@ const BusinessReportPage = L(() => import("./pages/BusinessReportPage"));
 const PurchaseReportPage = L(() => import("./pages/PurchaseReportPage"));
 const CashFlowReportPage = L(() => import("./pages/CashFlowReportPage"));
 const ProductionReportPage = L(() => import("./pages/ProductionReportPage"));
+
+const ProfilePage = L(() => import("./pages/ProfilePage"));
 // Map/Season/Plan History aliases (trong code gốc đều dùng AreaManagementHistoryPage)
 const MapHistoryPage = AreaManagementHistoryPage;
 const SeasonHistoryPage = AreaManagementHistoryPage;
@@ -1884,6 +1886,11 @@ const ROUTES = [
     key="production_report"
     path={PATH.PRODUCTION_REPORT}
     element={withSuspense(<ProductionReportPage />)}
+  />,
+  <Route
+    key="profile"
+    path={PATH.PROFILE}
+    element={withSuspense(<ProfilePage />)}
   />,
 ];
 

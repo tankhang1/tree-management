@@ -289,4 +289,6 @@ export const PATH = {
   PURCHASE_REPORT: "/purchase-report",
   CASH_FLOW_REPORT: "/cash-flow-report",
   PRODUCTION_REPORT: "/production-report",
+  // Profile
+  PROFILE: "/profile",
 };

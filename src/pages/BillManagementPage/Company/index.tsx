@@ -18,8 +18,11 @@ import {
   IconDotsVertical,
   IconEye,
   IconFileExcel,
+  IconFileText,
+  IconNotification,
   IconRefresh,
   IconSearch,
+  IconTrash,
 } from "@tabler/icons-react";
 import type { MRT_ColumnDef } from "mantine-react-table";
 import { useNavigate } from "react-router-dom";
@@ -161,6 +164,15 @@ const BillManagementCompanyPage = () => {
               onClick={onBillDetail}
             >
               Chi tiết
+            </Menu.Item>
+            <Menu.Item leftSection={<IconNotification size={18} />}>
+              Thông báo
+            </Menu.Item>
+            <Menu.Item leftSection={<IconFileText size={18} />}>
+              Xuất hoá đơn
+            </Menu.Item>
+            <Menu.Item leftSection={<IconTrash size={18} />} color="red">
+              Xoá
             </Menu.Item>
           </Menu.Dropdown>
         </Menu>

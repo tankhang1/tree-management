@@ -56,7 +56,7 @@ const billDataset: Bill[] = [
       companyName: "Công ty TNHH ABC",
       taxCode: "123456789",
     },
-    status: "Đóng gói",
+    status: "Đã thanh toán",
   },
   {
     billId: "BILL002",
@@ -71,7 +71,7 @@ const billDataset: Bill[] = [
       companyName: "Công ty TNHH XYZ",
       taxCode: "987654321",
     },
-    status: "Giao hàng",
+    status: "Chưa thanh toán",
   },
   {
     billId: "BILL003",
@@ -86,7 +86,7 @@ const billDataset: Bill[] = [
       companyName: "Công ty TNHH DEF",
       taxCode: "456789123",
     },
-    status: "Hoàn tất",
+    status: "Đang xử lý",
   },
 ];
 
@@ -131,17 +131,17 @@ const BillManagementUserPage = () => {
       Cell: ({ cell }) => {
         const status = cell.getValue<string>();
         const color =
-          status === "Nhận đơn"
-            ? "blue"
-            : status === "Đóng gói"
-            ? "orange"
-            : status === "Giao hàng"
-            ? "yellow"
-            : status === "Hoàn tất"
+          status === "Đã thanh toán"
             ? "green"
-            : status === "Huỷ đơn"
+            : status === "Chưa thanh toán"
             ? "red"
-            : "gray";
+            : status === "Đang xử lý"
+            ? "blue"
+            : status === "Hoàn tất"
+            ? "gray"
+            : status === "Huỷ bỏ"
+            ? "dark"
+            : "yellow";
 
         return <Badge color={color}>{status}</Badge>;
       },
@@ -179,7 +179,7 @@ const BillManagementUserPage = () => {
     <Stack gap="lg">
       <Group justify="space-between">
         <Title flex={1} order={2}>
-          Quản lý đơn hàng
+          Quản lý hoá đơn
         </Title>
         <Group>
           <Button variant="outline" radius={4} leftSection={<IconFileExcel />}>
@@ -192,7 +192,7 @@ const BillManagementUserPage = () => {
         {/* Header */}
         <Group justify="space-between" align="center" mb="xs">
           <Stack gap={0}>
-            <Title order={4}>Tìm kiếm đơn hàng</Title>
+            <Title order={4}>Tìm kiếm hoá đơn</Title>
             <Text c="dimmed" size="sm">
               Điền từ khóa hoặc chọn lọc khoản thời gian, trạng thái
             </Text>
@@ -243,13 +243,13 @@ const BillManagementUserPage = () => {
               radius={4}
               label="Trạng thái"
               placeholder="Chọn thông tin"
-              description="Ví dụ: Nhận đơn, Đóng gói, Giao hàng, Hoàn tất"
+              description="Ví dụ: Đã thanh toán, Chưa thanh toán, Đang xử lý,..."
               data={[
-                "Nhận đơn",
-                "Đóng gói",
-                "Giao hàng",
+                "Đã thanh toán",
+                "Chưa thanh toán",
+                "Đang xử lý",
                 "Hoàn tất",
-                "Huỷ đơn",
+                "Huỷ bỏ",
               ]}
             />
           </SimpleGrid>

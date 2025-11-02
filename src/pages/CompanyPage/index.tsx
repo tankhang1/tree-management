@@ -52,6 +52,7 @@ type FarmerEntity = {
   note?: string;
   crops: string[];
   areaHa: number;
+  businessType: "Ưu tiên" | "Thường";
   certifications?: string[];
 };
 
@@ -72,6 +73,7 @@ const farmerDataset: FarmerEntity[] = [
     note: "Canh tác theo mô hình VietGAP",
     crops: ["Cây dược liệu", "Hồ tiêu"],
     areaHa: 8.5,
+    businessType: "Ưu tiên",
     certifications: ["VietGAP"],
   },
   {
@@ -81,6 +83,7 @@ const farmerDataset: FarmerEntity[] = [
     ownerName: "Trần Thị B",
     identityNumber: "123456789012",
     phone: "0938123456",
+    businessType: "Thường",
     email: "info@benvungcoop.vn",
     address: "Xã Phú Riềng, huyện Phú Riềng, Bình Phước",
     province: "Bình Phước",
@@ -97,6 +100,7 @@ const farmerDataset: FarmerEntity[] = [
     name: "Công ty TNHH Nông sản HCM",
     type: "doanh nghiệp",
     ownerName: "Phạm Quốc C",
+    businessType: "Ưu tiên",
     identityNumber: "079123456789",
     phone: "0909123456",
     email: "contact@hcmaf.com",
@@ -149,6 +153,19 @@ const CompanyPage = () => {
     { accessorKey: "type", header: "Loại hình" },
     { accessorKey: "ownerName", header: "Chủ sở hữu" },
     { accessorKey: "identityNumber", header: "CCCD/CMND" },
+    {
+      accessorKey: "businessType",
+      header: "Trạng thái",
+      Cell: ({ cell }) => {
+        const value = cell.getValue<string>();
+        const color = value === "Ưu tiên" ? "green" : "gray";
+        return (
+          <Badge color={color}>
+            <Text size="sm">{value}</Text>
+          </Badge>
+        );
+      },
+    },
     { accessorKey: "phone", header: "Số điện thoại" },
     { accessorKey: "email", header: "Email" },
     { accessorKey: "address", header: "Địa chỉ" },
