@@ -264,19 +264,19 @@ const MapManagementPlotAddPage = () => {
             rows={[
               {
                 name: "Hàng A",
-                plantType: "Sầu riêng",
+                plantType: "Đậu Nành",
                 seed: "Ri6 F1",
                 quantity: 20,
               },
               {
                 name: "Hàng B",
-                plantType: "Xoài",
+                plantType: "Bắp",
                 seed: "Cát Chu",
                 quantity: 18,
               },
               {
                 name: "Hàng C",
-                plantType: "Bưởi",
+                plantType: "Bắp",
                 seed: "Da xanh",
                 quantity: 25,
               },

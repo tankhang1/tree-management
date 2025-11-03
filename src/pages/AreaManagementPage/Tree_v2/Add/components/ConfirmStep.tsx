@@ -94,19 +94,34 @@ const plot = {
   treeCount: 50,
   seeds: [
     {
-      code: "SDR-RI6",
-      seedName: "Sầu riêng Ri6 - SR-RI6",
-      cropName: "Sầu riêng",
+      code: "DN-DT84",
+      seedName: "Đậu nành DT84",
+      cropName: "Đậu nành",
       image:
-        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT_lo7BwRUzpkCiruaT48T5-8HZ8_7_sNxH0w&s",
+        "https://lh6.googleusercontent.com/proxy/MkmLTr7RaC47H6aLuMX0yGGlXhtKf77bRQ0sEwVhPiHI01aj7WPJYpuBWIbN422tMgVbH5Z67gqzUj9h-LmQpjem8pVrKg",
       seedType: "Hạt giống",
     },
     {
-      code: "SDR-RI6-2",
-      seedName: "Sầu riêng Ri6 - SR-RI6-2",
-      cropName: "Sầu riêng",
+      code: "BP-LVN10",
+      seedName: "Bắp LVN10",
+      cropName: "Bắp",
       image:
-        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT_lo7BwRUzpkCiruaT48T5-8HZ8_7_sNxH0w&s",
+        "https://storage.ssc.com.vn/Data/2021/05/18/lvn10-3-637569497051796680.jpg?w=620&h=350",
+      seedType: "Hạt giống",
+    },
+    {
+      code: "BP-VN886",
+      seedName: "Bắp vàng VN886",
+      cropName: "Bắp",
+      image:
+        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ6LzgJ0YkKBAisYlmO_7sL0bblETRIJi2t6A&s",
+      seedType: "Hạt giống",
+    },
+    {
+      code: "BP-NK66",
+      seedName: "Bắp NK66",
+      cropName: "Bắp",
+      image: "https://skhcn.daklak.gov.vn//img/04584219032015.jpg",
       seedType: "Hạt giống",
     },
   ],
@@ -211,7 +226,7 @@ const ConfirmStep = (props: ConfirmPlantingProps) => {
                     <Image
                       src={seed.image}
                       alt={seed.seedName}
-                      w={"40%"}
+                      w={100}
                       height={100}
                       radius="sm"
                     />

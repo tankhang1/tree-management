@@ -305,7 +305,7 @@ const MapManagementAreaPage = () => {
           <TextInput
             radius={4}
             label="Khung tìm kiếm"
-            description="Ví dụ: KV-AG01, Vùng Trồng Lúa, HTX Vàm Nao, An Giang…"
+            description="Ví dụ: KV-AG01, Vùng Trồng Đậu Nành, HTX Vàm Nao, An Giang…"
             placeholder="Nhập thông tin"
             leftSection={<IconSearch size={16} />}
             value={keyword}
@@ -316,7 +316,7 @@ const MapManagementAreaPage = () => {
             <MultiSelect
               searchable
               label="Cây trồng chính"
-              description="Ví dụ: Lúa, Ngô, Khoai Lang"
+              description="Ví dụ: Đậu nành, bắp"
               placeholder="Chọn thông tin"
               clearable
               radius={4}

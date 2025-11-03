@@ -13,29 +13,47 @@ import {
 import { IconArrowLeft, IconClock, IconFileText } from "@tabler/icons-react";
 import { useNavigate } from "react-router-dom";
 const sampleData = {
-  variety: "Sầu riêng Dona",
+  variety: "Đậu nành DT84",
   duration: 100,
   stages: [
     {
       name: "Nảy mầm",
-      duration: 10,
-      conditionNote: "Đảm bảo độ ẩm trên 70%",
-      document: "Huong-dan-nay-mam.pdf",
+      duration: 7,
+      conditionNote:
+        "Gieo khi đất ấm 25–30°C, giữ ẩm 70–80%. Sau 3–5 ngày hạt nảy mầm đều.",
+      document: "Huong-dan-nay-mam-dau-nanh.pdf",
     },
     {
-      name: "Sinh trưởng",
+      name: "Sinh trưởng sinh dưỡng",
       duration: 30,
-      conditionNote: "Tưới mỗi ngày, đủ ánh sáng",
-      document: "Ky-thuat-sinh-truong.pdf",
+      conditionNote:
+        "Giữ đất tơi xốp, làm cỏ sớm. Bón thúc NPK lần 1 sau 10–12 ngày.",
+      document: "Ky-thuat-cham-soc-dau-nanh.pdf",
     },
     {
       name: "Ra hoa",
-      duration: 20,
-      conditionNote: "Phun phân bón lá định kỳ",
+      duration: 10,
+      conditionNote:
+        "Giữ ẩm ổn định, tránh ngập úng. Bổ sung Kali, phun thuốc phòng sâu bệnh.",
       document: null,
+    },
+    {
+      name: "Tạo hạt",
+      duration: 30,
+      conditionNote:
+        "Tiếp tục tưới đều, bón Kali và trung vi lượng. Theo dõi sâu đục quả.",
+      document: "Huong-dan-tao-hat-dau-nanh.pdf",
+    },
+    {
+      name: "Chín và thu hoạch",
+      duration: 23,
+      conditionNote:
+        "Ngừng tưới 5–7 ngày trước thu. Thu khi 85–90% lá vàng, hạt khô đạt ẩm 12–13%.",
+      document: "Huong-dan-thu-hoach-dau-nanh.pdf",
     },
   ],
 };
+
 const SeasonManagementCycleDetailPage = () => {
   const navigate = useNavigate();
   return (

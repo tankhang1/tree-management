@@ -190,7 +190,7 @@ const MapManagementMapPage = () => {
                   Doanh nghiệp / Nông hộ:
                 </Text>
                 <Text size="sm" fw={600} c="brand.7">
-                  Công ty Mevi
+                  Công ty A
                 </Text>
               </Group>
               <Group gap={8}>
@@ -199,7 +199,7 @@ const MapManagementMapPage = () => {
                   Giống cây trồng:
                 </Text>
                 <Text size="sm" fw={600} c="brand.7">
-                  Giống Ri6
+                  VINASOY 02-NS
                 </Text>
               </Group>
               <Group gap={8}>

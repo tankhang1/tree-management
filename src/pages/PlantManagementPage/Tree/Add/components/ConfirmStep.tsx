@@ -21,49 +21,45 @@ const ConfirmStep = () => {
   const data = {
     region: "Vùng trồng A",
     area: "Khu vực B",
-    plot: "Lô C",
+    plot: "Lô DN-01",
     farmingMethod: "Hữu cơ",
-    treeGroup: "Cây ăn trái",
-    treeCategory: "Sầu riêng",
-    treeVariety: "Giống Ri6",
-    treeCode: "CAY-SR-0001",
-    seed: "Hạt giống SR-RI6",
-    irrigation: "Tưới nhỏ giọt",
+    treeGroup: "Cây công nghiệp ngắn ngày",
+    treeCategory: "Đậu nành",
+    treeVariety: "Giống GV01",
+    treeCode: "CAY-DN-0001",
+    seed: "Hạt giống DN-GV01",
+    irrigation: "Tưới phun mưa",
     image:
-      "https://sauriengoi.vn/wp-content/uploads/2023/08/AdobeStock-93Q2EVldRH-e1697079899709.jpg",
+      "https://bizweb.dktcdn.net/thumb/1024x1024/100/390/808/products/thuong-thuc-dau-nanh-theo-phong-cach-singapore-1.jpg?v=1592987555860",
     description:
-      "Cây sầu riêng giống Ri6, sinh trưởng tốt ở vùng đất bazan, năng suất cao.",
-    unit: "kg/trái",
+      "Đậu nành giống GV01, sinh trưởng 90–100 ngày, chịu hạn khá, năng suất ổn định.",
+    unit: "kg", // đơn vị sản phẩm thu hoạch
     growthCycles: [
       {
-        name: "Chu kỳ 1",
+        name: "Chu kỳ sinh trưởng",
         stages: [
-          { name: "Gieo hạt", duration: 15 },
-          { name: "Ra lá", duration: 30 },
-        ],
-      },
-      {
-        name: "Chu kỳ 2",
-        stages: [
-          { name: "Ra hoa", duration: 20 },
-          { name: "Đậu quả", duration: 40 },
+          { name: "Gieo hạt", duration: 5 },
+          { name: "Nảy mầm – ra lá", duration: 20 },
+          { name: "Sinh trưởng sinh dưỡng", duration: 30 },
+          { name: "Ra hoa – đậu quả", duration: 20 },
+          { name: "Chín – thu hoạch", duration: 25 },
         ],
       },
     ],
     rows: [
       {
-        name: "Hàng 1",
-        variety: "Giống Ri6",
-        treeCount: 5,
+        name: "Luống 1",
+        variety: "GV01",
+        treeCount: 150, // số cây/khóm theo schema hiện có
         gps: [
           { lat: 10.762622, lng: 106.660172 },
           { lat: 10.7628, lng: 106.6603 },
         ],
       },
       {
-        name: "Hàng 2",
-        variety: "Giống Ri6",
-        treeCount: 3,
+        name: "Luống 2",
+        variety: "GV01",
+        treeCount: 140,
         gps: [{ lat: 10.7629, lng: 106.6605 }],
       },
     ],

@@ -12,20 +12,42 @@ import { IconClockHour4 } from "@tabler/icons-react";
 const ConfirmStep = () => {
   const data = {
     treeGroup: "Cây ngắn ngày",
-    treeCategory: "Rau cải",
-    duration: 45,
+    treeCategory: "Đậu nành",
+    duration: 100, // trung bình 90–110 ngày
     stages: [
       {
-        name: "Gieo hạt",
-        duration: 5,
-        documentType: "file",
-        document: "Tài liệu gieo hạt.pdf",
+        name: "Nảy mầm",
+        duration: 7,
+        documentType: "editor",
+        document:
+          "Gieo hạt khi nhiệt độ đất 25–30°C, giữ ẩm 70–80%. Sau 3–5 ngày hạt nảy mầm, đảm bảo đất tơi xốp và không đọng nước.",
       },
       {
-        name: "Ra lá",
+        name: "Sinh trưởng sinh dưỡng",
+        duration: 30,
+        documentType: "editor",
+        document:
+          "Cây phát triển thân lá mạnh, cần ánh sáng đầy đủ. Làm cỏ và bón thúc NPK đợt 1 sau 10–12 ngày, duy trì ẩm độ 70%.",
+      },
+      {
+        name: "Ra hoa",
         duration: 10,
         documentType: "editor",
-        document: "Giai đoạn ra lá cần đủ ánh sáng và độ ẩm",
+        document:
+          "Giữ ẩm ổn định, tránh ngập úng. Bón bổ sung Lân và Kali để tăng tỉ lệ đậu hoa. Phun phòng sâu cuốn lá, rỉ sắt.",
+      },
+      {
+        name: "Tạo hạt",
+        duration: 30,
+        documentType: "editor",
+        document:
+          "Tiếp tục tưới đều, tránh thiếu nước. Giai đoạn này cần nhiều Kali và vi lượng. Theo dõi sâu đục quả.",
+      },
+      {
+        name: "Chín và thu hoạch",
+        duration: 23,
+        documentType: "file",
+        document: "Hướng_dẫn_thu_hoạch_đậu_nành.pdf",
       },
     ],
   };

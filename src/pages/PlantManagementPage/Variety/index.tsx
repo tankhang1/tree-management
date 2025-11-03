@@ -41,53 +41,52 @@ type CropVariety = {
 const cropVarieties: CropVariety[] = [
   {
     id: "VAR01",
-    name: "Sầu riêng Ri6",
+    name: "Đậu nành DT84",
     description:
-      "Giống sầu riêng phổ biến, cơm vàng, hạt lép, thơm ngọt, xuất xứ từ miền Tây Việt Nam.",
-    treeName: "Sầu riêng",
+      "Giống đậu nành DT84 sinh trưởng 90–100 ngày, chịu hạn tốt, hạt vàng sáng, năng suất cao.",
+    treeName: "Đậu nành",
     imgUrl:
-      "https://giongcaytrongeakmat.com/wp-content/uploads/giong-sau-rieng-ri6.jpg",
-    doc: "Link",
+      "https://lh6.googleusercontent.com/proxy/MkmLTr7RaC47H6aLuMX0yGGlXhtKf77bRQ0sEwVhPiHI01aj7WPJYpuBWIbN422tMgVbH5Z67gqzUj9h-LmQpjem8pVrKg",
+    doc: "https://vaas.vn/giong-dau-nanh-dt84",
   },
   {
     id: "VAR02",
-    name: "Sầu riêng Monthong",
+    name: "Đậu nành ĐX11",
     description:
-      "Giống sầu riêng Thái Lan, múi to, cơm dày, mùi nhẹ, dễ trồng và bảo quản.",
-    treeName: "Sầu riêng",
+      "Giống đậu nành ĐX11 cho năng suất ổn định, thời gian sinh trưởng 95 ngày, hạt to và chất lượng cao.",
+    treeName: "Đậu nành",
     imgUrl:
-      "https://giongcaytrongeakmat.com/wp-content/uploads/giong-sau-rieng-ri6.jpg",
-    doc: "Link",
+      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTxNvmzOr65QezHLAx9jp82a_wLJNjCzSuexA&s",
+    doc: "https://nongnghiep.vn/giong-dau-nanh-dx11",
   },
   {
     id: "VAR03",
-    name: "Xoài Cát Chu",
+    name: "Bắp LVN10",
     description:
-      "Giống xoài ngọt đậm, vỏ vàng óng, thịt mềm mịn, đặc sản Cao Lãnh – Đồng Tháp.",
-    treeName: "Xoài",
+      "Giống bắp lai LVN10 sinh trưởng khỏe, kháng sâu bệnh tốt, năng suất cao, thời gian sinh trưởng 100–115 ngày.",
+    treeName: "Bắp",
     imgUrl:
-      "https://giongcaytrongeakmat.com/wp-content/uploads/giong-sau-rieng-ri6.jpg",
-    doc: "Link",
+      "https://storage.ssc.com.vn/Data/2021/05/18/lvn10-3-637569497051796680.jpg?w=620&h=350",
+    doc: "https://vaas.vn/giong-bap-lvn10",
   },
   {
     id: "VAR04",
-    name: "Xoài Tượng",
+    name: "Bắp NK66",
     description:
-      "Giống xoài to trái, chắc thịt, thích hợp cho trồng đại trà ở vùng nhiệt đới.",
-    treeName: "Xoài",
-    imgUrl:
-      "https://giongcaytrongeakmat.com/wp-content/uploads/giong-sau-rieng-ri6.jpg",
-    doc: "Link",
+      "Giống bắp NK66 lai đơn, chịu hạn tốt, thích hợp vùng Đông Nam Bộ và Tây Nguyên.",
+    treeName: "Bắp",
+    imgUrl: "https://static.tuoitre.vn/tto/i/s626/2015/03/24/AgwPWLuq.jpg",
+    doc: "https://nongnghiep.vn/giong-bap-nk66",
   },
   {
     id: "VAR05",
-    name: "Chuối già Nam Mỹ",
+    name: "Bắp nếp HN68",
     description:
-      "Giống chuối được trồng phổ biến để xuất khẩu, năng suất cao, chịu bệnh tốt.",
-    treeName: "Chuối",
+      "Giống bắp nếp HN68 cho hạt dẻo thơm, hạt trắng sữa, thời gian sinh trưởng khoảng 95 ngày.",
+    treeName: "Bắp",
     imgUrl:
-      "https://giongcaytrongeakmat.com/wp-content/uploads/giong-sau-rieng-ri6.jpg",
-    doc: "Link",
+      "https://storage.vinaseed.com.vn/Data/2020/03/10/2-ngo-hn68-637194768462517218.jpg?w=620&h=350",
+    doc: "https://vaas.vn/giong-bap-nep-hn68",
   },
 ];
 

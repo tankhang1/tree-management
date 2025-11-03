@@ -213,67 +213,44 @@ const PlantManagementTreeAddPage = () => {
               data={["SR-RI6", "SR-RI4", "SR-RI3", "SR-RI8", "SR-RI9"]}
             />
             <Scrollable h={450}>
-              <Group wrap="nowrap" p={"xs"}>
+              <Group wrap="nowrap" p="xs">
                 <SeedCard
-                  backgroundImage="https://food-map.s3.ap-southeast-1.amazonaws.com/news/2021/03/sau-rieng-ri6-3.jpg"
-                  seedCode="SR-RI6"
-                  name="Hạt giống RI6"
-                  provider="Công ty giống cây trồng"
+                  backgroundImage="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTdvY2xVFTT9V8jGe2q8pxWWF4QfNWrchFGLQ&s"
+                  seedCode="DN-GV01"
+                  name="Đậu nành GV01"
+                  provider="Viện Nghiên cứu Cây trồng Việt Nam"
                   origin="Việt Nam"
-                  germinationRate={85}
-                  yield={25}
-                  description="Giống RI6 cho năng suất cao, cơm vàng đậm, vị ngọt thơm"
+                  germinationRate={90}
+                  yield={2.5}
+                  description="Giống đậu nành GV01 sinh trưởng tốt, chịu hạn khá, năng suất cao, hạt vàng sáng."
                   onSelect={(code) => setSelectedSeed(code)}
-                  isActive={selectedSeed === "SR-RI6"}
-                />
-                <SeedCard
-                  backgroundImage="https://food-map.s3.ap-southeast-1.amazonaws.com/news/2021/03/sau-rieng-ri6-3.jpg"
-                  seedCode="SR-RI4"
-                  name="Hạt giống RI4"
-                  provider="Công ty giống cây trồng"
-                  origin="Việt Nam"
-                  germinationRate={85}
-                  yield={25}
-                  description="Giống RI6 cho năng suất cao, cơm vàng đậm, vị ngọt thơm"
-                  onSelect={(code) => setSelectedSeed(code)}
-                  isActive={selectedSeed === "SR-RI4"}
+                  isActive={selectedSeed === "DN-GV01"}
                 />
 
                 <SeedCard
-                  backgroundImage="https://food-map.s3.ap-southeast-1.amazonaws.com/news/2021/03/sau-rieng-ri6-3.jpg"
-                  seedCode="SR-RI3"
-                  name="Hạt giống RI3"
-                  provider="Công ty giống cây trồng"
+                  backgroundImage="https://product.hstatic.net/1000075554/product/nanh_giong_mien_phu_minh_tam_goi_450g_f01d969848a444deaf5be7426a42fa95_eeaf90f8fdd648e191f20ea60c5617ed.jpg"
+                  seedCode="DN-GV02"
+                  name="Đậu nành An Phú"
+                  provider="Công ty Giống cây trồng Trung ương"
                   origin="Việt Nam"
-                  germinationRate={85}
-                  yield={25}
+                  germinationRate={88}
+                  yield={2.3}
+                  description="Giống đậu nành An Phú cho hạt to, giàu đạm, phù hợp canh tác đồng bằng sông Cửu Long."
                   onSelect={(code) => setSelectedSeed(code)}
-                  isActive={selectedSeed === "SR-RI3"}
-                  description="Giống RI6 cho năng suất cao, cơm vàng đậm, vị ngọt thơm"
+                  isActive={selectedSeed === "DN-GV02"}
                 />
+
                 <SeedCard
-                  backgroundImage="https://food-map.s3.ap-southeast-1.amazonaws.com/news/2021/03/sau-rieng-ri6-3.jpg"
-                  seedCode="SR-RI8"
-                  name="Hạt giống RI8"
-                  provider="Công ty giống cây trồng"
+                  backgroundImage="https://sinhhocchaua.com/wp-content/uploads/2024/08/bap-nep.jpg"
+                  seedCode="BP-LVN10"
+                  name="Bắp LVN10"
+                  provider="Công ty Giống cây trồng Trung ương"
                   origin="Việt Nam"
-                  germinationRate={85}
-                  yield={25}
+                  germinationRate={92}
+                  yield={9}
+                  description="Giống bắp LVN10 sinh trưởng khỏe, kháng sâu bệnh tốt, năng suất ổn định."
                   onSelect={(code) => setSelectedSeed(code)}
-                  isActive={selectedSeed === "SR-RI8"}
-                  description="Giống RI8 cho năng suất cao, cơm vàng đậm, vị ngọt thơm"
-                />
-                <SeedCard
-                  backgroundImage="https://food-map.s3.ap-southeast-1.amazonaws.com/news/2021/03/sau-rieng-ri6-3.jpg"
-                  seedCode="SR-RI9"
-                  name="Hạt giống RI9"
-                  provider="Công ty giống cây trồng"
-                  origin="Việt Nam"
-                  germinationRate={85}
-                  yield={25}
-                  onSelect={(code) => setSelectedSeed(code)}
-                  isActive={selectedSeed === "SR-RI9"}
-                  description="Giống RI9 cho năng suất cao, cơm vàng đậm, vị ngọt thơm"
+                  isActive={selectedSeed === "BP-LVN10"}
                 />
               </Group>
             </Scrollable>

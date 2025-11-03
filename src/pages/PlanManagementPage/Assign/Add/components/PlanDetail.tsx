@@ -12,7 +12,7 @@ import { IconBox, IconTool, IconVaccine } from "@tabler/icons-react";
 
 // 🔸 Dữ liệu mẫu cho trang chi tiết
 const mockPlan = {
-  seasonName: "Mùa Xuân 2025",
+  seasonName: "Mùa Xuân 2025 - Đậu nành DT84",
   startDate: "01/01/2025",
   endDate: "30/04/2025",
   zone: "Vùng Trồng Tây Nguyên",
@@ -23,15 +23,17 @@ const mockPlan = {
       stages: [
         {
           stageName: "Nảy mầm",
-          materials: [{ item: "Phân NPK", quantity: 10 }],
+          materials: [{ item: "NPK 16-16-8", quantity: 8 }],
           equipment: [{ item: "Bình tưới", quantity: 2 }],
-          pesticides: [{ item: "Confidor", quantity: 3 }],
+          pesticides: [{ item: "Thiram xử lý hạt", quantity: 1 }],
         },
         {
-          stageName: "Ra hoa",
-          materials: [{ item: "Vôi bột", quantity: 5 }],
+          stageName: "Sinh trưởng sinh dưỡng",
+          materials: [{ item: "Ure/Đạm bổ sung", quantity: 10 }],
           equipment: [{ item: "Máy xịt", quantity: 1 }],
-          pesticides: [{ item: "Radiant", quantity: 2 }],
+          pesticides: [
+            { item: "Emamectin 5% (phòng sâu cuốn lá)", quantity: 2 },
+          ],
         },
       ],
     },
@@ -64,7 +66,7 @@ const PlanDetail = () => {
                   Vùng trồng
                 </Title>
                 <Badge color="blue" variant="light">
-                  VT-001
+                  VT-SOY-001
                 </Badge>
               </Group>
               <Text size="sm">
@@ -92,7 +94,7 @@ const PlanDetail = () => {
                   Khu vực
                 </Title>
                 <Badge color="green" variant="light">
-                  KV-TN1
+                  KV-SOY-01
                 </Badge>
               </Group>
               <Text size="sm">
@@ -100,7 +102,7 @@ const PlanDetail = () => {
               </Text>
               <Group gap="xl">
                 <Text size="sm">
-                  <strong>Đơn vị quản lý:</strong> HTX Cà phê Buôn Ma Thuột
+                  <strong>Đơn vị quản lý:</strong> HTX Đậu nành Buôn Hồ
                 </Text>
                 <Text size="sm">
                   <strong>Người quản lý:</strong> Nguyễn Văn Tài
@@ -120,7 +122,7 @@ const PlanDetail = () => {
                   Lô
                 </Title>
                 <Badge color="green" variant="light">
-                  LO-A1-01
+                  LO-SOY-A1-01
                 </Badge>
               </Group>
               <Text size="sm">
@@ -128,10 +130,10 @@ const PlanDetail = () => {
               </Text>
               <Group gap="xl">
                 <Text size="sm">
-                  <strong>Loại cây:</strong> Sầu riêng Monthong
+                  <strong>Loại cây:</strong> Đậu nành DT84
                 </Text>
                 <Text size="sm">
-                  <strong>Số lượng cây:</strong> 120
+                  <strong>Số lượng cây:</strong> 25.000
                 </Text>
                 <Text size="sm">
                   <strong>Diện tích:</strong> 3.000 m²

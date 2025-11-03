@@ -48,15 +48,39 @@ type Assignment = {
 const assignmentData: Assignment[] = [
   {
     id: "A001",
-    name: "Tưới nước đợt 1",
-    startDate: "2025-07-02",
-    endDate: "2025-07-03",
-    departments: ["Phòng kỹ thuật", "Phòng vận hành"],
-    employees: ["Nguyễn Văn A", "Trần Thị B"],
+    name: "Gieo hạt và tưới nước lần đầu",
+    startDate: "2025-02-05",
+    endDate: "2025-02-06",
+    departments: ["Phòng kỹ thuật nông nghiệp", "Phòng sản xuất"],
+    employees: ["Nguyễn Văn Hòa", "Trần Thị Lan"],
     supervisor: "Phạm Văn Quản",
     creator: "Lê Thị Điều",
     manager: "Nguyễn Quản Lý",
-    seasonPlan: "Kế hoạch mùa Xuân 2025",
+    seasonPlan: "Kế hoạch trồng đậu nành vụ Xuân 2025",
+  },
+  {
+    id: "A002",
+    name: "Làm cỏ và bón phân thúc lần 1",
+    startDate: "2025-03-10",
+    endDate: "2025-03-12",
+    departments: ["Phòng kỹ thuật nông nghiệp"],
+    employees: ["Lê Văn Cường", "Đặng Thị Hạnh"],
+    supervisor: "Vũ Văn Tài",
+    creator: "Nguyễn Thị Mai",
+    manager: "Nguyễn Quản Lý",
+    seasonPlan: "Kế hoạch chăm sóc đậu nành giữa vụ",
+  },
+  {
+    id: "A003",
+    name: "Thu hoạch và vận chuyển hạt đậu nành",
+    startDate: "2025-05-15",
+    endDate: "2025-05-17",
+    departments: ["Phòng thu hoạch", "Phòng hậu cần"],
+    employees: ["Phan Văn Bình", "Trần Văn Dũng"],
+    supervisor: "Đỗ Thị Hoa",
+    creator: "Nguyễn Văn Thành",
+    manager: "Nguyễn Quản Lý",
+    seasonPlan: "Kế hoạch thu hoạch đậu nành",
   },
 ];
 
@@ -88,7 +112,7 @@ const PlanManagementAssignPage = () => {
       header: "Phòng ban",
       Cell: ({ row }) =>
         row.original.departments.map((d, i) => (
-          <Badge key={i} size="xs" color="blue" mr={4}>
+          <Badge key={i} size="xs" p="xs" color="blue" mr={4}>
             {d}
           </Badge>
         )),
@@ -98,7 +122,7 @@ const PlanManagementAssignPage = () => {
       header: "Nhân sự",
       Cell: ({ row }) =>
         row.original.employees.map((e, i) => (
-          <Badge key={i} size="xs" color="gray" mr={4}>
+          <Badge key={i} size="xs" p={"xs"} color="gray" mr={4}>
             {e}
           </Badge>
         )),

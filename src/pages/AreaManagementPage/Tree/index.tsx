@@ -238,7 +238,7 @@ const AreaManagementTreePage = () => {
           <TextInput
             radius={4}
             label="Khung tìm kiếm"
-            description="Ví dụ: KV-AG01, Vùng Trồng Lúa, HTX Vàm Nao, An Giang…"
+            description="Ví dụ: KV-AG01, Vùng Trồng Đậu Nành, HTX Vàm Nao, An Giang…"
             placeholder="Nhập thông tin"
             leftSection={<IconSearch size={16} />}
             value={keyword}
@@ -252,7 +252,7 @@ const AreaManagementTreePage = () => {
               radius={4}
               leftSection={<IconTree size={18} />}
               label="Cây trồng chính"
-              description="Ví dụ: Lúa, Ngô, Khoai tây"
+              description="Ví dụ: Đậu Nành, Ngô"
               placeholder="Chọn thông tin"
               data={[
                 { value: "rice", label: "Lúa" },
@@ -342,7 +342,7 @@ const AreaManagementTreePage = () => {
       <Modal
         opened={openedRowForm}
         onClose={closeRowForm}
-        size={'lg'}
+        size={"lg"}
         title={<Text fw={"bold"}>Chi tiết phân bổ</Text>}
       >
         <TreeDetailView tree={tree} />
