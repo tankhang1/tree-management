@@ -7,7 +7,6 @@ import {
   Button,
   Card,
   Chip,
-  Chips,
   Container,
   Divider,
   FileButton,
@@ -629,15 +628,11 @@ const ProfileSupportPage = () => {
                     <Paper radius="md" p="md" withBorder>
                       <Group justify="space-between" mb="sm">
                         <Title order={5}>Danh sách phiếu hỗ trợ</Title>
-                        <Chips
-                          multiple={false}
-                          value={filter}
-                          onChange={(v: any) => setFilter(v ?? "all")}
-                        >
+                        <Box className="">
                           <Chip value="all">Tất cả</Chip>
                           <Chip value="processing">Đang xử lý</Chip>
                           <Chip value="done">Hoàn tất</Chip>
-                        </Chips>
+                        </Box>
                       </Group>
                       <Table
                         highlightOnHover

@@ -459,7 +459,6 @@ const PlanManagementMainAddPage = () => {
                       searchable
                       clearable
                       radius={4}
-                      searchable
                       disabled
                       label="Tên chu kì sinh trưởng"
                       placeholder="Tên chu kì sinh trưởng"
