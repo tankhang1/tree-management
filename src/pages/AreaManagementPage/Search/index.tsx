@@ -98,65 +98,65 @@ type PestRecord = {
 };
 const cultivationNoteData: CultivationNote[] = [
   {
-    id: "PH001",
-    expectedStart: "2025-02-01",
-    expectedEnd: "2025-02-10",
-    actualStart: "2025-02-02",
-    actualEnd: "2025-02-09",
+    id: "CN-PH001",
+    expectedStart: "2025-03-10",
+    expectedEnd: "2025-03-12",
+    actualStart: "2025-03-11",
+    actualEnd: "2025-03-12",
   },
   {
-    id: "PH002",
-    expectedStart: "2024-06-05",
-    expectedEnd: "2024-06-15",
-    actualStart: "2024-06-06",
-    actualEnd: "2024-06-14",
+    id: "CRN-PH002",
+    expectedStart: "2025-02-18",
+    expectedEnd: "2025-02-20",
+    actualStart: "2025-02-19",
+    actualEnd: "2025-02-20",
   },
 ];
 const cultivationHistoryData: CultivationHistory[] = [
   {
-    id: "PH001",
-    cropSeasonName: "Mùa vụ Xuân 2025",
-    planName: "Kế hoạch phun thuốc sâu",
-    actualStart: "2025-02-02",
-    expectedEnd: "2025-02-10",
-    actualEnd: "2025-02-09",
-    manager: "Nguyễn Văn A",
-    qualityStaff: "Trần Thị B",
+    id: "CN-HIS001",
+    cropSeasonName: "Vụ Xuân 2025",
+    planName: "Gieo trồng đậu nành HL02",
+    actualStart: "2025-03-11",
+    expectedEnd: "2025-03-12",
+    actualEnd: "2025-03-12",
+    manager: "Nguyễn Văn Hòa",
+    qualityStaff: "Trần Thị Lan",
   },
   {
-    id: "PH002",
-    cropSeasonName: "Mùa vụ Hè 2024",
-    planName: "Bón phân hữu cơ",
-    actualStart: "2024-06-05",
-    expectedEnd: "2024-06-15",
-    actualEnd: "2024-06-14",
-    manager: "Lê Văn C",
-    qualityStaff: "Nguyễn Thị D",
+    id: "CRN-HIS002",
+    cropSeasonName: "Vụ Đông Xuân 2025",
+    planName: "Trồng bắp VN886",
+    actualStart: "2025-02-19",
+    expectedEnd: "2025-02-20",
+    actualEnd: "2025-02-20",
+    manager: "Lê Văn Dũng",
+    qualityStaff: "Nguyễn Thị Mai",
   },
 ];
 
 const pestRecordData: PestRecord[] = [
   {
-    id: "PH001",
-    detectedAt: "2025-03-15",
-    resolvedAt: "2025-03-18",
-    pestStatus: "Rầy nâu",
-    solution: "Phun thuốc và kiểm tra lại sau 7 ngày",
-    pesticides: ["Confidor", "Actara"],
-    staffHandler: "Nguyễn Văn A",
-    staffManager: "Trần Thị B",
-    staffQuality: "Lê Văn C",
+    id: "CN-PEST001",
+    detectedAt: "2025-04-14",
+    resolvedAt: "2025-04-16",
+    pestStatus: "Rệp đậu nành",
+    solution: "Phun Confidor 100SL và kiểm tra lại sau 5 ngày",
+    pesticides: ["Confidor 100SL", "Radiant 60SC"],
+    staffHandler: "Phạm Văn Bình",
+    staffManager: "Nguyễn Thị Hoa",
+    staffQuality: "Võ Quốc Huy",
   },
   {
-    id: "PH002",
-    detectedAt: "2025-04-10",
-    resolvedAt: "2025-04-13",
-    pestStatus: "Sâu đục thân",
-    solution: "Cắt bỏ cành bị hại, phun thuốc sinh học",
-    pesticides: ["Regent", "Vertimec"],
-    staffHandler: "Phạm Văn D",
-    staffManager: "Nguyễn Thị E",
-    staffQuality: "Trần Văn F",
+    id: "CRN-PEST002",
+    detectedAt: "2025-03-25",
+    resolvedAt: "2025-03-27",
+    pestStatus: "Sâu đục thân bắp",
+    solution: "Phun thuốc Brightin 5WG, vệ sinh gốc cây",
+    pesticides: ["Brightin 5WG", "Regent 800WG"],
+    staffHandler: "Vũ Văn Nam",
+    staffManager: "Lý Thị Hạnh",
+    staffQuality: "Đỗ Văn Long",
   },
 ];
 
@@ -167,18 +167,8 @@ type HarvestInfo = {
   unit: string; // Đơn vị / Quy cách
 };
 const harvestInfoData: HarvestInfo[] = [
-  {
-    id: "H001",
-    harvestDate: "2025-07-15",
-    yield: 1500,
-    unit: "kg",
-  },
-  {
-    id: "H002",
-    harvestDate: "2025-08-10",
-    yield: 800,
-    unit: "thùng (20kg)",
-  },
+  { id: "SOY-H001", harvestDate: "2025-07-05", yield: 2.9, unit: "tấn/ha" },
+  { id: "CORN-H002", harvestDate: "2025-07-02", yield: 7.3, unit: "tấn/ha" },
 ];
 
 type Stage = {
@@ -201,21 +191,25 @@ type GrowthCycle = {
 
 const growthCycles: GrowthCycle[] = [
   {
-    id: "cycle1",
-    name: "Chu kỳ trung bình (3-5 năm)",
+    id: "soy-cycle",
+    name: "Đậu nành (chu kỳ 85–110 ngày)",
     stages: [
-      { id: "stage1", name: "Ra hoa", duration: "30 ngày" },
-      { id: "stage2", name: "Kết trái", duration: "60 ngày" },
-      { id: "stage3", name: "Thu hoạch", duration: "15 ngày" },
+      { id: "s1", name: "Nảy mầm", duration: "5–7 ngày" },
+      { id: "s2", name: "Sinh trưởng sinh dưỡng", duration: "30 ngày" },
+      { id: "s3", name: "Ra hoa", duration: "8 ngày" },
+      { id: "s4", name: "Tạo hạt", duration: "28 ngày" },
+      { id: "s5", name: "Chín", duration: "12 ngày" },
     ],
   },
   {
-    id: "cycle2",
-    name: "Chu kỳ dài (5-7 năm)",
+    id: "corn-cycle",
+    name: "Bắp (chu kỳ 95–120 ngày)",
     stages: [
-      { id: "stage1", name: "Ra hoa", duration: "40 ngày" },
-      { id: "stage2", name: "Kết trái", duration: "80 ngày" },
-      { id: "stage3", name: "Thu hoạch", duration: "20 ngày" },
+      { id: "c1", name: "Nảy mầm", duration: "6 ngày" },
+      { id: "c2", name: "3–7 lá", duration: "20 ngày" },
+      { id: "c3", name: "Trỗ cờ/Phun râu", duration: "9 ngày" },
+      { id: "c4", name: "Làm hạt", duration: "30 ngày" },
+      { id: "c5", name: "Chín sáp/Chín khô", duration: "25 ngày" },
     ],
   },
 ];
@@ -265,48 +259,60 @@ const resource: Resource[] = [
 ];
 const treeCropData: TreeCrop[] = [
   {
-    id: "TREE001",
-    img: "https://traicayhoabien.com/wp-content/uploads/2023/04/SAU-RIENG-RI6-2.webp",
-    name: "Sầu riêng",
-    variety: "Ri6",
-    seedType: "Hạt lai F1",
-    plantingDate: "2023-05-10",
-    region: "Khu vực canh tác phía Bắc",
+    id: "SOY001",
+    img: "https://lh6.googleusercontent.com/proxy/MkmLTr7RaC47H6aLuMX0yGGlXhtKf77bRQ0sEwVhPiHI01aj7WPJYpuBWIbN422tMgVbH5Z67gqzUj9h-LmQpjem8pVrKg",
+    name: "Đậu nành",
+    variety: "HL02",
+    seedType: "Hạt giống thuần",
+    plantingDate: "2025-03-15",
+    region: "Vùng đồng bằng sông Cửu Long",
   },
   {
-    id: "TREE002",
-    name: "Xoài",
-    img: "https://market.nhovn.com/public/upload/images/hinhsanpham/xoai-cat-chu-89391597459145.jpg",
-    variety: "Cát Chu",
-    seedType: "Ghép cành",
-    plantingDate: "2024-03-15",
-    region: "Khu vực canh tác phía Nam",
+    id: "SOY002",
+    img: "https://lh6.googleusercontent.com/proxy/MkmLTr7RaC47H6aLuMX0yGGlXhtKf77bRQ0sEwVhPiHI01aj7WPJYpuBWIbN422tMgVbH5Z67gqzUj9h-LmQpjem8pVrKg",
+    name: "Đậu nành",
+    variety: "ĐX11",
+    seedType: "Hạt lai F1",
+    plantingDate: "2025-07-25",
+    region: "Vùng Đông Nam Bộ",
+  },
+  {
+    id: "CORN001",
+    img: "https://cdn.tgdd.vn/Products/Images/8785/241815/bhx/bap-my-202402261032060598.jpg",
+    name: "Bắp",
+    variety: "VN886",
+    seedType: "Hạt giống xác nhận",
+    plantingDate: "2025-02-20",
+    region: "Tây Nguyên",
+  },
+  {
+    id: "CORN002",
+    img: "https://cdn.tgdd.vn/Products/Images/8785/241815/bhx/bap-my-202402261032060598.jpg",
+    name: "Bắp",
+    variety: "LVN10",
+    seedType: "Hạt lai F1",
+    plantingDate: "2025-08-05",
+    region: "Duyên hải Nam Trung Bộ",
   },
 ];
 const treeDetail: TreeDetail = {
-  id: "CT001",
-  name: "Sầu riêng Ri6",
-  type: "Cây ăn trái",
-  note: "Ưa đất thịt, thoát nước tốt.",
-  seedCode: "SR-RI6",
-  seedName: "Giống Ri6",
-  supplier: "Công ty Nông sản Việt",
+  id: "SOY-DETAIL",
+  name: "Đậu nành HL02",
+  type: "Cây ngắn ngày",
+  note: "Ưa sáng, thoát nước tốt, phù hợp đất phù sa nhẹ.",
+  seedCode: "DN-HL02",
+  seedName: "Đậu nành HL02",
+  supplier: "Trung tâm Giống Cây Trồng Quốc Gia",
   origin: "Việt Nam",
-  germinationRate: "85",
-  yield: "25",
-  seedNote: "Giống được kiểm định bởi Bộ NN&PTNT.",
+  germinationRate: "89",
+  yield: "2.9",
+  seedNote: "Gieo hàng cách hàng 25–30 cm, cây cách cây 5 cm.",
   seedDoc: null,
-  harvestMethod: "Theo quả",
-  growthCycle: "Trung bình 3 năm",
-  growthStages: [
-    "Ươm giống",
-    "Trồng cây con",
-    "Chăm sóc sinh trưởng",
-    "Ra hoa",
-    "Kết trái",
-  ],
-  growthTime: "1095",
-  growthNote: "Cần tỉa cành định kỳ và phòng ngừa sâu bệnh.",
+  harvestMethod: "Thu hạt khô",
+  growthCycle: "85–110 ngày",
+  growthStages: ["Nảy mầm", "Sinh trưởng", "Ra hoa", "Tạo hạt", "Chín"],
+  growthTime: "95",
+  growthNote: "Phòng rệp và sâu xanh; tránh úng nước.",
 };
 const companyOptions = [
   {
@@ -712,8 +718,8 @@ export default function MVFarmSearch() {
               <Card shadow="sm" radius={4} withBorder p="lg">
                 <Group gap="md" align="flex-start" wrap="nowrap">
                   <Image
-                    src="https://vuacaygiong.com/wp-content/uploads/2017/11/Sau_rieng_Musang_King_d197.jpg"
-                    alt="Sầu riêng"
+                    src="https://lh6.googleusercontent.com/proxy/MkmLTr7RaC47H6aLuMX0yGGlXhtKf77bRQ0sEwVhPiHI01aj7WPJYpuBWIbN422tMgVbH5Z67gqzUj9h-LmQpjem8pVrKg"
+                    alt="Đậu nành"
                     h={220}
                     w={300}
                     radius={4}
@@ -722,28 +728,28 @@ export default function MVFarmSearch() {
                   <Stack gap={8} style={{ flex: 1 }}>
                     <Group gap="xs">
                       <Title order={4} style={{ lineHeight: 1.1 }}>
-                        Sầu riêng
+                        Đậu nành
                       </Title>
-                      <Badge variant="light" color="yellow" radius="sm">
-                        Ưu tiên
+                      <Badge variant="light" color="green" radius="sm">
+                        Canh tác tốt
                       </Badge>
                     </Group>
+
                     <SimpleGrid cols={{ base: 1, sm: 2 }} spacing={6}>
                       <Text size="sm" c="gray.7">
-                        <b>Mã cây:</b> TREE001
-                      </Text>
-
-                      <Text size="sm">
-                        <b>Giống cây trồng:</b> Ri6
+                        <b>Mã cây:</b> SOY001
                       </Text>
                       <Text size="sm">
-                        <b>Hình thức thu hoạch:</b> Thủ công
+                        <b>Giống cây trồng:</b> HL02
                       </Text>
                       <Text size="sm">
-                        <b>Hạt giống:</b> Hạt lai F1
+                        <b>Hình thức thu hoạch:</b> Thu hạt khô
                       </Text>
                       <Text size="sm">
-                        <b>Nhóm cây trồng:</b> Cây ăn trái
+                        <b>Hạt giống:</b> Hạt giống thuần
+                      </Text>
+                      <Text size="sm">
+                        <b>Nhóm cây trồng:</b> Cây công nghiệp ngắn ngày
                       </Text>
                       <Group gap={6} align="center">
                         <Text size="sm" component="span">
@@ -759,10 +765,13 @@ export default function MVFarmSearch() {
                         </Badge>
                       </Group>
                     </SimpleGrid>
+
                     <Divider my={6} />
                     <Text size="sm" c="gray.7">
-                      <b>Ghi chú:</b> Yêu cầu đất thịt và thoát nước tốt
+                      <b>Ghi chú:</b> Ưa sáng, thoát nước tốt, thích hợp đất phù
+                      sa nhẹ.
                     </Text>
+
                     <Group gap="xs" mt="xs">
                       <Tooltip label="Xem chi tiết">
                         <ActionIcon variant="light" radius={4}>

@@ -24,29 +24,32 @@ const PlantManagementTreeDetailPage = () => {
   const navigate = useNavigate();
   const form = useForm({
     initialValues: {
-      id: "CT001",
-      name: "Sầu riêng Ri6",
-      type: "Cây ăn trái",
-      note: "Ưa đất thịt, thoát nước tốt.",
-      seedCode: "SR-RI6",
-      seedName: "Giống Ri6",
-      supplier: "Công ty Nông sản Việt",
+      id: "CT002",
+      name: "Đậu nành",
+      type: "Cây công nghiệp ngắn ngày",
+      note: "Phù hợp với đất phù sa, cần ánh sáng tốt và thoát nước vừa phải.",
+      seedCode: "DN-GV01",
+      seedName: "Giống Đậu nành GV01",
+      supplier: "Viện Nghiên cứu Cây trồng Trung ương",
       origin: "Việt Nam",
-      germinationRate: "85",
-      yield: "25",
-      seedNote: "Giống được kiểm định bởi Bộ NN&PTNT.",
+      germinationRate: "90",
+      yield: "2.5",
+      seedNote:
+        "Giống có khả năng chịu hạn tốt, năng suất cao và hàm lượng protein lớn.",
       seedDoc: null,
-      harvestMethod: "Theo quả",
-      growthCycle: "Trung bình 3 năm",
+      harvestMethod: "Theo lứa",
+      growthCycle: "Ngắn (3-4 tháng)",
       growthStages: [
-        "Ươm giống",
-        "Trồng cây con",
-        "Chăm sóc sinh trưởng",
+        "Gieo hạt",
+        "Nảy mầm",
+        "Sinh trưởng thân lá",
         "Ra hoa",
-        "Kết trái",
+        "Kết quả",
+        "Thu hoạch",
       ],
-      growthTime: "1095",
-      growthNote: "Cần tỉa cành định kỳ và phòng ngừa sâu bệnh.",
+      growthTime: "120",
+      growthNote:
+        "Cần tưới nước đều giai đoạn ra hoa và kết quả; hạn chế sâu cuốn lá và rệp đậu.",
     },
   });
 
@@ -69,13 +72,13 @@ const PlantManagementTreeDetailPage = () => {
       <Grid gutter={40}>
         <Grid.Col span={{ base: 12, md: 4 }}>
           <Image
-            src="https://images.prismic.io/queenfarm/Z5YODpbqstJ992qW__550x550-cr_sau-rieng-57-removebg-preview.png?auto=format%2Ccompress&fit=max&w=3840"
+            src="https://dantocmiennui-media.baotintuc.vn/images/84426cb421b40f0fbef0009243df48a99534fe2adafef46ae8b1255b38d3094e9ca2f8f3dda56bf19250d37f31511823a865ffe4c6980715d772b87cdb48f7eb/3873TT1.jpg"
             radius="md"
             h={350}
             alt="Hình ảnh cây trồng"
             fit="contain"
           />
-          <Paper p="sm" radius={4} withBorder>
+          <Paper p="sm" radius={4} withBorder mt="md">
             <Text size="lg" fw={600} mb={4}>
               Thông tin chung
             </Text>

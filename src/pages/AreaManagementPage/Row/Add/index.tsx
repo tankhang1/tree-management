@@ -68,72 +68,95 @@ export interface RegionOption {
 }
 export const seedOptions: SeedOption[] = [
   {
-    code: "VAR01",
-    cropName: "Sầu riêng",
-    seedName: "Sầu riêng Ri6",
+    code: "DN001",
+    cropName: "Đậu nành",
+    seedName: "Đậu nành DT84",
     description:
-      "Giống sầu riêng phổ biến, cơm vàng, hạt lép, thơm ngọt, xuất xứ từ miền Tây Việt Nam.",
+      "Giống đậu nành ngắn ngày, sinh trưởng tốt ở vùng đồng bằng, năng suất cao và hạt to, được trồng phổ biến tại miền Tây.",
     image:
-      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRnHUglZObxyUZw-KJWpVaUyTND-GZ5QXeSbQ&s",
+      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSh3WrdDlyDlvU4zUrcW5l7GXeoJutE8IoHww&s",
   },
   {
-    code: "VAR02",
-    cropName: "Sầu riêng",
-    seedName: "Sầu riêng Monthong",
+    code: "DN002",
+    cropName: "Đậu nành",
+    seedName: "Đậu nành HL01",
     description:
-      "Giống Thái Lan, múi to, cơm dày, mùi nhẹ, dễ trồng và bảo quản.",
-    image:
-      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQg8Ss-pG3fczRDZC-w8-99pc6AO4LfMZQuvg&s",
+      "Giống đậu nành cải tiến, chịu hạn và sâu bệnh tốt, thích hợp canh tác hữu cơ và luân canh với lúa hoặc bắp.",
+    image: "https://hikifood.com/wp-content/uploads/2020/10/11326-ĐAU-NANH.jpg",
   },
   {
-    code: "VAR03",
-    cropName: "Xoài",
-    seedName: "Xoài Cát Chu",
-    description: "Xoài ngọt đậm, đặc sản Cao Lãnh – Đồng Tháp.",
-    image:
-      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSuoV_tndgYNlaWSUYaE9RlbIYvYBmPBY0u_w&s",
-  },
-  {
-    code: "VAR04",
-    cropName: "Xoài",
-    seedName: "Xoài Tượng",
+    code: "DN003",
+    cropName: "Đậu nành",
+    seedName: "Đậu nành ĐX11",
     description:
-      "Xoài to trái, chắc thịt, phù hợp trồng đại trà ở vùng nhiệt đới.",
+      "Giống đậu nành cho năng suất cao, hạt sáng, cây thấp, thích hợp trồng ở vùng đất đỏ bazan và phù sa cao.",
     image:
-      "https://hoangphatfruit.com/vnt_upload/product/10_2022/xoai_tuong_1_1.jpg",
+      "https://i.ex-cdn.com/nongnghiepmoitruong.vn/files/f1/Image/2009/7/5/05072009145217.jpg",
   },
   {
-    code: "VAR05",
-    cropName: "Chuối",
-    seedName: "Chuối già Nam Mỹ",
-    description: "Chuối xuất khẩu, năng suất cao, chịu bệnh tốt.",
-    image:
-      "https://product.hstatic.net/200000668417/product/z5552895105691_b5fa2080b2859fa7895d436706ce354d_19d9a2f94dc94c01b1f84a29e10b7cdb.jpg",
-  },
-  {
-    code: "SD001",
-    cropName: "Lúa",
-    seedName: "OM5451",
-    description: "Giống lúa ngắn ngày, năng suất cao, chịu mặn và hạn tốt.",
-    image:
-      "https://hoinongdankhanhhoa.org.vn/media/news/tin-tuc-su-kien/2018/9/28-9/luaOM5451.jpg",
-  },
-  {
-    code: "SD002",
-    cropName: "Ngô",
-    seedName: "LVN10",
-    description: "Giống ngô lai, phát triển mạnh, thích hợp khí hậu ôn hòa.",
-    image:
-      "https://storage.ssc.com.vn/Data/2021/05/18/lvn10-3-637569497051796680.jpg?w=620&h=350",
-  },
-  {
-    code: "SD003",
-    cropName: "Khoai lang",
-    seedName: "KL01",
+    code: "DN004",
+    cropName: "Đậu nành",
+    seedName: "Đậu nành HL02",
     description:
-      "Giống khoai lang ruột vàng, vị ngọt, thời gian sinh trưởng 4 tháng.",
+      "Giống đậu nành mới có khả năng chịu úng nhẹ, sinh trưởng mạnh, phù hợp cho vùng ĐBSCL và Đông Nam Bộ.",
     image:
-      "https://bizweb.dktcdn.net/100/421/709/products/khoai-lang-3.jpg?v=1697035245340",
+      "https://file.hstatic.net/1000034685/file/dau-nanh-do-tuong-gia-si_0be915c343df452787241ff3f65904ef.jpg",
+  },
+
+  // ======== BẮP (NGÔ) ========
+  {
+    code: "BP001",
+    cropName: "Bắp (Ngô)",
+    seedName: "Bắp LVN10",
+    description:
+      "Giống bắp lai F1 nổi tiếng, năng suất cao, thời gian sinh trưởng ngắn, thích hợp với hầu hết vùng khí hậu Việt Nam.",
+    image:
+      "https://product.hstatic.net/200000563169/product/lvn10_b2491c53014949379e9e70e735a92544_master.jpg",
+  },
+  {
+    code: "BP002",
+    cropName: "Bắp (Ngô)",
+    seedName: "Bắp nếp HN68",
+    description:
+      "Giống bắp nếp dẻo, thơm, hạt trắng sữa, phù hợp cho canh tác thương phẩm và chế biến thực phẩm tươi.",
+    image:
+      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRwmUQWrm6Rd5AAS4uzd-p02hKBomylOkpiUw&s",
+  },
+  {
+    code: "BP003",
+    cropName: "Bắp (Ngô)",
+    seedName: "Bắp vàng VN886",
+    description:
+      "Giống bắp vàng năng suất cao, chịu hạn tốt, phù hợp trồng ở vùng đất đỏ và phù sa trung bình.",
+    image:
+      "https://product.hstatic.net/200000475537/product/bap_vang_1_438727adac414fb887b15a3a82db1415_f08201f8be0f4e97ad524cddb19042fb_1024x1024.png",
+  },
+  {
+    code: "BP004",
+    cropName: "Bắp (Ngô)",
+    seedName: "Bắp lai DK9955",
+    description:
+      "Giống bắp lai cao sản của Dekalb, chịu sâu bệnh tốt, bắp dài, hạt vàng đậm, thích hợp cơ giới hóa thu hoạch.",
+    image:
+      "https://t.ex-cdn.com/nongnghiepmoitruong.vn/560w/files/f1/Image/2014/2/16/15-08-07-dscn1629152652894.jpg",
+  },
+  {
+    code: "BP005",
+    cropName: "Bắp (Ngô)",
+    seedName: "Bắp nếp trắng 999",
+    description:
+      "Giống bắp nếp trắng cao cấp, hạt trắng ngà, dẻo và thơm, phù hợp canh tác ngắn ngày vùng đồng bằng.",
+    image:
+      "https://storage.ssc.com.vn/Data/2024/11/01/diamond999-4-638660646992924648.jpg?w=620&h=350",
+  },
+  {
+    code: "BP006",
+    cropName: "Bắp (Ngô)",
+    seedName: "Bắp nếp tím HN33",
+    description:
+      "Giống bắp nếp tím lạ mắt, hạt dẻo ngọt, giàu anthocyanin, được trồng nhiều ở miền Tây và vùng cao.",
+    image:
+      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQkXjX4HV_DebL-YvX8OhdWdGQRAZNT4ZK1Dw&s",
   },
 ];
 export interface CropOption {
@@ -147,83 +170,84 @@ export interface CropOption {
 }
 export const cropOptions: CropOption[] = [
   {
-    code: "TREE001",
-    name: "Sầu riêng",
-    seed: "Sầu riêng Ri6",
+    code: "SOY001",
+    name: "Đậu nành",
+    seed: "Đậu nành DT84",
+    harvestMethod: "Thu hoạch hạt",
+    growthCycle: "Chu kỳ ngắn (85–110 ngày)",
+    note: "Ưa đất tơi xốp, pH 5.5–6.5, thoát nước tốt",
+    image:
+      "https://lh6.googleusercontent.com/proxy/MkmLTr7RaC47H6aLuMX0yGGlXhtKf77bRQ0sEwVhPiHI01aj7WPJYpuBWIbN422tMgVbH5Z67gqzUj9h-LmQpjem8pVrKg",
+  },
+  {
+    code: "SOY002",
+    name: "Đậu nành",
+    seed: "Đậu nành ĐX11",
+    harvestMethod: "Thu hoạch hạt bằng máy hoặc tay",
+    growthCycle: "Chu kỳ trung bình (90–100 ngày)",
+    note: "Thích hợp vùng Đông Nam Bộ, cần đủ ẩm khi ra hoa",
+    image:
+      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTxNvmzOr65QezHLAx9jp82a_wLJNjCzSuexA&s",
+  },
+  {
+    code: "CORN001",
+    name: "Bắp",
+    seed: "Bắp LVN10",
+    harvestMethod: "Thu hoạch bắp khô",
+    growthCycle: "Chu kỳ trung bình (95–120 ngày)",
+    note: "Ưa sáng, cần đất tơi xốp và nhiều dinh dưỡng",
+    image:
+      "https://storage.ssc.com.vn/Data/2021/05/18/lvn10-3-637569497051796680.jpg?w=620&h=350",
+  },
+  {
+    code: "CORN002",
+    name: "Bắp",
+    seed: "Bắp NK66",
+    harvestMethod: "Thu hoạch bắp tươi hoặc khô",
+    growthCycle: "Chu kỳ trung bình (100–115 ngày)",
+    note: "Phù hợp vùng Duyên hải Nam Trung Bộ, năng suất cao",
+    image: "https://static.tuoitre.vn/tto/i/s626/2015/03/24/AgwPWLuq.jpg",
+  },
+  {
+    code: "SOY003",
+    name: "Đậu nành",
+    seed: "Đậu nành HL07-12",
+    harvestMethod: "Thu hoạch theo lứa",
+    growthCycle: "Chu kỳ trung bình (95 ngày)",
+    note: "Chống đổ tốt, thích hợp vụ Đông Xuân",
+    image: "https://camnangcaytrong.com/Uploads/News/cay-dau-tuong-av.jpg",
+  },
+  {
+    code: "CORN003",
+    name: "Bắp",
+    seed: "Bắp HN88",
     harvestMethod: "Thu hoạch thủ công",
-    growthCycle: "Chu kỳ dài (5-7 năm)",
-    note: "Yêu cầu đất thịt và thoát nước tốt",
+    growthCycle: "Chu kỳ ngắn (90–100 ngày)",
+    note: "Giống lai F1, chịu hạn, phù hợp đất đỏ bazan",
     image:
-      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSKDJVMzZZFE3P3yLWKzhe0zz66QGfkD_q1VQ&s",
+      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQdJVGm-sJJtIaAWAKr9iSf1cR2w7C-iJZqUw&s",
   },
   {
-    code: "TREE002",
-    name: "Xoài",
-    seed: "Xoài cát",
-    harvestMethod: "Thu hoạch bằng sào",
-    growthCycle: "Chu kỳ trung bình (3-5 năm)",
-    image:
-      "https://pyloagri.com/wp-content/uploads/2021/10/xoai-cat-hoa-loc-3.jpg",
+    code: "SOY004",
+    name: "Đậu nành",
+    seed: "Đậu nành HL89",
+    harvestMethod: "Thu hoạch máy liên hợp",
+    growthCycle: "Chu kỳ trung bình (100–105 ngày)",
+    note: "Năng suất cao, chống chịu sâu bệnh tốt",
+    image: "https://harc-ias.vn/upload/products/Kha_nang_dau_trai_2.jpg",
   },
   {
-    code: "TREE003",
-    name: "Chuối",
-    seed: "Chuối xiêm",
-    harvestMethod: "Thu hoạch cuống",
-    growthCycle: "Chu kỳ ngắn (9-12 tháng)",
+    code: "CORN004",
+    name: "Bắp",
+    seed: "Bắp GS9",
+    harvestMethod: "Thu hoạch cơ giới",
+    growthCycle: "Chu kỳ dài (110–125 ngày)",
+    note: "Thích hợp cho vùng Tây Nguyên, năng suất ổn định",
     image:
-      "https://cdn.nhathuoclongchau.com.vn/unsafe/800x0/https://cms-prod.s3-sgn09.fptcloud.com/chuoi_xiem_co_tac_dung_gi_voi_suc_khoe_va_lam_dep_1_38e5fddc82.jpg",
-  },
-  {
-    code: "CR001",
-    name: "Lúa",
-    seed: "OM5451",
-    harvestMethod: "Gặt bằng máy",
-    growthCycle: "90 ngày",
-    note: "Chịu hạn tốt, năng suất cao",
-    image:
-      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTiuizNChlPfX34c3XWnxQUGtgqDWTChUshMg&s",
-  },
-  {
-    code: "CR002",
-    name: "Ngô",
-    seed: "LVN10",
-    harvestMethod: "Thu thủ công",
-    growthCycle: "100 ngày",
-    note: "Phù hợp vùng trung du",
-    image: "https://sinhhocchaua.com/wp-content/uploads/2024/08/bap-nep.jpg",
-  },
-  {
-    code: "CR003",
-    name: "Khoai lang",
-    seed: "KL01",
-    harvestMethod: "Đào tay",
-    growthCycle: "120 ngày",
-    note: "Đất cát pha là tốt nhất",
-    image:
-      "https://media-cdn-v2.laodong.vn/storage/newsportal/2023/9/3/1237041/Khoai-Lang.JPG?w=800&h=496&crop=auto&scale=both",
-  },
-  {
-    code: "CR004",
-    name: "Cà chua",
-    seed: "CT888",
-    harvestMethod: "Hái từng trái",
-    growthCycle: "75 ngày",
-    note: "Cần chăm sóc kỹ sâu bệnh",
-    image:
-      "https://cdnphoto.dantri.com.vn/VNkA3P1sbkHX9Ydf4foCcgFGuow=/thumb_w/1020/2022/07/04/172020103452pm-1656913209719.jpeg",
-  },
-  {
-    code: "CR005",
-    name: "Dưa hấu",
-    seed: "DH999",
-    harvestMethod: "Hái bằng tay",
-    growthCycle: "85 ngày",
-    note: "Trồng vào mùa khô, tưới đủ nước",
-    image:
-      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRX8sq-Snfk44ptgfu4E7Pkf4vGfBOg56YMPg&s",
+      "https://t.ex-cdn.com/nongnghiepmoitruong.vn/560w/files/f1/2016/5/19/09-52-33_giong-lu-li-gs9-cho-nng-sut-co-tren-nen-dt-nuoi-tom-o-dbscl-du-gp-thoi-tiet-khc-nghiet-l-hn-v-xm-nhp-mn-1.jpg",
   },
 ];
+
 export const areaOptions: AreaOption[] = [
   {
     code: "KV-BAC",

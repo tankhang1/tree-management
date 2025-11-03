@@ -24,7 +24,7 @@ type CropType = {
   name: string; // Tên loại cây
   note: string;
 };
-const cropTypes: CropType[] = [
+export const cropTypes: CropType[] = [
   {
     id: "rice",
     name: "Lúa",
@@ -32,8 +32,13 @@ const cropTypes: CropType[] = [
   },
   {
     id: "corn",
-    name: "Ngô",
-    note: "Cây trồng thay thế lúa, phù hợp với nhiều loại đất và khí hậu.",
+    name: "Bắp (Ngô)",
+    note: "Cây lương thực phổ biến, dễ trồng, thích hợp khí hậu ấm, năng suất cao.",
+  },
+  {
+    id: "soybean",
+    name: "Đậu nành",
+    note: "Cây họ đậu ngắn ngày, giàu đạm, giúp cải tạo đất và phù hợp nhiều vùng khí hậu.",
   },
   {
     id: "cassava",

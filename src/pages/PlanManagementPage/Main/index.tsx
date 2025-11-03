@@ -50,20 +50,53 @@ type SeasonPlan = {
 const seasonPlans: SeasonPlan[] = [
   {
     id: "SP001",
-    name: "Kế hoạch trồng lúa",
+    name: "Kế hoạch trồng đậu nành vụ Xuân 2025",
     seasonName: "Mùa vụ Xuân 2025",
     seasonId: "MSV-2025",
-    duration: 40,
-    zoneName: "Vùng A",
-    areaName: "Khu vực A1",
-    plotName: "Lô A1-L1",
-    rowName: "Hàng A1-L1-H1",
+    duration: 100,
+    zoneName: "Vùng Đậu Nành A",
+    areaName: "Khu vực DN-A1",
+    plotName: "Lô DN-A1-L1",
+    rowName: "Hàng DN-A1-L1-H1",
+    growthStageName: "Sinh trưởng sinh dưỡng",
+    materialEstimate: "Phân NPK: 60kg, Vôi bột: 15kg, Hạt giống DT84: 20kg",
+    equipmentEstimate: "Máy gieo hạt, máy xới nhỏ, bình tưới phun sương",
+    pesticideEstimate:
+      "Thuốc trừ sâu Abamectin 1.8EC: 20ml, Thuốc rỉ sắt Tilt Super: 25ml",
+  },
+  {
+    id: "SP002",
+    name: "Kế hoạch chăm sóc đậu nành giữa vụ",
+    seasonName: "Mùa vụ Xuân 2025",
+    seasonId: "MSV-2025",
+    duration: 30,
+    zoneName: "Vùng Đậu Nành A",
+    areaName: "Khu vực DN-A2",
+    plotName: "Lô DN-A2-L1",
+    rowName: "Hàng DN-A2-L1-H1",
     growthStageName: "Ra hoa",
-    materialEstimate: "Phân NPK: 50kg, Vôi bột: 10kg",
-    equipmentEstimate: "Máy xịt, bình tưới",
-    pesticideEstimate: "Confidor 10ml, Radiant 15ml",
+    materialEstimate: "Phân Kali: 20kg, Phân Lân: 15kg",
+    equipmentEstimate: "Máy phun phân bón lá, bình phun thuốc",
+    pesticideEstimate:
+      "Thuốc trừ sâu sinh học Neem 10ml, Thuốc nấm Mancozeb 80WP: 10g",
+  },
+  {
+    id: "SP003",
+    name: "Kế hoạch thu hoạch đậu nành",
+    seasonName: "Mùa vụ Xuân 2025",
+    seasonId: "MSV-2025",
+    duration: 15,
+    zoneName: "Vùng Đậu Nành A",
+    areaName: "Khu vực DN-A3",
+    plotName: "Lô DN-A3-L2",
+    rowName: "Hàng DN-A3-L2-H2",
+    growthStageName: "Chín và thu hoạch",
+    materialEstimate: "Bao đựng 50 cái, dây buộc 5 cuộn",
+    equipmentEstimate: "Máy gặt mini, xe kéo nhỏ",
+    pesticideEstimate: "Không sử dụng thuốc BVTV trong giai đoạn này",
   },
 ];
+
 const PlanManagementMainPage = () => {
   const navigate = useNavigate();
   const [keyword, setKeyword] = useState("");
@@ -174,7 +207,7 @@ const PlanManagementMainPage = () => {
           <TextInput
             radius={4}
             label="Khung tìm kiếm"
-            description="Ví dụ: Kế hoạch trồng lúa, vùng A,..."
+            description="Ví dụ: Kế hoạch trồng cây đậu nành, vùng A,..."
             placeholder="Nhập thông tin"
             leftSection={<IconSearch size={16} />}
             value={keyword}
