@@ -24,6 +24,7 @@ import {
   IconSettings,
   IconCashRegister,
   IconCertificate,
+  IconShieldHeart,
 } from "@tabler/icons-react";
 import { PATH } from "./path.constants";
 
@@ -156,7 +157,11 @@ export const NAV_BAR = [
       { label: "Tài liệu kỹ thuật", link: PATH.PLANT_TECHNICAL_DOC },
     ],
   },
-
+  {
+    label: "Phác đồ điều trị",
+    icon: IconShieldHeart,
+    link: PATH.TREATMENT_REGIMEN_MANAGEMENT,
+  },
   {
     label: "Báo cáo thu hoạch",
     icon: IconReportAnalytics,

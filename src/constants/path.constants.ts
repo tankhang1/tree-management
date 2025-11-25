@@ -88,6 +88,10 @@ export const PATH = {
   PLANT_TECHNICAL_DOC_DETAIL: "/plant-management/technical-doc/detail",
   PLANT_ADD_TECHNICAL_DOC: "/plant-management/technical-doc/add",
 
+  // Treatment regimen management
+  TREATMENT_REGIMEN_MANAGEMENT: "/treatment-regimen-management",
+  TREATMENT_REGIMEN_MANAGEMENT_ADD: "/treatment-regimen-management/add",
+
   // Season Management
   SEASON_MANAGEMENT: "/season-management",
   SEASON_GROWTH: "/season-management/growth",

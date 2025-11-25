@@ -671,6 +671,13 @@ const CashFlowReportPage = L(() => import("./pages/CashFlowReportPage"));
 const ProductionReportPage = L(() => import("./pages/ProductionReportPage"));
 
 const ProfilePage = L(() => import("./pages/ProfilePage"));
+
+const TreatmentRegimenManagementPage = L(
+  () => import("./pages/TreatmentRegimenManagementPage")
+);
+const AddTreatmentRegimenManagementPage = L(
+  () => import("./pages/TreatmentRegimenManagementPage/Add")
+);
 // Map/Season/Plan History aliases (trong code gốc đều dùng AreaManagementHistoryPage)
 const MapHistoryPage = AreaManagementHistoryPage;
 const SeasonHistoryPage = AreaManagementHistoryPage;
@@ -1039,7 +1046,18 @@ const ROUTES = [
     path={PATH.PLANT_ADD_TECHNICAL_DOC}
     element={withSuspense(<PlantManagementTechnicalDocAddPage />)}
   />,
+  // Treatment Regimen Management
+  <Route
+    key="treatment-regimen-management"
+    path={PATH.TREATMENT_REGIMEN_MANAGEMENT}
+    element={withSuspense(<TreatmentRegimenManagementPage />)}
+  />,
 
+  <Route
+    key="treatment-regimen-management_add"
+    path={PATH.TREATMENT_REGIMEN_MANAGEMENT_ADD}
+    element={withSuspense(<AddTreatmentRegimenManagementPage />)}
+  />,
   // Season Management
   <Route
     key="season_mgmt"

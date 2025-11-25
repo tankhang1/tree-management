@@ -503,6 +503,7 @@ const HarvestReportPage = () => {
               type="range"
               label="Khoảng thời gian"
               value={range}
+              //@ts-expect-error no check
               onChange={setRange}
               locale="vi"
               leftSection={<IconCalendarStats size={16} />}
