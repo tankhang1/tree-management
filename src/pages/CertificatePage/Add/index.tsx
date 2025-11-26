@@ -272,7 +272,7 @@ export default function CertificateAddPageGroup() {
             />
           </Stack>
         </Card>
-        <Group grow gap={"md"} align="flex-start">
+        {/* <Group grow gap={"md"} align="flex-start">
           <Card withBorder radius={4} shadow="sm">
             <Stack gap={"xs"}>
               <Title order={4}>Cây trồng</Title>
@@ -390,7 +390,7 @@ export default function CertificateAddPageGroup() {
               </Scrollable>
             </Stack>
           </Card>
-        </Group>
+        </Group> */}
         <Group justify="flex-end" mt="md">
           <Button radius={4}>Hoàn thành</Button>
         </Group>
