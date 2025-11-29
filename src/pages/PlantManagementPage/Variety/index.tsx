@@ -26,139 +26,132 @@ import {
 import type { MRT_ColumnDef } from "mantine-react-table";
 import Table from "../../../components/Table";
 import { useDisclosure } from "@mantine/hooks";
-import AddVarietyForm from "./components/AddVarietyForm";
 import { Link } from "react-router-dom";
-import VarietyDetailModal from "./components/VarietyDetailModal";
+import { useState, useMemo } from "react";
+import { notifications } from "@mantine/notifications";
 
-type CropVariety = {
-  id: string;
-  name: string;
-  description: string;
-  treeName: string;
-  imgUrl: string;
-  doc: string;
-};
-const cropVarieties: CropVariety[] = [
-  {
-    id: "VAR01",
-    name: "Đậu nành DT84",
-    description:
-      "Giống đậu nành DT84 sinh trưởng 90–100 ngày, chịu hạn tốt, hạt vàng sáng, năng suất cao.",
-    treeName: "Đậu nành",
-    imgUrl:
-      "https://lh6.googleusercontent.com/proxy/MkmLTr7RaC47H6aLuMX0yGGlXhtKf77bRQ0sEwVhPiHI01aj7WPJYpuBWIbN422tMgVbH5Z67gqzUj9h-LmQpjem8pVrKg",
-    doc: "https://vaas.vn/giong-dau-nanh-dt84",
-  },
-  {
-    id: "VAR02",
-    name: "Đậu nành ĐX11",
-    description:
-      "Giống đậu nành ĐX11 cho năng suất ổn định, thời gian sinh trưởng 95 ngày, hạt to và chất lượng cao.",
-    treeName: "Đậu nành",
-    imgUrl:
-      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTxNvmzOr65QezHLAx9jp82a_wLJNjCzSuexA&s",
-    doc: "https://nongnghiep.vn/giong-dau-nanh-dx11",
-  },
-  {
-    id: "VAR03",
-    name: "Bắp LVN10",
-    description:
-      "Giống bắp lai LVN10 sinh trưởng khỏe, kháng sâu bệnh tốt, năng suất cao, thời gian sinh trưởng 100–115 ngày.",
-    treeName: "Bắp",
-    imgUrl:
-      "https://storage.ssc.com.vn/Data/2021/05/18/lvn10-3-637569497051796680.jpg?w=620&h=350",
-    doc: "https://vaas.vn/giong-bap-lvn10",
-  },
-  {
-    id: "VAR04",
-    name: "Bắp NK66",
-    description:
-      "Giống bắp NK66 lai đơn, chịu hạn tốt, thích hợp vùng Đông Nam Bộ và Tây Nguyên.",
-    treeName: "Bắp",
-    imgUrl: "https://static.tuoitre.vn/tto/i/s626/2015/03/24/AgwPWLuq.jpg",
-    doc: "https://nongnghiep.vn/giong-bap-nk66",
-  },
-  {
-    id: "VAR05",
-    name: "Bắp nếp HN68",
-    description:
-      "Giống bắp nếp HN68 cho hạt dẻo thơm, hạt trắng sữa, thời gian sinh trưởng khoảng 95 ngày.",
-    treeName: "Bắp",
-    imgUrl:
-      "https://storage.vinaseed.com.vn/Data/2020/03/10/2-ngo-hn68-637194768462517218.jpg?w=620&h=350",
-    doc: "https://vaas.vn/giong-bap-nep-hn68",
-  },
-];
+import AddVarietyForm from "./components/AddVarietyForm";
+import VarietyDetailModal from "./components/VarietyDetailModal";
+import { useVarietyStore, type Variety } from "../../zustand/varietyStore";
 
 const PlantManagementVarietyPage = () => {
-  const [
-    openedVarietyForm,
-    { open: openVarietyForm, close: closeVarietyForm },
-  ] = useDisclosure(false);
-  const [
-    openedVarietyDetailForm,
-    { open: openVarietyDetailForm, close: closeVarietyDetailForm },
-  ] = useDisclosure(false);
-  const cropVarietyColumns: MRT_ColumnDef<CropVariety>[] = [
+  // 1. STORE & STATE
+  const { varieties, deleteVariety } = useVarietyStore();
+
+  // Modal states
+  const [openedForm, { open: openForm, close: closeForm }] =
+    useDisclosure(false);
+  const [openedDetail, { open: openDetail, close: closeDetail }] =
+    useDisclosure(false);
+  const [openedDelete, { open: openDelete, close: closeDelete }] =
+    useDisclosure(false);
+
+  // Selection states
+  const [selectedId, setSelectedId] = useState<string | null>(null);
+
+  // Filter states
+  const [keyword, setKeyword] = useState("");
+  const [selectedTrees, setSelectedTrees] = useState<string[]>([]);
+
+  // 2. LOGIC FILTER
+  const filteredRows = useMemo(() => {
+    return varieties.filter((v) => {
+      const matchKeyword =
+        !keyword ||
+        v.name.toLowerCase().includes(keyword.toLowerCase()) ||
+        v.id.toLowerCase().includes(keyword.toLowerCase());
+
+      const matchTree =
+        !selectedTrees.length || selectedTrees.includes(v.treeName);
+
+      return matchKeyword && matchTree;
+    });
+  }, [varieties, keyword, selectedTrees]);
+
+  // 3. HANDLERS
+  const handleCreate = () => {
+    setSelectedId(null); // Reset ID để form hiểu là thêm mới
+    openForm();
+  };
+
+  const handleEdit = (id: string) => {
+    setSelectedId(id);
+    openForm();
+  };
+
+  const handleView = (id: string) => {
+    setSelectedId(id);
+    openDetail();
+  };
+
+  const confirmDelete = (id: string) => {
+    setSelectedId(id);
+    openDelete();
+  };
+
+  const handleDelete = () => {
+    if (selectedId) {
+      deleteVariety(selectedId);
+      notifications.show({ title: "Đã xóa", color: "green", message: "" });
+      closeDelete();
+      setSelectedId(null);
+    }
+  };
+
+  // 4. TABLE COLUMNS
+  const columns: MRT_ColumnDef<Variety>[] = [
     {
       accessorKey: "imgUrl",
       header: "Hình ảnh",
       size: 80,
-      Cell: ({ cell }) => {
-        const url = cell.getValue<string>();
-        return url ? (
-          <Image
-            src={url}
-            alt="Ảnh giống cây"
-            style={{
-              width: 48,
-              height: 48,
-              objectFit: "cover",
-              borderRadius: 4,
-            }}
-          />
-        ) : (
-          <Text size="xs" c="dimmed">
-            Không có ảnh
-          </Text>
-        );
-      },
+      Cell: ({ cell }) => (
+        <Image
+          src={cell.getValue<string>()}
+          alt="img"
+          h={48}
+          w={48}
+          radius={4}
+          fit="cover"
+          fallbackSrc="https://placehold.co/48x48?text=No+Image"
+        />
+      ),
     },
-    {
-      accessorKey: "treeName",
-      header: "Tên cây",
-    },
-    {
-      accessorKey: "id",
-      header: "Mã giống",
-    },
-    {
-      accessorKey: "name",
-      header: "Tên giống",
-    },
+    { accessorKey: "treeName", header: "Tên cây" },
+    { accessorKey: "id", header: "Mã giống" },
+    { accessorKey: "name", header: "Tên giống" },
     {
       accessorKey: "description",
       header: "Mô tả",
       size: 300,
       Cell: ({ cell }) => (
-        <Tooltip label={cell.getValue<string>()}>
-          <Text lineClamp={2}>{cell.getValue<string>()}</Text>
+        <Tooltip label={cell.getValue<string>()} multiline w={300}>
+          <Text lineClamp={2} size="sm">
+            {cell.getValue<string>()}
+          </Text>
         </Tooltip>
       ),
     },
     {
-      accessorKey: "doc",
+      accessorKey: "docType", // Dùng trường này để hiển thị trạng thái tài liệu
       header: "Tài liệu",
-      Cell: ({ cell }) => <Link to={"/"}>{cell.getValue<string>()}</Link>,
+      Cell: ({ row }) =>
+        row.original.docType === "file" ? (
+          <Text c="blue" td="underline" size="sm">
+            {row.original.docContent}
+          </Text>
+        ) : (
+          <Text c="dimmed" size="sm">
+            Xem chi tiết
+          </Text>
+        ),
     },
     {
       id: "actions",
       header: "Tuỳ chọn",
       enableColumnActions: false,
-      enableSorting: false,
-      size: 10,
-      Cell: () => (
-        <Menu shadow="md" position="bottom-end" withArrow>
+      size: 60,
+      Cell: ({ row }) => (
+        <Menu shadow="md" position="bottom-end">
           <Menu.Target>
             <ActionIcon variant="subtle" color="gray">
               <IconDotsVertical size={18} />
@@ -166,15 +159,22 @@ const PlantManagementVarietyPage = () => {
           </Menu.Target>
           <Menu.Dropdown>
             <Menu.Item
-              onClick={openVarietyDetailForm}
+              onClick={() => handleView(row.original.id)}
               leftSection={<IconEye size={18} color="gray" />}
             >
               Chi tiết
             </Menu.Item>
-            <Menu.Item leftSection={<IconEdit size={18} color="green" />}>
+            <Menu.Item
+              onClick={() => handleEdit(row.original.id)}
+              leftSection={<IconEdit size={18} color="green" />}
+            >
               Chỉnh sửa
             </Menu.Item>
-            <Menu.Item leftSection={<IconTrash size={18} />} color="red">
+            <Menu.Item
+              onClick={() => confirmDelete(row.original.id)}
+              leftSection={<IconTrash size={18} />}
+              color="red"
+            >
               Xoá
             </Menu.Item>
           </Menu.Dropdown>
@@ -182,6 +182,7 @@ const PlantManagementVarietyPage = () => {
       ),
     },
   ];
+
   return (
     <Stack gap="lg">
       <Group justify="space-between">
@@ -192,86 +193,106 @@ const PlantManagementVarietyPage = () => {
           <Button variant="outline" radius={4} leftSection={<IconFileExcel />}>
             Xuất File
           </Button>
-          <Button radius={4} onClick={openVarietyForm}>
+          <Button radius={4} onClick={handleCreate}>
             Thêm mới
           </Button>
         </Group>
       </Group>
+
       <Card withBorder shadow="sm" radius={4} p="md">
-        {/* Header */}
         <Group justify="space-between" align="center" mb="xs">
           <Stack gap={0}>
             <Title order={4}>Tìm kiếm giống cây</Title>
             <Text c="dimmed" size="sm">
-              Điền từ khóa hoặc chọn lọc loại cây, cây trồng
+              Điền từ khóa hoặc chọn lọc loại cây
             </Text>
           </Stack>
-
           <Group>
-            <Tooltip label="Xoá tất cả bộ lọc">
+            <Tooltip label="Làm mới">
               <Button
                 radius={4}
                 variant="default"
                 leftSection={<IconRefresh size={16} />}
-                onClick={() => {}}
+                onClick={() => {
+                  setKeyword("");
+                  setSelectedTrees([]);
+                }}
               >
                 Làm mới
               </Button>
             </Tooltip>
-            <Button radius={4} leftSection={<IconSearch size={16} />}>
-              Lọc thông tin
-            </Button>
           </Group>
         </Group>
 
-        {/* Form */}
-        <Stack gap="sm">
-          {/* Khung tìm kiếm (keyword) */}
+        <Group gap="sm">
           <TextInput
             radius={4}
             label="Khung tìm kiếm"
-            description="Ví dụ: Sầu riêng Ri6, Xoài Cát Chu"
-            placeholder="Nhập thông tin"
+            placeholder="Nhập tên giống, mã giống..."
             leftSection={<IconSearch size={16} />}
+            value={keyword}
+            flex={1}
+            onChange={(e) => setKeyword(e.currentTarget.value)}
           />
-
-          <SimpleGrid cols={{ base: 1, md: 2, lg: 3 }} spacing="sm">
-            <MultiSelect
-              radius={4}
-              label="Loại cây trồng"
-              description="Ví dụ: Hạt lai F1, Ghép cành"
-              placeholder="Chọn thông tin"
-              data={[
-                "Hạt lai F1",
-                "Ghép cành",
-                "Chồi cây",
-                "Hạt giống Robusta",
-                "Hạt giống Thái",
-              ]}
-            />
-            <MultiSelect
-              label="Cây trồng"
-              description="Ví dụ: Sầu riêng Ri6, Xoài Cát Chu"
-              placeholder="Chọn thông tin"
-              data={["Sầu riêng", "Xoài", "Bưởi", "Chôm chôm", "Măng cụt"]}
-              radius={4}
-            />
-          </SimpleGrid>
-        </Stack>
+          <MultiSelect
+            label="Cây trồng"
+            placeholder="Chọn cây trồng"
+            data={["Sầu riêng", "Xoài", "Bưởi", "Đậu nành", "Bắp"]}
+            radius={4}
+            value={selectedTrees}
+            onChange={setSelectedTrees}
+            searchable
+            clearable
+            flex={1}
+          />
+        </Group>
       </Card>
-      <Table columns={cropVarietyColumns} data={cropVarieties} />
-      <Modal
-        opened={openedVarietyForm}
-        onClose={closeVarietyForm}
-        size={"lg"}
-        title={<Text fw={500}>Tạo mới giống cây</Text>}
-      >
-        <AddVarietyForm />
-      </Modal>
-      <VarietyDetailModal
-        opened={openedVarietyDetailForm}
-        onClose={closeVarietyDetailForm}
+
+      <Table
+        //@ts-expect-error no check
+        columns={columns}
+        //@ts-expect-error no check
+        data={filteredRows}
       />
+
+      {/* Modal Thêm/Sửa */}
+      <Modal
+        opened={openedForm}
+        onClose={closeForm}
+        size="lg"
+        title={
+          <Text fw={500}>
+            {selectedId ? "Cập nhật giống cây" : "Tạo mới giống cây"}
+          </Text>
+        }
+      >
+        <AddVarietyForm editId={selectedId} onClose={closeForm} />
+      </Modal>
+
+      {/* Modal Chi tiết */}
+      <VarietyDetailModal
+        opened={openedDetail}
+        onClose={closeDetail}
+        viewId={selectedId}
+      />
+
+      {/* Modal Xóa */}
+      <Modal
+        opened={openedDelete}
+        onClose={closeDelete}
+        title="Xác nhận xóa"
+        centered
+      >
+        <Text>Bạn có chắc chắn muốn xóa giống cây này không?</Text>
+        <Group justify="flex-end" mt="lg">
+          <Button variant="default" onClick={closeDelete}>
+            Hủy
+          </Button>
+          <Button color="red" onClick={handleDelete}>
+            Xóa
+          </Button>
+        </Group>
+      </Modal>
     </Stack>
   );
 };

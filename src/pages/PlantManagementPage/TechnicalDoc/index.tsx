@@ -6,6 +6,9 @@ import {
   Menu,
   Stack,
   Title,
+  Modal,
+  Text,
+  Badge,
 } from "@mantine/core";
 import type { MRT_ColumnDef } from "mantine-react-table";
 import Table from "../../../components/Table";
@@ -15,88 +18,125 @@ import {
   IconEye,
   IconFileExcel,
   IconTrash,
+  IconPlus,
 } from "@tabler/icons-react";
 import { useNavigate } from "react-router-dom";
 import { PATH } from "../../../constants/path.constants";
+import { useDisclosure } from "@mantine/hooks";
+import { useState } from "react";
+import { notifications } from "@mantine/notifications";
 
-type TechnicalDoc = {
-  id: string;
-  imageUrl: string; // Hình ảnh minh hoạ
-  templateCode: string; // Mã mẫu cây (nếu có)
-  cultivationTechniques: string; // Kỹ thuật canh tác
-  standards: string; // Tiêu chuẩn chất lượng
-  pestSolutions: string; // Các loại sâu bệnh và giải pháp
-};
-const varietyDetails: TechnicalDoc[] = [
-  {
-    id: "VRI-001",
-    imageUrl: "https://img.freepik.com/free-vector/tree_1308-36471.jpg",
-    templateCode: "TMP-01",
-    cultivationTechniques: "Trồng theo mô hình VietGAP, bón phân hữu cơ",
-    standards: "VietGAP, GlobalGAP",
-    pestSolutions: "Rầy nâu - sử dụng thuốc sinh học; Thối rễ - xử lý vôi bột",
-  },
-  {
-    id: "VRI-002",
-    imageUrl: "https://img.freepik.com/free-vector/tree_1308-36471.jpg",
-    templateCode: "TMP-02",
-    cultivationTechniques: "Chăm sóc bằng phân chuồng hoai mục, tưới nhỏ giọt",
-    standards: "UTZ Certified",
-    pestSolutions:
-      "Sâu đục thân - cắt tỉa cành; Bệnh gỉ sắt - phun thuốc gốc đồng",
-  },
-];
+// IMPORT STORE MỚI
+import {
+  useTreeTechnicalDocStore,
+  type TechnicalDoc,
+} from "../../zustand/treeTechnicalDocStore";
+
 const PlantManagementTechnicalDocPage = () => {
   const navigate = useNavigate();
+  // SỬ DỤNG HOOK MỚI
+  const { docs, deleteDoc } = useTreeTechnicalDocStore();
 
-  const onTechnicalDocDetail = () => {
-    navigate(PATH.PLANT_TECHNICAL_DOC_DETAIL);
+  const [openedDelete, { open: openDelete, close: closeDelete }] =
+    useDisclosure(false);
+  const [selectedId, setSelectedId] = useState<string | null>(null);
+
+  const onAddDoc = () => navigate(PATH.PLANT_ADD_TECHNICAL_DOC);
+  const onDetailDoc = (id: string) =>
+    navigate(`${PATH.PLANT_TECHNICAL_DOC_DETAIL}/${id}`);
+
+  const confirmDelete = (id: string) => {
+    setSelectedId(id);
+    openDelete();
   };
 
-  const varietyDetailColumns: MRT_ColumnDef<TechnicalDoc>[] = [
+  const handleDelete = () => {
+    if (selectedId) {
+      deleteDoc(selectedId);
+      notifications.show({
+        title: "Đã xóa tài liệu",
+        color: "green",
+        message: "",
+      });
+      closeDelete();
+      setSelectedId(null);
+    }
+  };
+
+  const columns: MRT_ColumnDef<TechnicalDoc>[] = [
     {
       accessorKey: "imageUrl",
       header: "Hình ảnh",
+      size: 80,
       Cell: ({ row }) => (
         <Image
           src={row.original.imageUrl}
-          alt="Cây trồng"
-          width={60}
+          h={50}
+          w={50}
           radius="md"
+          fit="cover"
+          fallbackSrc="https://placehold.co/50x50?text=No+Img"
         />
       ),
-      size: 80,
     },
-    { accessorKey: "templateCode", header: "Mẫu cây" },
-    { accessorKey: "cultivationTechniques", header: "Kỹ thuật canh tác" },
-    { accessorKey: "standards", header: "Tiêu chuẩn, chất lượng" },
-    { accessorKey: "pestSolutions", header: "Sâu bệnh & Giải pháp" },
-
+    { accessorKey: "templateCode", header: "Mã mẫu", size: 100 },
+    {
+      accessorKey: "cropName",
+      header: "Cây trồng",
+      Cell: ({ row }) => (
+        <Stack gap={0}>
+          <Text fw={500} size="sm">
+            {row.original.cropName}
+          </Text>
+          <Text c="dimmed" size="xs">
+            {row.original.variety}
+          </Text>
+        </Stack>
+      ),
+    },
+    {
+      accessorKey: "seasonality",
+      header: "Mùa vụ",
+      Cell: ({ cell }) => (
+        <Group gap={4}>
+          {cell.getValue<string[]>()?.map((s) => (
+            <Badge key={s} size="xs" variant="light">
+              {s}
+            </Badge>
+          ))}
+        </Group>
+      ),
+    },
+    {
+      accessorKey: "lastUpdated",
+      header: "Cập nhật cuối",
+      Cell: ({ cell }) =>
+        new Date(cell.getValue<string>()).toLocaleDateString("vi-VN"),
+    },
     {
       accessorKey: "actions",
-      header: "Tuỳ chọn",
+      header: "Thao tác",
       enableColumnActions: false,
-      size: 10,
-      Cell: () => (
-        <Menu shadow="md">
+      size: 60,
+      Cell: ({ row }) => (
+        <Menu shadow="md" position="bottom-end">
           <Menu.Target>
-            <ActionIcon variant="transparent" c={"gray"}>
-              <IconDotsVertical />
+            <ActionIcon variant="subtle" color="gray">
+              <IconDotsVertical size={18} />
             </ActionIcon>
           </Menu.Target>
-
           <Menu.Dropdown>
             <Menu.Item
-              leftSection={<IconEye size={18} color="gray" />}
-              onClick={onTechnicalDocDetail}
+              onClick={() => onDetailDoc(row.original.id)}
+              leftSection={<IconEye size={18} color="blue" />}
             >
-              Chi tiết
+              Chi tiết / Sửa
             </Menu.Item>
-            <Menu.Item leftSection={<IconEdit size={18} color="green" />}>
-              Chỉnh sửa
-            </Menu.Item>
-            <Menu.Item leftSection={<IconTrash size={18} />} color="red">
-              Xoá
+            <Menu.Item
+              onClick={() => confirmDelete(row.original.id)}
+              leftSection={<IconTrash size={18} color="red" />}
+            >
+              Xóa
             </Menu.Item>
           </Menu.Dropdown>
         </Menu>
@@ -106,24 +146,47 @@ const PlantManagementTechnicalDocPage = () => {
 
   return (
     <Stack gap="lg">
-      <Group justify="space-between" px={"sm"}>
+      <Group justify="space-between">
         <Title flex={1} order={2}>
-          Quản lý tài liệu kĩ thuật
+          Quản lý tài liệu kỹ thuật
         </Title>
         <Group>
           <Button variant="outline" radius={4} leftSection={<IconFileExcel />}>
-            Xuất File
+            Xuất Excel
           </Button>
           <Button
             radius={4}
-            onClick={() => navigate(PATH.PLANT_ADD_TECHNICAL_DOC)}
+            onClick={onAddDoc}
+            leftSection={<IconPlus size={18} />}
           >
             Thêm mới
           </Button>
         </Group>
       </Group>
 
-      <Table columns={varietyDetailColumns} data={varietyDetails} />
+      <Table
+        //@ts-expect-error no check
+        columns={columns}
+        //@ts-expect-error no check
+        data={docs}
+      />
+
+      <Modal
+        opened={openedDelete}
+        onClose={closeDelete}
+        title="Xác nhận xóa"
+        centered
+      >
+        <Text>Bạn có chắc chắn muốn xóa tài liệu này không?</Text>
+        <Group justify="flex-end" mt="lg">
+          <Button variant="default" onClick={closeDelete}>
+            Hủy
+          </Button>
+          <Button color="red" onClick={handleDelete}>
+            Xóa ngay
+          </Button>
+        </Group>
+      </Modal>
     </Stack>
   );
 };

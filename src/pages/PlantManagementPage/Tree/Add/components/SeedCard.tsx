@@ -47,6 +47,7 @@ const SeedCard = ({
       withBorder
       padding="md"
       w={300}
+      h={420}
       style={{
         position: "relative",
         transition: "transform 0.2s ease",

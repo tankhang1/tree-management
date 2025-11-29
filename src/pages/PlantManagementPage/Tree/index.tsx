@@ -12,6 +12,7 @@ import {
   TextInput,
   Title,
   Tooltip,
+  Modal,
 } from "@mantine/core";
 import {
   IconDotsVertical,
@@ -29,135 +30,144 @@ import Table from "../../../components/Table";
 import type { MRT_ColumnDef } from "mantine-react-table";
 import { useNavigate } from "react-router-dom";
 import { PATH } from "../../../constants/path.constants";
-export type TreeCrop = {
-  id: string;
-  name: string;
-  seedType: string; // chọn II.2
-  harvestMethod: string; // chọn II.5
-  growthCycle: string; // chọn II.4
-  note?: string;
-  imgUrl?: string;
-};
-export const treeCropData: TreeCrop[] = [
-  {
-    id: "TREE001",
-    name: "Đậu nành",
-    seedType: "Hạt giống DT84",
-    harvestMethod: "Thu hoạch bằng máy gặt liên hợp",
-    growthCycle: "Chu kỳ ngắn (85–110 ngày)",
-    note: "Ưa đất tơi xốp, pH 5.5–6.5; tránh ngập úng.",
-    imgUrl:
-      "https://lh6.googleusercontent.com/proxy/MkmLTr7RaC47H6aLuMX0yGGlXhtKf77bRQ0sEwVhPiHI01aj7WPJYpuBWIbN422tMgVbH5Z67gqzUj9h-LmQpjem8pVrKg",
-  },
-  {
-    id: "TREE002",
-    name: "Bắp",
-    seedType: "Hạt lai F1 LVN10",
-    harvestMethod: "Thu hoạch bằng tay hoặc máy tuốt bắp",
-    growthCycle: "Chu kỳ trung bình (95–120 ngày)",
-    note: "Ưa sáng, cần nhiều dinh dưỡng giai đoạn sinh trưởng.",
-    imgUrl:
-      "https://storage.vinaseed.com.vn/Data/2020/02/14/ngo-lai-don-lvn10-700-3-637172784104183900.jpg?w=620&h=350",
-  },
-  {
-    id: "TREE003",
-    name: "Đậu phộng",
-    seedType: "Giống LDH01",
-    harvestMethod: "Nhổ tay, phơi khô",
-    growthCycle: "Chu kỳ ngắn (90–100 ngày)",
-    note: "Phù hợp đất cát pha, tưới đủ ẩm trong giai đoạn tạo củ.",
-    imgUrl:
-      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTxv9jM0OAuz5DBK8pwHMinlOObu6ND6f52JQ&s",
-  },
-  {
-    id: "TREE004",
-    name: "Lạc đỏ",
-    seedType: "Hạt giống địa phương",
-    harvestMethod: "Thu hoạch thủ công",
-    growthCycle: "Chu kỳ ngắn (95 ngày)",
-    note: "Trồng xen canh tăng độ phì cho đất.",
-    imgUrl:
-      "https://vn-test-11.slatic.net/p/83d571a8224ce1eb268b1ff6bdf57e4a.jpg",
-  },
-  {
-    id: "TREE005",
-    name: "Đậu xanh",
-    seedType: "Giống HL89",
-    harvestMethod: "Thu hoạch bằng tay",
-    growthCycle: "Chu kỳ ngắn (70–80 ngày)",
-    note: "Thích hợp trồng vụ hè thu, chịu hạn tốt.",
-    imgUrl: "https://harc-ias.vn/upload/products/Kha_nang_dau_trai_2.jpg",
-  },
+import { useTreeStore, type Tree } from "../../zustand/treeStore"; // Import đúng Type Tree
+import { useState, useMemo } from "react";
+import { useDisclosure } from "@mantine/hooks";
+import { notifications } from "@mantine/notifications";
+
+// Dữ liệu options cho bộ lọc (Có thể lấy từ store khác nếu cần)
+const HARVEST_METHODS = [
+  "Thu hoạch thủ công (Hái tay)",
+  "Thu hoạch cơ giới (Máy gặt)",
+  "Thu hoạch bán cơ giới",
 ];
+const GROWTH_CYCLES = ["Ngắn hạn", "Trung hạn", "Dài hạn"];
 
 const PlantManagementTreePage = () => {
   const navigate = useNavigate();
-  const onAddTree = () => {
-    navigate(PATH.PLANT_ADD_TREE);
+
+  // 1. KẾT NỐI STORE
+  const { trees, deleteTree } = useTreeStore();
+
+  // 2. STATE CHO FILTER
+  const [keyword, setKeyword] = useState("");
+  const [selectedTypes, setSelectedTypes] = useState<string[]>([]);
+  const [selectedMethods, setSelectedMethods] = useState<string[]>([]);
+
+  // State cho Modal Xóa
+  const [openedDelete, { open: openDelete, close: closeDelete }] =
+    useDisclosure(false);
+  const [selectedId, setSelectedId] = useState<string | null>(null);
+
+  // 3. NAVIGATION
+  const onAddTree = () => navigate(PATH.PLANT_ADD_TREE);
+  const onEditTree = (id: string) => navigate(`${PATH.PLANT_ADD_TREE}/${id}`); // Dùng chung trang Add để Edit
+  const onTreeDetail = (id: string) =>
+    navigate(`${PATH.PLANT_TREE_DETAIL}/${id}`); // Trang chi tiết (nếu có)
+
+  // 4. LOGIC DELETE
+  const confirmDelete = (id: string) => {
+    setSelectedId(id);
+    openDelete();
   };
-  const onTreeDetail = () => {
-    navigate(PATH.PLANT_TREE_DETAIL);
+
+  const handleDelete = () => {
+    if (selectedId) {
+      deleteTree(selectedId);
+      notifications.show({
+        title: "Đã xóa cây trồng",
+        color: "green",
+        message: "",
+      });
+      closeDelete();
+      setSelectedId(null);
+    }
   };
-  const treeCropColumns: MRT_ColumnDef<TreeCrop>[] = [
-    { accessorKey: "id", header: "Mã cây" },
+
+  const handleResetFilters = () => {
+    setKeyword("");
+    setSelectedTypes([]);
+    setSelectedMethods([]);
+  };
+
+  // 5. LOGIC FILTER (Lọc dữ liệu)
+  const filteredData = useMemo(() => {
+    return trees.filter((tree) => {
+      // Lọc theo từ khóa (Mã hoặc Tên)
+      const matchKeyword =
+        !keyword ||
+        tree.name.toLowerCase().includes(keyword.toLowerCase()) ||
+        tree.id.toLowerCase().includes(keyword.toLowerCase());
+
+      // Lọc theo Loại cây
+      const matchType =
+        !selectedTypes.length || selectedTypes.includes(tree.type);
+
+      // Lọc theo Phương pháp thu hoạch
+      const matchMethod =
+        !selectedMethods.length || selectedMethods.includes(tree.harvestMethod);
+
+      return matchKeyword && matchType && matchMethod;
+    });
+  }, [trees, keyword, selectedTypes, selectedMethods]);
+
+  // 6. CẤU HÌNH CỘT BẢNG
+  const columns: MRT_ColumnDef<Tree>[] = [
+    {
+      accessorKey: "id",
+      header: "Mã cây",
+      size: 100,
+      Cell: ({ cell }) => <Text fw={500}>{cell.getValue<string>()}</Text>,
+    },
     {
       accessorKey: "imgUrl",
       header: "Hình ảnh",
       size: 80,
-      Cell: ({ cell }) => {
-        const url = cell.getValue<string>();
-        return url ? (
-          <Image
-            src={url}
-            alt="Ảnh giống cây"
-            style={{
-              width: 48,
-              height: 48,
-              objectFit: "cover",
-              borderRadius: 4,
-            }}
-          />
-        ) : (
-          <Text size="xs" c="dimmed">
-            Không có ảnh
-          </Text>
-        );
-      },
+      Cell: ({ cell }) => (
+        <Image
+          src={cell.getValue<string>()}
+          h={40}
+          w={40}
+          radius={4}
+          fit="cover"
+          fallbackSrc="https://placehold.co/40x40?text=No+Image"
+        />
+      ),
     },
-    { accessorKey: "name", header: "Tên cây" },
-    { accessorKey: "seedType", header: "Hạt giống" },
-    { accessorKey: "harvestMethod", header: "Hình thức thu hoạch" },
-    { accessorKey: "growthCycle", header: "Chu kỳ sinh trưởng" },
+    { accessorKey: "name", header: "Tên cây", size: 150 },
+    { accessorKey: "type", header: "Loại cây" },
+    { accessorKey: "group", header: "Nhóm cây" },
+    { accessorKey: "harvestMethod", header: "Thu hoạch" },
     {
-      accessorKey: "note",
-      header: "Ghi chú",
-      Cell: ({ row }) => row.original.note || "—",
-    },
-    {
-      accessorKey: "actions",
+      id: "actions",
       header: "Tuỳ chọn",
       enableColumnActions: false,
-      size: 10,
-      Cell: () => (
-        <Menu shadow="md">
+      size: 60,
+      Cell: ({ row }) => (
+        <Menu shadow="md" position="bottom-end">
           <Menu.Target>
-            <ActionIcon variant="transparent" c={"gray"}>
-              <IconDotsVertical />
+            <ActionIcon variant="subtle" color="gray">
+              <IconDotsVertical size={18} />
             </ActionIcon>
           </Menu.Target>
-
           <Menu.Dropdown>
-            <Menu.Item
-              leftSection={<IconEye size={18} color="gray" />}
-              onClick={onTreeDetail}
+            {/* <Menu.Item 
+                leftSection={<IconEye size={18} color="gray" />}
+                onClick={() => onTreeDetail(row.original.id)}
             >
               Chi tiết
+            </Menu.Item> */}
+            <Menu.Item
+              leftSection={<IconEdit size={18} color="blue" />}
+              onClick={() => onEditTree(row.original.id)}
+            >
+              Sửa
             </Menu.Item>
-            <Menu.Item leftSection={<IconEdit size={18} color="green" />}>
-              Chỉnh sửa
-            </Menu.Item>
-            <Menu.Item leftSection={<IconTrash size={18} />} color="red">
-              Xoá
+            <Menu.Item
+              leftSection={<IconTrash size={18} color="red" />}
+              onClick={() => confirmDelete(row.original.id)}
+            >
+              Xóa
             </Menu.Item>
           </Menu.Dropdown>
         </Menu>
@@ -173,7 +183,7 @@ const PlantManagementTreePage = () => {
         </Title>
         <Group>
           <Button variant="outline" radius={4} leftSection={<IconFileExcel />}>
-            Xuất File
+            Xuất Excel
           </Button>
           <Button radius={4} onClick={onAddTree}>
             Thêm mới
@@ -181,14 +191,13 @@ const PlantManagementTreePage = () => {
         </Group>
       </Group>
 
+      {/* --- BỘ LỌC --- */}
       <Card withBorder shadow="sm" radius={4} p="md">
-        {/* Header */}
         <Group justify="space-between" align="center" mb="xs">
           <Stack gap={0}>
             <Title order={4}>Tìm kiếm cây trồng</Title>
             <Text c="dimmed" size="sm">
-              Điền từ khóa hoặc chọn lọc loại cây, hình thức thu hoạch, chu kỳ
-              sinh trưởng
+              Lọc theo tên, mã, loại cây hoặc phương pháp thu hoạch
             </Text>
           </Stack>
 
@@ -198,44 +207,38 @@ const PlantManagementTreePage = () => {
                 radius={4}
                 variant="default"
                 leftSection={<IconRefresh size={16} />}
-                onClick={() => {}}
+                onClick={handleResetFilters}
               >
                 Làm mới
               </Button>
             </Tooltip>
             <Button radius={4} leftSection={<IconSearch size={16} />}>
-              Lọc thông tin
+              Tìm kiếm
             </Button>
           </Group>
         </Group>
 
-        {/* Form */}
         <Stack gap="sm">
-          {/* Khung tìm kiếm (keyword) */}
           <TextInput
             radius={4}
             label="Khung tìm kiếm"
-            description="Ví dụ: Sầu riêng, Xoài"
-            placeholder="Nhập thông tin"
+            placeholder="Nhập tên cây hoặc mã cây..."
             leftSection={<IconSearch size={16} />}
+            value={keyword}
+            onChange={(e) => setKeyword(e.currentTarget.value)}
           />
 
-          <SimpleGrid cols={{ base: 1, md: 2, lg: 3 }} spacing="sm">
+          <SimpleGrid cols={{ base: 1, md: 3 }} spacing="sm">
             <MultiSelect
               searchable
               clearable
               radius={4}
               leftSection={<IconSeedling size={18} />}
               label="Loại cây"
-              description="Ví dụ: Hạt lai F1, Ghép cành"
-              placeholder="Chọn thông tin"
-              data={[
-                "Hạt lai F1",
-                "Ghép cành",
-                "Chồi cây",
-                "Hạt giống Robusta",
-                "Hạt giống Thái",
-              ]}
+              placeholder="Chọn loại cây"
+              data={["Sầu riêng", "Xoài", "Bưởi", "Đậu nành"]} // Có thể lấy động từ store unique value
+              value={selectedTypes}
+              onChange={setSelectedTypes}
             />
             <MultiSelect
               searchable
@@ -243,14 +246,10 @@ const PlantManagementTreePage = () => {
               radius={4}
               leftSection={<IconTractor size={18} />}
               label="Hình thức thu hoạch"
-              description="Ví dụ: Thu hoạch thủ công, Thu hoạch bằng sào"
-              placeholder="Chọn thông tin"
-              data={[
-                "Thu hoạch thủ công",
-                "Thu hoạch bằng sào",
-                "Thu hoạch cuống",
-                "Thu hoạch bằng tay",
-              ]}
+              placeholder="Chọn hình thức"
+              data={HARVEST_METHODS}
+              value={selectedMethods}
+              onChange={setSelectedMethods}
             />
             <MultiSelect
               searchable
@@ -258,20 +257,39 @@ const PlantManagementTreePage = () => {
               radius={4}
               leftSection={<IconGrowth size={18} />}
               label="Chu kỳ sinh trưởng"
-              description="Ví dụ: Chu kỳ dài (5-7 năm), Chu kỳ trung bình (3-5 năm)"
-              placeholder="Chọn thông tin"
-              data={[
-                "Chu kỳ dài (5-7 năm)",
-                "Chu kỳ trung bình (3-5 năm)",
-                "Chu kỳ ngắn (9-12 tháng)",
-                "Chu kỳ dài (4-5 năm)",
-                "Chu kỳ trung bình (3-4 năm)",
-              ]}
+              placeholder="Chọn chu kỳ"
+              data={GROWTH_CYCLES}
+              // Logic lọc chu kỳ phức tạp hơn vì nó nằm trong mảng con, tạm thời để UI thôi
             />
           </SimpleGrid>
         </Stack>
       </Card>
-      <Table columns={treeCropColumns} data={treeCropData} />
+
+      {/* --- BẢNG DỮ LIỆU --- */}
+      <Table
+        //@ts-expect-error no check
+        columns={columns}
+        //@ts-expect-error no check
+        data={filteredData}
+      />
+
+      {/* --- MODAL XÓA --- */}
+      <Modal
+        opened={openedDelete}
+        onClose={closeDelete}
+        title="Xác nhận xóa"
+        centered
+      >
+        <Text>Bạn có chắc chắn muốn xóa cây trồng này không?</Text>
+        <Group justify="flex-end" mt="lg">
+          <Button variant="default" onClick={closeDelete}>
+            Hủy
+          </Button>
+          <Button color="red" onClick={handleDelete}>
+            Xóa ngay
+          </Button>
+        </Group>
+      </Modal>
     </Stack>
   );
 };

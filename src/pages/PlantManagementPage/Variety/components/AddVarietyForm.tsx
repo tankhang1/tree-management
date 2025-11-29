@@ -11,15 +11,43 @@ import {
   Radio,
   Text,
   Input,
+  LoadingOverlay,
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
-import { IconUpload, IconX } from "@tabler/icons-react";
-import { useState } from "react";
+import { IconUpload, IconX, IconPhoto, IconCheck } from "@tabler/icons-react";
+import { useEffect, useState } from "react";
 import SunEditor from "suneditor-react";
-import { IconPhoto } from "@tabler/icons-react";
-import { Dropzone, IMAGE_MIME_TYPE } from "@mantine/dropzone";
+import "suneditor/dist/css/suneditor.min.css"; // Nhớ import CSS
+import {
+  Dropzone,
+  IMAGE_MIME_TYPE,
+  PDF_MIME_TYPE,
+  type FileWithPath,
+} from "@mantine/dropzone";
+import { notifications } from "@mantine/notifications";
+import { useVarietyStore, type Variety } from "../../../zustand/varietyStore";
 
-const AddVarietyForm = () => {
+// Store
+
+// Helper chuyển file sang base64 để lưu localStorage
+const fileToBase64 = (file: File): Promise<string> => {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () => resolve(reader.result as string);
+    reader.onerror = (error) => reject(error);
+  });
+};
+
+type Props = {
+  editId?: string | null;
+  onClose: () => void;
+};
+
+const AddVarietyForm = ({ editId, onClose }: Props) => {
+  const { addVariety, updateVariety, getVarietyById, isLoading } =
+    useVarietyStore();
+
   const form = useForm({
     initialValues: {
       id: "",
@@ -27,15 +55,49 @@ const AddVarietyForm = () => {
       description: "",
       treeName: "",
       imgUrl: "",
-      doc: "",
-      docType: "",
+      docType: "editor",
+      docContent: "", // Lưu HTML hoặc tên file PDF
+    },
+    validate: {
+      id: (val) => (val.trim().length === 0 ? "Mã không được để trống" : null),
+      name: (val) =>
+        val.trim().length === 0 ? "Tên không được để trống" : null,
+      treeName: (val) => (!val ? "Vui lòng chọn loại cây" : null),
     },
   });
 
   const [imagePreview, setImagePreview] = useState<string | null>(null);
 
-  const handleSubmit = (values: typeof form.values) => {
-    console.log("📦 Dữ liệu gửi:", values);
+  // --- LOGIC LOAD DỮ LIỆU KHI EDIT ---
+  useEffect(() => {
+    if (editId) {
+      const data = getVarietyById(editId);
+      if (data) {
+        form.setValues({
+          id: data.id,
+          name: data.name,
+          description: data.description,
+          treeName: data.treeName,
+          imgUrl: data.imgUrl,
+          docType: data.docType || "editor",
+          docContent: data.docContent || "",
+        });
+        setImagePreview(data.imgUrl);
+      }
+    } else {
+      // Tự động sinh ID khi thêm mới
+      form.setFieldValue("id", `VAR-${Math.floor(Math.random() * 10000)}`);
+    }
+  }, [editId]);
+
+  // --- HANDLERS ---
+  const handleDropImage = async (files: FileWithPath[]) => {
+    const file = files[0];
+    if (file) {
+      const base64 = await fileToBase64(file);
+      setImagePreview(base64);
+      form.setFieldValue("imgUrl", base64);
+    }
   };
 
   const handleImageClear = () => {
@@ -43,8 +105,55 @@ const AddVarietyForm = () => {
     setImagePreview(null);
   };
 
+  const handleDropPdf = (files: FileWithPath[]) => {
+    const file = files[0];
+    if (file) {
+      form.setFieldValue("docContent", file.name); // Chỉ lưu tên file demo
+      notifications.show({
+        message: `Đã chọn file: ${file.name}`,
+        color: "blue",
+      });
+    }
+  };
+
+  const handleSubmit = async (values: typeof form.values) => {
+    const payload: Variety = {
+      ...values,
+      // Các trường optional mình để mặc định hoặc rỗng cho demo
+      origin: "Việt Nam",
+      maturityDays: 0,
+      yieldKgPerTree: 0,
+      season: [],
+      resistance: [],
+      hashtags: [],
+      notes: "",
+      isCertified: false,
+    };
+
+    let success = false;
+    if (editId) {
+      success = await updateVariety(editId, payload);
+    } else {
+      success = await addVariety(payload);
+    }
+
+    if (success) {
+      notifications.show({
+        title: "Thành công",
+        message: editId ? "Cập nhật thành công" : "Tạo mới thành công",
+        color: "green",
+        icon: <IconCheck />,
+      });
+      onClose();
+    }
+  };
+
   return (
-    <form onSubmit={form.onSubmit(handleSubmit)}>
+    <form
+      onSubmit={form.onSubmit(handleSubmit)}
+      style={{ position: "relative" }}
+    >
+      <LoadingOverlay visible={isLoading} />
       <Stack gap="sm">
         <TextInput
           label="Mã giống cây"
@@ -52,6 +161,8 @@ const AddVarietyForm = () => {
           required
           radius={4}
           {...form.getInputProps("id")}
+          readOnly={!!editId} // Không cho sửa ID khi edit
+          variant={editId ? "filled" : "default"}
         />
 
         <TextInput
@@ -69,7 +180,15 @@ const AddVarietyForm = () => {
           placeholder="Chọn loại cây"
           radius={4}
           required
-          data={["Sầu riêng", "Xoài", "Chuối", "Cà phê", "Chè"]}
+          data={[
+            "Sầu riêng",
+            "Xoài",
+            "Chuối",
+            "Cà phê",
+            "Chè",
+            "Đậu nành",
+            "Bắp",
+          ]}
           {...form.getInputProps("treeName")}
         />
 
@@ -84,72 +203,45 @@ const AddVarietyForm = () => {
 
         <Input.Wrapper label="Ảnh giống cây">
           <Dropzone
-            onDrop={(files) => console.log("accepted files", files)}
-            onReject={(files) => console.log("rejected files", files)}
+            onDrop={handleDropImage}
             maxSize={5 * 1024 ** 2}
             accept={IMAGE_MIME_TYPE}
+            multiple={false}
           >
             <Group
               justify="center"
               gap="xl"
-              mih={220}
+              mih={120}
               style={{ pointerEvents: "none" }}
             >
-              <Dropzone.Accept>
-                <IconUpload
-                  size={52}
-                  color="var(--mantine-color-blue-6)"
-                  stroke={1.5}
-                />
-              </Dropzone.Accept>
-              <Dropzone.Reject>
-                <IconX
-                  size={52}
-                  color="var(--mantine-color-red-6)"
-                  stroke={1.5}
-                />
-              </Dropzone.Reject>
               <Dropzone.Idle>
-                <IconPhoto
-                  size={52}
-                  color="var(--mantine-color-dimmed)"
-                  stroke={1.5}
-                />
+                <IconPhoto size={40} color="gray" />
               </Dropzone.Idle>
-
               <div>
-                <Text size="xl" inline>
+                <Text size="sm" inline>
                   Kéo hoặc chọn để tải ảnh lên
-                </Text>
-                <Text size="sm" c="dimmed" inline mt={7}>
-                  Giới hạn kích thước ảnh khoản 5MB
                 </Text>
               </div>
             </Group>
           </Dropzone>
         </Input.Wrapper>
+
         {imagePreview && (
-          <Group justify="left" mt="xs">
+          <Group justify="flex-start" mt="xs">
             <div style={{ position: "relative", display: "inline-block" }}>
               <Image
                 src={imagePreview}
-                alt="Ảnh giống cây"
                 radius="md"
-                height={160}
-                width={220}
-                fit="cover"
+                h={120}
+                w="auto"
+                fit="contain"
               />
               <ActionIcon
                 variant="filled"
                 color="red"
                 size="sm"
                 radius="xl"
-                style={{
-                  position: "absolute",
-                  top: rem(6),
-                  right: rem(6),
-                  zIndex: 10,
-                }}
+                style={{ position: "absolute", top: 2, right: 2 }}
                 onClick={handleImageClear}
               >
                 <IconX size={14} />
@@ -165,70 +257,55 @@ const AddVarietyForm = () => {
         >
           <Group mt="xs">
             <Radio value="file" label="Tải file PDF" />
-            <Radio value="editor" label="Tài liệu kỹ thuật" />
+            <Radio value="editor" label="Soạn thảo trực tiếp" />
           </Group>
         </Radio.Group>
 
         {form.values.docType === "file" ? (
-          <Dropzone
-            onDrop={(files) => console.log("accepted files", files)}
-            onReject={(files) => console.log("rejected files", files)}
-            maxSize={5 * 1024 ** 2}
-            accept={["application/pdf"]}
-          >
-            <Group
-              justify="center"
-              gap="xl"
-              mih={220}
-              style={{ pointerEvents: "none" }}
+          <>
+            <Dropzone
+              onDrop={handleDropPdf}
+              maxSize={5 * 1024 ** 2}
+              accept={PDF_MIME_TYPE}
+              multiple={false}
             >
-              <Dropzone.Accept>
-                <IconUpload
-                  size={52}
-                  color="var(--mantine-color-blue-6)"
-                  stroke={1.5}
-                />
-              </Dropzone.Accept>
-              <Dropzone.Reject>
-                <IconX
-                  size={52}
-                  color="var(--mantine-color-red-6)"
-                  stroke={1.5}
-                />
-              </Dropzone.Reject>
-              <Dropzone.Idle>
-                <IconPhoto
-                  size={52}
-                  color="var(--mantine-color-dimmed)"
-                  stroke={1.5}
-                />
-              </Dropzone.Idle>
-
-              <div>
-                <Text size="xl" inline>
-                  Bỏ và thả tài liệu kỹ thuật tại đây
-                </Text>
-                <Text size="sm" c="dimmed" inline mt={7}>
-                  Đính kèm tài liệu (tối đa 5MB)
-                </Text>
-              </div>
-            </Group>
-          </Dropzone>
+              <Group
+                justify="center"
+                mih={80}
+                style={{ pointerEvents: "none" }}
+              >
+                <IconUpload size={30} color="gray" />
+                <Text size="sm">Tải file PDF (Max 5MB)</Text>
+              </Group>
+            </Dropzone>
+            {form.values.docContent && (
+              <Text size="xs" c="blue" mt={4}>
+                File hiện tại: {form.values.docContent}
+              </Text>
+            )}
+          </>
         ) : (
-          <Stack>
-            <Text style={{ fontSize: 14, fontWeight: 500 }}>
+          <Stack gap={4}>
+            <Text size="sm" fw={500}>
               Nội dung kỹ thuật
             </Text>
             <SunEditor
-              setOptions={{ height: "200px" }}
-              setContents={form.values.doc}
-              onChange={(val) => form.setFieldValue("doc", val)}
+              setOptions={{
+                height: "200px",
+                buttonList: [["bold", "italic", "list"]],
+              }}
+              setContents={form.values.docContent}
+              onChange={(val) => form.setFieldValue("docContent", val)}
             />
           </Stack>
         )}
+
         <Group justify="flex-end" mt="md">
+          <Button variant="default" onClick={onClose}>
+            Hủy
+          </Button>
           <Button type="submit" radius={4}>
-            Tạo giống cây
+            {editId ? "Lưu thay đổi" : "Tạo giống cây"}
           </Button>
         </Group>
       </Stack>

@@ -25,6 +25,7 @@
     "@mantine/form": "^8.1.2",
     "@mantine/hooks": "^8.1.0",
     "@mantine/modals": "^8.1.1",
+    "@mantine/notifications": "^8.3.9",
     "@tabler/icons-react": "^3.34.0",
     "clsx": "^2.1.1",
     "dayjs": "^1.11.13",
@@ -43,7 +44,8 @@
     "recharts": "^2.15.3",
     "suneditor": "^2.47.5",
     "suneditor-react": "^3.6.1",
-    "xlsx": "^0.18.5"
+    "xlsx": "^0.18.5",
+    "zustand": "^5.0.8"
   },
   "devDependencies": {
     "@eslint/js": "^9.25.0",

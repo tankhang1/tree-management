@@ -51,8 +51,10 @@ import { Dropzone, IMAGE_MIME_TYPE } from "@mantine/dropzone";
 import { useDisclosure } from "@mantine/hooks";
 import { useForm } from "@mantine/form";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import SunEditor from "suneditor-react";
+import { useTreeTechnicalDocStore } from "../../../zustand/treeTechnicalDocStore";
+import { notifications } from "@mantine/notifications";
 
 type Attachment = { name: string; href: string };
 
@@ -86,6 +88,8 @@ const initialData = {
 
 const PlantManagementTechnicalDocDetailPage = () => {
   const navigate = useNavigate();
+  const { id } = useParams();
+  const { getDocById, updateDoc, isLoading } = useTreeTechnicalDocStore();
   const [data, setData] = useState(initialData);
   const [opened, { open, close }] = useDisclosure(false);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
@@ -143,24 +147,20 @@ const PlantManagementTechnicalDocDetailPage = () => {
   const removeAttachment = (idx: number) =>
     setAttachments((a) => a.filter((_, i) => i !== idx));
 
-  const save = (values: typeof form.values) => {
-    setData((prev) => ({
-      ...prev,
-      templateCode: values.templateCode,
-      imageUrl: values.imageUrl,
-      cropName: values.cropName,
-      variety: values.variety,
-      seasonality: values.seasonality,
-      difficulty: values.difficultyPct / 100,
-      tags: values.tags,
-      cultivationTechniques: values.cultivationTechniques,
-      standards: values.standards,
-      pestSolutions: values.pestSolutions,
-      specTable: values.specTable.map((r) => [r.k, r.v] as [string, string]),
-      attachments,
-      lastUpdated: new Date().toISOString().slice(0, 16).replace("T", " "),
-    }));
-    close();
+  const save = async (values: typeof form.values) => {
+    if (!id) return;
+    // GỌI HÀM updateDoc TỪ STORE MỚI
+    const success = await updateDoc(id, values);
+
+    if (success) {
+      notifications.show({
+        title: "Cập nhật thành công",
+        color: "green",
+        message: "",
+      });
+      close();
+      setData({ ...data, ...values } as any);
+    }
   };
 
   return (

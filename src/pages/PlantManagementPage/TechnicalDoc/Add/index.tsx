@@ -28,6 +28,8 @@ import {
 import { useMemo, useState } from "react";
 import SunEditor from "suneditor-react";
 import { useNavigate } from "react-router-dom";
+import { useTreeTechnicalDocStore } from "../../../zustand/treeTechnicalDocStore";
+import { notifications } from "@mantine/notifications";
 
 type Attachment = { name: string; href: string };
 type SpecRow = { k: string; v: string };
@@ -63,6 +65,7 @@ const initialValues = {
 
 const PlantManagementTechnicalDocAddPage = () => {
   const navigate = useNavigate();
+  const { addDoc, isLoading } = useTreeTechnicalDocStore();
   const [attachments, setAttachments] = useState<Attachment[]>([
     { name: "Quy trình VietGAP.pdf", href: "#" },
     { name: "Lịch bón phân mẫu.xlsx", href: "#" },
@@ -112,10 +115,25 @@ const PlantManagementTechnicalDocAddPage = () => {
     [form.values.difficultyPct]
   );
 
-  const handleSubmit = (values: typeof form.values) => {
-    const payload = { ...values, attachments };
-    console.log("CREATE_PAYLOAD:", payload);
-    alert("Đã tạo bản nháp tài liệu kỹ thuật!");
+  const handleSubmit = async () => {
+    const values = form.getValues();
+    const payload = {
+      ...values,
+      quickChecklist: values.quickChecklist,
+      attachments: attachments,
+    };
+
+    // GỌI HÀM addDoc TỪ STORE MỚI
+    const success = await addDoc(payload);
+
+    if (success) {
+      notifications.show({
+        title: "Thành công",
+        message: "Đã tạo tài liệu mới",
+        color: "green",
+      });
+      navigate(-1);
+    }
   };
 
   return (

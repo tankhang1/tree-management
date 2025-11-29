@@ -11,172 +11,211 @@ import {
   Text,
   TextInput,
   SimpleGrid,
-  Select,
   MultiSelect,
-  NumberInput,
-  Checkbox,
+  Modal,
 } from "@mantine/core";
 import {
-  IconBuilding,
   IconDotsVertical,
   IconEdit,
   IconEye,
   IconFileExcel,
-  IconHome,
-  IconMap,
   IconTrash,
   IconRefresh,
   IconSearch,
   IconNotification,
+  IconPlus,
 } from "@tabler/icons-react";
 import type { MRT_ColumnDef } from "mantine-react-table";
 import Table from "../../components/Table";
 import { useNavigate } from "react-router-dom";
 import { PATH } from "../../constants/path.constants";
-import { useMemo, useState } from "react";
-import NotificationModal from "./components/NotificationModal";
+import { useEffect, useState } from "react";
+import { useDisclosure } from "@mantine/hooks";
+import { notifications } from "@mantine/notifications";
 
-type FarmerEntity = {
-  id: string;
-  name: string;
-  type: "hộ nông dân" | "doanh nghiệp" | "hợp tác xã";
-  ownerName: string;
-  identityNumber: string;
-  phone: string;
-  email?: string;
-  address: string;
-  province: string;
-  location: { lat: number; lng: number };
-  taxCode?: string;
-  landCertificateNo?: string;
-  note?: string;
-  crops: string[];
-  areaHa: number;
-  businessType: "Ưu tiên" | "Thường";
-  certifications?: string[];
-};
-
-const farmerDataset: FarmerEntity[] = [
-  {
-    id: "F001",
-    name: "Hộ ông Nguyễn Văn A",
-    type: "hộ nông dân",
-    ownerName: "Nguyễn Văn A",
-    identityNumber: "012345678901",
-    phone: "0912345678",
-    email: "a.nongdan@example.com",
-    address: "Ấp 1, xã Tân Lập, huyện Hớn Quản, Bình Phước",
-    province: "Bình Phước",
-    location: { lat: 11.850812, lng: 106.674836 },
-    taxCode: "",
-    landCertificateNo: "CN123456789",
-    note: "Canh tác theo mô hình VietGAP",
-    crops: ["Cây dược liệu", "Hồ tiêu"],
-    areaHa: 8.5,
-    businessType: "Ưu tiên",
-    certifications: ["VietGAP"],
-  },
-  {
-    id: "F002",
-    name: "HTX Nông nghiệp Bền Vững",
-    type: "hợp tác xã",
-    ownerName: "Trần Thị B",
-    identityNumber: "123456789012",
-    phone: "0938123456",
-    businessType: "Thường",
-    email: "info@benvungcoop.vn",
-    address: "Xã Phú Riềng, huyện Phú Riềng, Bình Phước",
-    province: "Bình Phước",
-    location: { lat: 11.667091, lng: 106.985761 },
-    taxCode: "0401234567",
-    landCertificateNo: "HTX-987654321",
-    note: "Liên kết tiêu thụ với DN Nhật",
-    crops: ["Cây ăn trái", "Cây có múi"],
-    areaHa: 42,
-    certifications: ["GlobalG.A.P"],
-  },
-  {
-    id: "F003",
-    name: "Công ty TNHH Nông sản HCM",
-    type: "doanh nghiệp",
-    ownerName: "Phạm Quốc C",
-    businessType: "Ưu tiên",
-    identityNumber: "079123456789",
-    phone: "0909123456",
-    email: "contact@hcmaf.com",
-    address: "KCN Hiệp Phước, H. Nhà Bè, TP. HCM",
-    province: "TP.HCM",
-    location: { lat: 10.607, lng: 106.743 },
-    taxCode: "0312345678",
-    landCertificateNo: "DN-556677",
-    note: "Chuỗi cung ứng lạnh",
-    crops: ["Rau màu", "Cây dược liệu"],
-    areaHa: 25,
-    certifications: [],
-  },
-];
-
-const PROVINCES = [
-  "TP.HCM",
-  "Bình Dương",
-  "Đồng Nai",
-  "Tây Ninh",
-  "Bình Phước",
-];
-const CROP_GROUPS = [
-  "Cây dược liệu",
-  "Cây ăn trái",
-  "Cây có múi",
-  "Rau màu",
-  "Cây công nghiệp",
-  "Lúa",
-  "Hồ tiêu",
-];
+// IMPORT STORE VÀ TYPE MỚI
+import NotificationModal from "./components/NotificationModal"; // Giữ nguyên component này
+import { useCompanyStore, type Company } from "../zustand/companyStore";
 
 const CompanyPage = () => {
   const navigate = useNavigate();
-  const [rows, setRows] = useState<FarmerEntity[]>(farmerDataset);
 
+  // 1. KẾT NỐI STORE
+  const { companies, deleteCompany } = useCompanyStore();
+
+  // 2. STATE LOCAL
+  const [rows, setRows] = useState<Company[]>(companies);
+
+  // Filter States
   const [keyword, setKeyword] = useState("");
-  const [types, setTypes] = useState<Array<FarmerEntity["type"]>>([]);
-  const [provinces, setProvinces] = useState<string[]>([]);
-  const [crops, setCrops] = useState<string[]>([]);
-  const [minArea, setMinArea] = useState<number | "">(0);
-  const [maxArea, setMaxArea] = useState<number | "">("");
-  const [hasCert, setHasCert] = useState(false);
+  const [selectedTypes, setSelectedTypes] = useState<string[]>([]); // Lọc theo type (Doanh nghiệp, Nông hộ...)
+  const [selectedCategories, setSelectedCategories] = useState<string[]>([]); // Lọc theo categoryType (customer, partner...)
 
+  // Action States
+  const [selectedCompany, setSelectedCompany] = useState<Company | null>(null);
+
+  // Modals
+  const [openedDelete, { open: openDelete, close: closeDelete }] =
+    useDisclosure(false);
+  const [openedNoti, { open: openNoti, close: closeNoti }] =
+    useDisclosure(false);
+
+  // Sync Store -> Rows khi data thay đổi
+  useEffect(() => {
+    setRows(companies);
+  }, [companies]);
+
+  // Navigation
   const onAddCompany = () => navigate(PATH.COMPANY_ADD);
-  const onCompanyDetail = () => navigate(PATH.COMPANY_DETAIL);
+  const onCompanyDetail = (id: string) =>
+    navigate(`${PATH.COMPANY_DETAIL}/${id}`);
+  const onCompanyEdit = (id: string) => "";
 
-  const farmerColumns: MRT_ColumnDef<FarmerEntity>[] = [
-    { accessorKey: "name", header: "Tên đơn vị" },
-    { accessorKey: "type", header: "Loại hình" },
-    { accessorKey: "ownerName", header: "Chủ sở hữu" },
-    { accessorKey: "identityNumber", header: "CCCD/CMND" },
+  // --- LOGIC FILTER MỚI ---
+  const resetFilters = () => {
+    setKeyword("");
+    setSelectedTypes([]);
+    setSelectedCategories([]);
+    setRows(companies);
+  };
+
+  const applyFilters = () => {
+    const kw = keyword.trim().toLowerCase();
+
+    const filtered = companies.filter((item) => {
+      // 1. Tìm kiếm theo từ khóa (Mã, Tên, Người đại diện, SĐT)
+      const okKw =
+        !kw ||
+        item.name.toLowerCase().includes(kw) ||
+        item.code.toLowerCase().includes(kw) ||
+        item.representative.toLowerCase().includes(kw) ||
+        item.phone.includes(kw) ||
+        item.email.toLowerCase().includes(kw);
+
+      // 2. Lọc theo Loại hình (Doanh nghiệp/Nông hộ...)
+      const okType = !selectedTypes.length || selectedTypes.includes(item.type);
+
+      // 3. Lọc theo Phân loại (Khách hàng/Đối tác...)
+      const okCategory =
+        !selectedCategories.length ||
+        selectedCategories.includes(item.categoryType);
+
+      return okKw && okType && okCategory;
+    });
+
+    setRows(filtered);
+    notifications.show({
+      message: `Tìm thấy ${filtered.length} kết quả`,
+      color: "blue",
+    });
+  };
+
+  // --- LOGIC DELETE ---
+  const confirmDelete = (company: Company) => {
+    setSelectedCompany(company);
+    openDelete();
+  };
+
+  const handleDelete = () => {
+    if (selectedCompany) {
+      deleteCompany(selectedCompany.id);
+      notifications.show({
+        title: "Thành công",
+        message: `Đã xóa ${selectedCompany.name}`,
+        color: "green",
+      });
+      closeDelete();
+      setSelectedCompany(null);
+    }
+  };
+
+  // --- LOGIC NOTIFICATION ---
+  const handleOpenNoti = (company: Company) => {
+    setSelectedCompany(company);
+    openNoti();
+  };
+
+  const handleSendNotification = (message: string) => {
+    console.log(`Sending to ${selectedCompany?.email}: ${message}`);
+    notifications.show({
+      title: "Đã gửi",
+      message: `Đã gửi thông báo đến ${selectedCompany?.name}`,
+      color: "teal",
+      icon: <IconNotification size={16} />,
+    });
+    closeNoti();
+  };
+
+  // --- CẤU HÌNH CỘT (TABLE COLUMNS) THEO TYPE "COMPANY" ---
+  const columns: MRT_ColumnDef<Company>[] = [
     {
-      accessorKey: "businessType",
-      header: "Trạng thái",
+      accessorKey: "code",
+      header: "Mã định danh",
+      size: 100,
+      Cell: ({ cell }) => <Text fw={500}>{cell.getValue<string>()}</Text>,
+    },
+    {
+      accessorKey: "name",
+      header: "Tên đơn vị",
+      size: 200,
+      Cell: ({ row }) => (
+        <Stack gap={0}>
+          <Text fw={500} size="sm">
+            {row.original.name}
+          </Text>
+          <Text c="dimmed" size="xs">
+            {row.original.brand}
+          </Text>
+        </Stack>
+      ),
+    },
+    {
+      accessorKey: "type",
+      header: "Loại hình",
+      Cell: ({ cell }) => (
+        <Badge variant="outline" color="blue">
+          {cell.getValue<string>()}
+        </Badge>
+      ),
+    },
+    {
+      accessorKey: "categoryType",
+      header: "Phân loại",
       Cell: ({ cell }) => {
-        const value = cell.getValue<string>();
-        const color = value === "Ưu tiên" ? "green" : "gray";
-        return (
-          <Badge color={color}>
-            <Text size="sm">{value}</Text>
-          </Badge>
-        );
+        const val = cell.getValue<string>();
+        let color = "gray";
+        let label = "Khác";
+        switch (val) {
+          case "customer":
+            color = "green";
+            label = "Khách hàng";
+            break;
+          case "partner":
+            color = "violet";
+            label = "Đối tác";
+            break;
+          case "supplier":
+            color = "orange";
+            label = "Nhà cung cấp";
+            break;
+          case "bank":
+            color = "blue";
+            label = "Ngân hàng";
+            break;
+        }
+        return <Badge color={color}>{label}</Badge>;
       },
     },
-    { accessorKey: "phone", header: "Số điện thoại" },
-    { accessorKey: "email", header: "Email" },
-    { accessorKey: "address", header: "Địa chỉ" },
-    { accessorKey: "taxCode", header: "Mã số thuế" },
+    { accessorKey: "representative", header: "Người đại diện" },
+    { accessorKey: "phone", header: "SĐT" },
+    { accessorKey: "address", header: "Địa chỉ", size: 200 },
     {
       accessorKey: "actions",
       header: "Tuỳ chọn",
       enableColumnActions: false,
-      size: 10,
-      Cell: () => (
-        <Menu shadow="md">
+      size: 60,
+      Cell: ({ row }) => (
+        <Menu shadow="md" position="bottom-end">
           <Menu.Target>
             <ActionIcon variant="transparent" c="gray">
               <IconDotsVertical />
@@ -184,21 +223,28 @@ const CompanyPage = () => {
           </Menu.Target>
           <Menu.Dropdown>
             <Menu.Item
-              onClick={onCompanyDetail}
+              onClick={() => onCompanyDetail(row.original.id)}
               leftSection={<IconEye size={18} color="gray" />}
             >
               Chi tiết
             </Menu.Item>
             <Menu.Item
-              onClick={onCompanyDetail}
-              leftSection={<IconNotification size={18} color="gray" />}
+              onClick={() => handleOpenNoti(row.original)}
+              leftSection={<IconNotification size={18} color="orange" />}
             >
-              Thông báo
+              Gửi thông báo
             </Menu.Item>
-            <Menu.Item leftSection={<IconEdit size={18} color="green" />}>
+            <Menu.Item
+              onClick={() => onCompanyEdit(row.original.id)}
+              leftSection={<IconEdit size={18} color="blue" />}
+            >
               Chỉnh sửa
             </Menu.Item>
-            <Menu.Item leftSection={<IconTrash size={18} />} color="red">
+            <Menu.Item
+              onClick={() => confirmDelete(row.original)}
+              leftSection={<IconTrash size={18} />}
+              color="red"
+            >
               Xoá
             </Menu.Item>
           </Menu.Dropdown>
@@ -206,54 +252,6 @@ const CompanyPage = () => {
       ),
     },
   ];
-
-  const appliedCount = useMemo(
-    () =>
-      [
-        keyword,
-        types.length,
-        provinces.length,
-        crops.length,
-        minArea || minArea === 0 ? 1 : 0,
-        maxArea ? 1 : 0,
-        hasCert ? 1 : 0,
-      ].filter(Boolean).length,
-    [keyword, types, provinces, crops, minArea, maxArea, hasCert]
-  );
-
-  const resetFilters = () => {
-    setKeyword("");
-    setTypes([]);
-    setProvinces([]);
-    setCrops([]);
-    setMinArea(0);
-    setMaxArea("");
-    setHasCert(false);
-    setRows(farmerDataset);
-  };
-
-  const applyFilters = () => {
-    const kw = keyword.trim().toLowerCase();
-    const filtered = farmerDataset.filter((r) => {
-      const okKw =
-        !kw ||
-        r.name.toLowerCase().includes(kw) ||
-        r.id.toLowerCase().includes(kw) ||
-        r.ownerName.toLowerCase().includes(kw) ||
-        r.address.toLowerCase().includes(kw) ||
-        (r.taxCode || "").toLowerCase().includes(kw);
-      const okType = !types.length || types.includes(r.type);
-      const okProvince = !provinces.length || provinces.includes(r.province);
-      const okCrop = !crops.length || r.crops.some((c) => crops.includes(c));
-      const okArea =
-        (minArea === "" || r.areaHa >= Number(minArea)) &&
-        (maxArea === "" || r.areaHa <= Number(maxArea));
-      const okCert =
-        !hasCert || (r.certifications && r.certifications.length > 0);
-      return okKw && okType && okProvince && okCrop && okArea && okCert;
-    });
-    setRows(filtered);
-  };
 
   return (
     <Stack gap="lg">
@@ -263,25 +261,29 @@ const CompanyPage = () => {
         </Title>
         <Group>
           <Button variant="outline" radius={4} leftSection={<IconFileExcel />}>
-            Xuất File
+            Xuất Excel
           </Button>
-          <Button radius={4} onClick={onAddCompany}>
+          <Button
+            radius={4}
+            onClick={onAddCompany}
+            leftSection={<IconPlus size={18} />}
+          >
             Thêm mới
           </Button>
         </Group>
       </Group>
 
+      {/* FILTER CARD */}
       <Card withBorder shadow="sm" radius={4} p="md">
         <Group justify="space-between" align="center" mb="xs">
           <Stack gap={0}>
-            <Title order={4}>Tìm kiếm doanh nghiệp / nông hộ</Title>
+            <Title order={4}>Tìm kiếm</Title>
             <Text c="dimmed" size="sm">
-              Nhập từ khoá (VD: &quot;Nông hộ 1&quot;) hoặc áp dụng bộ lọc (VD:
-              &quot;HCM&quot;, &quot;Cây dược liệu&quot;).
+              Lọc theo tên, mã, loại hình hoặc vai trò
             </Text>
           </Stack>
           <Group>
-            <Tooltip label="Xoá tất cả bộ lọc">
+            <Tooltip label="Xoá bộ lọc">
               <Button
                 radius={4}
                 variant="default"
@@ -305,77 +307,77 @@ const CompanyPage = () => {
           <TextInput
             radius={4}
             label="Từ khoá"
-            description='Ví dụ: "FARM001", "Hồ tiêu", "Phú Riềng"...'
-            placeholder="Nhập tên, mã, chủ sở hữu, địa chỉ..."
+            placeholder="Nhập mã, tên công ty, người đại diện, SĐT..."
             leftSection={<IconSearch size={16} />}
             value={keyword}
             onChange={(e) => setKeyword(e.currentTarget.value)}
+            onKeyDown={(e) => e.key === "Enter" && applyFilters()}
           />
 
-          <SimpleGrid cols={{ base: 1, md: 2, lg: 3 }} spacing="sm">
-            <MultiSelect
-              radius={4}
-              label="Tỉnh/Thành"
-              placeholder="Chọn"
-              data={PROVINCES}
-              searchable
-              clearable
-              value={provinces}
-              onChange={setProvinces}
-            />
-            <MultiSelect
-              radius={4}
-              label="Nhóm cây trồng"
-              placeholder="Chọn"
-              data={CROP_GROUPS}
-              searchable
-              clearable
-              value={crops}
-              onChange={setCrops}
-            />
+          <SimpleGrid cols={{ base: 1, md: 3 }} spacing="sm">
             <MultiSelect
               radius={4}
               label="Loại hình"
-              placeholder="Chọn"
-              data={[
-                { value: "doanh nghiệp", label: "Doanh nghiệp" },
-                { value: "hộ nông dân", label: "Hộ nông dân" },
-                { value: "hợp tác xã", label: "Hợp tác xã" },
-              ]}
-              searchable
+              placeholder="Chọn loại hình"
+              data={["Doanh nghiệp", "Nông hộ", "Hợp tác xã"]}
+              value={selectedTypes}
+              onChange={setSelectedTypes}
               clearable
-              value={types as any}
-              onChange={(v) => setTypes(v as any)}
             />
-            <Group gap="xs" align="end">
-              <NumberInput
-                radius={4}
-                label="Diện tích tối thiểu (ha)"
-                value={minArea}
-                min={0}
-                step={0.5}
-              />
-              <NumberInput
-                radius={4}
-                label="Diện tích tối đa (ha)"
-                value={maxArea}
-                min={0}
-                step={0.5}
-              />
-            </Group>
-            <Checkbox
-              mt={28}
+            <MultiSelect
               radius={4}
-              label="Có chứng nhận"
-              checked={hasCert}
-              onChange={(e) => setHasCert(e.currentTarget.checked)}
+              label="Phân loại"
+              placeholder="Chọn vai trò"
+              data={[
+                { value: "customer", label: "Khách hàng" },
+                { value: "partner", label: "Đối tác" },
+                { value: "supplier", label: "Nhà cung cấp" },
+                { value: "bank", label: "Ngân hàng" },
+              ]}
+              value={selectedCategories}
+              onChange={setSelectedCategories}
+              clearable
             />
+            {/* Bạn có thể thêm lọc theo Tỉnh/Thành nếu muốn phân tích chuỗi Address */}
           </SimpleGrid>
         </Stack>
       </Card>
 
-      <Table columns={farmerColumns} data={rows} />
-      {/* <NotificationModal opened={true} onClose={() => {}} onSend={() => {}} /> */}
+      {/* TABLE */}
+      <Table columns={columns} data={rows} />
+
+      {/* DELETE MODAL */}
+      <Modal
+        opened={openedDelete}
+        onClose={closeDelete}
+        title="Xác nhận xoá"
+        centered
+      >
+        <Text>
+          Bạn có chắc chắn muốn xoá đơn vị{" "}
+          <strong>{selectedCompany?.name}</strong>?
+        </Text>
+        <Text size="sm" c="dimmed" mt="xs">
+          Hành động này sẽ xóa vĩnh viễn dữ liệu bao gồm chi nhánh và liên hệ đi
+          kèm.
+        </Text>
+        <Group justify="flex-end" mt="lg">
+          <Button variant="default" onClick={closeDelete}>
+            Hủy
+          </Button>
+          <Button color="red" onClick={handleDelete}>
+            Xoá ngay
+          </Button>
+        </Group>
+      </Modal>
+
+      {/* NOTIFICATION MODAL */}
+      <NotificationModal
+        opened={openedNoti}
+        onClose={closeNoti}
+        receiverName={selectedCompany?.name || ""}
+        onSend={handleSendNotification}
+      />
     </Stack>
   );
 };

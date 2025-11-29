@@ -1,7 +1,3 @@
-// CẬP NHẬT: Giao diện thêm mới cây trồng
-// - Bước 2: chia 2 cột: thông tin cây bên trái, hạt giống bên phải, có hình ảnh
-// - Bước 4: thêm nhiều chu kỳ sinh trưởng (n chu kỳ)
-
 import {
   Button,
   Card,
@@ -17,6 +13,11 @@ import {
   NumberInput,
   Input,
   Radio,
+  LoadingOverlay,
+  SimpleGrid,
+  Badge,
+  ActionIcon,
+  Image, // Thêm Image, ActionIcon
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import {
@@ -26,52 +27,185 @@ import {
   IconUpload,
   IconX,
 } from "@tabler/icons-react";
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import SeedCard from "./components/SeedCard";
-import { Dropzone, IMAGE_MIME_TYPE } from "@mantine/dropzone";
-import ConfirmStep from "./components/ConfirmStep";
-import { cropOptions } from "../../../AreaManagementPage/Block/Add";
-import CropCards from "../../../AreaManagementPage/Region/Add/components/CropCards";
-import SeedCards from "../../../AreaManagementPage/Region/Add/components/SeedCards";
-import { seedOptions } from "../../../AreaManagementPage/Row/Add";
+import { useState, useEffect, useMemo } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import {
+  Dropzone,
+  IMAGE_MIME_TYPE,
+  type FileWithPath,
+} from "@mantine/dropzone";
+import { notifications } from "@mantine/notifications";
 import SunEditor from "suneditor-react";
+import "suneditor/dist/css/suneditor.min.css";
+
+// Components
+import SeedCard from "./components/SeedCard";
 import Scrollable from "../../../../components/Scrollable";
+import ConfirmStep from "./components/ConfirmStep";
+
+// Store
+import { useTreeStore, type Tree } from "../../../zustand/treeStore";
+import { useCropGroupStore } from "../../../zustand/cropGroupStore";
+import { useSeedStore } from "../../../zustand/seedStore";
+import { useVarietyStore } from "../../../zustand/varietyStore";
+
+// Helper Base64
+const fileToBase64 = (file: File): Promise<string> => {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () => resolve(reader.result as string);
+    reader.onerror = (err) => reject(err);
+  });
+};
 
 const PlantManagementTreeAddPage = () => {
   const navigate = useNavigate();
+  const { id } = useParams();
+  const isEdit = !!id;
+
+  // STORE
+  const {
+    addTree,
+    updateTree,
+    getTreeById,
+    isLoading: loadingTree,
+  } = useTreeStore();
+  const { groups } = useCropGroupStore();
+  const { seeds } = useSeedStore();
+  const { varieties } = useVarietyStore();
+
   const [activeStep, setActiveStep] = useState(0);
-  const [selectedSeed, setSelectedSeed] = useState<string>("");
+  const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const [seedSearch, setSeedSearch] = useState("");
+
   const form = useForm({
     initialValues: {
       id: "",
       name: "",
+      group: "",
       type: "",
+      variety: "",
       note: "",
+      imgUrl: "",
       seedCode: "",
-      seedName: "",
-      supplier: "",
-      origin: "",
-      germinationRate: "",
-      uniformRate: "",
-      yield: "",
-      seedNote: "",
-      seedDoc: null,
-      seedImage: null as File | null,
       harvestMethod: "",
-      growthCycles: [],
-      techinicalDocType: "file", // 'file' or 'editor'
-      standardDocType: " file", // 'file' or 'editor'
-      pestDocType: "file",
+      growthCycles: [] as {
+        id: string;
+        name: string;
+        stages: string[];
+        estimatedTime: number;
+      }[],
+      techDocType: "editor",
+      techDocContent: "",
+      standardDocType: "editor",
+      standardDocContent: "",
+      pestDocType: "editor",
+      pestDocContent: "",
+    },
+    validate: {
+      id: (val) => (val.trim().length === 0 ? "Vui lòng nhập mã" : null),
+      name: (val) => (val.trim().length === 0 ? "Vui lòng nhập tên" : null),
+      type: (val) => (!val ? "Vui lòng chọn loại cây" : null),
+      variety: (val) => (!val ? "Vui lòng chọn giống cây" : null),
     },
   });
 
-  const handleSubmit = () => {
-    console.log("🌱 Dữ liệu cây trồng:", form.values);
+  // LOAD DATA EDIT
+  useEffect(() => {
+    if (isEdit && id) {
+      const data = getTreeById(id);
+      if (data) {
+        form.setValues({
+          ...data,
+          seedCode: data.seedCode || "",
+          growthCycles: data.growthCycles || [],
+        });
+        setImagePreview(data.imgUrl);
+      }
+    } else {
+      form.setFieldValue("id", `TREE-${Math.floor(Math.random() * 10000)}`);
+    }
+  }, [id]);
+
+  // OPTIONS LOGIC
+  const cropTypeOptions = useMemo(
+    () => groups.map((g) => ({ value: g.name, label: g.name })),
+    [groups]
+  );
+
+  const varietyOptions = useMemo(() => {
+    if (!form.values.type) return [];
+    return varieties
+      .filter((v) => v.treeName === form.values.type)
+      .map((v) => ({ value: v.name, label: v.name }));
+  }, [varieties, form.values.type]);
+
+  const filteredSeeds = useMemo(() => {
+    return seeds.filter(
+      (s) =>
+        s.name.toLowerCase().includes(seedSearch.toLowerCase()) ||
+        s.id.toLowerCase().includes(seedSearch.toLowerCase())
+    );
+  }, [seeds, seedSearch]);
+
+  const selectedSeedObj = useMemo(
+    () => seeds.find((s) => s.id === form.values.seedCode),
+    [seeds, form.values.seedCode]
+  );
+
+  // HANDLERS
+  const handleDropImage = async (files: FileWithPath[]) => {
+    const file = files[0];
+    if (file) {
+      const base64 = await fileToBase64(file);
+      setImagePreview(base64);
+      form.setFieldValue("imgUrl", base64);
+    }
+  };
+
+  // --- LOGIC XÓA ẢNH ---
+  const handleRemoveImage = () => {
+    setImagePreview(null);
+    form.setFieldValue("imgUrl", "");
+  };
+
+  // VALIDATE NEXT STEP
+  const handleNextStep = () => {
+    if (activeStep === 0) {
+      const { hasErrors } = form.validate();
+      if (hasErrors) return;
+    }
+    setActiveStep((current) => current + 1);
+  };
+
+  const handleSubmit = async () => {
+    const values = form.getValues();
+    const payload: Tree = {
+      ...values,
+      seedName: selectedSeedObj ? selectedSeedObj.name : "",
+    };
+
+    let success = false;
+    if (isEdit && id) {
+      success = await updateTree(id, payload);
+    } else {
+      success = await addTree(payload);
+    }
+
+    if (success) {
+      notifications.show({
+        title: "Thành công",
+        message: isEdit ? "Đã cập nhật" : "Đã thêm mới",
+        color: "green",
+      });
+      navigate(-1);
+    }
   };
 
   return (
-    <Card withBorder shadow="md" radius={12} p="xl">
+    <Card withBorder shadow="md" radius={12} p="xl" pos="relative">
+      <LoadingOverlay visible={loadingTree} />
       <Group mb="md">
         <Button
           variant="subtle"
@@ -81,191 +215,212 @@ const PlantManagementTreeAddPage = () => {
         >
           Quay lại
         </Button>
-        <Title order={3}>🌿 Thêm mới cây trồng</Title>
+        <Title order={3}>
+          🌿 {isEdit ? "Cập nhật cây trồng" : "Thêm mới cây trồng"}
+        </Title>
       </Group>
-      <Stepper active={activeStep} onStepClick={setActiveStep} mt="xs">
+
+      <Stepper
+        active={activeStep}
+        onStepClick={setActiveStep}
+        mt="xs"
+        allowNextStepsSelect={false}
+      >
         <Stepper.Step label="Bước 1" description="Thông tin cây" />
         <Stepper.Step label="Bước 2" description="Hạt giống" />
-        <Stepper.Step label="Bước 3" description="Hình thức thu hoạch" />
-        <Stepper.Step label="Bước 4" description="Chu kỳ sinh trưởng" />
-        <Stepper.Step label="Bước 5" description="Tài liệu kĩ thuật" />
+        <Stepper.Step label="Bước 3" description="Thu hoạch" />
+        <Stepper.Step label="Bước 4" description="Sinh trưởng" />
+        <Stepper.Step label="Bước 5" description="Tài liệu" />
         <Stepper.Step label="Bước 6" description="Xác nhận" />
       </Stepper>
 
       <form onSubmit={form.onSubmit(handleSubmit)}>
+        {/* --- BƯỚC 1 --- */}
         {activeStep === 0 && (
           <Group grow align="flex-start" mt="md" gap="xs">
             <Stack gap={"xs"}>
               <TextInput
                 label="Mã cây"
-                placeholder="Mã cây"
                 required
                 {...form.getInputProps("id")}
                 radius={4}
+                readOnly={isEdit}
+              />
+              <TextInput
+                label="Tên cây"
+                required
+                {...form.getInputProps("name")}
+                radius={4}
               />
               <Select
-                searchable
-                clearable
                 label="Nhóm cây trồng"
-                placeholder="Chọn nhóm cây trồng"
-                radius={4}
+                placeholder="Chọn nhóm"
                 data={[
                   "Cây ăn trái",
                   "Cây công nghiệp",
                   "Cây lương thực",
-                  "Cây thuốc",
-                  "Cây cảnh",
-                  "Cây lấy gỗ",
-                  "Cây lấy dầu",
-                  "Cây lấy sợi",
+                  "Rau màu",
+                  "Cây dược liệu",
                 ]}
-              />
-              <Text fw={500} fz={15}>
-                Loại cây trồng
-              </Text>
-              <TextInput
-                placeholder="Tìm kiếm loại cây"
+                {...form.getInputProps("group")}
                 radius={4}
-                leftSection={<IconSearch size={18} />}
               />
-              <CropCards
-                isMultiple={false}
-                selected=""
-                plants={cropOptions}
-                onSelect={() => {}}
-              />
-              <Text fw={500} fz={15}>
-                Giống cây trồng
-              </Text>
-              <TextInput
-                leftSection={<IconSearch size={18} />}
+              <Select
+                label="Loại cây"
+                placeholder="Chọn loại cây"
+                data={cropTypeOptions}
+                searchable
+                nothingFoundMessage="Không tìm thấy"
+                {...form.getInputProps("type")}
                 radius={4}
-                placeholder="Tìm kiếm giống cây trồng"
+                withAsterisk
+                onChange={(val) => {
+                  form.setFieldValue("type", val || "");
+                  form.setFieldValue("variety", "");
+                }}
               />
-              <SeedCards selected="" seeds={seedOptions} onSelect={() => {}} />
+              <Select
+                label="Giống cây"
+                placeholder={
+                  form.values.type
+                    ? "Chọn giống cây"
+                    : "Vui lòng chọn loại cây trước"
+                }
+                data={varietyOptions}
+                disabled={!form.values.type}
+                searchable
+                nothingFoundMessage="Không tìm thấy"
+                {...form.getInputProps("variety")}
+                radius={4}
+                withAsterisk
+              />
             </Stack>
 
             <Stack gap={"xs"}>
               <Input.Wrapper label="Ảnh cây trồng">
                 <Dropzone
-                  onDrop={(files) => console.log("accepted files", files)}
-                  onReject={(files) => console.log("rejected files", files)}
+                  onDrop={handleDropImage}
                   maxSize={5 * 1024 ** 2}
                   accept={IMAGE_MIME_TYPE}
                 >
                   <Group
                     justify="center"
                     gap="xl"
-                    mih={220}
+                    mih={180}
                     style={{ pointerEvents: "none" }}
                   >
-                    <Dropzone.Accept>
-                      <IconUpload
-                        size={52}
-                        color="var(--mantine-color-blue-6)"
-                        stroke={1.5}
-                      />
-                    </Dropzone.Accept>
-                    <Dropzone.Reject>
-                      <IconX
-                        size={52}
-                        color="var(--mantine-color-red-6)"
-                        stroke={1.5}
-                      />
-                    </Dropzone.Reject>
                     <Dropzone.Idle>
-                      <IconPhoto
-                        size={52}
-                        color="var(--mantine-color-dimmed)"
-                        stroke={1.5}
-                      />
+                      <IconPhoto size={50} color="gray" />
                     </Dropzone.Idle>
-
                     <div>
-                      <Text size="xl" inline>
-                        Kéo hoặc chọn để tải ảnh lên
-                      </Text>
-                      <Text size="sm" c="dimmed" inline mt={7}>
-                        Giới hạn kích thước ảnh khoản 5MB
+                      <Text size="sm" inline>
+                        Kéo thả ảnh tại đây
                       </Text>
                     </div>
                   </Group>
                 </Dropzone>
               </Input.Wrapper>
 
+              {/* --- PHẦN HIỂN THỊ ẢNH CÓ NÚT XÓA --- */}
+              {imagePreview && (
+                <div
+                  style={{
+                    position: "relative",
+                    display: "inline-block",
+                    alignSelf: "center",
+                  }}
+                >
+                  <Image
+                    src={imagePreview}
+                    alt="Preview"
+                    h={150}
+                    w="auto"
+                    fit="cover"
+                    radius="md"
+                    style={{ border: "1px solid #eee" }}
+                  />
+                  <ActionIcon
+                    variant="filled"
+                    color="red"
+                    size="sm"
+                    radius="xl"
+                    style={{
+                      position: "absolute",
+                      top: 5,
+                      right: 5,
+                      zIndex: 10,
+                    }}
+                    onClick={handleRemoveImage}
+                  >
+                    <IconX size={14} />
+                  </ActionIcon>
+                </div>
+              )}
+
               <Textarea
                 label="Mô tả"
                 {...form.getInputProps("note")}
                 radius={4}
+                minRows={3}
               />
             </Stack>
           </Group>
         )}
 
+        {/* --- CÁC BƯỚC KHÁC (GIỮ NGUYÊN NHƯ CŨ) --- */}
         {activeStep === 1 && (
-          <Stack mt={"md"}>
-            <Select
-              searchable
-              clearable
-              label="Hạt giống cây"
-              placeholder="Chọn giống cây"
-              radius={4}
-              data={["SR-RI6", "SR-RI4", "SR-RI3", "SR-RI8", "SR-RI9"]}
+          <Stack mt="md">
+            <Group justify="space-between">
+              <Text fw={500}>Hạt giống</Text>
+              {form.values.seedCode && (
+                <Badge size="lg" color="green" variant="light">
+                  Đang chọn: {selectedSeedObj?.name || form.values.seedCode}
+                </Badge>
+              )}
+            </Group>
+            <TextInput
+              placeholder="Tìm kiếm hạt giống..."
+              leftSection={<IconSearch size={16} />}
+              value={seedSearch}
+              onChange={(e) => setSeedSearch(e.currentTarget.value)}
             />
             <Scrollable h={450}>
-              <Group wrap="nowrap" p="xs">
-                <SeedCard
-                  backgroundImage="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTdvY2xVFTT9V8jGe2q8pxWWF4QfNWrchFGLQ&s"
-                  seedCode="DN-GV01"
-                  name="Đậu nành GV01"
-                  provider="Viện Nghiên cứu Cây trồng Việt Nam"
-                  origin="Việt Nam"
-                  germinationRate={90}
-                  yield={2.5}
-                  description="Giống đậu nành GV01 sinh trưởng tốt, chịu hạn khá, năng suất cao, hạt vàng sáng."
-                  onSelect={(code) => setSelectedSeed(code)}
-                  isActive={selectedSeed === "DN-GV01"}
-                />
-
-                <SeedCard
-                  backgroundImage="https://product.hstatic.net/1000075554/product/nanh_giong_mien_phu_minh_tam_goi_450g_f01d969848a444deaf5be7426a42fa95_eeaf90f8fdd648e191f20ea60c5617ed.jpg"
-                  seedCode="DN-GV02"
-                  name="Đậu nành An Phú"
-                  provider="Công ty Giống cây trồng Trung ương"
-                  origin="Việt Nam"
-                  germinationRate={88}
-                  yield={2.3}
-                  description="Giống đậu nành An Phú cho hạt to, giàu đạm, phù hợp canh tác đồng bằng sông Cửu Long."
-                  onSelect={(code) => setSelectedSeed(code)}
-                  isActive={selectedSeed === "DN-GV02"}
-                />
-
-                <SeedCard
-                  backgroundImage="https://sinhhocchaua.com/wp-content/uploads/2024/08/bap-nep.jpg"
-                  seedCode="BP-LVN10"
-                  name="Bắp LVN10"
-                  provider="Công ty Giống cây trồng Trung ương"
-                  origin="Việt Nam"
-                  germinationRate={92}
-                  yield={9}
-                  description="Giống bắp LVN10 sinh trưởng khỏe, kháng sâu bệnh tốt, năng suất ổn định."
-                  onSelect={(code) => setSelectedSeed(code)}
-                  isActive={selectedSeed === "BP-LVN10"}
-                />
+              <Group p="xs" align="flex-start">
+                {filteredSeeds.length > 0 ? (
+                  filteredSeeds.map((seed) => (
+                    <SeedCard
+                      key={seed.id}
+                      seedCode={seed.id}
+                      name={seed.name}
+                      provider={seed.supplier}
+                      origin={seed.origin}
+                      germinationRate={seed.germinationRate}
+                      yield={Number(seed.yield)}
+                      backgroundImage={seed.imgUrl}
+                      isActive={form.values.seedCode === seed.id}
+                      onSelect={(code) => form.setFieldValue("seedCode", code)}
+                    />
+                  ))
+                ) : (
+                  <Text c="dimmed" size="sm" ta="center" w="100%" py="xl">
+                    Chưa có dữ liệu hạt giống.
+                  </Text>
+                )}
               </Group>
             </Scrollable>
           </Stack>
         )}
 
         {activeStep === 2 && (
-          <Stack mt="md" gap="xs">
+          <Stack mt="md">
             <Select
-              searchable
-              clearable
-              label="Đơn vị tính toán khi thu hoạch"
+              label="Phương pháp thu hoạch"
               placeholder="Chọn phương pháp"
-              data={["Theo quả", "Kg", "Tấn", "Thùng / Sọt"]}
-              required
+              data={[
+                "Thu hoạch thủ công (Hái tay)",
+                "Thu hoạch cơ giới (Máy gặt)",
+                "Thu hoạch bán cơ giới",
+              ]}
               {...form.getInputProps("harvestMethod")}
               radius={4}
             />
@@ -273,375 +428,152 @@ const PlantManagementTreeAddPage = () => {
         )}
 
         {activeStep === 3 && (
-          <Stack mt="md" gap="xs">
-            {/**Drag and drop và theo thứ tự */}
+          <Stack mt="md">
             {form.values.growthCycles.map((cycle, index) => (
-              <Card key={index} withBorder radius="md" shadow="xs" p="md">
+              <Card key={index} withBorder radius="md" p="sm" bg="gray.0">
                 <Stack gap="xs">
+                  <Group justify="space-between">
+                    <Text fw={500} size="sm">
+                      Chu kỳ #{index + 1}
+                    </Text>
+                    <Button
+                      color="red"
+                      variant="subtle"
+                      size="compact-xs"
+                      onClick={() => form.removeListItem("growthCycles", index)}
+                    >
+                      <IconX size={14} /> Xóa
+                    </Button>
+                  </Group>
                   <Select
+                    label="Tên chu kỳ"
+                    placeholder="Chọn hoặc nhập"
                     searchable
-                    clearable
-                    label={"Chu kì sinh trưởng"}
-                    data={["Ngắn hạn", "Trung hạn", "Dài hạn"]}
-                    radius={4}
+                    data={[
+                      "Kiến thiết cơ bản",
+                      "Kinh doanh (Ra hoa - Thu hoạch)",
+                      "Phục hồi sau thu hoạch",
+                    ]}
+                    {...form.getInputProps(`growthCycles.${index}.name`)}
                   />
                   <MultiSelect
-                    searchable
-                    clearable
-                    label="Giai đoạn sinh trưởng"
+                    label="Giai đoạn chi tiết"
+                    placeholder="Chọn các giai đoạn"
                     data={[
-                      "Gieo trồng",
-                      "Ra rễ",
+                      "Gieo hạt",
+                      "Nảy mầm",
+                      "Cây con",
                       "Phát triển thân lá",
                       "Ra hoa",
                       "Đậu quả",
+                      "Nuôi quả",
+                      "Chín",
                       "Thu hoạch",
                     ]}
-                    onChange={(val) =>
-                      form.setFieldValue(`growthCycles.${index}.stages`, val)
-                    }
-                    radius={4}
+                    {...form.getInputProps(`growthCycles.${index}.stages`)}
                   />
                   <NumberInput
-                    label="Thời gian diễn ra chu kỳ ( ngày )"
-                    placeholder="VD: 180 ngày"
-                    radius={4}
+                    label="Thời gian ước tính (ngày)"
+                    min={0}
+                    {...form.getInputProps(
+                      `growthCycles.${index}.estimatedTime`
+                    )}
                   />
-                  <Group justify="right">
-                    <Button
-                      color="red"
-                      variant="light"
-                      radius={4}
-                      onClick={() => form.removeListItem("growthCycles", index)}
-                    >
-                      Xoá
-                    </Button>
-                  </Group>
                 </Stack>
               </Card>
             ))}
-
-            <Group justify="right">
-              <Button
-                radius={4}
-                onClick={() =>
-                  form.insertListItem("growthCycles", {
-                    id: crypto.randomUUID(),
-                    name: "",
-                    stages: [],
-                    estimatedTime: "",
-                  })
-                }
-              >
-                + Thêm chu kỳ
-              </Button>
-            </Group>
+            <Button
+              variant="outline"
+              radius={4}
+              onClick={() =>
+                form.insertListItem("growthCycles", {
+                  id: crypto.randomUUID(),
+                  name: "",
+                  stages: [],
+                  estimatedTime: 0,
+                })
+              }
+            >
+              + Thêm chu kỳ sinh trưởng
+            </Button>
           </Stack>
         )}
+
         {activeStep === 4 && (
-          <Stack gap="xs" mt={"md"}>
-            <Radio.Group
-              label="Kỹ thuật canh tác"
-              value={form.getValues().techinicalDocType}
-              onChange={(val) => form.setFieldValue("techinicalDocType", val)}
-            >
-              <Group mt="xs">
-                <Radio value="file" label="Tải file PDF" />
-                <Radio value="editor" label="Kỹ thuật canh tác" />
-              </Group>
-            </Radio.Group>
-
-            {form.getValues().techinicalDocType === "file" ? (
-              <Dropzone
-                onDrop={(files) => console.log("accepted files", files)}
-                onReject={(files) => console.log("rejected files", files)}
-                maxSize={5 * 1024 ** 2}
-                accept={["application/pdf"]}
+          <Stack mt="md">
+            <Card withBorder radius="md" p="sm">
+              <Text fw={500} mb="xs">
+                1. Kỹ thuật canh tác
+              </Text>
+              <Radio.Group
+                value={form.values.techDocType}
+                onChange={(val) => form.setFieldValue("techDocType", val)}
+                mb="xs"
               >
-                <Group
-                  justify="center"
-                  gap="xl"
-                  mih={220}
-                  style={{ pointerEvents: "none" }}
-                >
-                  <Dropzone.Accept>
-                    <IconUpload
-                      size={52}
-                      color="var(--mantine-color-blue-6)"
-                      stroke={1.5}
-                    />
-                  </Dropzone.Accept>
-                  <Dropzone.Reject>
-                    <IconX
-                      size={52}
-                      color="var(--mantine-color-red-6)"
-                      stroke={1.5}
-                    />
-                  </Dropzone.Reject>
-                  <Dropzone.Idle>
-                    <IconPhoto
-                      size={52}
-                      color="var(--mantine-color-dimmed)"
-                      stroke={1.5}
-                    />
-                  </Dropzone.Idle>
-
-                  <div>
-                    <Text size="xl" inline>
-                      Bỏ và thả nội dung kỹ thuật canh tác
-                    </Text>
-                    <Text size="sm" c="dimmed" inline mt={7}>
-                      Đính kèm nội dung kỹ thuật canh tác (tối đa 5MB)
-                    </Text>
-                  </div>
+                <Group>
+                  <Radio value="editor" label="Soạn thảo nội dung" />
+                  <Radio value="file" label="Upload PDF" />
                 </Group>
-              </Dropzone>
-            ) : (
-              <div>
-                <label style={{ fontSize: 14, fontWeight: 500 }}>
-                  Kỹ thuật canh tác
-                </label>
+              </Radio.Group>
+              {form.values.techDocType === "editor" ? (
                 <SunEditor
-                  setOptions={{
-                    height: "200px",
-                    buttonList: [
-                      ["undo", "redo"],
-                      ["font", "fontSize", "formatBlock"],
-                      ["paragraphStyle", "blockquote"],
-                      [
-                        "bold",
-                        "underline",
-                        "italic",
-                        "strike",
-                        "subscript",
-                        "superscript",
-                      ],
-                      ["fontColor", "hiliteColor", "textStyle"],
-                      ["removeFormat"],
-                      "/", // Line break
-                      ["outdent", "indent"],
-                      ["align", "horizontalRule", "list", "lineHeight"],
-                      [
-                        "table",
-                        "link",
-                        "image",
-                        "video",
-                        "audio" /** ,'math' */,
-                      ], // You must add the 'katex' library at options to use the 'math' plugin.
-                      /** ['imageGallery'] */ // You must add the "imageGalleryUrl".
-                      ["fullScreen", "showBlocks", "codeView"],
-                      ["preview", "print"],
-                      ["save", "template"],
-                      /** ['dir', 'dir_ltr', 'dir_rtl'] */ // "dir": Toggle text direction, "dir_ltr": Right to Left, "dir_rtl": Left to Right
-                    ],
-                  }}
+                  setContents={form.values.techDocContent}
+                  onChange={(c) => form.setFieldValue("techDocContent", c)}
+                  setOptions={{ height: "150px" }}
                 />
-              </div>
-            )}
-            <Radio.Group
-              label="Tiêu chuẩn chất lượng"
-              value={form.getValues().standardDocType}
-              onChange={(val) => form.setFieldValue("standardDocType", val)}
-            >
-              <Group mt="xs">
-                <Radio value="file" label="Tải file PDF" />
-                <Radio value="editor" label="Tiêu chuẩn chất lượng" />
-              </Group>
-            </Radio.Group>
+              ) : (
+                <TextInput
+                  leftSection={<IconUpload size={16} />}
+                  placeholder="Nhập tên file hoặc URL (Demo)"
+                  {...form.getInputProps("techDocContent")}
+                />
+              )}
+            </Card>
 
-            {form.getValues().standardDocType === "file" ? (
-              <Dropzone
-                onDrop={(files) => console.log("accepted files", files)}
-                onReject={(files) => console.log("rejected files", files)}
-                maxSize={5 * 1024 ** 2}
-                accept={["application/pdf"]}
+            <Card withBorder radius="md" p="sm">
+              <Text fw={500} mb="xs">
+                2. Tiêu chuẩn chất lượng
+              </Text>
+              <Radio.Group
+                value={form.values.standardDocType}
+                onChange={(val) => form.setFieldValue("standardDocType", val)}
+                mb="xs"
               >
-                <Group
-                  justify="center"
-                  gap="xl"
-                  mih={220}
-                  style={{ pointerEvents: "none" }}
-                >
-                  <Dropzone.Accept>
-                    <IconUpload
-                      size={52}
-                      color="var(--mantine-color-blue-6)"
-                      stroke={1.5}
-                    />
-                  </Dropzone.Accept>
-                  <Dropzone.Reject>
-                    <IconX
-                      size={52}
-                      color="var(--mantine-color-red-6)"
-                      stroke={1.5}
-                    />
-                  </Dropzone.Reject>
-                  <Dropzone.Idle>
-                    <IconPhoto
-                      size={52}
-                      color="var(--mantine-color-dimmed)"
-                      stroke={1.5}
-                    />
-                  </Dropzone.Idle>
-
-                  <div>
-                    <Text size="xl" inline>
-                      Bỏ và thả nội dung tiêu chuẩn chất lượng
-                    </Text>
-                    <Text size="sm" c="dimmed" inline mt={7}>
-                      Đính kèm nội dung tiêu chuẩn chất lượng (tối đa 5MB)
-                    </Text>
-                  </div>
+                <Group>
+                  <Radio value="editor" label="Soạn thảo nội dung" />
+                  <Radio value="file" label="Upload PDF" />
                 </Group>
-              </Dropzone>
-            ) : (
-              <div>
-                <label style={{ fontSize: 14, fontWeight: 500 }}>
-                  Tiêu chuẩn chất lượng
-                </label>
+              </Radio.Group>
+              {form.values.standardDocType === "editor" ? (
                 <SunEditor
-                  setOptions={{
-                    height: "200px",
-                    buttonList: [
-                      ["undo", "redo"],
-                      ["font", "fontSize", "formatBlock"],
-                      ["paragraphStyle", "blockquote"],
-                      [
-                        "bold",
-                        "underline",
-                        "italic",
-                        "strike",
-                        "subscript",
-                        "superscript",
-                      ],
-                      ["fontColor", "hiliteColor", "textStyle"],
-                      ["removeFormat"],
-                      "/", // Line break
-                      ["outdent", "indent"],
-                      ["align", "horizontalRule", "list", "lineHeight"],
-                      [
-                        "table",
-                        "link",
-                        "image",
-                        "video",
-                        "audio" /** ,'math' */,
-                      ], // You must add the 'katex' library at options to use the 'math' plugin.
-                      /** ['imageGallery'] */ // You must add the "imageGalleryUrl".
-                      ["fullScreen", "showBlocks", "codeView"],
-                      ["preview", "print"],
-                      ["save", "template"],
-                      /** ['dir', 'dir_ltr', 'dir_rtl'] */ // "dir": Toggle text direction, "dir_ltr": Right to Left, "dir_rtl": Left to Right
-                    ],
-                  }}
+                  setContents={form.values.standardDocContent}
+                  onChange={(c) => form.setFieldValue("standardDocContent", c)}
+                  setOptions={{ height: "150px" }}
                 />
-              </div>
-            )}
-            <Radio.Group
-              label="Giải pháp phòng trừ sâu bệnh"
-              value={form.getValues().pestDocType}
-              onChange={(val) => form.setFieldValue("pestDocType", val)}
-            >
-              <Group mt="xs">
-                <Radio value="file" label="Tải file PDF" />
-                <Radio value="editor" label="Giải pháp phòng trừ sâu bệnh" />
-              </Group>
-            </Radio.Group>
-
-            {form.getValues().pestDocType === "file" ? (
-              <Dropzone
-                onDrop={(files) => console.log("accepted files", files)}
-                onReject={(files) => console.log("rejected files", files)}
-                maxSize={5 * 1024 ** 2}
-                accept={["application/pdf"]}
-              >
-                <Group
-                  justify="center"
-                  gap="xl"
-                  mih={220}
-                  style={{ pointerEvents: "none" }}
-                >
-                  <Dropzone.Accept>
-                    <IconUpload
-                      size={52}
-                      color="var(--mantine-color-blue-6)"
-                      stroke={1.5}
-                    />
-                  </Dropzone.Accept>
-                  <Dropzone.Reject>
-                    <IconX
-                      size={52}
-                      color="var(--mantine-color-red-6)"
-                      stroke={1.5}
-                    />
-                  </Dropzone.Reject>
-                  <Dropzone.Idle>
-                    <IconPhoto
-                      size={52}
-                      color="var(--mantine-color-dimmed)"
-                      stroke={1.5}
-                    />
-                  </Dropzone.Idle>
-
-                  <div>
-                    <Text size="xl" inline>
-                      Bỏ và thả nội dung giải pháp phòng trừ sâu bệnh
-                    </Text>
-                    <Text size="sm" c="dimmed" inline mt={7}>
-                      Đính kèm nội dung giải pháp phòng trừ sâu bệnh (tối đa
-                      5MB)
-                    </Text>
-                  </div>
-                </Group>
-              </Dropzone>
-            ) : (
-              <div>
-                <label style={{ fontSize: 14, fontWeight: 500 }}>
-                  Giải pháp phòng trừ sâu bệnh
-                </label>
-                <SunEditor
-                  setOptions={{
-                    height: "200px",
-                    buttonList: [
-                      ["undo", "redo"],
-                      ["font", "fontSize", "formatBlock"],
-                      ["paragraphStyle", "blockquote"],
-                      [
-                        "bold",
-                        "underline",
-                        "italic",
-                        "strike",
-                        "subscript",
-                        "superscript",
-                      ],
-                      ["fontColor", "hiliteColor", "textStyle"],
-                      ["removeFormat"],
-                      "/", // Line break
-                      ["outdent", "indent"],
-                      ["align", "horizontalRule", "list", "lineHeight"],
-                      [
-                        "table",
-                        "link",
-                        "image",
-                        "video",
-                        "audio" /** ,'math' */,
-                      ], // You must add the 'katex' library at options to use the 'math' plugin.
-                      /** ['imageGallery'] */ // You must add the "imageGalleryUrl".
-                      ["fullScreen", "showBlocks", "codeView"],
-                      ["preview", "print"],
-                      ["save", "template"],
-                      /** ['dir', 'dir_ltr', 'dir_rtl'] */ // "dir": Toggle text direction, "dir_ltr": Right to Left, "dir_rtl": Left to Right
-                    ],
-                  }}
+              ) : (
+                <TextInput
+                  leftSection={<IconUpload size={16} />}
+                  placeholder="Nhập tên file hoặc URL (Demo)"
+                  {...form.getInputProps("standardDocContent")}
                 />
-              </div>
-            )}
+              )}
+            </Card>
           </Stack>
         )}
-        {activeStep === 5 && <ConfirmStep />}
 
+        {activeStep === 5 && (
+          <ConfirmStep
+            data={form.values}
+            imagePreview={imagePreview}
+            seedName={selectedSeedObj?.name || form.values.seedCode}
+          />
+        )}
+
+        {/* --- NAVIGATION BUTTONS --- */}
         <Group justify="space-between" mt="xl">
           <Button
             variant="default"
+            type="button"
             disabled={activeStep === 0}
             onClick={() => setActiveStep((p) => p - 1)}
             radius={4}
@@ -649,12 +581,12 @@ const PlantManagementTreeAddPage = () => {
             Quay lại
           </Button>
           {activeStep < 5 ? (
-            <Button onClick={() => setActiveStep((p) => p + 1)} radius={4}>
+            <Button type="button" onClick={handleNextStep} radius={4}>
               Tiếp theo
             </Button>
           ) : (
-            <Button type="submit" color="green" radius={4}>
-              Lưu
+            <Button onClick={handleSubmit} color="green" radius={4}>
+              Lưu & Hoàn tất
             </Button>
           )}
         </Group>

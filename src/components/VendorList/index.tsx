@@ -6,7 +6,9 @@ import {
   Badge,
   Tooltip,
   ActionIcon,
-  Autocomplete,
+  TextInput, // Đổi sang TextInput để làm ô tìm kiếm
+  Loader,
+  Center,
 } from "@mantine/core";
 import {
   IconBuildingFactory,
@@ -18,149 +20,196 @@ import {
   IconSearch,
 } from "@tabler/icons-react";
 import Scrollable from "../Scrollable";
-import { useState } from "react";
+import { useEffect, useState, useMemo } from "react";
+import { useCompanyStore } from "../../pages/zustand/companyStore";
 
-const suppliers = [
-  {
-    code: "SUP001",
-    name: "Công ty TNHH Nông Nghiệp Xanh",
-    type: "Doanh nghiệp",
-    representative: "Nguyễn Văn A",
-    phone: "0912345678",
-    email: "contact@nongnghiepxanh.vn",
-    address: "123 Đường Lê Lợi, Quận 1, TP.HCM",
-  },
-  {
-    code: "SUP002",
-    name: "Trần Thị B",
-    type: "Cá nhân",
-    representative: "Trần Thị B",
-    phone: "0987654321",
-    email: "",
-    address: "Ấp 3, Xã Tân Phú, Huyện Châu Thành, Long An",
-  },
-  {
-    code: "SUP002",
-    name: "Trần Thị B",
-    type: "Cá nhân",
-    representative: "Trần Thị B",
-    phone: "0987654321",
-    email: "",
-    address: "Ấp 3, Xã Tân Phú, Huyện Châu Thành, Long An",
-  },
-];
+type TVendorList = {
+  // Thay đổi: Nhận value từ parent để hiển thị trạng thái đã chọn (nếu form đang edit)
+  value?: string;
+  onChange: (id: string) => void;
+};
 
-export function VendorList() {
-  const [selected, setSelected] = useState("");
+export function VendorList({ value, onChange }: TVendorList) {
+  // 1. KẾT NỐI STORE
+  const { companies, isLoading } = useCompanyStore();
 
-  const onSelect = (code: string) => {
-    setSelected(code);
+  // 2. STATE LOCAL
+  const [selected, setSelected] = useState(value || "");
+  const [keyword, setKeyword] = useState("");
+
+  // Sync prop value với state nội bộ (cho trường hợp Edit mode)
+  useEffect(() => {
+    if (value) setSelected(value);
+  }, [value]);
+
+  // 4. LỌC DANH SÁCH (Chỉ lấy Nhà cung cấp + Logic tìm kiếm)
+  const filteredSuppliers = useMemo(() => {
+    return companies.filter((c) => {
+      // Điều kiện 1: Phải là Nhà cung cấp
+      const isSupplier = c.categoryType === "supplier";
+
+      // Điều kiện 2: Tìm kiếm theo tên hoặc mã
+      const matchKeyword =
+        !keyword ||
+        c.name.toLowerCase().includes(keyword.toLowerCase()) ||
+        c.code.toLowerCase().includes(keyword.toLowerCase());
+
+      return isSupplier && matchKeyword;
+    });
+  }, [companies, keyword]);
+
+  const onSelect = (id: string) => {
+    setSelected(id);
+    onChange(id); // Trả về ID cho form cha
   };
+
   return (
     <Stack gap={"xs"}>
       <Text fw={500} fz={15}>
-        Nhà cung cấp
+        Chọn nhà cung cấp
       </Text>
-      <Autocomplete
-        placeholder="Tìm nhà cung cấp"
+
+      {/* Ô tìm kiếm */}
+      <TextInput
+        placeholder="Tìm kiếm theo tên hoặc mã..."
         leftSection={<IconSearch size={18} />}
         radius={4}
+        value={keyword}
+        onChange={(e) => setKeyword(e.currentTarget.value)}
       />
+
       <Scrollable h={270}>
-        <Group wrap="nowrap" gap="md" p={"xs"}>
-          {suppliers.map((sup, index) => (
-            <Card
-              miw={400}
-              h={250}
-              key={index}
-              shadow="md"
-              padding="lg"
-              radius="md"
-              withBorder
-              style={{
-                position: "relative",
-                transition: "transform 0.2s ease",
-                borderColor: selected === sup.code ? "green" : undefined,
-                cursor: "pointer",
-              }}
-              onClick={() => onSelect(sup.code)}
-              onMouseEnter={(e) =>
-                (e.currentTarget.style.transform = "scale(1.02)")
-              }
-              onMouseLeave={(e) =>
-                (e.currentTarget.style.transform = "scale(1)")
-              }
-            >
-              <Group justify="space-between">
-                <Group>
-                  <IconBuildingFactory size={32} />
-                  <div>
-                    <Text size="lg" fw={700}>
-                      {sup.name}
-                    </Text>
-                    <Badge
-                      color={sup.type === "Doanh nghiệp" ? "blue" : "orange"}
-                      variant="light"
-                      mt={4}
-                    >
-                      {sup.type}
-                    </Badge>
-                  </div>
-                </Group>
-
-                <Tooltip label="Xem chi tiết" withArrow>
-                  <ActionIcon
-                    color="blue"
-                    variant="light"
-                    radius="xl"
-                    size="lg"
-                  >
-                    <IconIdBadge />
-                  </ActionIcon>
-                </Tooltip>
-              </Group>
-
-              <Stack mt="md" gap="xs">
-                <Group>
-                  <IconIdBadge size={18} />
-                  <Text size="sm">
-                    <strong>Mã nhà cung cấp:</strong> {sup.code}
-                  </Text>
-                </Group>
-
-                <Group>
-                  <IconUser size={18} />
-                  <Text size="sm">
-                    <strong>Người đại diện:</strong> {sup.representative}
-                  </Text>
-                </Group>
-
-                <Group>
-                  <IconPhone size={18} />
-                  <Text size="sm">
-                    <strong>SĐT:</strong> {sup.phone}
-                  </Text>
-                </Group>
-
-                {sup.email && (
+        {isLoading ? (
+          <Center h={200}>
+            <Loader size="sm" />
+          </Center>
+        ) : filteredSuppliers.length === 0 ? (
+          <Center h={200}>
+            <Text c="dimmed" size="sm">
+              Không tìm thấy nhà cung cấp nào.
+            </Text>
+          </Center>
+        ) : (
+          <Group wrap="nowrap" gap="md" p={"xs"}>
+            {filteredSuppliers.map((sup) => (
+              <Card
+                miw={400}
+                h={250}
+                key={sup.id}
+                shadow="md"
+                padding="lg"
+                radius="md"
+                withBorder
+                style={{
+                  position: "relative",
+                  transition: "transform 0.2s ease",
+                  // So sánh theo ID
+                  borderColor: selected === sup.id ? "green" : undefined,
+                  borderWidth: selected === sup.id ? 2 : 1,
+                  cursor: "pointer",
+                }}
+                onClick={() => onSelect(sup.id)}
+                onMouseEnter={(e) =>
+                  (e.currentTarget.style.transform = "scale(1.02)")
+                }
+                onMouseLeave={(e) =>
+                  (e.currentTarget.style.transform = "scale(1)")
+                }
+              >
+                <Group justify="space-between">
                   <Group>
-                    <IconMail size={18} />
+                    <IconBuildingFactory
+                      size={32}
+                      color={selected === sup.id ? "green" : "gray"}
+                    />
+                    <div>
+                      <Text size="lg" fw={700} lineClamp={1} title={sup.name}>
+                        {sup.name}
+                      </Text>
+                      <Badge
+                        color={sup.type === "Doanh nghiệp" ? "blue" : "orange"}
+                        variant="light"
+                        mt={4}
+                      >
+                        {sup.type}
+                      </Badge>
+                    </div>
+                  </Group>
+
+                  <Tooltip label="Xem chi tiết" withArrow>
+                    <ActionIcon
+                      color="blue"
+                      variant="light"
+                      radius="xl"
+                      size="lg"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        // Logic xem chi tiết nếu cần
+                      }}
+                    >
+                      <IconIdBadge size={20} />
+                    </ActionIcon>
+                  </Tooltip>
+                </Group>
+
+                <Stack mt="md" gap="xs">
+                  <Group>
+                    <IconIdBadge size={18} />
                     <Text size="sm">
-                      <strong>Email:</strong> {sup.email}
+                      <strong>Mã:</strong> {sup.code}
                     </Text>
                   </Group>
-                )}
 
-                <Group align="start">
-                  <IconMapPin size={18} style={{ marginTop: 2 }} />
-                  <Text size="sm">
-                    <strong>Địa chỉ:</strong> {sup.address}
-                  </Text>
-                </Group>
-              </Stack>
-            </Card>
-          ))}
-        </Group>
+                  <Group>
+                    <IconUser size={18} />
+                    <Text size="sm" lineClamp={1}>
+                      <strong>Đại diện:</strong> {sup.representative}
+                    </Text>
+                  </Group>
+
+                  <Group>
+                    <IconPhone size={18} />
+                    <Text size="sm">
+                      <strong>SĐT:</strong> {sup.phone}
+                    </Text>
+                  </Group>
+
+                  {sup.email && (
+                    <Group>
+                      <IconMail size={18} />
+                      <Text size="sm" lineClamp={1}>
+                        <strong>Email:</strong> {sup.email}
+                      </Text>
+                    </Group>
+                  )}
+
+                  <Group align="start">
+                    <IconMapPin size={18} style={{ marginTop: 2 }} />
+                    <Text size="sm" lineClamp={1} title={sup.address}>
+                      <strong>ĐC:</strong> {sup.address}
+                    </Text>
+                  </Group>
+                </Stack>
+
+                {/* Dấu check xanh khi được chọn */}
+                {selected === sup.id && (
+                  <Badge
+                    color="green"
+                    variant="filled"
+                    style={{
+                      position: "absolute",
+                      top: 10,
+                      right: 10,
+                      zIndex: 10,
+                    }}
+                  >
+                    Đang chọn
+                  </Badge>
+                )}
+              </Card>
+            ))}
+          </Group>
+        )}
       </Scrollable>
     </Stack>
   );

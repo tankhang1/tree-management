@@ -25,98 +25,110 @@ import {
   IconTrash,
 } from "@tabler/icons-react";
 import type { MRT_ColumnDef } from "mantine-react-table";
-import Table from "../../../components/Table";
+import { useMemo, useState } from "react"; // Import thêm hooks
 import { useNavigate } from "react-router-dom";
+import Table from "../../../components/Table";
 import { PATH } from "../../../constants/path.constants";
+import { type Seed, useSeedStore } from "../../zustand/seedStore";
 import SeedDetailView from "./components/SeedDetailView";
 
-type SeedInfo = {
-  id: string; // Mã giống cây (hệ thống)
-  name: string; // Tên giống
-  supplier: string; // Nhà cung cấp
-  origin: string; // Xuất xứ (quốc gia)
-  germinationRate: number; // Tỷ lệ nảy mầm (%)
-  yield: string; // Năng suất (ví dụ: "25 tấn/ha")
-  uniformity: number;
-  note: string; // Mô tả
-  technicalDoc: string | null; // Link tài liệu kỹ thuật hoặc tên file
-  imgUrl: string;
-};
-export const seedDataset: SeedInfo[] = [
-  {
-    id: "DN-DT84",
-    name: "Đậu nành DT84",
-    supplier: "Trung tâm Giống cây trồng Việt Nam",
-    origin: "Việt Nam",
-    germinationRate: 90,
-    uniformity: 70,
-    yield: "2,5 tấn/ha",
-    note: "Giống đậu nành ngắn ngày (90–100 ngày), chịu hạn tốt, hạt vàng sáng, dễ canh tác.",
-    technicalDoc: "dau-nanh-dt84.pdf",
-    imgUrl:
-      "https://lh6.googleusercontent.com/proxy/MkmLTr7RaC47H6aLuMX0yGGlXhtKf77bRQ0sEwVhPiHI01aj7WPJYpuBWIbN422tMgVbH5Z67gqzUj9h-LmQpjem8pVrKg",
-  },
-  {
-    id: "DN-DX11",
-    name: "Đậu nành ĐX11",
-    supplier: "Công ty Mekong Seed",
-    origin: "Việt Nam",
-    germinationRate: 88,
-    uniformity: 72,
-    yield: "2,8 tấn/ha",
-    note: "Giống cho năng suất cao, hạt to, vỏ vàng, phù hợp nhiều vùng sinh thái khác nhau.",
-    technicalDoc: "dau-nanh-dx11.pdf",
-    imgUrl:
-      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTxNvmzOr65QezHLAx9jp82a_wLJNjCzSuexA&s",
-  },
-  {
-    id: "BP-LVN10",
-    name: "Bắp LVN10",
-    supplier: "Viện Nghiên cứu Ngô Trung ương",
-    origin: "Việt Nam",
-    germinationRate: 93,
-    uniformity: 80,
-    yield: "9,5 tấn/ha",
-    note: "Giống bắp lai LVN10 sinh trưởng khỏe, kháng sâu bệnh tốt, thời gian sinh trưởng 100–115 ngày.",
-    technicalDoc: "bap-lvn10.pdf",
-    imgUrl:
-      "https://storage.ssc.com.vn/Data/2021/05/18/lvn10-3-637569497051796680.jpg?w=620&h=350",
-  },
-  {
-    id: "BP-NK66",
-    name: "Bắp NK66",
-    supplier: "Syngenta Việt Nam",
-    origin: "Thái Lan",
-    germinationRate: 91,
-    uniformity: 78,
-    yield: "10 tấn/ha",
-    note: "Giống bắp NK66 chịu hạn tốt, phù hợp vùng Đông Nam Bộ và Tây Nguyên, chất lượng hạt cao.",
-    technicalDoc: "bap-nk66.pdf",
-    imgUrl: "https://static.tuoitre.vn/tto/i/s626/2015/03/24/AgwPWLuq.jpg",
-  },
-  {
-    id: "BP-HN68",
-    name: "Bắp nếp HN68",
-    supplier: "Công ty Giống Cây trồng Trung ương",
-    origin: "Việt Nam",
-    germinationRate: 89,
-    uniformity: 75,
-    yield: "8,5 tấn/ha",
-    note: "Giống bắp nếp chất lượng cao, hạt dẻo thơm, trắng sữa, thời gian sinh trưởng 95 ngày.",
-    technicalDoc: "bap-hn68.pdf",
-    imgUrl:
-      "https://storage.vinaseed.com.vn/Data/2020/03/10/2-ngo-hn68-637194768462517218.jpg?w=620&h=350",
-  },
-];
-
 const PlantManagementSeedPage = () => {
+  const { seeds, deleteSeed } = useSeedStore(); // Lấy thêm hàm delete nếu cần
   const navigate = useNavigate();
+
+  // --- STATE QUẢN LÝ MODAL CHI TIẾT ---
   const [openedSeedForm, { open: openSeedForm, close: closeSeedForm }] =
     useDisclosure(false);
+  const [selectedSeed, setSelectedSeed] = useState<Seed | null>(null);
+
+  // --- STATE QUẢN LÝ INPUT LỌC ---
+  // State lưu giá trị đang nhập trên form
+  const [keyword, setKeyword] = useState("");
+  const [selectedSuppliers, setSelectedSuppliers] = useState<string[]>([]);
+  const [selectedOrigins, setSelectedOrigins] = useState<string[]>([]);
+
+  // State lưu giá trị ĐÃ KÍCH HOẠT để lọc (dùng khi nhấn nút "Lọc thông tin")
+  // Nếu bạn muốn lọc Real-time (nhập tới đâu lọc tới đó) thì bỏ phần Active này và dùng trực tiếp state ở trên.
+  const [activeFilter, setActiveFilter] = useState({
+    keyword: "",
+    suppliers: [] as string[],
+    origins: [] as string[],
+  });
+
   const onAddSeed = () => {
     navigate(PATH.PLANT_ADD_SEED);
   };
-  const seedColumns: MRT_ColumnDef<SeedInfo>[] = [
+
+  // --- LOGIC TẠO DỮ LIỆU DROPDOWN ĐỘNG ---
+  // Tự động lấy danh sách unique từ dữ liệu seeds có sẵn
+  const supplierOptions = useMemo(() => {
+    return Array.from(new Set(seeds.map((s) => s.supplier))).filter(Boolean);
+  }, [seeds]);
+
+  const originOptions = useMemo(() => {
+    return Array.from(new Set(seeds.map((s) => s.origin))).filter(Boolean);
+  }, [seeds]);
+
+  // --- LOGIC FILTER ---
+  const handleApplyFilter = () => {
+    setActiveFilter({
+      keyword,
+      suppliers: selectedSuppliers,
+      origins: selectedOrigins,
+    });
+  };
+
+  const handleResetFilter = () => {
+    setKeyword("");
+    setSelectedSuppliers([]);
+    setSelectedOrigins([]);
+    setActiveFilter({
+      keyword: "",
+      suppliers: [],
+      origins: [],
+    });
+  };
+
+  const filteredSeeds = useMemo(() => {
+    return seeds.filter((seed) => {
+      // 1. Lọc theo từ khóa (Mã hoặc Tên)
+      const matchKeyword =
+        activeFilter.keyword === "" ||
+        seed.name.toLowerCase().includes(activeFilter.keyword.toLowerCase()) ||
+        seed.id.toLowerCase().includes(activeFilter.keyword.toLowerCase());
+
+      // 2. Lọc theo Nhà cung cấp
+      const matchSupplier =
+        activeFilter.suppliers.length === 0 ||
+        activeFilter.suppliers.includes(seed.supplier);
+
+      // 3. Lọc theo Xuất xứ
+      const matchOrigin =
+        activeFilter.origins.length === 0 ||
+        activeFilter.origins.includes(seed.origin);
+
+      return matchKeyword && matchSupplier && matchOrigin;
+    });
+  }, [seeds, activeFilter]);
+
+  // --- XỬ LÝ ACTION ---
+  const handleViewDetail = (seed: Seed) => {
+    setSelectedSeed(seed);
+    openSeedForm();
+  };
+
+  const handleEdit = (id: string) => {};
+
+  const handleDelete = (id: string) => {
+    if (window.confirm("Bạn có chắc chắn muốn xóa giống cây này?")) {
+      // Gọi hàm xóa từ store
+      // deleteSeed(id);
+      console.log("Delete id:", id);
+    }
+  };
+
+  // --- CẤU HÌNH CỘT ---
+  const seedColumns: MRT_ColumnDef<Seed>[] = [
     {
       accessorKey: "imgUrl",
       header: "Hình ảnh",
@@ -147,30 +159,43 @@ const PlantManagementSeedPage = () => {
     { accessorKey: "origin", header: "Xuất xứ" },
     {
       accessorKey: "germinationRate",
-      header: "Tỷ lệ nảy mầm (%)",
+      header: "Tỷ lệ nảy mầm",
       Cell: ({ cell }) => `${cell.getValue()}%`,
     },
     {
       accessorKey: "uniformity",
-      header: "Độ đồng đều (%)",
+      header: "Độ đồng đều",
       Cell: ({ cell }) => `${cell.getValue()}%`,
     },
     { accessorKey: "yield", header: "Năng suất" },
-    { accessorKey: "note", header: "Mô tả" },
+    {
+      accessorKey: "note",
+      header: "Mô tả",
+      Cell: ({ cell }) => (
+        <Text lineClamp={2} size="sm">
+          <div
+            dangerouslySetInnerHTML={{ __html: cell.getValue() as string }}
+          />
+        </Text>
+      ),
+    },
     {
       accessorKey: "technicalDoc",
       header: "Tài liệu kỹ thuật",
       Cell: ({ cell }) =>
         cell.getValue() ? (
           <a
-            href={`/${cell.getValue()}`}
+            href={`/${cell.getValue()}`} // Cần logic xử lý URL file thực tế
             target="_blank"
             rel="noopener noreferrer"
+            style={{ textDecoration: "none", color: "#228be6" }}
           >
-            Tài liệu tham khảo
+            Xem tài liệu
           </a>
         ) : (
-          "Không có"
+          <Text c="dimmed" size="sm">
+            Không có
+          </Text>
         ),
     },
     {
@@ -178,8 +203,8 @@ const PlantManagementSeedPage = () => {
       header: "Tuỳ chọn",
       enableColumnActions: false,
       size: 10,
-      Cell: () => (
-        <Menu shadow="md">
+      Cell: ({ row }) => (
+        <Menu shadow="md" position="bottom-end">
           <Menu.Target>
             <ActionIcon variant="transparent" c={"gray"}>
               <IconDotsVertical />
@@ -189,14 +214,21 @@ const PlantManagementSeedPage = () => {
           <Menu.Dropdown>
             <Menu.Item
               leftSection={<IconEye size={18} color="gray" />}
-              onClick={openSeedForm}
+              onClick={() => handleViewDetail(row.original)}
             >
               Chi tiết
             </Menu.Item>
-            <Menu.Item leftSection={<IconEdit size={18} color="green" />}>
+            <Menu.Item
+              leftSection={<IconEdit size={18} color="green" />}
+              onClick={() => handleEdit(row.original.id)}
+            >
               Chỉnh sửa
             </Menu.Item>
-            <Menu.Item leftSection={<IconTrash size={18} />} color="red">
+            <Menu.Item
+              leftSection={<IconTrash size={18} />}
+              color="red"
+              onClick={() => handleDelete(row.original.id)}
+            >
               Xoá
             </Menu.Item>
           </Menu.Dropdown>
@@ -204,6 +236,7 @@ const PlantManagementSeedPage = () => {
       ),
     },
   ];
+
   return (
     <Stack gap="lg">
       <Group justify="space-between">
@@ -219,8 +252,9 @@ const PlantManagementSeedPage = () => {
           </Button>
         </Group>
       </Group>
+
+      {/* FILTER CARD */}
       <Card withBorder shadow="sm" radius={4} p="md">
-        {/* Header */}
         <Group justify="space-between" align="center" mb="xs">
           <Stack gap={0}>
             <Title order={4}>Tìm kiếm hạt giống cây</Title>
@@ -235,79 +269,82 @@ const PlantManagementSeedPage = () => {
                 radius={4}
                 variant="default"
                 leftSection={<IconRefresh size={16} />}
-                onClick={() => {}}
+                onClick={handleResetFilter}
               >
                 Làm mới
               </Button>
             </Tooltip>
-            <Button radius={4} leftSection={<IconSearch size={16} />}>
+            <Button
+              radius={4}
+              leftSection={<IconSearch size={16} />}
+              onClick={handleApplyFilter}
+            >
               Lọc thông tin
             </Button>
           </Group>
         </Group>
 
-        {/* Form */}
+        {/* Filter Inputs */}
         <Stack gap="sm">
-          {/* Khung tìm kiếm (keyword) */}
           <TextInput
             radius={4}
             label="Khung tìm kiếm"
-            description="Ví dụ: Giống Ri6, Giống Xoài Miền Tây"
-            placeholder="Nhập thông tin"
+            description="Tìm theo tên giống hoặc mã giống"
+            placeholder="Nhập thông tin..."
             leftSection={<IconSearch size={16} />}
+            value={keyword}
+            onChange={(e) => setKeyword(e.currentTarget.value)}
+            // Cho phép nhấn Enter để lọc luôn
+            onKeyDown={(e) => {
+              if (e.key === "Enter") handleApplyFilter();
+            }}
           />
 
           <SimpleGrid cols={{ base: 1, md: 2, lg: 3 }} spacing="sm">
             <MultiSelect
               radius={4}
               label="Nhà cung cấp"
-              description="Ví dụ: Công ty TNHH ABC, Công ty CP XYZ"
-              placeholder="Chọn thông tin"
-              data={[
-                "Công ty TNHH ABC",
-                "Công ty CP XYZ",
-                "Công ty TNHH MTV DEF",
-                "Công ty TNHH GHI",
-              ]}
+              placeholder="Chọn nhà cung cấp"
+              data={supplierOptions}
+              value={selectedSuppliers}
+              onChange={setSelectedSuppliers}
+              searchable
+              clearable
             />
             <MultiSelect
               radius={4}
               label="Xuất xứ"
-              description="Ví dụ: Việt Nam, Thái Lan, Indonesia"
-              placeholder="Chọn thông tin"
-              data={[
-                "Việt Nam",
-                "Thái Lan",
-                "Indonesia",
-                "Malaysia",
-                "Campuchia",
-              ]}
+              placeholder="Chọn quốc gia"
+              data={originOptions}
+              value={selectedOrigins}
+              onChange={setSelectedOrigins}
+              searchable
+              clearable
             />
           </SimpleGrid>
         </Stack>
       </Card>
-      <Table columns={seedColumns} data={seedDataset} />
+
+      {/* TABLE */}
+      {/* Hiển thị số lượng kết quả tìm thấy */}
+      <Text size="sm" fs="italic" c="dimmed">
+        Tìm thấy {filteredSeeds.length} kết quả
+      </Text>
+
+      <Table columns={seedColumns} data={filteredSeeds} />
+
+      {/* MODAL CHI TIẾT */}
       <Modal
         opened={openedSeedForm}
         onClose={closeSeedForm}
         title={<Text fw={500}>Thông tin chi tiết giống hạt</Text>}
+        size="lg"
       >
-        <SeedDetailView
-          seed={{
-            id: "SR-RI6",
-            name: "Giống Ri6",
-            supplier: "Green Seed Co.",
-            origin: "Việt Nam",
-            germinationRate: "85",
-            yield: "25",
-            note: "<p>Giống Ri6 nổi bật với năng suất cao và cơm vàng đậm.</p>",
-            imageUrl:
-              "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR1bNpDVSv6F-8H10X4SwSvoi_OF-XkLZZIdw&s",
-            technicalDocUrl: "", // hoặc null nếu không có file
-            technicalContent:
-              "<p>Hướng dẫn trồng theo mật độ 6x6m, sử dụng phân NPK.</p>",
-          }}
-        />
+        {selectedSeed ? (
+          <SeedDetailView seed={selectedSeed} />
+        ) : (
+          <Text>Đang tải...</Text>
+        )}
       </Modal>
     </Stack>
   );

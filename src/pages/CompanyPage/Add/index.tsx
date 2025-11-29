@@ -15,6 +15,7 @@ import {
   Modal,
   Select,
   Image,
+  LoadingOverlay,
 } from "@mantine/core";
 import { useState } from "react";
 import {
@@ -32,100 +33,210 @@ import {
   IconPhone,
   IconPlus,
   IconTruck,
-  IconTypeface,
   IconUser,
+  IconCheck,
+  IconTrash,
 } from "@tabler/icons-react";
 import { useNavigate } from "react-router-dom";
+import { notifications } from "@mantine/notifications";
+
+// Component con (Giả định đã có)
 import BankSelect from "../../../components/BankList";
 import { addressList } from "../../OrderManagementPage/Create";
 import Scrollable from "../../../components/Scrollable";
-import { ContactListCards } from "../../FinancePage/components/ContactListCards";
+import { useCompanyStore } from "../../zustand/companyStore";
 
 const CompanyAddPage = () => {
-  const [openedAddressForm, setOpenedAddressForm] = useState(false);
   const navigate = useNavigate();
+  const { addCompany, isLoading } = useCompanyStore();
+
+  const [openedAddressForm, setOpenedAddressForm] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState<
     "customer" | "partner" | "supplier" | "bank"
   >("customer");
   const [selectedAddress, setSelectedAddress] = useState<string | null>(null);
   const [active, setActive] = useState(0);
+
+  // --- 1. STATE QUẢN LÝ DỮ LIỆU ---
   const [formData, setFormData] = useState({
     type: "Doanh nghiệp",
-    code: "ENT-001",
-    name: "Công ty TNHH Nông sản Xanh",
-    brand: "GreenAgro",
-    representative: "Nguyễn Văn A",
-    phone: "0909123456",
-    email: "contact@greenagro.vn",
-    address: "123 Đường Lê Lợi, Quận 1, TP.HCM",
-    taxCode: "0301234567",
-    taxAddress: "123 Đường Trần Hưng Đạo, Quận 5, TP.HCM",
-    category: "Sản xuất & phân phối",
-    note: "Khách hàng ưu tiên",
+    code: "ENT-" + Math.floor(Math.random() * 1000),
+    name: "",
+    brand: "",
+    representative: "",
+    phone: "",
+    email: "",
+    address: "",
+    taxCode: "",
+    taxAddress: "",
+    category: "", // Text phân loại nhập tay
+    note: "",
+    relations: [], // MultiSelect value
   });
+
   const [branches, setBranches] = useState([
     {
-      name: "Chi nhánh Hà Nội",
-      phone: "0241234567",
-      email: "hanoi@greenagro.vn",
-      address: "456 Phố Huế, Hai Bà Trưng, Hà Nội",
-      taxCode: "0101122334",
-      taxAddress: "456 Trần Nhân Tông, Hai Bà Trưng, Hà Nội",
-      note: "Chi nhánh phía Bắc",
-    },
-    {
-      name: "Chi nhánh Cần Thơ",
-      phone: "02921234567",
-      email: "cantho@greenagro.vn",
-      address: "789 Nguyễn Trãi, Ninh Kiều, Cần Thơ",
-      taxCode: "1800456789",
-      taxAddress: "789 Hòa Bình, Ninh Kiều, Cần Thơ",
-      note: "Chi nhánh miền Tây",
+      name: "Chi nhánh chính",
+      phone: "",
+      email: "",
+      address: "",
+      taxCode: "",
+      taxAddress: "",
+      note: "",
     },
   ]);
+
   const [banks, setBanks] = useState([
     {
-      bank: "Techcombank (TCB)",
-      accountHolder: "Nguyễn Văn A",
-      accountNumber: "19001234567890",
-      branch: "Chi nhánh Sài Gòn",
-      note: "Tài khoản giao dịch chính",
-    },
-    {
-      bank: "Vietcombank (VCB)",
-      accountHolder: "Nguyễn Văn A",
-      accountNumber: "0011001234567",
-      branch: "Chi nhánh Hà Nội",
-      note: "Dùng cho thanh toán nội bộ",
+      bank: "",
+      accountHolder: "",
+      accountNumber: "",
+      branch: "",
+      note: "",
     },
   ]);
+
   const [contacts, setContacts] = useState([
     {
-      name: "Nguyễn Văn A",
-      phone: "0909123456",
-      email: "doank@gmail.com",
-      role: "Giám đốc",
-      organization: "Ban kinh doanh",
-      address: "123 Đường Lê Lợi, Quận 1, TP.HCM",
-      note: "Chịu trách nhiệm chính",
-    },
-    {
-      name: "Trần Thị B",
-      phone: "0934567890",
-      email: "doa@gmail.com",
-      role: "Kế toán trưởng",
-      organization: "Phòng kế toán",
-      address: "123 Đường Lê Lợi, Quận 1, TP.HCM",
-      note: "Quản lý tài chính và kế toán",
+      name: "",
+      phone: "",
+      email: "",
+      role: "",
+      organization: "",
+      address: "",
+      note: "",
     },
   ]);
+
+  // --- 2. CÁC HÀM XỬ LÝ LOGIC (HANDLERS) ---
+
+  // Xử lý thay đổi thông tin cơ bản
+  const handleFormChange = (key: keyof typeof formData, value: any) => {
+    setFormData((prev) => ({ ...prev, [key]: value }));
+  };
+
+  // Xử lý Chi nhánh (Branches)
+  const handleBranchChange = (index: number, key: string, value: string) => {
+    const newBranches: any = [...branches];
+    newBranches[index][key] = value;
+    setBranches(newBranches);
+  };
+  const addBranch = () => {
+    setBranches([
+      ...branches,
+      {
+        name: "",
+        phone: "",
+        email: "",
+        address: "",
+        taxCode: "",
+        taxAddress: "",
+        note: "",
+      },
+    ]);
+  };
+  const removeBranch = (index: number) => {
+    setBranches(branches.filter((_, i) => i !== index));
+  };
+
+  // Xử lý Ngân hàng (Banks)
+  const handleBankChange = (
+    index: number,
+    key: string,
+    value: string | null
+  ) => {
+    const newBanks: any = [...banks];
+    newBanks[index][key] = value || "";
+    setBanks(newBanks);
+  };
+  const addBank = () => {
+    setBanks([
+      ...banks,
+      { bank: "", accountHolder: "", accountNumber: "", branch: "", note: "" },
+    ]);
+  };
+  const removeBank = (index: number) => {
+    setBanks(banks.filter((_, i) => i !== index));
+  };
+
+  // Xử lý Liên hệ (Contacts)
+  const handleContactChange = (index: number, key: string, value: string) => {
+    const newContacts: any = [...contacts];
+    newContacts[index][key] = value;
+    setContacts(newContacts);
+  };
+  const addContact = () => {
+    setContacts([
+      ...contacts,
+      {
+        name: "",
+        phone: "",
+        email: "",
+        role: "",
+        organization: "",
+        address: "",
+        note: "",
+      },
+    ]);
+  };
+  const removeContact = (index: number) => {
+    setContacts(contacts.filter((_, i) => i !== index));
+  };
+
+  // Điều hướng Stepper
   const nextStep = () =>
     setActive((current) => (current < 5 ? current + 1 : current));
   const prevStep = () =>
     setActive((current) => (current > 0 ? current - 1 : current));
 
+  // --- 3. LOGIC LƯU DỮ LIỆU ---
+  const handleConfirmSave = async () => {
+    // Validate cơ bản
+    if (!formData.name) {
+      notifications.show({
+        title: "Lỗi",
+        message: "Vui lòng nhập tên đối tượng",
+        color: "red",
+      });
+      setActive(0); // Quay về bước 1
+      return;
+    }
+
+    const finalData = {
+      ...formData,
+      categoryType: selectedCategory, // Lưu loại tab đang chọn (Customer/Partner...)
+      branches: branches,
+      banks: banks,
+      contacts: contacts,
+    };
+
+    const success = await addCompany(finalData);
+
+    if (success) {
+      notifications.show({
+        title: "Thành công",
+        message: "Đã tạo mới doanh nghiệp!",
+        color: "green",
+        icon: <IconCheck />,
+      });
+      setActive(5); // Chuyển sang màn hình hoàn tất
+    } else {
+      notifications.show({
+        title: "Lỗi",
+        message: "Có lỗi xảy ra, vui lòng thử lại.",
+        color: "red",
+      });
+    }
+  };
+
   return (
-    <Paper shadow="md" radius={8} p="xl" withBorder>
+    <Paper shadow="md" radius={8} p="xl" withBorder pos="relative">
+      <LoadingOverlay
+        visible={isLoading}
+        zIndex={1000}
+        overlayProps={{ radius: "sm", blur: 2 }}
+      />
+
       <Group mb="md">
         <Button
           variant="subtle"
@@ -139,6 +250,7 @@ const CompanyAddPage = () => {
       </Group>
 
       <Stepper active={active} onStepClick={setActive}>
+        {/* --- BƯỚC 1: THÔNG TIN CƠ BẢN --- */}
         <Stepper.Step label="Bước 1" description="Thông tin cơ bản">
           <Group grow align="flex-start">
             <Card withBorder radius={4}>
@@ -147,75 +259,84 @@ const CompanyAddPage = () => {
                 <Group>
                   <Button
                     leftSection={<IconBuilding size={18} />}
-                    variant="filled"
+                    variant={
+                      formData.type === "Doanh nghiệp" ? "filled" : "outline"
+                    }
+                    onClick={() => handleFormChange("type", "Doanh nghiệp")}
                     radius={4}
                   >
                     Doanh nghiệp
                   </Button>
                   <Button
                     leftSection={<IconHome size={18} />}
-                    variant="outline"
+                    variant={formData.type === "Nông hộ" ? "filled" : "outline"}
+                    onClick={() => handleFormChange("type", "Nông hộ")}
                     radius={4}
                   >
                     Nông hộ
                   </Button>
                   <Button
                     leftSection={<IconMap size={18} />}
-                    variant="outline"
+                    variant={
+                      formData.type === "Hợp tác xã" ? "filled" : "outline"
+                    }
+                    onClick={() => handleFormChange("type", "Hợp tác xã")}
                     radius={4}
                   >
                     Hợp tác xã
                   </Button>
                 </Group>
+
                 <TextInput
                   label="Mã định danh"
                   value={formData.code}
-                  radius={4}
                   onChange={(e) =>
-                    setFormData({ ...formData, code: e.target.value })
+                    handleFormChange("code", e.currentTarget.value)
                   }
+                  radius={4}
                 />
                 <TextInput
                   label="Tên đối tượng"
                   placeholder="Công ty TNHH ABC"
+                  withAsterisk
                   value={formData.name}
-                  radius={4}
                   onChange={(e) =>
-                    setFormData({ ...formData, name: e.target.value })
+                    handleFormChange("name", e.currentTarget.value)
                   }
+                  radius={4}
                 />
                 <TextInput
                   label="Thương hiệu"
                   placeholder="ABC Mart"
                   value={formData.brand}
-                  radius={4}
                   onChange={(e) =>
-                    setFormData({ ...formData, brand: e.target.value })
+                    handleFormChange("brand", e.currentTarget.value)
                   }
+                  radius={4}
                 />
                 <TextInput
                   label="Người đại diện"
                   value={formData.representative}
-                  radius={4}
                   onChange={(e) =>
-                    setFormData({ ...formData, representative: e.target.value })
+                    handleFormChange("representative", e.currentTarget.value)
                   }
+                  radius={4}
                 />
                 <TextInput
                   label="Số điện thoại"
                   value={formData.phone}
-                  radius={4}
                   onChange={(e) =>
-                    setFormData({ ...formData, phone: e.target.value })
+                    handleFormChange("phone", e.currentTarget.value)
                   }
+                  radius={4}
                 />
                 <TextInput
                   label="Email"
                   value={formData.email}
-                  radius={4}
                   onChange={(e) =>
-                    setFormData({ ...formData, email: e.target.value })
+                    handleFormChange("email", e.currentTarget.value)
                   }
+                  radius={4}
                 />
                 <Group align="flex-end">
                   <TextInput
@@ -223,8 +344,9 @@ const CompanyAddPage = () => {
                     placeholder={"Tìm kiếm địa chỉ"}
                     radius={4}
                     flex={1}
+                    value={formData.address}
                     onChange={(e) =>
-                      setFormData({ ...formData, address: e.target.value })
+                      handleFormChange("address", e.currentTarget.value)
                     }
                   />
                   <Button onClick={() => setOpenedAddressForm(true)} radius={4}>
@@ -249,7 +371,10 @@ const CompanyAddPage = () => {
                               ? "green"
                               : undefined,
                         }}
-                        onClick={() => setSelectedAddress(address.id)}
+                        onClick={() => {
+                          setSelectedAddress(address.id);
+                          handleFormChange("address", address.address);
+                        }}
                       >
                         <Stack gap="xs">
                           <Group justify="space-between">
@@ -268,6 +393,7 @@ const CompanyAddPage = () => {
                     ))}
                   </Group>
                 </Scrollable>
+
                 <Input.Wrapper label="Phân loại">
                   <Group gap="md">
                     <Button
@@ -314,6 +440,7 @@ const CompanyAddPage = () => {
                 </Input.Wrapper>
               </Stack>
             </Card>
+
             <Stack>
               <Card withBorder radius={4}>
                 <Stack gap={"xs"}>
@@ -323,25 +450,24 @@ const CompanyAddPage = () => {
                     radius={4}
                     value={formData.taxCode}
                     onChange={(e) =>
-                      setFormData({ ...formData, taxCode: e.target.value })
+                      handleFormChange("taxCode", e.currentTarget.value)
                     }
                   />
                   <TextInput
                     label="Địa chỉ thuế"
                     value={formData.taxAddress}
-                    radius={4}
                     onChange={(e) =>
-                      setFormData({ ...formData, taxAddress: e.target.value })
+                      handleFormChange("taxAddress", e.currentTarget.value)
                     }
+                    radius={4}
                   />
-
                   <Textarea
                     label="Ghi chú"
                     radius={4}
                     minRows={2}
                     value={formData.note}
                     onChange={(e) =>
-                      setFormData({ ...formData, note: e.target.value })
+                      handleFormChange("note", e.currentTarget.value)
                     }
                   />
                 </Stack>
@@ -357,6 +483,8 @@ const CompanyAddPage = () => {
                       "Đối tác",
                       "Đối tác chiến lược",
                     ]}
+                    value={formData.relations}
+                    onChange={(val) => handleFormChange("relations", val)}
                   />
                 </Stack>
               </Card>
@@ -364,6 +492,7 @@ const CompanyAddPage = () => {
           </Group>
         </Stepper.Step>
 
+        {/* --- BƯỚC 2: CHI NHÁNH --- */}
         <Stepper.Step label="Bước 2" description="Thông tin chi nhánh">
           <Stack gap={"xs"}>
             {branches.map((b, idx) => (
@@ -371,121 +500,85 @@ const CompanyAddPage = () => {
                 <Stack gap={"xs"}>
                   <Group grow align="flex-start">
                     <Stack gap={"xs"}>
-                      <Title order={6}>Thông tin chi nhánh</Title>
-
-                      <TextInput label="Tên chi nhánh" radius={4} />
-                      <TextInput label="Số điện thoại" radius={4} />
-                      <TextInput label="Email" radius={4} />
-                      <Group align="flex-end">
-                        <TextInput
-                          label="Địa chỉ"
-                          placeholder={"Tìm kiếm địa chỉ"}
-                          radius={4}
-                          flex={1}
-                          onChange={(e) =>
-                            setFormData({
-                              ...formData,
-                              address: e.target.value,
-                            })
-                          }
-                        />
-                        <Button
-                          onClick={() => setOpenedAddressForm(true)}
-                          radius={4}
-                        >
-                          Thêm mới
-                        </Button>
-                      </Group>
-                      <Scrollable h={150}>
-                        <Group
-                          p={"xs"}
-                          wrap="nowrap"
-                          align="flex-start"
-                          gap="md"
-                        >
-                          {addressList.map((address) => (
-                            <Card
-                              key={address.id}
-                              miw={300}
-                              h={150}
-                              withBorder
-                              shadow="sm"
-                              radius="md"
-                              p="lg"
-                              style={{
-                                cursor: "pointer",
-                                borderColor:
-                                  selectedAddress === address.id
-                                    ? "green"
-                                    : undefined,
-                                position: "relative",
-                                transition: "transform 0.2s ease",
-                              }}
-                              onMouseEnter={(e) =>
-                                (e.currentTarget.style.transform =
-                                  "scale(1.02)")
-                              }
-                              onMouseLeave={(e) =>
-                                (e.currentTarget.style.transform = "scale(1)")
-                              }
-                              onClick={() => setSelectedAddress(address.id)}
-                            >
-                              <Stack gap="xs">
-                                <Group justify="space-between">
-                                  <Title order={4} fw={500}>
-                                    {address.recipientName}
-                                  </Title>
-                                </Group>
-                                <Text size="sm">
-                                  <b>Số điện thoại:</b> {address.phoneNumber}
-                                </Text>
-                                <Text size="sm">
-                                  <b>Địa chỉ:</b> {address.address}
-                                </Text>
-                              </Stack>
-                            </Card>
-                          ))}
-                        </Group>
-                      </Scrollable>
+                      <Title order={6}>Thông tin chi nhánh {idx + 1}</Title>
+                      <TextInput
+                        label="Tên chi nhánh"
+                        radius={4}
+                        value={b.name}
+                        onChange={(e) =>
+                          handleBranchChange(idx, "name", e.currentTarget.value)
+                        }
+                      />
+                      <TextInput
+                        label="Số điện thoại"
+                        radius={4}
+                        value={b.phone}
+                        onChange={(e) =>
+                          handleBranchChange(
+                            idx,
+                            "phone",
+                            e.currentTarget.value
+                          )
+                        }
+                      />
+                      <TextInput
+                        label="Email"
+                        radius={4}
+                        value={b.email}
+                        onChange={(e) =>
+                          handleBranchChange(
+                            idx,
+                            "email",
+                            e.currentTarget.value
+                          )
+                        }
+                      />
+                      <TextInput
+                        label="Địa chỉ"
+                        radius={4}
+                        value={b.address}
+                        onChange={(e) =>
+                          handleBranchChange(
+                            idx,
+                            "address",
+                            e.currentTarget.value
+                          )
+                        }
+                      />
                     </Stack>
-
                     <Stack gap={"xs"}>
                       <Title order={6}>Thông tin thuế</Title>
                       <TextInput
                         label="Mã số thuế (MST)"
                         radius={4}
-                        value={formData.taxCode}
+                        value={b.taxCode}
                         onChange={(e) =>
-                          setFormData({ ...formData, taxCode: e.target.value })
+                          handleBranchChange(
+                            idx,
+                            "taxCode",
+                            e.currentTarget.value
+                          )
                         }
                       />
                       <TextInput
                         label="Địa chỉ thuế"
-                        value={formData.taxAddress}
                         radius={4}
+                        value={b.taxAddress}
                         onChange={(e) =>
-                          setFormData({
-                            ...formData,
-                            taxAddress: e.target.value,
-                          })
+                          handleBranchChange(
+                            idx,
+                            "taxAddress",
+                            e.currentTarget.value
+                          )
                         }
                       />
-                      {/* <Select
-                        label="Phân loại"
-                        radius={4}
-                        data={["Khách hàng", "Nhà cung cấp", "Đối tác"]}
-                        value={formData.category}
-                        onChange={(val) =>
-                          setFormData({ ...formData, category: val! })
-                        }
-                      /> */}
                       <Textarea
                         label="Ghi chú"
                         radius={4}
                         minRows={2}
-                        value={formData.note}
+                        value={b.note}
                         onChange={(e) =>
-                          setFormData({ ...formData, note: e.target.value })
+                          handleBranchChange(idx, "note", e.currentTarget.value)
                         }
                       />
                     </Stack>
@@ -495,9 +588,8 @@ const CompanyAddPage = () => {
                       color="red"
                       radius={4}
                       variant="light"
-                      onClick={() =>
-                        setBranches(branches.filter((_, i) => i !== idx))
-                      }
+                      onClick={() => removeBranch(idx)}
+                      leftSection={<IconTrash size={16} />}
                     >
                       Xoá
                     </Button>
@@ -509,56 +601,86 @@ const CompanyAddPage = () => {
               variant="light"
               radius={4}
               leftSection={<IconPlus />}
-              onClick={() =>
-                setBranches([
-                  ...branches,
-                  {
-                    name: "",
-                    phone: "",
-                    email: "",
-                    address: "",
-                    taxCode: "",
-                    taxAddress: "",
-                    note: "",
-                  },
-                ])
-              }
+              onClick={addBranch}
             >
               Thêm chi nhánh
             </Button>
           </Stack>
         </Stepper.Step>
 
+        {/* --- BƯỚC 3: NGÂN HÀNG --- */}
         <Stepper.Step label="Bước 3" description="Thông tin ngân hàng">
           <Stack gap={"xs"}>
             {banks.map((bank, idx) => (
               <Card key={idx} withBorder>
                 <Grid>
                   <Grid.Col span={6}>
-                    <BankSelect />
+                    {/* Giả sử BankSelect là component hiển thị, thêm Select thật để lấy dữ liệu */}
+                    <Select
+                      label="Chọn ngân hàng"
+                      data={[
+                        "Vietcombank",
+                        "Techcombank",
+                        "MBBank",
+                        "ACB",
+                        "BIDV",
+                      ]}
+                      value={bank.bank}
+                      onChange={(val) => handleBankChange(idx, "bank", val)}
+                      radius={4}
+                    />
                   </Grid.Col>
                   <Grid.Col span={6}>
-                    <TextInput label="Chủ tài khoản" radius={4} />
+                    <TextInput
+                      label="Chủ tài khoản"
+                      radius={4}
+                      value={bank.accountHolder}
+                      onChange={(e) =>
+                        handleBankChange(
+                          idx,
+                          "accountHolder",
+                          e.currentTarget.value
+                        )
+                      }
+                    />
                   </Grid.Col>
                   <Grid.Col span={6}>
-                    <TextInput label="Số tài khoản" radius={4} />
+                    <TextInput
+                      label="Số tài khoản"
+                      radius={4}
+                      value={bank.accountNumber}
+                      onChange={(e) =>
+                        handleBankChange(
+                          idx,
+                          "accountNumber",
+                          e.currentTarget.value
+                        )
+                      }
+                    />
                   </Grid.Col>
                   <Grid.Col span={6}>
                     <Select
-                      searchable
-                      clearable
                       label="Chi nhánh (nếu có)"
                       radius={4}
                       data={[
-                        { value: "hanoi", label: "Chi nhánh Hà Nội" },
-                        { value: "saigon", label: "Chi nhánh Sài Gòn" },
-                        { value: "danang", label: "Chi nhánh Đà Nẵng" },
-                        { value: "cantho", label: "Chi nhánh Cần Thơ" },
+                        "Chi nhánh Hà Nội",
+                        "Chi nhánh Sài Gòn",
+                        "Chi nhánh Đà Nẵng",
                       ]}
+                      value={bank.branch}
+                      onChange={(val) => handleBankChange(idx, "branch", val)}
                     />
                   </Grid.Col>
                   <Grid.Col span={12}>
-                    <Textarea label="Ghi chú" minRows={2} radius={4} />
+                    <Textarea
+                      label="Ghi chú"
+                      minRows={2}
+                      radius={4}
+                      value={bank.note}
+                      onChange={(e) =>
+                        handleBankChange(idx, "note", e.currentTarget.value)
+                      }
+                    />
                   </Grid.Col>
                   <Grid.Col span={12}>
                     <Group justify="flex-end">
@@ -566,9 +688,8 @@ const CompanyAddPage = () => {
                         color="red"
                         variant="light"
                         radius={4}
-                        onClick={() =>
-                          setBanks(banks.filter((_, i) => i !== idx))
-                        }
+                        onClick={() => removeBank(idx)}
+                        leftSection={<IconTrash size={16} />}
                       >
                         Xoá
                       </Button>
@@ -581,46 +702,57 @@ const CompanyAddPage = () => {
               variant="light"
               radius={4}
               leftSection={<IconPlus />}
-              onClick={() =>
-                setBanks([
-                  ...banks,
-                  {
-                    bank: "",
-                    accountHolder: "",
-                    accountNumber: "",
-                    branch: "",
-                    note: "",
-                  },
-                ])
-              }
+              onClick={addBank}
             >
               Thêm tài khoản ngân hàng
             </Button>
           </Stack>
         </Stepper.Step>
+
+        {/* --- BƯỚC 4: LIÊN HỆ --- */}
         <Stepper.Step label="Bước 4" description="Thông tin liên hệ">
           <Stack gap="xs">
             {contacts.map((contact, idx) => (
               <Card key={idx} withBorder radius="md" shadow="sm">
                 <Grid>
                   <Grid.Col span={6}>
-                    <TextInput label="Họ tên" radius={4} value={contact.name} />
+                    <TextInput
+                      label="Họ tên"
+                      radius={4}
+                      value={contact.name}
+                      onChange={(e) =>
+                        handleContactChange(idx, "name", e.currentTarget.value)
+                      }
+                    />
                   </Grid.Col>
                   <Grid.Col span={6}>
                     <TextInput
                       label="Số điện thoại"
                       radius={4}
                       value={contact.phone}
+                      onChange={(e) =>
+                        handleContactChange(idx, "phone", e.currentTarget.value)
+                      }
                     />
                   </Grid.Col>
                   <Grid.Col span={6}>
-                    <TextInput label="Email" radius={4} value={contact.email} />
+                    <TextInput
+                      label="Email"
+                      radius={4}
+                      value={contact.email}
+                      onChange={(e) =>
+                        handleContactChange(idx, "email", e.currentTarget.value)
+                      }
+                    />
                   </Grid.Col>
                   <Grid.Col span={6}>
                     <TextInput
                       label="Chức vụ"
                       radius={4}
                       value={contact.role}
+                      onChange={(e) =>
+                        handleContactChange(idx, "role", e.currentTarget.value)
+                      }
                     />
                   </Grid.Col>
                   <Grid.Col span={6}>
@@ -628,6 +760,13 @@ const CompanyAddPage = () => {
                       label="Phòng ban"
                       radius={4}
                       value={contact.organization}
+                      onChange={(e) =>
+                        handleContactChange(
+                          idx,
+                          "organization",
+                          e.currentTarget.value
+                        )
+                      }
                     />
                   </Grid.Col>
                   <Grid.Col span={6}>
@@ -635,6 +774,13 @@ const CompanyAddPage = () => {
                       label="Địa chỉ"
                       radius={4}
                       value={contact.address}
+                      onChange={(e) =>
+                        handleContactChange(
+                          idx,
+                          "address",
+                          e.currentTarget.value
+                        )
+                      }
                     />
                   </Grid.Col>
                   <Grid.Col span={12}>
@@ -643,6 +789,9 @@ const CompanyAddPage = () => {
                       minRows={2}
                       radius={4}
                       value={contact.note}
+                      onChange={(e) =>
+                        handleContactChange(idx, "note", e.currentTarget.value)
+                      }
                     />
                   </Grid.Col>
                   <Grid.Col span={12}>
@@ -651,11 +800,8 @@ const CompanyAddPage = () => {
                         color="red"
                         variant="light"
                         radius={4}
-                        onClick={() =>
-                          setContacts((prev) =>
-                            prev.filter((_, i) => i !== idx)
-                          )
-                        }
+                        onClick={() => removeContact(idx)}
+                        leftSection={<IconTrash size={16} />}
                       >
                         Xoá liên hệ
                       </Button>
@@ -664,35 +810,21 @@ const CompanyAddPage = () => {
                 </Grid>
               </Card>
             ))}
-
             <Button
               variant="outline"
               radius={4}
               leftSection={<IconPlus />}
-              onClick={() =>
-                setContacts([
-                  ...contacts,
-                  {
-                    name: "",
-                    phone: "",
-                    email: "",
-                    role: "",
-                    organization: "",
-                    address: "",
-                    note: "",
-                  },
-                ])
-              }
+              onClick={addContact}
             >
               Thêm liên hệ
             </Button>
           </Stack>
         </Stepper.Step>
 
+        {/* --- BƯỚC 5: XÁC NHẬN --- */}
         <Stepper.Step label="Bước 5" description="Xác nhận thông tin">
           <Card withBorder radius="md" shadow="xs" p="lg">
             <Stack gap="md">
-              {/* THÔNG TIN CƠ BẢN */}
               <Stack>
                 <Title order={5}>📄 Thông tin cơ bản</Title>
                 <Group grow>
@@ -704,157 +836,79 @@ const CompanyAddPage = () => {
                       </Group>
                       <Group gap="xs">
                         <IconId size={18} />
-                        <Text size="sm">Mã định danh: {formData.code}</Text>
+                        <Text size="sm">Mã: {formData.code}</Text>
                       </Group>
                       <Group gap="xs">
                         <IconUser size={18} />
                         <Text size="sm">Tên: {formData.name}</Text>
                       </Group>
                       <Group gap="xs">
-                        <IconUser size={18} />
-                        <Text size="sm">Thương hiệu: {formData.brand}</Text>
-                      </Group>
-                      <Group gap="xs">
-                        <IconUser size={18} />
-                        <Text size="sm">
-                          Người đại diện: {formData.representative}
-                        </Text>
-                      </Group>
-                      <Group gap="xs">
                         <IconPhone size={18} />
-                        <Text size="sm">Số điện thoại: {formData.phone}</Text>
-                      </Group>
-                      <Group gap="xs">
-                        <IconMail size={18} />
-                        <Text size="sm">Email: {formData.email}</Text>
+                        <Text size="sm">SĐT: {formData.phone}</Text>
                       </Group>
                     </Stack>
                   </Card>
                   <Card h={230} withBorder radius="md" p="sm">
                     <Stack gap={"xs"}>
-                      <Group gap="xs">
-                        <IconId size={18} />
-                        <Text size="sm">Mã số thuế: {formData.taxCode}</Text>
-                      </Group>
-                      <Group gap="xs">
-                        <IconMapPin size={18} />
-                        <Text size="sm">
-                          Địa chỉ thuế: {formData.taxAddress}
-                        </Text>
-                      </Group>
-                      <Group gap="xs">
-                        <IconTypeface size={18} />
-                        <Text size="sm">Phân loại: {formData.category}</Text>
-                      </Group>
-                      <Group gap="xs">
-                        <IconNote size={18} />
-                        <Text size="sm">Ghi chú: {formData.note}</Text>
-                      </Group>
-                      <Group gap="xs">
-                        <IconMapPin size={18} />
-                        <Text size="sm">Địa chỉ: {formData.address}</Text>
-                      </Group>
+                      <Text size="sm">MST: {formData.taxCode}</Text>
+                      <Text size="sm">Địa chỉ: {formData.address}</Text>
+                      <Text size="sm">Phân loại: {selectedCategory}</Text>
                     </Stack>
                   </Card>
                 </Group>
               </Stack>
 
-              {/* CHI NHÁNH */}
               <Stack>
-                <Title order={5}>🏢 Chi nhánh</Title>
-                <Scrollable h={180}>
-                  <Group wrap="nowrap" gap={"xs"}>
+                <Title order={5}>🏢 Chi nhánh ({branches.length})</Title>
+                <Scrollable h={150}>
+                  <Stack gap="xs">
                     {branches.map((b, i) => (
-                      <Card key={i} withBorder radius="md" p="sm">
-                        <Stack gap={2}>
-                          <Text size="sm">
-                            <strong>Tên:</strong> {b.name}
-                          </Text>
-                          <Text size="sm">
-                            <strong>SĐT:</strong> {b.phone}
-                          </Text>
-                          <Text size="sm">
-                            <strong>Email:</strong> {b.email}
-                          </Text>
-                          <Text size="sm">
-                            <strong>Địa chỉ:</strong> {b.address}
-                          </Text>
-                          <Text size="sm">
-                            <strong>MST:</strong> {b.taxCode}
-                          </Text>
-                          <Text size="sm">
-                            <strong>Địa chỉ thuế:</strong> {b.taxAddress}
-                          </Text>
-                          <Text size="sm">
-                            <strong>Ghi chú:</strong> {b.note}
-                          </Text>
-                        </Stack>
-                      </Card>
+                      <Text key={i} size="sm">
+                        - {b.name} ({b.phone})
+                      </Text>
                     ))}
-                  </Group>
+                  </Stack>
                 </Scrollable>
               </Stack>
 
-              {/* NGÂN HÀNG */}
               <Stack>
-                <Title order={5}>🏦 Ngân hàng</Title>
-                <Scrollable h={140}>
-                  <Group wrap="nowrap" gap="xs">
+                <Title order={5}>🏦 Ngân hàng ({banks.length})</Title>
+                <Scrollable h={150}>
+                  <Stack gap="xs">
                     {banks.map((b, i) => (
-                      <Card key={i} withBorder radius="md" p="sm">
-                        <Stack gap={2}>
-                          <Text size="sm">
-                            <strong>Ngân hàng:</strong> {b.bank}
-                          </Text>
-                          <Text size="sm">
-                            <strong>Chủ tài khoản:</strong> {b.accountHolder}
-                          </Text>
-                          <Text size="sm">
-                            <strong>Số tài khoản:</strong> {b.accountNumber}
-                          </Text>
-                          <Text size="sm">
-                            <strong>Chi nhánh:</strong> {b.branch}
-                          </Text>
-                          <Text size="sm">
-                            <strong>Ghi chú:</strong> {b.note}
-                          </Text>
-                        </Stack>
-                      </Card>
+                      <Text key={i} size="sm">
+                        - {b.bank} - {b.accountNumber}
+                      </Text>
                     ))}
-                  </Group>
+                  </Stack>
                 </Scrollable>
-              </Stack>
-              <Stack>
-                <Title order={5}>📞 Thông tin liên hệ</Title>
-                <ContactListCards />
               </Stack>
             </Stack>
           </Card>
         </Stepper.Step>
 
+        {/* --- HOÀN THÀNH --- */}
         <Stepper.Completed>
           <Stack align="center" justify="center" mt="xl">
             <Image
-              src={
-                "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQjPNbBpZeXnXfTuA6AWek-Kj8NYEVbYdG6ayi5bIWarDuryXDrILdKMTd597quLD0PBKM&usqp=CAU"
-              }
-              w={200}
+              src={"https://cdn-icons-png.flaticon.com/512/148/148767.png"}
+              w={150}
               fit="cover"
             />
             <Text fz={"h2"} ta="center">
-              Tạo mới doanh nghiệp / nông hộ thành công!
+              Tạo mới thành công!
             </Text>
             <Text fz={"md"} ta="center" c="dimmed">
-              Doanh nghiệp / nông hộ mới đã được thêm thành công. Bạn có thể
+              Doanh nghiệp {formData.name} đã được lưu vào hệ thống.
             </Text>
-
             <Button size="md" mt="md" radius={4} onClick={() => navigate(-1)}>
-              Xác nhận
+              Quay về danh sách
             </Button>
           </Stack>
         </Stepper.Completed>
       </Stepper>
 
+      {/* --- NÚT ĐIỀU HƯỚNG --- */}
       {active < 5 && (
         <Group justify="space-between" mt="xl">
           <Button
@@ -865,12 +919,24 @@ const CompanyAddPage = () => {
           >
             Quay lại
           </Button>
-          <Button radius={4} onClick={nextStep}>
-            {active === 4 ? "Hoàn thành" : "Tiếp theo"}
-          </Button>
+          {active === 4 ? (
+            <Button
+              radius={4}
+              color="green"
+              onClick={handleConfirmSave}
+              loading={isLoading}
+            >
+              Xác nhận & Lưu
+            </Button>
+          ) : (
+            <Button radius={4} onClick={nextStep}>
+              Tiếp theo
+            </Button>
+          )}
         </Group>
       )}
 
+      {/* Modal Address */}
       <Modal
         opened={openedAddressForm}
         onClose={() => setOpenedAddressForm(false)}
@@ -898,7 +964,7 @@ const CompanyAddPage = () => {
           />
           <Textarea
             label="Ghi chú"
-            placeholder="Nhập ghi chú (nếu có)"
+            placeholder="Nhập ghi chú"
             radius={4}
             minRows={3}
           />
@@ -920,4 +986,4 @@ const CompanyAddPage = () => {
   );
 };
 
-export default CompanyAddPage; // export default để sử dụng trong main.tsx
+export default CompanyAddPage;

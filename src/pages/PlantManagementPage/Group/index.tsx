@@ -18,96 +18,85 @@ import {
 import Table from "../../../components/Table";
 import type { MRT_ColumnDef } from "mantine-react-table";
 import { useDisclosure } from "@mantine/hooks";
+import { useState } from "react";
+import { notifications } from "@mantine/notifications";
+
 import AddGroupForm from "./components/AddGroupForm";
-type CropType = {
-  id: string; // Mã loại cây
-  name: string; // Tên loại cây
-  note: string;
-};
-export const cropTypes: CropType[] = [
-  {
-    id: "rice",
-    name: "Lúa",
-    note: "Cây lương thực chính tại Việt Nam, thường trồng vào vụ Đông Xuân và Hè Thu.",
-  },
-  {
-    id: "corn",
-    name: "Bắp (Ngô)",
-    note: "Cây lương thực phổ biến, dễ trồng, thích hợp khí hậu ấm, năng suất cao.",
-  },
-  {
-    id: "soybean",
-    name: "Đậu nành",
-    note: "Cây họ đậu ngắn ngày, giàu đạm, giúp cải tạo đất và phù hợp nhiều vùng khí hậu.",
-  },
-  {
-    id: "cassava",
-    name: "Khoai mì",
-    note: "Cây dễ trồng, chịu hạn tốt, thường dùng làm nguyên liệu chế biến công nghiệp.",
-  },
-  {
-    id: "sweet_potato",
-    name: "Khoai lang",
-    note: "Cây trồng ngắn ngày, thích hợp với đất cát pha, cho năng suất cao.",
-  },
-  {
-    id: "sugarcane",
-    name: "Mía",
-    note: "Nguồn nguyên liệu chính cho ngành sản xuất đường.",
-  },
-  {
-    id: "coffee",
-    name: "Cà phê",
-    note: "Cây công nghiệp dài ngày, chủ yếu trồng ở Tây Nguyên.",
-  },
-  {
-    id: "rubber",
-    name: "Cao su",
-    note: "Cây công nghiệp lâu năm, cho mủ dùng trong công nghiệp chế biến.",
-  },
-  {
-    id: "tea",
-    name: "Chè",
-    note: "Cây công nghiệp và dược liệu, thường trồng ở vùng trung du và miền núi.",
-  },
-  {
-    id: "pepper",
-    name: "Hồ tiêu",
-    note: "Gia vị quan trọng, được xuất khẩu nhiều, chủ yếu trồng ở Tây Nguyên.",
-  },
-  {
-    id: "dragon_fruit",
-    name: "Thanh long",
-    note: "Cây ăn quả đặc sản của miền Nam Trung Bộ.",
-  },
-];
+import {
+  useCropGroupStore,
+  type CropGroup,
+} from "../../zustand/cropGroupStore";
+// Import Store và Interface
 
 const PlantManagementGroupPage = () => {
-  const [
-    openedAddGroupForm,
-    { open: openAddGroupForm, close: closeAddGroupForm },
-  ] = useDisclosure(false);
-  const cropTypeColumns: MRT_ColumnDef<CropType>[] = [
+  // 1. Kết nối Store
+  const { groups, deleteGroup } = useCropGroupStore();
+
+  // 2. State quản lý Modal và ID đang chọn
+  const [openedForm, { open: openForm, close: closeForm }] =
+    useDisclosure(false);
+  const [openedDelete, { open: openDelete, close: closeDelete }] =
+    useDisclosure(false);
+  const [selectedId, setSelectedId] = useState<string | null>(null);
+
+  // 3. Handlers (Xử lý sự kiện)
+  const handleCreate = () => {
+    setSelectedId(null); // Reset ID để form hiểu là thêm mới
+    openForm();
+  };
+
+  const handleEdit = (id: string) => {
+    setSelectedId(id);
+    openForm();
+  };
+
+  const confirmDelete = (id: string) => {
+    setSelectedId(id);
+    openDelete();
+  };
+
+  const handleDelete = () => {
+    if (selectedId) {
+      deleteGroup(selectedId);
+      notifications.show({
+        title: "Đã xóa thành công",
+        color: "green",
+        message: "",
+      });
+      closeDelete();
+      setSelectedId(null);
+    }
+  };
+
+  // 4. Cấu hình cột bảng
+  const cropTypeColumns: MRT_ColumnDef<CropGroup>[] = [
     {
       accessorKey: "id",
       header: "Mã loại cây",
+      size: 120,
       Cell: ({ cell }) => <Text fw={500}>{cell.getValue<string>()}</Text>,
     },
     {
       accessorKey: "name",
       header: "Tên loại cây",
+      size: 200,
     },
     {
       accessorKey: "note",
       header: "Ghi chú",
+      Cell: ({ cell }) => (
+        <Text c="dimmed" size="sm" lineClamp={1}>
+          {cell.getValue<string>()}
+        </Text>
+      ),
     },
     {
       accessorKey: "actions",
       header: "Tuỳ chọn",
       enableColumnActions: false,
-      size: 10,
-      Cell: () => (
-        <Menu shadow="md">
+      size: 60,
+      Cell: ({ row }) => (
+        <Menu shadow="md" position="bottom-end">
           <Menu.Target>
             <ActionIcon variant="transparent" c={"gray"}>
               <IconDotsVertical />
@@ -115,13 +104,21 @@ const PlantManagementGroupPage = () => {
           </Menu.Target>
 
           <Menu.Dropdown>
-            <Menu.Item leftSection={<IconEye size={18} color="gray" />}>
-              Chi tiết
-            </Menu.Item>
-            <Menu.Item leftSection={<IconEdit size={18} color="green" />}>
+            {/* Nếu cần chức năng xem chi tiết thì thêm sau */}
+            {/* <Menu.Item leftSection={<IconEye size={18} color="gray" />}>Chi tiết</Menu.Item> */}
+
+            <Menu.Item
+              leftSection={<IconEdit size={18} color="green" />}
+              onClick={() => handleEdit(row.original.id)}
+            >
               Chỉnh sửa
             </Menu.Item>
-            <Menu.Item leftSection={<IconTrash size={18} />} color="red">
+
+            <Menu.Item
+              leftSection={<IconTrash size={18} />}
+              color="red"
+              onClick={() => confirmDelete(row.original.id)}
+            >
               Xoá
             </Menu.Item>
           </Menu.Dropdown>
@@ -129,6 +126,7 @@ const PlantManagementGroupPage = () => {
       ),
     },
   ];
+
   return (
     <Stack gap="lg">
       <Group justify="space-between">
@@ -139,19 +137,49 @@ const PlantManagementGroupPage = () => {
           <Button variant="outline" radius={4} leftSection={<IconFileExcel />}>
             Xuất File
           </Button>
-          <Button radius={4} onClick={openAddGroupForm}>
+          <Button radius={4} onClick={handleCreate}>
             Thêm mới
           </Button>
         </Group>
       </Group>
 
-      <Table columns={cropTypeColumns} data={cropTypes} />
+      {/* Truyền dữ liệu từ Store vào Table */}
+      <Table
+        //@ts-expect-error no check
+        columns={cropTypeColumns}
+        //@ts-expect-error no check
+        data={groups}
+      />
+
+      {/* Modal Thêm/Sửa */}
       <Modal
-        opened={openedAddGroupForm}
-        onClose={closeAddGroupForm}
-        title={<Text fw={500}>Tạo mới loại cây</Text>}
+        opened={openedForm}
+        onClose={closeForm}
+        title={
+          <Text fw={500}>
+            {selectedId ? "Cập nhật loại cây" : "Tạo mới loại cây"}
+          </Text>
+        }
       >
-        <AddGroupForm />
+        <AddGroupForm editId={selectedId} onClose={closeForm} />
+      </Modal>
+
+      {/* Modal Xác nhận Xóa */}
+      <Modal
+        opened={openedDelete}
+        onClose={closeDelete}
+        title="Xác nhận xóa"
+        centered
+      >
+        <Text>Bạn có chắc chắn muốn xóa nhóm cây này không?</Text>
+        <Group justify="flex-end" mt="lg">
+          <Button variant="default" onClick={closeDelete}>
+            Hủy
+          </Button>
+          <Button color="red" onClick={handleDelete}>
+            Xóa ngay
+          </Button>
+        </Group>
       </Modal>
     </Stack>
   );

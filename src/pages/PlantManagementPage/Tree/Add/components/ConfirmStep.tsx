@@ -8,253 +8,244 @@ import {
   Badge,
   Grid,
   Image,
+  ThemeIcon,
+  Paper,
+  Box,
 } from "@mantine/core";
 import {
-  IconMapPin,
-  IconPlant2,
-  IconListNumbers,
-  IconRepeat,
-  IconClockHour4,
+  IconLeaf,
+  IconClock,
+  IconFileText,
+  IconTool,
+  IconSeeding,
+  IconInfoCircle,
 } from "@tabler/icons-react";
 
-const ConfirmStep = () => {
-  const data = {
-    region: "Vùng trồng A",
-    area: "Khu vực B",
-    plot: "Lô DN-01",
-    farmingMethod: "Hữu cơ",
-    treeGroup: "Cây công nghiệp ngắn ngày",
-    treeCategory: "Đậu nành",
-    treeVariety: "Giống GV01",
-    treeCode: "CAY-DN-0001",
-    seed: "Hạt giống DN-GV01",
-    irrigation: "Tưới phun mưa",
-    image:
-      "https://bizweb.dktcdn.net/thumb/1024x1024/100/390/808/products/thuong-thuc-dau-nanh-theo-phong-cach-singapore-1.jpg?v=1592987555860",
-    description:
-      "Đậu nành giống GV01, sinh trưởng 90–100 ngày, chịu hạn khá, năng suất ổn định.",
-    unit: "kg", // đơn vị sản phẩm thu hoạch
-    growthCycles: [
-      {
-        name: "Chu kỳ sinh trưởng",
-        stages: [
-          { name: "Gieo hạt", duration: 5 },
-          { name: "Nảy mầm – ra lá", duration: 20 },
-          { name: "Sinh trưởng sinh dưỡng", duration: 30 },
-          { name: "Ra hoa – đậu quả", duration: 20 },
-          { name: "Chín – thu hoạch", duration: 25 },
-        ],
-      },
-    ],
-    rows: [
-      {
-        name: "Luống 1",
-        variety: "GV01",
-        treeCount: 150, // số cây/khóm theo schema hiện có
-        gps: [
-          { lat: 10.762622, lng: 106.660172 },
-          { lat: 10.7628, lng: 106.6603 },
-        ],
-      },
-      {
-        name: "Luống 2",
-        variety: "GV01",
-        treeCount: 140,
-        gps: [{ lat: 10.7629, lng: 106.6605 }],
-      },
-    ],
-  };
+// Định nghĩa kiểu dữ liệu props nhận vào
+interface ConfirmStepProps {
+  data: any; // Dữ liệu từ form.values
+  imagePreview: string | null; // Ảnh preview (Base64)
+  seedName: string; // Tên hạt giống đã chọn
+}
+
+const ConfirmStep = ({ data, imagePreview, seedName }: ConfirmStepProps) => {
+  // Helper để hiển thị nội dung tài liệu
+  const renderDocInfo = (label: string, type: string, content: string) => (
+    <Paper withBorder p="sm" radius="md">
+      <Group>
+        <ThemeIcon color={content ? "blue" : "gray"} variant="light">
+          <IconFileText size={18} />
+        </ThemeIcon>
+        <div style={{ flex: 1 }}>
+          <Text size="sm" fw={500}>
+            {label}
+          </Text>
+          {content ? (
+            <Text size="xs" c="dimmed">
+              {type === "file"
+                ? `File đính kèm: ${content}`
+                : "Nội dung đã soạn thảo"}
+            </Text>
+          ) : (
+            <Text size="xs" c="dimmed" fs="italic">
+              Chưa cập nhật
+            </Text>
+          )}
+        </div>
+      </Group>
+    </Paper>
+  );
 
   return (
-    <Stack mt={"md"}>
-      <Title order={3}>Xác nhận thông tin cây trồng</Title>
+    <Stack gap="lg" mt="md">
+      {/* 1. THÔNG TIN CHUNG */}
+      <Card withBorder radius="md" shadow="sm" p="lg">
+        <Group justify="space-between" mb="md">
+          <Title order={4} c="green.8">
+            <Group gap="xs">
+              <IconInfoCircle /> Thông tin chung
+            </Group>
+          </Title>
+          <Badge size="lg" color="green">
+            {data.group || "Chưa chọn nhóm"}
+          </Badge>
+        </Group>
 
-      <Card withBorder>
-        <Group grow align="flex-start">
-          <Stack>
-            <Group>
-              <Text fw={500}>Vùng trồng:</Text>
-              <Text>{data.region}</Text>
-            </Group>
-            <Group>
-              <Text fw={500}>Khu vực:</Text>
-              <Text>{data.area}</Text>
-            </Group>
-            <Group>
-              <Text fw={500}>Lô:</Text>
-              <Text>{data.plot}</Text>
-            </Group>
-            <Group>
-              <Text fw={500}>Phương pháp canh tác:</Text>
-              <Text>{data.farmingMethod}</Text>
-            </Group>
-            <Group>
-              <Text fw={500}>Nhóm cây:</Text>
-              <Text>{data.treeGroup}</Text>
-            </Group>
-            <Group>
-              <Text fw={500}>Loại cây:</Text>
-              <Text>{data.treeCategory}</Text>
-            </Group>
-            <Group>
-              <Text fw={500}>Giống cây:</Text>
-              <Text>{data.treeVariety}</Text>
-            </Group>
-            <Group>
-              <Text fw={500}>Mã cây:</Text>
-              <Text>{data.treeCode}</Text>
-            </Group>
-            <Group>
-              <Text fw={500}>Hạt giống:</Text>
-              <Text>{data.seed}</Text>
-            </Group>
-            <Group>
-              <Text fw={500}>Phương pháp tưới tiêu:</Text>
-              <Text>{data.irrigation}</Text>
-            </Group>
-            <Group>
-              <Text fw={500}>Đơn vị tính thu hoạch:</Text>
-              <Text>{data.unit}</Text>
-            </Group>
-            <Group>
-              <Text fw={500}>Mô tả:</Text>
-              <Text>{data.description}</Text>
-            </Group>
-          </Stack>
-
-          <Stack justify="center" align="center">
+        <Grid gutter="xl">
+          <Grid.Col span={{ base: 12, md: 4 }}>
             <Image
-              w={300}
-              h={300}
-              src={data.image}
+              src={imagePreview}
+              h={200}
+              w="100%"
               radius="md"
               alt="Ảnh cây trồng"
+              fit="cover"
+              fallbackSrc="https://placehold.co/400x300?text=No+Image"
+              style={{ border: "1px solid #eee" }}
             />
-          </Stack>
-        </Group>
+          </Grid.Col>
+
+          <Grid.Col span={{ base: 12, md: 8 }}>
+            <Stack gap="sm">
+              <Group>
+                <Text fw={600} w={120}>
+                  Mã cây:
+                </Text>
+                <Text>{data.id}</Text>
+              </Group>
+              <Divider variant="dashed" />
+
+              <Group>
+                <Text fw={600} w={120}>
+                  Tên cây:
+                </Text>
+                <Text size="lg" fw={700} c="blue">
+                  {data.name}
+                </Text>
+              </Group>
+              <Divider variant="dashed" />
+
+              <Group>
+                <Text fw={600} w={120}>
+                  Loại cây:
+                </Text>
+                <Text>{data.type}</Text>
+              </Group>
+              <Divider variant="dashed" />
+
+              <Group>
+                <Text fw={600} w={120}>
+                  Giống (Variety):
+                </Text>
+                <Text>{data.variety || "—"}</Text>
+              </Group>
+              <Divider variant="dashed" />
+
+              <Group align="flex-start">
+                <Text fw={600} w={120}>
+                  Mô tả:
+                </Text>
+                <Text size="sm" c="dimmed" style={{ flex: 1 }}>
+                  {data.note || "Không có mô tả"}
+                </Text>
+              </Group>
+            </Stack>
+          </Grid.Col>
+        </Grid>
       </Card>
 
-      <Divider label="Chu kỳ sinh trưởng" labelPosition="center" my="md" />
-
-      <Group wrap="nowrap" gap="md">
-        {data.growthCycles.map((cycle, idx) => (
-          <Card withBorder key={idx} shadow="xs">
-            <Stack>
-              <Group>
-                <IconRepeat size={18} />
-                <Text fw={600}>{cycle.name}</Text>
+      {/* 2. HẠT GIỐNG & THU HOẠCH */}
+      <Grid>
+        <Grid.Col span={{ base: 12, md: 6 }}>
+          <Card withBorder radius="md" h="100%">
+            <Title order={5} mb="sm" c="orange.8">
+              <Group gap="xs">
+                <IconSeeding size={20} /> Hạt giống nguồn
               </Group>
-              {cycle.stages.map((stage, sIdx) => (
-                <Group key={sIdx} pl={24}>
-                  <IconClockHour4 size={16} />
-                  <Text size="sm">
-                    {stage.name} - {stage.duration} ngày
-                  </Text>
-                </Group>
-              ))}
+            </Title>
+            <Stack gap="xs">
+              <Group justify="space-between">
+                <Text size="sm" c="dimmed">
+                  Mã hạt giống:
+                </Text>
+                <Badge variant="outline" color="orange">
+                  {data.seedCode || "Chưa chọn"}
+                </Badge>
+              </Group>
+              <Text size="sm" fw={500}>
+                {seedName || "—"}
+              </Text>
             </Stack>
           </Card>
-        ))}
-      </Group>
-      <Divider
-        label="Danh sách tài liệu kỹ thuật"
-        labelPosition="center"
-        my="md"
-      />
-      <Group>
-        <Card radius={4} withBorder shadow="xs" flex={1}>
-          <Stack>
-            <Text fw={"bold"}>Kỹ thuật canh tác</Text>
-            <Text size="sm" c="dimmed">
-              Hướng dẫn chi tiết về cách trồng và chăm sóc cây sầu riêng giống
-              Ri6, bao gồm các bước từ chuẩn bị đất, gieo hạt, tưới tiêu, và bón
-              phân.
-            </Text>
-            <a
-              href="https://example.com/ky-thuat-canh-tac.pdf"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <Text color="blue" size="sm">
-                Tải xuống tài liệu kỹ thuật canh tác
-              </Text>
-            </a>
-          </Stack>
-        </Card>
-        <Card radius={4} withBorder shadow="xs" flex={1}>
-          <Stack>
-            <Text fw={"bold"}>Tiêu chuẩn chất lượng</Text>
-            <Text size="sm" c="dimmed">
-              Các tiêu chuẩn chất lượng cần đạt được cho cây sầu riêng giống
-              Ri6, bao gồm kích thước trái, trọng lượng, và hàm lượng dinh
-              dưỡng.
-            </Text>
-            <a
-              href="https://example.com/tieu-chuan-chat-luong.pdf"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <Text color="blue" size="sm">
-                Tải xuống tài liệu tiêu chuẩn chất lượng
-              </Text>
-            </a>
-          </Stack>
-        </Card>
-        <Card radius={4} withBorder shadow="xs" flex={1}>
-          <Stack>
-            <Text fw={"bold"}>Giải pháp phòng trừ sâu bệnh</Text>
-            <Text size="sm" c="dimmed">
-              Hướng dẫn chi tiết về cách phòng trừ sâu bệnh cho cây sầu riêng
-              giống Ri6, bao gồm các loại thuốc bảo vệ thực vật và phương pháp
-              sử dụng an toàn.
-            </Text>
-            <a
-              href="https://example.com/phong-tru-sau-benh.pdf"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <Text color="blue" size="sm">
-                Tải xuống tài liệu giải pháp phòng trừ sâu bệnh
-              </Text>
-            </a>
-          </Stack>
-        </Card>
-      </Group>
-      <Divider label="Danh sách hàng" labelPosition="center" my="md" />
+        </Grid.Col>
 
-      <Grid>
-        {data.rows.map((row, index) => (
-          <Grid.Col span={6} key={index}>
-            <Card shadow="xs" withBorder>
-              <Stack>
-                <Group justify="apart">
-                  <Text fw={600}>{row.name}</Text>
-                  <Badge
-                    color="green"
-                    leftSection={<IconListNumbers size={14} />}
-                  >
-                    {row.treeCount} cây{" "}
+        <Grid.Col span={{ base: 12, md: 6 }}>
+          <Card withBorder radius="md" h="100%">
+            <Title order={5} mb="sm" c="blue.8">
+              <Group gap="xs">
+                <IconTool size={20} /> Thu hoạch
+              </Group>
+            </Title>
+            <Stack gap="xs">
+              <Group justify="space-between">
+                <Text size="sm" c="dimmed">
+                  Phương pháp:
+                </Text>
+                <Text fw={500}>{data.harvestMethod || "Chưa chọn"}</Text>
+              </Group>
+            </Stack>
+          </Card>
+        </Grid.Col>
+      </Grid>
+
+      {/* 3. CHU KỲ SINH TRƯỞNG */}
+      <Card withBorder radius="md">
+        <Title order={4} mb="md" c="teal.8">
+          <Group gap="xs">
+            <IconClock /> Chu kỳ sinh trưởng ({data.growthCycles.length})
+          </Group>
+        </Title>
+
+        {data.growthCycles.length > 0 ? (
+          <Stack gap="md">
+            {data.growthCycles.map((cycle: any, index: number) => (
+              <Card key={index} bg="gray.0" radius="md" withBorder>
+                <Group justify="space-between" mb="xs">
+                  <Text fw={600} size="sm">
+                    #{index + 1}. {cycle.name}
+                  </Text>
+                  <Badge color="teal" variant="light">
+                    {cycle.estimatedTime} ngày
                   </Badge>
                 </Group>
-                <Group>
-                  <IconPlant2 size={18} />
-                  <Text size="sm">{row.variety}</Text>
+
+                <Group gap="xs">
+                  {cycle.stages && cycle.stages.length > 0 ? (
+                    cycle.stages.map((stage: string, idx: number) => (
+                      <Badge key={idx} variant="white" color="gray" size="sm">
+                        {stage}
+                      </Badge>
+                    ))
+                  ) : (
+                    <Text size="xs" c="dimmed">
+                      Chưa có giai đoạn
+                    </Text>
+                  )}
                 </Group>
-                <Group>
-                  <IconMapPin size={18} />
-                  <Stack gap={2}>
-                    {row.gps.map((point, i) => (
-                      <Text size="xs" key={i}>
-                        Lat: {point.lat}, Lng: {point.lng}
-                      </Text>
-                    ))}
-                  </Stack>
-                </Group>
-              </Stack>
-            </Card>
+              </Card>
+            ))}
+          </Stack>
+        ) : (
+          <Text c="dimmed" fs="italic" ta="center" py="md">
+            Chưa thiết lập chu kỳ sinh trưởng
+          </Text>
+        )}
+      </Card>
+
+      {/* 4. TÀI LIỆU KỸ THUẬT */}
+      <Card withBorder radius="md">
+        <Title order={4} mb="md" c="indigo.8">
+          <Group gap="xs">
+            <IconLeaf /> Tài liệu kèm theo
+          </Group>
+        </Title>
+        <Grid>
+          <Grid.Col span={{ base: 12, md: 6 }}>
+            {renderDocInfo(
+              "Kỹ thuật canh tác",
+              data.techDocType,
+              data.techDocContent
+            )}
           </Grid.Col>
-        ))}
-      </Grid>
+          <Grid.Col span={{ base: 12, md: 6 }}>
+            {renderDocInfo(
+              "Tiêu chuẩn chất lượng",
+              data.standardDocType,
+              data.standardDocContent
+            )}
+          </Grid.Col>
+        </Grid>
+      </Card>
     </Stack>
   );
 };
