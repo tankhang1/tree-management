@@ -31,6 +31,12 @@ import { MapContainer, Polygon, TileLayer } from "react-leaflet";
 import { useNavigate } from "react-router-dom";
 import { ConfirmStep } from "./components/ConfirmStep";
 import { CompanyList } from "../../../../components/CompanyList";
+import {
+  useRegionStore,
+  type LatLngPoint,
+  type RegionEntity,
+} from "../../../zustand/regionStore";
+
 type LatLng = [number, number];
 
 const MapManagementAddRegionPage = () => {
@@ -38,6 +44,9 @@ const MapManagementAddRegionPage = () => {
     openedAddLocation,
     { open: openAddLocation, close: closeAddLocation },
   ] = useDisclosure(false);
+  const [companyIds, setCompanyIds] = useState<string[]>([]);
+
+  const addRegion = useRegionStore((s) => s.addRegion);
   const navigate = useNavigate();
   const [lat, setLat] = useState<string>("");
   const [lng, setLng] = useState<string>("");
@@ -60,8 +69,12 @@ const MapManagementAddRegionPage = () => {
         area: "",
         soilType: "",
         terrain: [],
+        companyIds: [],
         gps: "",
         note: "",
+        province: "",
+        address: "",
+        ward: "",
       },
       areas: [
         {
@@ -95,12 +108,37 @@ const MapManagementAddRegionPage = () => {
       terrain: [],
       mainCrop: "",
       gps: "",
+      province: "",
+      address: "",
+      ward: "",
     });
     setExpandedAreas((prev) => [...prev, form.values.areas.length]);
   };
-
   const handleSubmit = () => {
-    console.log("✅ Dữ liệu toàn bộ:", form.values);
+    const values = form.getValues();
+    console.log(values);
+    const id =
+      typeof crypto !== "undefined" && "randomUUID" in crypto
+        ? crypto.randomUUID()
+        : Date.now().toString();
+
+    const coordsForStore: LatLngPoint[] = coords.map(([la, ln]) => ({
+      lat: la,
+      lng: ln,
+    }));
+
+    const entity: RegionEntity = {
+      id,
+      region: {
+        ...values.region,
+        companyIds: companyIds,
+      },
+      areas: values.areas,
+      coords: coordsForStore,
+    };
+
+    addRegion(entity);
+    setActive(4);
   };
   const handleAddPoint = () => {
     const parsedLat = parseFloat(lat);
@@ -187,6 +225,7 @@ const MapManagementAddRegionPage = () => {
               radius={4}
               label="Tỉnh/Thành phố"
               multiple
+              {...form.getInputProps("region.province")}
               placeholder="Tỉnh/Thành phố"
               data={[
                 "Hà Nội",
@@ -253,6 +292,7 @@ const MapManagementAddRegionPage = () => {
               label="Phường/Xã"
               radius={4}
               searchable
+              {...form.getInputProps("region.ward")}
               placeholder="Phường/Xã"
               data={[
                 "Phường Bến Nghé",
@@ -327,8 +367,17 @@ const MapManagementAddRegionPage = () => {
                 "Xã Bình Trưng",
               ]}
             />
-            <TextInput radius={4} label="Địa chỉ" />
-            <CompanyList />
+            <TextInput
+              radius={4}
+              label="Địa chỉ"
+              {...form.getInputProps("region.address")}
+            />
+
+            <CompanyList
+              isMultiple
+              value={companyIds}
+              onChange={setCompanyIds}
+            />
             <NumberInput
               radius={4}
               label="Diện tích (m²)"
@@ -435,6 +484,7 @@ const MapManagementAddRegionPage = () => {
                     placeholder="Nhập tên khu vực"
                     defaultValue={`Khu vực ${areaIdx + 1}`}
                     radius={4}
+                    {...form.getInputProps(`areas.${areaIdx}.name`)}
                   />
                   <Button
                     size="xs"
@@ -485,6 +535,86 @@ const MapManagementAddRegionPage = () => {
                     </Button>
                   </Group>
                 </Collapse>
+                <Modal
+                  opened={openedAddLocation}
+                  onClose={closeAddLocation}
+                  title={<Text fw={"bold"}>Bản đồ khu vực</Text>}
+                >
+                  <Stack mt="md" gap={"xs"}>
+                    <Group align="flex-end">
+                      <TextInput
+                        label="Latitude"
+                        value={lat}
+                        onChange={(e) => setLat(e.currentTarget.value)}
+                        placeholder="10.762622"
+                        radius={4}
+                        flex={1}
+                      />
+                      <TextInput
+                        label="Longitude"
+                        value={lng}
+                        onChange={(e) => setLng(e.currentTarget.value)}
+                        placeholder="106.660172"
+                        radius={4}
+                        flex={1}
+                      />
+                      <Button
+                        onClick={handleAddPoint}
+                        radius={4}
+                        leftSection={<IconPlus size={16} />}
+                      >
+                        Thêm
+                      </Button>
+                    </Group>
+                    {coords.length > 0 && (
+                      <Stack gap={"xs"}>
+                        <Text size="sm" c="dimmed">
+                          Danh sách tọa độ ({coords.length}):
+                        </Text>
+                        {coords.map(([lat, lng], i) => (
+                          <Group key={i} gap="xs">
+                            <Text size="sm" w={"40%"}>
+                              {i + 1}. {lat}, {lng}
+                            </Text>
+                            <ActionIcon
+                              color="red"
+                              variant="light"
+                              radius={4}
+                              onClick={() => handleRemove(i)}
+                            >
+                              <IconTrash size={16} />
+                            </ActionIcon>
+                          </Group>
+                        ))}
+                      </Stack>
+                    )}
+                    {/* Cảnh báo nếu không đủ 3 điểm */}
+                    {coords.length > 0 && coords.length < 3 && (
+                      <Alert
+                        icon={<IconAlertTriangle />}
+                        color="yellow"
+                        radius={4}
+                      >
+                        Cần ít nhất 3 điểm để tạo đa giác.
+                      </Alert>
+                    )}
+                    Bản đồ Leaflet với polygon
+                    <MapContainer
+                      center={
+                        coords.length >= 1 ? coords[0] : [10.762622, 106.660172]
+                      }
+                      zoom={16}
+                      style={{
+                        height: "300px",
+                        width: "100%",
+                        borderRadius: 8,
+                      }}
+                    >
+                      <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
+                      <Polygon positions={coords} color="green" />
+                    </MapContainer>
+                  </Stack>
+                </Modal>
               </Card>
             ))}
             <Button radius={4} variant="outline" onClick={handleAddArea}>
@@ -494,34 +624,26 @@ const MapManagementAddRegionPage = () => {
         )}
         {active === 3 && (
           <ConfirmStep
-            code="VTN001"
-            govCode="QG-456789"
-            name="Vùng Tây Nguyên A"
-            farmer="HTX Nông nghiệp Tây Nguyên"
-            size={12000}
-            soilType="Đất đỏ bazan"
-            terrain="Đồi thoải"
-            note="Vùng trồng được đăng ký mã số QG"
-            gps={[
-              { lat: 10.762622, lng: 106.660172 },
-              { lat: 10.76264, lng: 106.6602 },
-              { lat: 10.762665, lng: 106.660185 },
-              { lat: 10.762622, lng: 106.660172 },
-            ]}
-            zones={[
-              {
-                name: "Khu vực 1",
-                area: "5000",
-                soilType: "Đất pha cát",
-                terrain: "Bằng phẳng",
-              },
-              {
-                name: "Khu vực 2",
-                area: "7000",
-                soilType: "Đất thịt nhẹ",
-                terrain: "Thoải dốc",
-              },
-            ]}
+            code={form.values.region.codeSystem || undefined}
+            govCode={form.values.region.codeGov || undefined}
+            name={form.values.region.name || "Chưa đặt tên vùng"}
+            farmer={
+              // tuỳ bạn, có thể lấy từ companyStore nếu đã chọn
+              "HTX / Nông hộ đã chọn"
+            }
+            size={form.values.region.area ? Number(form.values.region.area) : 0}
+            soilType={form.values.region.soilType || "Chưa chọn"}
+            terrain={form.values.region.terrain?.join(", ") || "Chưa chọn"}
+            note={form.values.region.note || undefined}
+            gps={coords.map(([lat, lng]) => ({ lat, lng }))}
+            zones={form.values.areas.map((area, idx) => ({
+              name: area.name || `Khu vực ${idx + 1}`,
+              area: area.area || "0",
+              soilType: area.soilType || "Chưa chọn",
+              terrain: Array.isArray(area.terrain)
+                ? area.terrain.join(", ")
+                : area.terrain || "Chưa chọn",
+            }))}
           />
         )}
         {active < 4 && (
@@ -535,82 +657,12 @@ const MapManagementAddRegionPage = () => {
               Quay lại
             </Button>
 
-            <Button radius={4} onClick={nextStep}>
+            <Button radius={4} onClick={active === 3 ? handleSubmit : nextStep}>
               {active === 3 ? "Hoàn thành" : "Tiếp tục"}
             </Button>
           </Group>
         )}
       </form>
-      <Modal
-        opened={openedAddLocation}
-        onClose={closeAddLocation}
-        title={<Text fw={"bold"}>Bản đồ khu vực</Text>}
-      >
-        <Stack mt="md" gap={"xs"}>
-          <Group align="flex-end">
-            <TextInput
-              label="Latitude"
-              value={lat}
-              onChange={(e) => setLat(e.currentTarget.value)}
-              placeholder="10.762622"
-              radius={4}
-              flex={1}
-            />
-            <TextInput
-              label="Longitude"
-              value={lng}
-              onChange={(e) => setLng(e.currentTarget.value)}
-              placeholder="106.660172"
-              radius={4}
-              flex={1}
-            />
-            <Button
-              onClick={handleAddPoint}
-              radius={4}
-              leftSection={<IconPlus size={16} />}
-            >
-              Thêm
-            </Button>
-          </Group>
-          {coords.length > 0 && (
-            <Stack gap={"xs"}>
-              <Text size="sm" c="dimmed">
-                Danh sách tọa độ ({coords.length}):
-              </Text>
-              {coords.map(([lat, lng], i) => (
-                <Group key={i} gap="xs">
-                  <Text size="sm" w={"40%"}>
-                    {i + 1}. {lat}, {lng}
-                  </Text>
-                  <ActionIcon
-                    color="red"
-                    variant="light"
-                    radius={4}
-                    onClick={() => handleRemove(i)}
-                  >
-                    <IconTrash size={16} />
-                  </ActionIcon>
-                </Group>
-              ))}
-            </Stack>
-          )}
-          {/* Cảnh báo nếu không đủ 3 điểm */}
-          {coords.length > 0 && coords.length < 3 && (
-            <Alert icon={<IconAlertTriangle />} color="yellow" radius={4}>
-              Cần ít nhất 3 điểm để tạo đa giác.
-            </Alert>
-          )}
-          Bản đồ Leaflet với polygon
-          <MapContainer
-            center={coords.length >= 1 ? coords[0] : [10.762622, 106.660172]}
-            zoom={16}
-            style={{ height: "300px", width: "100%", borderRadius: 8 }}
-          >
-            <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
-            <Polygon positions={coords} color="green" />
-          </MapContainer>
-        </Stack>
-      </Modal>
     </Card>
   );
 };

@@ -19,104 +19,96 @@ import {
   IconSearch,
 } from "@tabler/icons-react";
 import Scrollable from "../Scrollable";
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import { useCompanyStore } from "../../pages/zustand/companyStore";
 
-const data = [
-  {
-    name: "Hộ ông Nguyễn Văn A",
-    type: "hộ nông dân",
-    owner: "Nguyễn Văn A",
-    id: "012345678901",
-    phone: "0912345678",
-    email: "a.nongdan@example.com",
-    address: "Ấp 1, xã Tân Lập, huyện Hớn Quản, Bình Phước",
-  },
-  {
-    name: "HTX Nông nghiệp Bền Vững",
-    type: "hợp tác xã",
-    owner: "Trần Thị B",
-    id: "123456789012",
-    phone: "0938123456",
-    email: "info@benvungcoop.vn",
-    address: "Xã Phú Riềng, huyện Phú Riềng, Bình Phước",
-  },
-  {
-    name: "Hộ ông Lê Văn C",
-    type: "hộ nông dân",
-    owner: "Lê Văn C",
-    id: "234567890123",
-    phone: "0987654321",
-    email: "c.nongdan@example.com",
-    address: "Ấp 2, xã Tân Hưng, huyện Đồng Phú, Bình Phước",
-  },
-  {
-    name: "HTX Nông nghiệp Xanh",
-    type: "hợp tác xã",
-    owner: "Nguyễn Thị D",
-    id: "345678901234",
-    phone: "0901234567",
-    email: "info@nongnghiepxanh.vn",
-    address: "Xã Tân Tiến, huyện Đồng Xoài, Bình Phước",
-  },
-  {
-    name: "Hộ bà Phạm Thị E",
-    type: "hộ nông dân",
-    owner: "Phạm Thị E",
-    id: "456789012345",
-    phone: "0911223344",
-    email: "e.nongdan@example.com",
-    address: "Ấp 3, xã Minh Hưng, huyện Chơn Thành, Bình Phước",
-  },
-  {
-    name: "HTX Nông nghiệp Hữu Cơ",
-    type: "hợp tác xã",
-    owner: "Trần Văn F",
-    id: "567890123456",
-    phone: "0922334455",
-    email: "info@huuco.vn",
-    address: "Xã Tân Lợi, huyện Hớn Quản, Bình Phước",
-  },
-  {
-    name: "Hộ ông Nguyễn Văn G",
-    type: "hộ nông dân",
-    owner: "Nguyễn Văn G",
-    id: "678901234567",
-    phone: "0933445566",
-    email: "g.nongdan@example.com",
-    address: "Ấp 4, xã Tân Phước, huyện Phú Riềng, Bình Phước",
-  },
-];
 type TCompanyList = {
   isMultiple?: boolean;
+  value?: string[]; // selected company ids (controlled)
+  onChange?: (ids: string[]) => void;
 };
-export function CompanyList({ isMultiple = false }: TCompanyList) {
-  const [selectedId, setSelectedId] = useState<string[]>([]);
+
+export function CompanyList({
+  isMultiple = false,
+  value,
+  onChange,
+}: TCompanyList) {
+  const { companies } = useCompanyStore();
+
+  const [search, setSearch] = useState("");
+  const [internalSelected, setInternalSelected] = useState<string[]>([]);
+
+  const selectedId = value !== undefined ? value : internalSelected;
+
+  const setSelectedId = (ids: string[]) => {
+    if (value === undefined) {
+      setInternalSelected(ids);
+    }
+    onChange?.(ids);
+  };
+
   const onSelect = (id: string) => {
     if (isMultiple) {
       if (selectedId.includes(id)) {
-        setSelectedId((prev) => prev.filter((item) => item !== id));
+        setSelectedId(selectedId.filter((item) => item !== id));
       } else {
-        setSelectedId((prev) => [...prev, id]);
+        setSelectedId([...selectedId, id]);
       }
     } else {
       setSelectedId([id]);
     }
   };
+
+  const suggestions = useMemo(
+    () =>
+      Array.from(
+        new Set(
+          companies.flatMap((c) => [c.name, c.id, c.phone, c.email, c.address])
+        )
+      ),
+    [companies]
+  );
+
+  const filteredCompanies = useMemo(() => {
+    if (!search.trim()) return companies;
+    const q = search.toLowerCase();
+    return companies.filter((c) => {
+      return (
+        c.name.toLowerCase().includes(q) ||
+        c.id.toLowerCase().includes(q) ||
+        c.phone.toLowerCase().includes(q) ||
+        c.email.toLowerCase().includes(q) ||
+        c.address.toLowerCase().includes(q)
+      );
+    });
+  }, [companies, search]);
+
+  useEffect(() => {
+    if (value && !isMultiple && value.length > 1) {
+      setSelectedId([value[0]]);
+    }
+  }, [value, isMultiple]);
+
   return (
-    <Stack gap={"xs"}>
+    <Stack gap="xs">
       <Text fw={500} fz={15}>
         Doanh nghiệp/ Nông hộ
       </Text>
+
       <Autocomplete
         placeholder="Tìm doanh nghiệp/ nông hộ"
         leftSection={<IconSearch size={18} />}
         radius={4}
+        data={suggestions}
+        value={search}
+        onChange={setSearch}
       />
+
       <Scrollable>
-        <Group align="flex-start" wrap="nowrap" gap="md" p={"xs"}>
-          {data.map((item, index) => (
+        <Group align="flex-start" wrap="nowrap" gap="md" p="xs">
+          {filteredCompanies.map((item) => (
             <Card
-              key={index}
+              key={item.id}
               shadow="md"
               padding="lg"
               radius={4}
@@ -152,6 +144,8 @@ export function CompanyList({ isMultiple = false }: TCompanyList) {
                         <Checkbox
                           checked={selectedId.includes(item.id)}
                           radius={4}
+                          onChange={() => onSelect(item.id)}
+                          onClick={(e) => e.stopPropagation()}
                         />
                       )}
                     </Group>
@@ -174,7 +168,7 @@ export function CompanyList({ isMultiple = false }: TCompanyList) {
                 <Group>
                   <IconUser size={18} />
                   <Text size="sm">
-                    <strong>Chủ sở hữu:</strong> {item.owner}
+                    <strong>Chủ sở hữu:</strong> {item.name}
                   </Text>
                 </Group>
 

@@ -31,7 +31,10 @@ import {
 } from "@tabler/icons-react";
 import { useNavigate } from "react-router-dom";
 import { PATH } from "../../../constants/path.constants";
-import { useState } from "react";
+import { useMemo, useState } from "react";
+import { useRegionStore, type RegionEntity } from "../../zustand/regionStore";
+import { useCompanyStore } from "../../zustand/companyStore";
+
 type AreaZone = {
   id: string;
   code: string;
@@ -47,157 +50,34 @@ type AreaZone = {
   district: string;
 };
 
-export const areaZoneData: AreaZone[] = [
-  {
-    id: "DN001",
-    code: "KV-AG01",
-    name: "Cánh đồng Vàm Nao",
-    regionName: "Vùng Trồng Đậu Nành An Giang",
-    orgUnit: "HTX Nông nghiệp Vàm Nao",
-    area: 15000,
-    soilType: "Đất phù sa",
-    terrain: ["Bằng phẳng", "Ven sông"],
-    gps: "10.3862,105.4351 10.3868,105.4362 10.3857,105.4367 10.3853,105.4356",
-    numberOfLots: 5,
-    province: "An Giang",
-    district: "TP. Long Xuyên",
-  },
-  {
-    id: "DN002",
-    code: "KV-TG01",
-    name: "Ruộng Mỹ Tho",
-    regionName: "Vùng Đậu Nành Tiền Giang",
-    orgUnit: "Hộ Ông Trần Văn H.",
-    area: 12000,
-    soilType: "Đất phù sa",
-    terrain: ["Bằng phẳng", "Trũng nhẹ"],
-    gps: "10.3521,106.3562 10.3529,106.3569 10.3520,106.3576 10.3514,106.3568",
-    numberOfLots: 4,
-    province: "Tiền Giang",
-    district: "TP. Mỹ Tho",
-  },
-  {
-    id: "DN003",
-    code: "KV-CT01",
-    name: "Vườn cây Cái Răng",
-    regionName: "Vùng Đậu Nành Cần Thơ – Hậu Giang",
-    orgUnit: "Hộ Bà Nguyễn Thị L.",
-    area: 18000,
-    soilType: "Đất phù sa",
-    terrain: ["Bằng phẳng", "Ven kênh"],
-    gps: "10.0105,105.7498 10.0112,105.7506 10.0103,105.7513 10.0097,105.7505",
-    numberOfLots: 6,
-    province: "Cần Thơ",
-    district: "Quận Cái Răng",
-  },
-  {
-    id: "DN004",
-    code: "KV-LA01",
-    name: "Cánh đồng Đức Hòa",
-    regionName: "Vùng Đậu Nành Long An",
-    orgUnit: "HTX Đức Hòa",
-    area: 25000,
-    soilType: "Đất thịt nhẹ",
-    terrain: ["Bằng phẳng"],
-    gps: "10.7918,106.4152 10.7925,106.4161 10.7917,106.4169 10.7910,106.4160",
-    numberOfLots: 6,
-    province: "Long An",
-    district: "Huyện Đức Hòa",
-  },
-  {
-    id: "DN005",
-    code: "KV-GL01",
-    name: "Nông trại Ia Grai",
-    regionName: "Vùng Đậu Nành Tây Nguyên",
-    orgUnit: "Công ty TNHH GreenFarm",
-    area: 32000,
-    soilType: "Đất đỏ bazan",
-    terrain: ["Thoai thoải", "Đồi thấp"],
-    gps: "13.9918,107.9792 13.9926,107.9801 13.9917,107.9809 13.9910,107.9800",
-    numberOfLots: 8,
-    province: "Gia Lai",
-    district: "Huyện Ia Grai",
-  },
+type FilterState = {
+  keyword: string;
+  soilTypes: string[];
+  terrains: string[];
+  provinces: string[];
+  wards: string[];
+};
 
-  // ======== KHU TRỒNG BẮP (NGÔ) ========
-  {
-    id: "BP001",
-    code: "KV-DT01",
-    name: "Đồng Sen Tháp Mười",
-    regionName: "Vùng Bắp Đồng Tháp",
-    orgUnit: "HTX Tháp Mười",
-    area: 22000,
-    soilType: "Đất phèn (đã xử lý)",
-    terrain: ["Bằng phẳng", "Trũng"],
-    gps: "10.5234,105.7215 10.5240,105.7226 10.5230,105.7232 10.5224,105.7221",
-    numberOfLots: 7,
-    province: "Đồng Tháp",
-    district: "Huyện Tháp Mười",
-  },
-  {
-    id: "BP002",
-    code: "KV-BT01",
-    name: "Vườn Xen Canh Dừa Bến Tre",
-    regionName: "Vùng Xen Canh Bắp – Dừa Bến Tre",
-    orgUnit: "Hộ Ông Lê Văn Q.",
-    area: 9000,
-    soilType: "Đất cát pha",
-    terrain: ["Bằng phẳng", "Ven sông"],
-    gps: "10.2221,106.3731 10.2229,106.3738 10.2221,106.3746 10.2214,106.3738",
-    numberOfLots: 3,
-    province: "Bến Tre",
-    district: "Huyện Châu Thành",
-  },
-  {
-    id: "BP003",
-    code: "KV-VL01",
-    name: "Vườn Bưởi Bình Minh",
-    regionName: "Vùng Xen Canh Bắp – Cây Có Múi Vĩnh Long",
-    orgUnit: "Doanh nghiệp VinaFruit",
-    area: 11000,
-    soilType: "Đất phù sa",
-    terrain: ["Bằng phẳng"],
-    gps: "10.2124,105.9726 10.2130,105.9734 10.2121,105.9740 10.2116,105.9732",
-    numberOfLots: 4,
-    province: "Vĩnh Long",
-    district: "Thị xã Bình Minh",
-  },
-  {
-    id: "BP004",
-    code: "KV-KG01",
-    name: "Cánh đồng Tân Hiệp",
-    regionName: "Vùng Bắp Kiên Giang",
-    orgUnit: "Hộ Bà Trần Thị S.",
-    area: 30000,
-    soilType: "Đất phù sa ngọt",
-    terrain: ["Bằng phẳng"],
-    gps: "10.1035,105.1981 10.1043,105.1989 10.1036,105.1997 10.1029,105.1989",
-    numberOfLots: 8,
-    province: "Kiên Giang",
-    district: "Huyện Tân Hiệp",
-  },
-  {
-    id: "BP005",
-    code: "KV-NA01",
-    name: "Cánh đồng Quỳnh Lưu",
-    regionName: "Vùng Bắp Bắc Trung Bộ",
-    orgUnit: "HTX Quỳnh Lưu Xanh",
-    area: 26000,
-    soilType: "Đất pha cát",
-    terrain: ["Bằng phẳng", "Ven biển"],
-    gps: "19.2752,105.6213 19.2761,105.6221 19.2753,105.6228 19.2746,105.6219",
-    numberOfLots: 5,
-    province: "Nghệ An",
-    district: "Huyện Quỳnh Lưu",
-  },
-];
 const MapManagementRegionPage = () => {
+  const { regions } = useRegionStore();
+  const { companies } = useCompanyStore();
   const navigate = useNavigate();
+
+  // UI input state
   const [keyword, setKeyword] = useState("");
   const [soilTypes, setSoilTypes] = useState<string[]>([]);
   const [terrains, setTerrains] = useState<string[]>([]);
   const [provinces, setProvinces] = useState<string[]>([]);
   const [wards, setWards] = useState<string[]>([]);
+
+  // Applied filters (thực sự dùng để lọc bảng)
+  const [appliedFilters, setAppliedFilters] = useState<FilterState>({
+    keyword: "",
+    soilTypes: [],
+    terrains: [],
+    provinces: [],
+    wards: [],
+  });
 
   const clearAll = () => {
     setKeyword("");
@@ -205,48 +85,96 @@ const MapManagementRegionPage = () => {
     setTerrains([]);
     setProvinces([]);
     setWards([]);
+
+    setAppliedFilters({
+      keyword: "",
+      soilTypes: [],
+      terrains: [],
+      provinces: [],
+      wards: [],
+    });
   };
+
+  const handleApplyFilters = () => {
+    setAppliedFilters({
+      keyword,
+      soilTypes,
+      terrains,
+      provinces,
+      wards,
+    });
+  };
+
   const onRegionDetail = () => {
     navigate(PATH.MAP_REGION_DETAIL);
   };
-  const areaZoneColumns: MRT_ColumnDef<AreaZone>[] = [
+
+  const onAddRegion = () => {
+    navigate(PATH.MAP_ADD_REGION);
+  };
+
+  const areaZoneColumns: MRT_ColumnDef<RegionEntity>[] = [
     {
       accessorKey: "code",
       header: "Mã vùng",
-      Cell: ({ row }) => <Text fw={500}>{row.original.code}</Text>,
+      Cell: ({ row }) => <Text fw={500}>{row.original.id}</Text>,
     },
-
     {
       accessorKey: "regionName",
       header: "Vùng",
+      Cell: ({ row }) => <Text fw={500}>{row.original.region.name}</Text>,
     },
     {
       accessorKey: "orgUnit",
       header: "Doanh nghiệp / nông hộ",
+      Cell: ({ row }) => {
+        const companyNames = companies
+          .filter((company) =>
+            row.original.region.companyIds.includes(company.id.toString())
+          )
+          .map((item) => item.name);
+        return (
+          <Stack>
+            {companyNames.map((item) => (
+              <Text fw={500}>- {item}</Text>
+            ))}
+          </Stack>
+        );
+      },
     },
     {
       accessorKey: "province",
       header: "Tỉnh/Thành phố",
+      Cell: ({ row }) => <Text>{row.original?.region.province}</Text>,
     },
     {
       accessorKey: "district",
       header: "Phường/Xã",
+      Cell: ({ row }) => <Text>{row.original?.region.ward}</Text>,
+    },
+    {
+      accessorKey: "address",
+      header: "Địa chỉ",
+      Cell: ({ row }) => <Text>{row.original?.region.address}</Text>,
     },
     {
       accessorKey: "area",
       header: "Diện tích (m²)",
-      Cell: ({ row }) => <Text>{row.original?.area?.toLocaleString()} m²</Text>,
+      Cell: ({ row }) => (
+        <Text>{row.original?.region.area?.toLocaleString()} m²</Text>
+      ),
     },
     {
       accessorKey: "soilType",
       header: "Loại đất",
+      Cell: ({ row }) => <Text>{row.original?.region.soilType}</Text>,
     },
     {
       accessorKey: "terrain",
       header: "Địa hình",
       Cell: ({ row }) => (
         <Group gap="xs">
-          {row.original.terrain.map((item, i) => (
+          {row.original.region.terrain.map((item, i) => (
             <Badge key={i} size="xs" color="gray">
               {item}
             </Badge>
@@ -254,7 +182,6 @@ const MapManagementRegionPage = () => {
         </Group>
       ),
     },
-
     {
       accessorKey: "actions",
       header: "Tuỳ chọn",
@@ -263,7 +190,7 @@ const MapManagementRegionPage = () => {
       Cell: () => (
         <Menu shadow="md">
           <Menu.Target>
-            <ActionIcon variant="transparent" c={"gray"}>
+            <ActionIcon variant="transparent" c="gray">
               <IconDotsVertical />
             </ActionIcon>
           </Menu.Target>
@@ -286,9 +213,64 @@ const MapManagementRegionPage = () => {
       ),
     },
   ];
-  const onAddRegion = () => {
-    navigate(PATH.MAP_ADD_REGION);
-  };
+
+  // Dữ liệu sau khi áp filter
+  const filteredAreaZones = useMemo(() => {
+    const {
+      keyword: kw,
+      soilTypes: fSoil,
+      terrains: fTerrain,
+      provinces: fProv,
+      wards: fWards,
+    } = appliedFilters;
+
+    const kwLower = kw.trim().toLowerCase();
+
+    return regions.filter((item) => {
+      // Keyword: check code, name, regionName, orgUnit, province, district, soilType, terrain
+      if (kwLower) {
+        const inKeyword =
+          item.region.name.toLowerCase().includes(kwLower) ||
+          item.region.note.toLowerCase().includes(kwLower) ||
+          item.region.area.toLowerCase().includes(kwLower);
+
+        if (!inKeyword) return false;
+      }
+
+      // Loại đất
+      if (fSoil.length > 0 && !fSoil.includes(item.region.soilType)) {
+        return false;
+      }
+
+      // Địa hình (chỉ cần giao nhau)
+      if (
+        fTerrain.length > 0 &&
+        item.region.terrain.every((t) => !fTerrain.includes(t))
+      ) {
+        return false;
+      }
+
+      // Tỉnh/Thành
+      if (fProv.length > 0 && !fProv.includes(item.region.province)) {
+        return false;
+      }
+
+      // Phường/Xã (district)
+      if (fWards.length > 0 && !fWards.includes(item.region.ward)) {
+        return false;
+      }
+
+      return true;
+    });
+  }, [appliedFilters]);
+
+  const hasAppliedFilters =
+    !!appliedFilters.keyword ||
+    appliedFilters.soilTypes.length > 0 ||
+    appliedFilters.terrains.length > 0 ||
+    appliedFilters.provinces.length > 0 ||
+    appliedFilters.wards.length > 0;
+
   return (
     <Stack gap="lg">
       <Group justify="space-between">
@@ -304,6 +286,7 @@ const MapManagementRegionPage = () => {
           </Button>
         </Group>
       </Group>
+
       <Card withBorder shadow="sm" radius={4} p="md">
         {/* Header */}
         <Group justify="space-between" align="center" mb="xs">
@@ -326,7 +309,11 @@ const MapManagementRegionPage = () => {
                 Làm mới
               </Button>
             </Tooltip>
-            <Button radius={4} leftSection={<IconSearch size={16} />}>
+            <Button
+              radius={4}
+              leftSection={<IconSearch size={16} />}
+              onClick={handleApplyFilters}
+            >
               Lọc thông tin
             </Button>
           </Group>
@@ -523,55 +510,92 @@ const MapManagementRegionPage = () => {
             />
           </SimpleGrid>
 
-          {/* Tóm tắt filter bằng chips (UI) */}
-          {(keyword ||
-            soilTypes.length ||
-            terrains.length ||
-            provinces.length ||
-            wards.length) && (
+          {/* Tóm tắt filter bằng chips (applied) */}
+          {hasAppliedFilters && (
             <Group gap={8}>
-              {keyword && (
-                <Badge
-                  variant="light"
-                  rightSection={<CloseButton onClick={() => setKeyword("")} />}
-                >
-                  Từ khoá: {keyword}
-                </Badge>
-              )}
-              {soilTypes.length > 0 && (
+              {appliedFilters.keyword && (
                 <Badge
                   variant="light"
                   rightSection={
-                    <CloseButton onClick={() => setSoilTypes([])} />
+                    <CloseButton
+                      onClick={() =>
+                        setAppliedFilters((prev) => ({
+                          ...prev,
+                          keyword: "",
+                        }))
+                      }
+                    />
                   }
                 >
-                  Loại đất: {soilTypes.join(", ")}
+                  Từ khoá: {appliedFilters.keyword}
                 </Badge>
               )}
-              {terrains.length > 0 && (
-                <Badge
-                  variant="light"
-                  rightSection={<CloseButton onClick={() => setTerrains([])} />}
-                >
-                  Địa hình: {terrains.join(", ")}
-                </Badge>
-              )}
-              {provinces.length > 0 && (
+              {appliedFilters.soilTypes.length > 0 && (
                 <Badge
                   variant="light"
                   rightSection={
-                    <CloseButton onClick={() => setProvinces([])} />
+                    <CloseButton
+                      onClick={() =>
+                        setAppliedFilters((prev) => ({
+                          ...prev,
+                          soilTypes: [],
+                        }))
+                      }
+                    />
                   }
                 >
-                  Tỉnh/TP: {provinces.join(", ")}
+                  Loại đất: {appliedFilters.soilTypes.join(", ")}
                 </Badge>
               )}
-              {wards.length > 0 && (
+              {appliedFilters.terrains.length > 0 && (
                 <Badge
                   variant="light"
-                  rightSection={<CloseButton onClick={() => setWards([])} />}
+                  rightSection={
+                    <CloseButton
+                      onClick={() =>
+                        setAppliedFilters((prev) => ({
+                          ...prev,
+                          terrains: [],
+                        }))
+                      }
+                    />
+                  }
                 >
-                  Phường/Xã: {wards.join(", ")}
+                  Địa hình: {appliedFilters.terrains.join(", ")}
+                </Badge>
+              )}
+              {appliedFilters.provinces.length > 0 && (
+                <Badge
+                  variant="light"
+                  rightSection={
+                    <CloseButton
+                      onClick={() =>
+                        setAppliedFilters((prev) => ({
+                          ...prev,
+                          provinces: [],
+                        }))
+                      }
+                    />
+                  }
+                >
+                  Tỉnh/TP: {appliedFilters.provinces.join(", ")}
+                </Badge>
+              )}
+              {appliedFilters.wards.length > 0 && (
+                <Badge
+                  variant="light"
+                  rightSection={
+                    <CloseButton
+                      onClick={() =>
+                        setAppliedFilters((prev) => ({
+                          ...prev,
+                          wards: [],
+                        }))
+                      }
+                    />
+                  }
+                >
+                  Phường/Xã: {appliedFilters.wards.join(", ")}
                 </Badge>
               )}
               <ActionIcon
@@ -585,8 +609,10 @@ const MapManagementRegionPage = () => {
           )}
         </Stack>
       </Card>
-      <Table columns={areaZoneColumns} data={areaZoneData} />
+
+      <Table columns={areaZoneColumns} data={filteredAreaZones} />
     </Stack>
   );
 };
+
 export default MapManagementRegionPage;
