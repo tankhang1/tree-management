@@ -17,42 +17,63 @@ import {
 import type { MRT_ColumnDef } from "mantine-react-table";
 import Table from "../../../components/Table";
 import { useDisclosure } from "@mantine/hooks";
+import { useState } from "react";
+import { notifications } from "@mantine/notifications";
+
 import AddMachineCategoryForm from "./components/AddMachineCategoryForm";
-
-type MachineType = {
-  id: string; // Mã loại máy móc
-  name: string; // Tên loại máy móc
-};
-
-export const machineTypes: MachineType[] = [
-  {
-    id: "MCH01",
-    name: "Máy cày",
-  },
-  {
-    id: "MCH02",
-    name: "Máy phun thuốc",
-  },
-  {
-    id: "MCH03",
-    name: "Máy gặt",
-  },
-  {
-    id: "MCH04",
-    name: "Máy bay nông nghiệp",
-  },
-];
+import {
+  useMachineCategoryStore,
+  type MachineCategory,
+} from "../../zustand/machineCategoryStore";
 
 const MachineManagementCategoryPage = () => {
+  // 1. Kết nối Store
+  const { machines, deleteMachine } = useMachineCategoryStore();
+
+  // 2. State quản lý
   const [
     openedMachineForm,
     { open: openMachineForm, close: closeMachineForm },
   ] = useDisclosure(false);
+  const [openedDelete, { open: openDelete, close: closeDelete }] =
+    useDisclosure(false);
+  const [selectedId, setSelectedId] = useState<string | null>(null);
 
-  const machineTypeColumns: MRT_ColumnDef<MachineType>[] = [
+  // 3. Handlers
+  const handleCreate = () => {
+    setSelectedId(null);
+    openMachineForm();
+  };
+
+  const handleEdit = (id: string) => {
+    setSelectedId(id);
+    openMachineForm();
+  };
+
+  const confirmDelete = (id: string) => {
+    setSelectedId(id);
+    openDelete();
+  };
+
+  const handleDelete = () => {
+    if (selectedId) {
+      deleteMachine(selectedId);
+      notifications.show({
+        title: "Đã xóa thành công",
+        color: "green",
+        message: "",
+      });
+      closeDelete();
+      setSelectedId(null);
+    }
+  };
+
+  const machineTypeColumns: MRT_ColumnDef<MachineCategory>[] = [
     {
       accessorKey: "id",
       header: "Mã loại máy móc",
+      size: 150,
+      Cell: ({ cell }) => <Text fw={500}>{cell.getValue<string>()}</Text>,
     },
     {
       accessorKey: "name",
@@ -63,8 +84,8 @@ const MachineManagementCategoryPage = () => {
       header: "Tuỳ chọn",
       enableColumnActions: false,
       size: 10,
-      Cell: () => (
-        <Menu shadow="md">
+      Cell: ({ row }) => (
+        <Menu shadow="md" position="bottom-end">
           <Menu.Target>
             <ActionIcon variant="transparent" c={"gray"}>
               <IconDotsVertical />
@@ -72,10 +93,17 @@ const MachineManagementCategoryPage = () => {
           </Menu.Target>
 
           <Menu.Dropdown>
-            <Menu.Item leftSection={<IconEdit size={18} color="green" />}>
+            <Menu.Item
+              leftSection={<IconEdit size={18} color="green" />}
+              onClick={() => handleEdit(row.original.id)}
+            >
               Chỉnh sửa
             </Menu.Item>
-            <Menu.Item leftSection={<IconTrash size={18} />} color="red">
+            <Menu.Item
+              leftSection={<IconTrash size={18} />}
+              color="red"
+              onClick={() => confirmDelete(row.original.id)}
+            >
               Xoá
             </Menu.Item>
           </Menu.Dropdown>
@@ -94,19 +122,52 @@ const MachineManagementCategoryPage = () => {
           <Button variant="outline" radius={4} leftSection={<IconFileExcel />}>
             Xuất File
           </Button>
-          <Button radius={4} onClick={openMachineForm}>
+          <Button radius={4} onClick={handleCreate}>
             Thêm mới
           </Button>
         </Group>
       </Group>
 
-      <Table columns={machineTypeColumns} data={machineTypes} />
+      {/* Truyền data từ Store */}
+      <Table
+        //@ts-expect-error no check
+        columns={machineTypeColumns}
+        //@ts-expect-error no check
+        data={machines}
+      />
+
+      {/* Modal Thêm/Sửa */}
       <Modal
         opened={openedMachineForm}
         onClose={closeMachineForm}
-        title={<Text fw={"bold"}>Thêm mới loại máy móc</Text>}
+        title={
+          <Text fw={"bold"}>
+            {selectedId ? "Cập nhật loại máy móc" : "Thêm mới loại máy móc"}
+          </Text>
+        }
       >
-        <AddMachineCategoryForm />
+        <AddMachineCategoryForm
+          editId={selectedId}
+          onClose={closeMachineForm}
+        />
+      </Modal>
+
+      {/* Modal Xóa */}
+      <Modal
+        opened={openedDelete}
+        onClose={closeDelete}
+        title="Xác nhận xóa"
+        centered
+      >
+        <Text>Bạn có chắc chắn muốn xóa loại máy này không?</Text>
+        <Group justify="flex-end" mt="lg">
+          <Button variant="default" onClick={closeDelete}>
+            Hủy
+          </Button>
+          <Button color="red" onClick={handleDelete}>
+            Xóa ngay
+          </Button>
+        </Group>
       </Modal>
     </Stack>
   );

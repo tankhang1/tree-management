@@ -11,101 +11,152 @@ import {
   TextInput,
   Title,
   Tooltip,
+  Modal,
+  Badge,
 } from "@mantine/core";
 import { DatePickerInput } from "@mantine/dates";
 import {
   IconCalendar,
   IconDotsVertical,
-  IconEdit,
   IconEye,
   IconFileExcel,
   IconRefresh,
   IconSearch,
   IconTrash,
+  IconPlus,
 } from "@tabler/icons-react";
 import type { MRT_ColumnDef } from "mantine-react-table";
 import Table from "../../components/Table";
 import { useNavigate } from "react-router-dom";
 import { PATH } from "../../constants/path.constants";
-type Contract = {
-  id: string;
-  name: string;
-  contractType: "Thu" | "Mua";
-  summary: string;
-  items: string[]; // tên các vật tư / thuốc / máy móc / thành phẩm
-  quantity: number;
-  unit: string;
-  value: number;
-  currency: string;
-  status: "Đang hiệu lực" | "Đã kết thúc" | "Chờ duyệt";
-  startDate: string;
-  endDate: string;
-  partner: string; // Tên đối tác / khách hàng
-  fileUrl?: string;
-};
-const contractData: Contract[] = [
-  {
-    id: "HD001",
-    name: "Hợp đồng thu mua sầu riêng 2024",
-    contractType: "Thu",
-    summary: "Thu mua sản phẩm sầu riêng từ vùng trồng A",
-    items: ["Sầu riêng Ri6", "Thùng vận chuyển"],
-    quantity: 5000,
-    unit: "Kg",
-    value: 250_000_000,
-    currency: "VND",
-    status: "Đang hiệu lực",
-    startDate: "2024-07-01",
-    endDate: "2024-12-31",
-    partner: "Công ty Nông sản ABC",
-    fileUrl: "/contracts/hd001.pdf",
-  },
-  {
-    id: "HD002",
-    name: "Hợp đồng mua máy móc đợt 1",
-    contractType: "Mua",
-    summary: "Mua thiết bị phục vụ sản xuất",
-    items: ["Máy cày Kubota", "Thuốc trừ sâu B58"],
-    quantity: 20,
-    unit: "Cái",
-    value: 120_000_000,
-    currency: "VND",
-    status: "Chờ duyệt",
-    startDate: "2024-08-01",
-    endDate: "2024-09-30",
-    partner: "Công ty Thiết bị Nông nghiệp DEF",
-    fileUrl: "",
-  },
-];
+import { useState, useMemo } from "react";
+import { useDisclosure } from "@mantine/hooks";
+import { notifications } from "@mantine/notifications";
+import { useContractStore, type Contract } from "../zustand/contractStore";
+
+// IMPORT STORE
 
 const ContractManagementPage = () => {
   const navigate = useNavigate();
-  const onAddContract = () => {
-    navigate(PATH.CONTRACT_ADD_MANAGEMENT);
+  // 1. KẾT NỐI STORE
+  const { contracts, deleteContract } = useContractStore();
+
+  // State local
+  const [keyword, setKeyword] = useState("");
+  const [selectedPartners, setSelectedPartners] = useState<string[]>([]);
+  const [selectedTypes, setSelectedTypes] = useState<string[]>([]);
+  const [selectedStatus, setSelectedStatus] = useState<string[]>([]);
+  const [dateRange, setDateRange] = useState<[Date | null, Date | null]>([
+    null,
+    null,
+  ]);
+
+  // Modal delete
+  const [openedDelete, { open: openDelete, close: closeDelete }] =
+    useDisclosure(false);
+  const [selectedId, setSelectedId] = useState<string | null>(null);
+
+  // Handlers
+  const onAddContract = () => navigate(PATH.CONTRACT_ADD_MANAGEMENT);
+  const onDetailContract = (id: string) =>
+    navigate(`${PATH.CONTRACT_MANAGEMENT_DETAIL}/${id}`);
+
+  const confirmDelete = (id: string) => {
+    setSelectedId(id);
+    openDelete();
   };
-  const onDetailContract = () => {
-    navigate(PATH.CONTRACT_MANAGEMENT_DETAIL);
+
+  const handleDelete = () => {
+    if (selectedId) {
+      deleteContract(selectedId);
+      notifications.show({
+        title: "Đã xóa hợp đồng",
+        color: "green",
+        message: "",
+      });
+      closeDelete();
+      setSelectedId(null);
+    }
   };
+
+  const handleResetFilters = () => {
+    setKeyword("");
+    setSelectedPartners([]);
+    setSelectedTypes([]);
+    setSelectedStatus([]);
+    setDateRange([null, null]);
+  };
+
+  // Logic lọc dữ liệu
+  const filteredData = useMemo(() => {
+    return contracts.filter((c) => {
+      const matchKw =
+        !keyword ||
+        c.name.toLowerCase().includes(keyword.toLowerCase()) ||
+        c.id.toLowerCase().includes(keyword.toLowerCase());
+      const matchPartner =
+        !selectedPartners.length || selectedPartners.includes(c.partner);
+      const matchType =
+        !selectedTypes.length || selectedTypes.includes(c.contractType);
+      const matchStatus =
+        !selectedStatus.length || selectedStatus.includes(c.status);
+
+      let matchDate = true;
+      if (dateRange[0] && dateRange[1]) {
+        const contractDate = new Date(c.startDate);
+        matchDate =
+          contractDate >= dateRange[0] && contractDate <= dateRange[1];
+      }
+
+      return matchKw && matchPartner && matchType && matchStatus && matchDate;
+    });
+  }, [
+    contracts,
+    keyword,
+    selectedPartners,
+    selectedTypes,
+    selectedStatus,
+    dateRange,
+  ]);
+
   const contractColumns: MRT_ColumnDef<Contract>[] = [
-    { accessorKey: "id", header: "Mã hợp đồng" },
-    { accessorKey: "name", header: "Tên hợp đồng" },
+    { accessorKey: "id", header: "Mã HĐ", size: 100 },
+    { accessorKey: "name", header: "Tên hợp đồng", size: 250 },
     { accessorKey: "partner", header: "Đối tác" },
-    { accessorKey: "contractType", header: "Loại" },
-    { accessorKey: "summary", header: "Tóm tắt nội dung" },
     {
-      accessorKey: "items",
-      header: "Danh sách vật tư",
-      Cell: ({ row }) => row.original.items.join(", "),
+      accessorKey: "contractType",
+      header: "Loại",
+      Cell: ({ cell }) => (
+        <Badge variant="outline">{cell.getValue<string>()}</Badge>
+      ),
     },
-    { accessorKey: "quantity", header: "Sản lượng" },
-    { accessorKey: "unit", header: "Đơn vị" },
+    {
+      accessorKey: "summary",
+      header: "Tóm tắt",
+      size: 300,
+      Cell: ({ cell }) => (
+        <Text lineClamp={1} size="sm">
+          {cell.getValue<string>()}
+        </Text>
+      ),
+    },
     {
       accessorKey: "value",
       header: "Giá trị",
       Cell: ({ row }) =>
-        `${row.original.value.toLocaleString()} ${row.original.currency}`,
+        `${row.original.value?.toLocaleString() || 0} ${row.original.currency}`,
     },
-    { accessorKey: "status", header: "Trạng thái" },
+    {
+      accessorKey: "status",
+      header: "Trạng thái",
+      Cell: ({ cell }) => {
+        const val = cell.getValue<string>();
+        let color = "gray";
+        if (val === "Đang hiệu lực") color = "green";
+        if (val === "Chờ duyệt") color = "yellow";
+        return <Badge color={color}>{val}</Badge>;
+      },
+    },
     { accessorKey: "startDate", header: "Ngày hiệu lực" },
     { accessorKey: "endDate", header: "Ngày kết thúc" },
 
@@ -113,9 +164,9 @@ const ContractManagementPage = () => {
       accessorKey: "actions",
       header: "Tuỳ chọn",
       enableColumnActions: false,
-      size: 10,
-      Cell: () => (
-        <Menu shadow="md">
+      size: 60,
+      Cell: ({ row }) => (
+        <Menu shadow="md" position="bottom-end">
           <Menu.Target>
             <ActionIcon variant="transparent" c={"gray"}>
               <IconDotsVertical />
@@ -125,14 +176,15 @@ const ContractManagementPage = () => {
           <Menu.Dropdown>
             <Menu.Item
               leftSection={<IconEye size={18} color="gray" />}
-              onClick={onDetailContract}
+              onClick={() => onDetailContract(row.original.id)}
             >
-              Chi tiết
+              Chi tiết / Sửa
             </Menu.Item>
-            <Menu.Item leftSection={<IconEdit size={18} color="green" />}>
-              Chỉnh sửa
-            </Menu.Item>
-            <Menu.Item leftSection={<IconTrash size={18} />} color="red">
+            <Menu.Item
+              leftSection={<IconTrash size={18} />}
+              color="red"
+              onClick={() => confirmDelete(row.original.id)}
+            >
               Xoá
             </Menu.Item>
           </Menu.Dropdown>
@@ -149,21 +201,24 @@ const ContractManagementPage = () => {
         </Title>
         <Group>
           <Button variant="outline" radius={4} leftSection={<IconFileExcel />}>
-            Xuất File
+            Xuất Excel
           </Button>
-          <Button radius={4} onClick={onAddContract}>
+          <Button
+            radius={4}
+            onClick={onAddContract}
+            leftSection={<IconPlus size={18} />}
+          >
             Thêm mới
           </Button>
         </Group>
       </Group>
 
       <Card withBorder shadow="sm" radius={4} p="md">
-        {/* Header */}
         <Group justify="space-between" align="center" mb="xs">
           <Stack gap={0}>
             <Title order={4}>Tìm kiếm hợp đồng</Title>
             <Text c="dimmed" size="sm">
-              Điền từ khóa hoặc chọn lọc đối tác, loại, khoản thời gian
+              Lọc theo tên, đối tác, loại hoặc thời gian
             </Text>
           </Stack>
 
@@ -173,70 +228,99 @@ const ContractManagementPage = () => {
                 radius={4}
                 variant="default"
                 leftSection={<IconRefresh size={16} />}
-                onClick={() => {}}
+                onClick={handleResetFilters}
               >
                 Làm mới
               </Button>
             </Tooltip>
             <Button radius={4} leftSection={<IconSearch size={16} />}>
-              Lọc thông tin
+              Tìm kiếm
             </Button>
           </Group>
         </Group>
 
-        {/* Form */}
         <Stack gap="sm">
-          {/* Khung tìm kiếm (keyword) */}
           <TextInput
             radius={4}
             label="Khung tìm kiếm"
-            description="Ví dụ: Hợp đồng thu mua sầu riêng"
-            placeholder="Nhập thông tin"
+            placeholder="Nhập tên hợp đồng, mã hợp đồng..."
             leftSection={<IconSearch size={16} />}
+            value={keyword}
+            onChange={(e) => setKeyword(e.currentTarget.value)}
           />
 
           <SimpleGrid cols={{ base: 1, md: 2, lg: 3 }} spacing="sm">
             <DatePickerInput
               leftSection={<IconCalendar size={18} />}
               label="Khoảng thời gian"
-              description="Ví dụ: 18/5/2025 - 18/6/2025"
-              placeholder="Chọn thông tin"
+              placeholder="Chọn khoảng ngày"
               radius={4}
               clearable
-              locale="vi"
               type="range"
+              value={dateRange}
+              //@ts-expect-error no check
+              onChange={setDateRange}
             />
             <MultiSelect
               radius={4}
               searchable
               clearable
               label="Đối tác"
-              description="Ví dụ: Công ty Nông sản ABC"
-              placeholder="Chọn thông tin"
-              data={["Đối tác 1", "Đối tác 2", "Đối tác 3"]}
+              placeholder="Chọn đối tác"
+              data={[
+                "Công ty Nông sản ABC",
+                "Công ty Thiết bị Nông nghiệp DEF",
+              ]}
+              value={selectedPartners}
+              onChange={setSelectedPartners}
             />
             <MultiSelect
               radius={4}
               searchable
               clearable
               label="Loại hợp đồng"
-              description="Ví dụ: Hợp đồng thu mua"
-              placeholder="Chọn thông tin"
-              data={["Loại 1", "Loại 2", "Loại 3"]}
+              placeholder="Chọn loại"
+              data={["Mua hàng", "Bán hàng", "Dịch vụ", "Thuê"]}
+              value={selectedTypes}
+              onChange={setSelectedTypes}
             />
             <MultiSelect
               radius={4}
               searchable
               clearable
               label="Trạng thái"
-              description="Ví dụ: Đang hiệu lực"
-              placeholder="Chọn thông tin"
-              data={["Chờ duyệt", "Đang hiệu lực", "Hết hiệu lực"]}
+              placeholder="Chọn trạng thái"
+              data={["Chờ duyệt", "Đang hiệu lực", "Đã kết thúc"]}
+              value={selectedStatus}
+              onChange={setSelectedStatus}
             />
           </SimpleGrid>
         </Stack>
       </Card>
-      <Table columns={contractColumns} data={contractData} />
+
+      <Table
+        //@ts-expect-error no check
+        columns={contractColumns}
+        //@ts-expect-error no check
+        data={filteredData}
+      />
+
+      <Modal
+        opened={openedDelete}
+        onClose={closeDelete}
+        title="Xác nhận xóa"
+        centered
+      >
+        <Text>Bạn có chắc chắn muốn xóa hợp đồng này không?</Text>
+        <Group justify="flex-end" mt="lg">
+          <Button variant="default" onClick={closeDelete}>
+            Hủy
+          </Button>
+          <Button color="red" onClick={handleDelete}>
+            Xóa ngay
+          </Button>
+        </Group>
+      </Modal>
     </Stack>
   );
 };

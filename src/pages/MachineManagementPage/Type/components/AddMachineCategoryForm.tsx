@@ -1,13 +1,22 @@
-import { Button, Group, Stack, TextInput } from "@mantine/core";
+import { Button, Group, Stack, TextInput, LoadingOverlay } from "@mantine/core";
 import { useForm } from "@mantine/form";
+import { useEffect } from "react";
+import { notifications } from "@mantine/notifications";
+import {
+  useMachineCategoryStore,
+  type MachineCategory,
+} from "../../../zustand/machineCategoryStore";
 
-type FormValues = {
-  id: string;
-  name: string;
+type Props = {
+  editId?: string | null;
+  onClose: () => void;
 };
 
-const AddMachineCategoryForm = () => {
-  const form = useForm<FormValues>({
+const AddMachineCategoryForm = ({ editId, onClose }: Props) => {
+  const { addMachine, updateMachine, getMachineById, isLoading } =
+    useMachineCategoryStore();
+
+  const form = useForm<MachineCategory>({
     initialValues: {
       id: "",
       name: "",
@@ -20,28 +29,74 @@ const AddMachineCategoryForm = () => {
     },
   });
 
-  const handleSubmit = (values: FormValues) => {
-    console.log("Dữ liệu máy móc:", values);
-    form.reset();
+  // Load dữ liệu khi Sửa
+  useEffect(() => {
+    if (editId) {
+      const data = getMachineById(editId);
+      if (data) {
+        form.setValues({
+          id: data.id,
+          name: data.name,
+        });
+      }
+    }
+  }, [editId]);
+
+  const handleSubmit = async (values: MachineCategory) => {
+    let success = false;
+
+    if (editId) {
+      success = await updateMachine(editId, values);
+    } else {
+      success = await addMachine(values);
+    }
+
+    if (success) {
+      notifications.show({
+        title: "Thành công",
+        message: editId ? "Đã cập nhật loại máy" : "Đã thêm loại máy mới",
+        color: "green",
+      });
+      onClose();
+    } else {
+      notifications.show({
+        title: "Thất bại",
+        message: "Mã loại máy đã tồn tại hoặc có lỗi xảy ra",
+        color: "red",
+      });
+    }
   };
 
   return (
-    <form onSubmit={form.onSubmit(handleSubmit)}>
+    <form
+      onSubmit={form.onSubmit(handleSubmit)}
+      style={{ position: "relative" }}
+    >
+      <LoadingOverlay visible={isLoading} />
       <Stack>
         <TextInput
           label="Mã loại máy móc"
           placeholder="Ví dụ: MCH01"
           radius={4}
           {...form.getInputProps("id")}
+          readOnly={!!editId} // Không cho sửa ID khi đang edit
+          disabled={!!editId}
+          withAsterisk
         />
         <TextInput
           label="Tên loại máy móc"
           radius={4}
           placeholder="Ví dụ: Máy cày"
           {...form.getInputProps("name")}
+          withAsterisk
         />
         <Group justify="flex-end" mt="md">
-          <Button radius={4}>Lưu</Button>
+          <Button variant="default" onClick={onClose} radius={4}>
+            Hủy
+          </Button>
+          <Button type="submit" radius={4} color="green">
+            {editId ? "Lưu thay đổi" : "Tạo mới"}
+          </Button>
         </Group>
       </Stack>
     </form>

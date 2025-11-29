@@ -10,27 +10,26 @@ import {
   Text,
   TextInput,
   Title,
+  LoadingOverlay,
 } from "@mantine/core";
 import {
   IconDotsVertical,
   IconEdit,
-  IconEye,
+  IconEye, // Giữ lại nếu cần sau này
   IconFileExcel,
   IconTrash,
+  IconPlus,
 } from "@tabler/icons-react";
 import type { MRT_ColumnDef } from "mantine-react-table";
 import { useState } from "react";
 import Table from "../../components/Table";
+import { notifications } from "@mantine/notifications";
+import { useDisclosure } from "@mantine/hooks";
+import {
+  usePackagingStore,
+  type PackagingSpecification,
+} from "../zustand/packagingStore";
 
-type PackagingSpecification = {
-  id: string;
-  name: string;
-  packagingType: string;
-  conversionQuantity: number;
-  baseUnit: string;
-};
-
-// Danh sách các đơn vị tính cơ bản để nạp vào Select
 const BASE_UNITS = [
   "Cái",
   "Chiếc",
@@ -42,56 +41,131 @@ const BASE_UNITS = [
   "Cuộn",
   "Hộp",
   "Chai",
+  "Lon",
 ];
-
-const packagingSpecifications: PackagingSpecification[] = [
-  {
-    id: "PKG001",
-    name: "Hộp giấy nhỏ",
-    packagingType: "Hộp",
-    conversionQuantity: 50,
-    baseUnit: "Cái",
-  },
-  {
-    id: "PKG002",
-    name: "Túi nilon lớn",
-    packagingType: "Túi",
-    conversionQuantity: 100,
-    baseUnit: "Chiếc",
-  },
+const PACKAGING_TYPES = [
+  "Hộp",
+  "Túi",
+  "Bao",
+  "Bịch",
+  "Thùng",
+  "Lốc",
+  "Pallet",
+  "Kiện",
 ];
 
 const PackagingSpecificationPage = () => {
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [newSpecification, setNewSpecification] = useState({
+  // Store Hooks
+  const {
+    packagings,
+    addPackaging,
+    updatePackaging,
+    deletePackaging,
+    isLoading,
+  } = usePackagingStore();
+
+  // Modal State
+  const [opened, { open, close }] = useDisclosure(false);
+  const [openedDelete, { open: openDelete, close: closeDelete }] =
+    useDisclosure(false);
+
+  // Data State
+  const [isEditMode, setIsEditMode] = useState(false);
+  const [selectedId, setSelectedId] = useState<string | null>(null);
+  const [formData, setFormData] = useState<PackagingSpecification>({
     id: "",
     name: "",
     packagingType: "",
-    conversionQuantity: 0,
+    conversionQuantity: 1,
     baseUnit: "",
   });
 
-  const handleCreate = () => {
-    console.log("Tạo mới Quy cách:", newSpecification);
-    setIsModalOpen(false);
-    setNewSpecification({
+  // --- HANDLERS ---
+
+  const handleOpenCreate = () => {
+    setIsEditMode(false);
+    setFormData({
       id: "",
       name: "",
       packagingType: "",
-      conversionQuantity: 0,
+      conversionQuantity: 1,
       baseUnit: "",
     });
+    open();
   };
 
-  const packagingColumns: MRT_ColumnDef<PackagingSpecification>[] = [
-    { accessorKey: "id", header: "Mã quy cách", size: 100 },
-    { accessorKey: "name", header: "Tên quy cách" },
-    { accessorKey: "packagingType", header: "Dạng đóng gói", size: 120 },
-    { accessorKey: "baseUnit", header: "Đơn vị tính", size: 100 },
+  const handleOpenEdit = (pkg: PackagingSpecification) => {
+    setIsEditMode(true);
+    setFormData(pkg); // Fill data vào form
+    open();
+  };
+
+  const handleSave = async () => {
+    // Validate cơ bản
+    if (
+      !formData.id ||
+      !formData.name ||
+      !formData.baseUnit ||
+      !formData.packagingType
+    ) {
+      notifications.show({
+        title: "Lỗi",
+        message: "Vui lòng điền đầy đủ thông tin",
+        color: "red",
+      });
+      return;
+    }
+
+    let success = false;
+    if (isEditMode) {
+      success = await updatePackaging(formData.id, formData);
+    } else {
+      success = await addPackaging(formData);
+    }
+
+    if (success) {
+      notifications.show({
+        title: "Thành công",
+        message: isEditMode ? "Cập nhật thành công" : "Tạo mới thành công",
+        color: "green",
+      });
+      close();
+    } else {
+      notifications.show({
+        title: "Thất bại",
+        message: "Mã quy cách đã tồn tại hoặc lỗi hệ thống",
+        color: "red",
+      });
+    }
+  };
+
+  const handleDelete = () => {
+    if (selectedId) {
+      deletePackaging(selectedId);
+      notifications.show({ title: "Đã xóa", color: "green", message: "" });
+      closeDelete();
+    }
+  };
+
+  // --- TABLE COLUMNS ---
+  const columns: MRT_ColumnDef<PackagingSpecification>[] = [
+    {
+      accessorKey: "id",
+      header: "Mã quy cách",
+      size: 100,
+      Cell: ({ cell }) => <Text fw={500}>{cell.getValue<string>()}</Text>,
+    },
+    { accessorKey: "name", header: "Tên quy cách", size: 200 },
+    {
+      accessorKey: "packagingType",
+      header: "Dạng đóng gói",
+      size: 120,
+      Cell: ({ cell }) => <Text c="dimmed">{cell.getValue<string>()}</Text>,
+    },
     {
       accessorKey: "conversionQuantity",
       header: "SL Quy đổi",
-      size: 120,
+      size: 150,
       Cell: ({ row }) => (
         <Text fw={500} c="blue">
           {row.original.conversionQuantity.toLocaleString("vi-VN")}{" "}
@@ -99,12 +173,13 @@ const PackagingSpecificationPage = () => {
         </Text>
       ),
     },
+    { accessorKey: "baseUnit", header: "Đơn vị tính", size: 100 },
     {
       accessorKey: "actions",
       header: "Tuỳ chọn",
       enableColumnActions: false,
       size: 80,
-      Cell: () => (
+      Cell: ({ row }) => (
         <Menu shadow="md" position="bottom-end">
           <Menu.Target>
             <ActionIcon variant="subtle" color="gray">
@@ -112,11 +187,20 @@ const PackagingSpecificationPage = () => {
             </ActionIcon>
           </Menu.Target>
           <Menu.Dropdown>
-            <Menu.Item leftSection={<IconEye size={18} />}>Chi tiết</Menu.Item>
-            <Menu.Item leftSection={<IconEdit size={18} color="green" />}>
+            {/* <Menu.Item leftSection={<IconEye size={18} />}>Chi tiết</Menu.Item> */}
+            <Menu.Item
+              leftSection={<IconEdit size={18} color="blue" />}
+              onClick={() => handleOpenEdit(row.original)}
+            >
               Chỉnh sửa
             </Menu.Item>
-            <Menu.Item leftSection={<IconTrash size={18} color="red" />}>
+            <Menu.Item
+              leftSection={<IconTrash size={18} color="red" />}
+              onClick={() => {
+                setSelectedId(row.original.id);
+                openDelete();
+              }}
+            >
               Xoá
             </Menu.Item>
           </Menu.Dropdown>
@@ -133,49 +217,57 @@ const PackagingSpecificationPage = () => {
           <Button variant="outline" radius="md" leftSection={<IconFileExcel />}>
             Xuất File
           </Button>
-          <Button radius="md" onClick={() => setIsModalOpen(true)}>
+          <Button
+            radius="md"
+            onClick={handleOpenCreate}
+            leftSection={<IconPlus size={18} />}
+          >
             Thêm mới
           </Button>
         </Group>
       </Group>
 
-      <Table columns={packagingColumns} data={packagingSpecifications} />
+      <Table
+        //@ts-expect-error no check
+        columns={columns}
+        //@ts-expect-error no check
+        data={packagings}
+      />
 
+      {/* --- MODAL THÊM / SỬA --- */}
       <Modal
-        opened={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
+        opened={opened}
+        onClose={close}
         title={
           <Text fw={600} size="lg">
-            Tạo mới Quy cách
+            {isEditMode ? "Cập nhật Quy cách" : "Tạo mới Quy cách"}
           </Text>
         }
         centered
       >
-        <Stack gap="md">
+        <Stack gap="md" pos="relative">
+          <LoadingOverlay visible={isLoading} />
+
           <TextInput
             radius="md"
             label="Mã quy cách"
-            placeholder="VD: PKG005"
+            placeholder="VD: PKG001"
             withAsterisk
-            value={newSpecification.id}
+            value={formData.id}
             onChange={(e) =>
-              setNewSpecification((prev) => ({
-                ...prev,
-                id: e.currentTarget.value,
-              }))
+              setFormData({ ...formData, id: e.currentTarget.value })
             }
+            readOnly={isEditMode} // Không cho sửa ID khi edit
+            disabled={isEditMode}
           />
           <TextInput
             radius="md"
             label="Tên quy cách"
-            placeholder="VD: Thùng bia 24 lon"
+            placeholder="VD: Thùng 24 lon"
             withAsterisk
-            value={newSpecification.name}
+            value={formData.name}
             onChange={(e) =>
-              setNewSpecification((prev) => ({
-                ...prev,
-                name: e.currentTarget.value,
-              }))
+              setFormData({ ...formData, name: e.currentTarget.value })
             }
           />
 
@@ -185,33 +277,26 @@ const PackagingSpecificationPage = () => {
               clearable
               label="Dạng đóng gói"
               placeholder="Chọn dạng"
-              data={["Hộp", "Túi", "Bao", "Bịch", "Thùng", "Lốc"]}
+              data={PACKAGING_TYPES}
               radius="md"
               withAsterisk
-              value={newSpecification.packagingType}
-              onChange={(value) =>
-                setNewSpecification((prev) => ({
-                  ...prev,
-                  packagingType: value || "",
-                }))
+              value={formData.packagingType}
+              onChange={(val) =>
+                setFormData({ ...formData, packagingType: val || "" })
               }
             />
 
-            {/* --- ĐÃ CẬP NHẬT THÀNH SELECT --- */}
             <Select
               searchable
               clearable
-              label="Đơn vị tính"
+              label="Đơn vị tính (Cơ bản)"
               placeholder="Chọn ĐVT"
-              data={BASE_UNITS} // Sử dụng danh sách hằng số
+              data={BASE_UNITS}
               radius="md"
               withAsterisk
-              value={newSpecification.baseUnit}
-              onChange={(value) =>
-                setNewSpecification((prev) => ({
-                  ...prev,
-                  baseUnit: value || "",
-                }))
+              value={formData.baseUnit}
+              onChange={(val) =>
+                setFormData({ ...formData, baseUnit: val || "" })
               }
             />
           </Group>
@@ -219,37 +304,50 @@ const PackagingSpecificationPage = () => {
           <NumberInput
             radius="md"
             label="Số lượng quy đổi"
-            placeholder="Nhập số lượng"
+            description={`1 ${formData.packagingType || "..."} = ? ${
+              formData.baseUnit || "..."
+            }`}
+            placeholder="VD: 24"
             withAsterisk
-            min={0}
-            value={newSpecification.conversionQuantity}
+            min={1}
+            value={formData.conversionQuantity}
             onChange={(val) =>
-              setNewSpecification((prev) => ({
-                ...prev,
-                conversionQuantity: Number(val),
-              }))
+              setFormData({ ...formData, conversionQuantity: Number(val) })
             }
-            // Hiển thị đơn vị ngay trong ô nhập để người dùng dễ hình dung
             rightSection={
               <Text size="xs" c="dimmed" mr="xs">
-                {newSpecification.baseUnit}
+                {formData.baseUnit}
               </Text>
             }
           />
 
           <Group justify="flex-end" mt="md">
-            <Button
-              radius="md"
-              variant="default"
-              onClick={() => setIsModalOpen(false)}
-            >
+            <Button variant="default" onClick={close}>
               Hủy
             </Button>
-            <Button radius="md" onClick={handleCreate}>
-              Tạo mới
+            <Button onClick={handleSave} color="green">
+              {isEditMode ? "Lưu thay đổi" : "Tạo mới"}
             </Button>
           </Group>
         </Stack>
+      </Modal>
+
+      {/* --- MODAL XÓA --- */}
+      <Modal
+        opened={openedDelete}
+        onClose={closeDelete}
+        title="Xác nhận xóa"
+        centered
+      >
+        <Text>Bạn có chắc chắn muốn xóa quy cách này không?</Text>
+        <Group justify="flex-end" mt="lg">
+          <Button variant="default" onClick={closeDelete}>
+            Hủy
+          </Button>
+          <Button color="red" onClick={handleDelete}>
+            Xóa ngay
+          </Button>
+        </Group>
       </Modal>
     </Stack>
   );

@@ -1407,7 +1407,7 @@ const ROUTES = [
   />,
   <Route
     key="machine_main_detail"
-    path={PATH.MACHINE_MAIN_DETAIL}
+    path={`${PATH.MACHINE_MAIN_DETAIL}/:id`}
     element={withSuspense(<MachineManagementMainDetailPage />)}
   />,
   <Route
