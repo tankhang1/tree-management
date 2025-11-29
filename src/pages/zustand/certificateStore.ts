@@ -39,9 +39,10 @@ const MOCK_CERTIFICATES: Certificate[] = [
     targets: [],
     createdAt: "2025-01-10T00:00:00.000Z",
   },
+
   {
     id: "GCN-002",
-    orgName: "Tổ chức Organic Vietnam",
+    orgName: "Organic Vietnam",
     orgLogo:
       "https://file.hstatic.net/200000423303/article/nn_huuco_8ad18ec91a174544837c5d06217ee34a_grande.jpg",
     certCode: "ORG-2025-002",
@@ -50,15 +51,16 @@ const MOCK_CERTIFICATES: Certificate[] = [
     validYears: 2,
     definition: "Sản xuất theo phương pháp hữu cơ, không sử dụng hóa chất.",
     contentType: "file",
-    content: "", // Giả lập không có nội dung file base64 để tránh nặng store
+    content: "",
     targets: [],
     createdAt: "2025-02-18T00:00:00.000Z",
   },
+
   {
     id: "GCN-003",
     orgName: "GlobalG.A.P.",
     orgLogo:
-      "https://upload.wikimedia.org/wikipedia/commons/1/1d/Globalgap_logo.png",
+      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTQTSd8fBayOqHlXNRpk9PKWD9QaGja-EU4eD-JRYPTeBY5VQ0iWvJh1sOS9I4N0zpeUnU&usqp=CAU",
     certCode: "GG-2024-999",
     certName: "GlobalGAP",
     issueDate: "2024-12-01T00:00:00.000Z",
@@ -69,6 +71,24 @@ const MOCK_CERTIFICATES: Certificate[] = [
       "<ul><li>An toàn thực phẩm</li><li>Bảo vệ môi trường</li><li>Sức khỏe người lao động</li></ul>",
     targets: [],
     createdAt: "2024-11-25T00:00:00.000Z",
+  },
+
+  {
+    id: "GCN-004",
+    orgName: "Rainforest Alliance",
+    orgLogo:
+      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTzSIkrhyLPEho3buFO9MzWV32V-IbQ-HJTq6k6nYSoePDUp1ei_2ux5QP6AWMae6SzEJCyr73F6hNg5cM4IfE2z782eaLTZoHc8aVTuIY&s=10",
+    certCode: "RA-2023-111",
+    certName: "Rainforest Alliance Certified",
+    issueDate: "2023-09-10T00:00:00.000Z",
+    validYears: 3,
+    definition:
+      "Chứng nhận bảo vệ rừng, môi trường và phúc lợi người lao động.",
+    contentType: "editor",
+    content:
+      "<p>Sản phẩm được sản xuất theo tiêu chuẩn bảo vệ rừng và hệ sinh thái.</p>",
+    targets: [],
+    createdAt: "2023-09-01T00:00:00.000Z",
   },
 ];
 

@@ -16,7 +16,7 @@ import {
   Card,
   Image,
 } from "@mantine/core";
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { MapContainer, TileLayer, Polygon } from "react-leaflet";
 import {
   IconAlertTriangle,
@@ -30,6 +30,7 @@ import { useNavigate } from "react-router-dom";
 import { useDisclosure } from "@mantine/hooks";
 import RegionCardSelector from "../../../AreaManagementPage/Region/Add/components/RegionCards";
 import { regionOptions } from "../../../AreaManagementPage/Block/Add";
+import { useRegionStore } from "../../../zustand/regionStore";
 
 type AreaForm = {
   code: string;
@@ -50,6 +51,7 @@ const defaultForm: AreaForm = {
   orgUnit: "",
   gps: "",
 };
+
 type LatLng = [number, number];
 
 const MapManagementAddAreaPage = () => {
@@ -59,28 +61,17 @@ const MapManagementAddAreaPage = () => {
   ] = useDisclosure(false);
 
   const navigate = useNavigate();
+  const { regions, updateRegion } = useRegionStore();
+
   const [form, setForm] = useState<AreaForm>(defaultForm);
   const [active, setActive] = useState(0);
   const [lat, setLat] = useState<string>("");
   const [lng, setLng] = useState<string>("");
   const [coords, setCoords] = useState<LatLng[]>([]);
 
-  const handleAddPoint = () => {
-    const parsedLat = parseFloat(lat);
-    const parsedLng = parseFloat(lng);
-    if (!isNaN(parsedLat) && !isNaN(parsedLng)) {
-      setCoords((prev) => [...prev, [parsedLat, parsedLng]]);
-      setLat("");
-      setLng("");
-    }
-  };
-
-  const handleRemove = (index: number) => {
-    setCoords((prev) => prev.filter((_, i) => i !== index));
-  };
-
-  const nextStep = () => setActive((cur) => Math.min(cur + 1, 4));
-  const prevStep = () => setActive((cur) => Math.max(cur - 1, 0));
+  const [selectedRegionId, setSelectedRegionId] = useState<string | null>(null);
+  const [regionKeyword, setRegionKeyword] = useState("");
+  const [stepError, setStepError] = useState<string | null>(null);
 
   const handleChange = <K extends keyof AreaForm>(
     key: K,
@@ -88,6 +79,129 @@ const MapManagementAddAreaPage = () => {
   ) => {
     setForm((prev) => ({ ...prev, [key]: value }));
   };
+
+  const updateGpsString = (points: LatLng[]) => {
+    const gpsStr = points.map(([la, lo]) => `${la},${lo}`).join(" ");
+    setForm((prev) => ({ ...prev, gps: gpsStr }));
+  };
+
+  const handleAddPoint = () => {
+    const parsedLat = parseFloat(lat);
+    const parsedLng = parseFloat(lng);
+    if (!isNaN(parsedLat) && !isNaN(parsedLng)) {
+      const nextCoords: LatLng[] = [...coords, [parsedLat, parsedLng]];
+      setCoords(nextCoords);
+      updateGpsString(nextCoords);
+      setLat("");
+      setLng("");
+    }
+  };
+
+  const handleRemove = (index: number) => {
+    const nextCoords = coords.filter((_, i) => i !== index);
+    setCoords(nextCoords);
+    updateGpsString(nextCoords);
+  };
+
+  const validateStep0 = () => {
+    if (!selectedRegionId) {
+      setStepError("Vui lòng chọn vùng trồng.");
+      return false;
+    }
+    if (!form.name.trim()) {
+      setStepError("Vui lòng nhập tên khu vực.");
+      return false;
+    }
+    if (!form.area || form.area <= 0) {
+      setStepError("Diện tích phải lớn hơn 0.");
+      return false;
+    }
+    if (!form.soilType) {
+      setStepError("Vui lòng chọn loại đất.");
+      return false;
+    }
+    if (!form.terrain.length) {
+      setStepError("Vui lòng chọn ít nhất một địa hình.");
+      return false;
+    }
+    setStepError(null);
+    return true;
+  };
+
+  const validateStep1 = () => {
+    if (coords.length < 3) {
+      setStepError("Cần ít nhất 3 điểm toạ độ để tạo đa giác khu vực.");
+      return false;
+    }
+    setStepError(null);
+    return true;
+  };
+
+  const validateStep2 = () => {
+    // hiện tại chưa có form lô chi tiết, tạm thời luôn true
+    setStepError(null);
+    return true;
+  };
+
+  const handleSaveArea = () => {
+    if (!selectedRegionId) {
+      setStepError("Không tìm thấy vùng trồng để gắn khu vực.");
+      return false;
+    }
+
+    const region = regions.find((r) => r.id === selectedRegionId);
+    if (!region) {
+      setStepError("Vùng trồng đã chọn không tồn tại trong dữ liệu.");
+      return false;
+    }
+
+    const newArea = {
+      code: form.code || `KV-${Date.now()}`,
+      name: form.name,
+      regionRef: selectedRegionId,
+      orgUnit: form.orgUnit || region.region?.companyIds?.[0] || "",
+      area: String(form.area),
+      soilType: form.soilType,
+      terrain: form.terrain,
+      mainCrop: "",
+      gps: form.gps,
+    };
+
+    const updatedAreas = [...region.areas, newArea];
+
+    updateRegion(selectedRegionId, { areas: updatedAreas });
+
+    setStepError(null);
+    return true;
+  };
+
+  const nextStep = () => {
+    if (active === 0 && !validateStep0()) return;
+    if (active === 1 && !validateStep1()) return;
+    if (active === 2 && !validateStep2()) return;
+    if (active === 3) {
+      const ok = handleSaveArea();
+      if (!ok) return;
+    }
+    setActive((cur) => Math.min(cur + 1, 4));
+  };
+
+  const prevStep = () => setActive((cur) => Math.max(cur - 1, 0));
+
+  const filteredRegions = useMemo(() => {
+    const kw = regionKeyword.toLowerCase().trim();
+    if (!kw) return regions;
+    return regions.filter(
+      (r: any) =>
+        r.name?.toLowerCase().includes(kw) || r.code?.toLowerCase().includes(kw)
+    );
+  }, [regionKeyword]);
+
+  const selectedRegionLabel = useMemo(() => {
+    if (!selectedRegionId) return "Chưa chọn";
+    const found = regionOptions.find((r: any) => r.id === selectedRegionId);
+    return found ? `${found.code} - ${found.name}` : selectedRegionId;
+  }, [selectedRegionId]);
 
   return (
     <Paper shadow="md" radius={8} p="xl" withBorder>
@@ -102,6 +216,18 @@ const MapManagementAddAreaPage = () => {
         </Button>
         <Title order={3}>Tạo mới khu vực trồng</Title>
       </Group>
+
+      {stepError && (
+        <Alert
+          mb="md"
+          icon={<IconAlertTriangle />}
+          color="red"
+          radius={4}
+          title="Lỗi dữ liệu"
+        >
+          {stepError}
+        </Alert>
+      )}
 
       <Stepper
         active={active}
@@ -119,12 +245,17 @@ const MapManagementAddAreaPage = () => {
                 placeholder="Tìm kiếm vùng trồng"
                 radius={4}
                 leftSection={<IconSearch size={18} />}
+                value={regionKeyword}
+                onChange={(e) => setRegionKeyword(e.currentTarget.value)}
               />
               <RegionCardSelector
-                regions={regionOptions}
-                selected={"12"}
-                onSelect={() => {}}
+                regions={filteredRegions}
+                selected={selectedRegionId ?? ""}
+                onSelect={(id: string) => setSelectedRegionId(id)}
               />
+              <Text size="sm" c="dimmed">
+                Đang chọn: <strong>{selectedRegionLabel}</strong>
+              </Text>
             </Stack>
 
             <TextInput
@@ -139,7 +270,7 @@ const MapManagementAddAreaPage = () => {
               radius={4}
               required
               value={form.area}
-              onChange={(value) => handleChange("area", +value || 0)}
+              onChange={(value) => handleChange("area", Number(value) || 0)}
               min={0}
             />
             <Select
@@ -196,10 +327,10 @@ const MapManagementAddAreaPage = () => {
                 <Text size="sm" c="dimmed">
                   Danh sách tọa độ ({coords.length}):
                 </Text>
-                {coords.map(([lat, lng], i) => (
+                {coords.map(([latVal, lngVal], i) => (
                   <Group key={i} gap="xs">
                     <Text size="sm" w={"40%"}>
-                      {i + 1}. {lat}, {lng}
+                      {i + 1}. {latVal}, {lngVal}
                     </Text>
                     <ActionIcon
                       color="red"
@@ -213,7 +344,6 @@ const MapManagementAddAreaPage = () => {
                 ))}
               </Stack>
             )}
-            {/* Cảnh báo nếu không đủ 3 điểm */}
             {coords.length > 0 && coords.length < 3 && (
               <Alert icon={<IconAlertTriangle />} color="yellow" radius={4}>
                 Cần ít nhất 3 điểm để tạo đa giác.
@@ -276,23 +406,27 @@ const MapManagementAddAreaPage = () => {
                 <Title order={5}>📍 Thông tin khu vực</Title>
                 <Group justify="space-between">
                   <Text fw={500}>Tên khu vực:</Text>
-                  <Text>Khu vực D4</Text>
+                  <Text>{form.name || "Chưa nhập"}</Text>
                 </Group>
                 <Group justify="space-between">
                   <Text fw={500}>Diện tích:</Text>
-                  <Text>11200 m²</Text>
+                  <Text>{form.area ? form.area.toLocaleString() : 0} m²</Text>
                 </Group>
                 <Group justify="space-between">
                   <Text fw={500}>Loại đất:</Text>
-                  <Text>Đất đỏ</Text>
+                  <Text>{form.soilType || "Chưa chọn"}</Text>
                 </Group>
                 <Group justify="space-between">
                   <Text fw={500}>Địa hình:</Text>
-                  <Text>Bằng phẳng</Text>
+                  <Text>
+                    {form.terrain.length
+                      ? form.terrain.join(", ")
+                      : "Chưa chọn"}
+                  </Text>
                 </Group>
                 <Group justify="space-between">
-                  <Text fw={500}>Đơn vị quản lý:</Text>
-                  <Text>Công ty Nông sản Nam Bộ</Text>
+                  <Text fw={500}>Thuộc vùng:</Text>
+                  <Text>{selectedRegionLabel}</Text>
                 </Group>
               </Stack>
             </Card>
@@ -301,9 +435,9 @@ const MapManagementAddAreaPage = () => {
               <Stack gap="xs">
                 <Title order={5}>🧭 Toạ độ khu vực</Title>
                 {coords.length >= 3 ? (
-                  coords.map(([lat, lng], i) => (
+                  coords.map(([latVal, lngVal], i) => (
                     <Text size="sm" key={i}>
-                      {i + 1}. Lat: {lat} – Lng: {lng}
+                      {i + 1}. Lat: {latVal} – Lng: {lngVal}
                     </Text>
                   ))
                 ) : (
@@ -314,7 +448,6 @@ const MapManagementAddAreaPage = () => {
               </Stack>
             </Card>
 
-            {/* Optional: Preview mini bản đồ nếu muốn */}
             <Card withBorder radius="md" padding="md">
               <Title order={5} mb="xs">
                 🗺 Xem trước khu vực trên bản đồ
@@ -332,6 +465,7 @@ const MapManagementAddAreaPage = () => {
             </Card>
           </Stack>
         </Stepper.Step>
+
         <Stepper.Completed>
           <Stack align="center" justify="center" mt="xl">
             <Image
@@ -377,6 +511,7 @@ const MapManagementAddAreaPage = () => {
           )}
         </Group>
       )}
+
       <Modal
         opened={openedAddLocation}
         onClose={closeAddLocation}
@@ -413,10 +548,10 @@ const MapManagementAddAreaPage = () => {
               <Text size="sm" c="dimmed">
                 Danh sách tọa độ ({coords.length}):
               </Text>
-              {coords.map(([lat, lng], i) => (
+              {coords.map(([latVal, lngVal], i) => (
                 <Group key={i} gap="xs">
                   <Text size="sm" w={"40%"}>
-                    {i + 1}. {lat}, {lng}
+                    {i + 1}. {latVal}, {lngVal}
                   </Text>
                   <ActionIcon
                     color="red"
@@ -430,7 +565,6 @@ const MapManagementAddAreaPage = () => {
               ))}
             </Stack>
           )}
-          {/* Cảnh báo nếu không đủ 3 điểm */}
           {coords.length > 0 && coords.length < 3 && (
             <Alert icon={<IconAlertTriangle />} color="yellow" radius={4}>
               Cần ít nhất 3 điểm để tạo đa giác.

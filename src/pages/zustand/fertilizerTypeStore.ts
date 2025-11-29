@@ -19,21 +19,91 @@ interface FertilizerTypeState {
   getTypeById: (id: string) => FertilizerType | undefined;
 }
 
-// Dữ liệu mẫu
 const MOCK_DATA: FertilizerType[] = [
   {
     id: "FT001",
     name: "Phân NPK tổng hợp",
     nutrientContent: "NPK 16-16-8",
     unit: "kg",
-    description: "Phù hợp cho cây ăn trái và rau màu",
+    description: "Dùng cho cây ăn trái, rau màu và cây công nghiệp.",
   },
   {
     id: "FT002",
     name: "Phân hữu cơ vi sinh",
-    nutrientContent: "Chất hữu cơ 30%",
+    nutrientContent: "30% hữu cơ + vi sinh vật có lợi",
     unit: "bao",
-    description: "Tăng độ tơi xốp cho đất",
+    description: "Cải tạo đất, tăng hệ vi sinh tự nhiên.",
+  },
+  {
+    id: "FT003",
+    name: "Phân NPK cao cấp",
+    nutrientContent: "NPK 20-20-15 + TE",
+    unit: "kg",
+    description: "Tăng trưởng mạnh, phù hợp cho giai đoạn nuôi trái.",
+  },
+  {
+    id: "FT004",
+    name: "Ure hạt trắng",
+    nutrientContent: "46% N",
+    unit: "kg",
+    description: "Cung cấp đạm cho cây phát triển thân lá.",
+  },
+  {
+    id: "FT005",
+    name: "DAP Lào Cai",
+    nutrientContent: "18-46",
+    unit: "kg",
+    description: "Giúp phát triển rễ, dùng cho lúa và cây công nghiệp.",
+  },
+  {
+    id: "FT006",
+    name: "Kali đỏ KCL",
+    nutrientContent: "K₂O 60%",
+    unit: "kg",
+    description: "Giúp tăng độ ngọt, chắc trái, màu đẹp.",
+  },
+  {
+    id: "FT007",
+    name: "Phân lân nung chảy",
+    nutrientContent: "P₂O₅ 15%",
+    unit: "kg",
+    description: "Bổ sung lân, cải thiện độ pH, dùng tốt cho cây ăn trái.",
+  },
+  {
+    id: "FT008",
+    name: "Phân bón lá vi lượng",
+    nutrientContent: "Zn + Bo + Mg + TE",
+    unit: "chai",
+    description: "Kích thích ra hoa, đậu trái tốt.",
+  },
+  {
+    id: "FT009",
+    name: "Phân hữu cơ khoáng",
+    nutrientContent: "4-3-3 + hữu cơ 50%",
+    unit: "bao",
+    description: "Cung cấp dinh dưỡng chậm, bền, tăng chất lượng đất.",
+  },
+  {
+    id: "FT010",
+    name: "Phân cải tạo đất",
+    nutrientContent: "Humic + Fulvic + Ca",
+    unit: "kg",
+    description: "Cải thiện cấu trúc đất, tăng khả năng giữ nước.",
+  },
+  {
+    id: "FT011",
+    name: "Phân vi sinh cố định đạm",
+    nutrientContent: "Vi sinh Rhizobium",
+    unit: "kg",
+    description: "Hỗ trợ cây họ đậu cố định đạm tự nhiên.",
+  },
+  {
+    id: "FT012",
+    name: "Phân trung lượng Ca-Mg-S",
+    nutrientContent: "Ca 20% + Mg 10% + S 12%",
+    unit: "kg",
+    description:
+      "Ngăn ngừa nứt trái, tăng cứng cây và khả năng hấp thu dinh dưỡng.",
   },
 ];
 

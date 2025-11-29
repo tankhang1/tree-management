@@ -31,8 +31,9 @@ import {
 } from "@tabler/icons-react";
 import { useNavigate } from "react-router-dom";
 import { PATH } from "../../../constants/path.constants";
-import { useState } from "react";
-type AreaZone = {
+import { useMemo, useState } from "react";
+import { useRegionStore } from "../../zustand/regionStore";
+export type AreaZone = {
   id: string;
   code: string;
   name: string;
@@ -43,96 +44,7 @@ type AreaZone = {
   gps: string;
   numberOfLots: number;
 };
-const areaZoneData: AreaZone[] = [
-  {
-    id: "K001",
-    code: "KV-A1",
-    name: "Khu vực A1",
-    regionName: "Vùng Trồng A",
-    area: 10000,
-    soilType: "Đất thịt",
-    terrain: ["Cao", "Dốc"],
-    gps: "10.762622,106.660172 10.762700,106.660200 10.762800,106.660300 10.762900,106.660400",
-    numberOfLots: 5,
-  },
-  {
-    id: "K002",
-    code: "KV-B2",
-    name: "Khu vực B2",
-    regionName: "Vùng Trồng B",
-    area: 8500,
-    soilType: "Đất phù sa",
-    terrain: ["Thấp", "Trũng"],
-    gps: "10.763000,106.661000 10.763100,106.661100 10.763200,106.661200 10.763300,106.661300",
-    numberOfLots: 3,
-  },
-  {
-    id: "K003",
-    code: "KV-C1",
-    name: "Khu vực C1",
-    regionName: "Vùng Trồng C",
-    area: 6000,
-    soilType: "Đất cát",
-    terrain: ["Bằng phẳng"],
-    gps: "10.764000,106.662000 10.764100,106.662100 10.764200,106.662200 10.764300,106.662300",
-    numberOfLots: 4,
-  },
-  {
-    id: "K004",
-    code: "KV-D3",
-    name: "Khu vực D3",
-    regionName: "Vùng Trồng D",
-    area: 12000,
-    soilType: "Đất đỏ bazan",
-    terrain: ["Cao", "Bằng phẳng"],
-    gps: "10.765000,106.663000 10.765100,106.663100 10.765200,106.663200 10.765300,106.663300",
-    numberOfLots: 6,
-  },
-  {
-    id: "K005",
-    code: "KV-E4",
-    name: "Khu vực E4",
-    regionName: "Vùng Trồng E",
-    area: 9500,
-    soilType: "Đất sét",
-    terrain: ["Dốc", "Thấp"],
-    gps: "10.766000,106.664000 10.766100,106.664100 10.766200,106.664200 10.766300,106.664300",
-    numberOfLots: 4,
-  },
-  {
-    id: "K006",
-    code: "KV-F5",
-    name: "Khu vực F5",
-    regionName: "Vùng Trồng F",
-    area: 7000,
-    soilType: "Đất phù sa",
-    terrain: ["Trũng"],
-    gps: "10.767000,106.665000 10.767100,106.665100 10.767200,106.665200 10.767300,106.665300",
-    numberOfLots: 3,
-  },
-  {
-    id: "K007",
-    code: "KV-G6",
-    name: "Khu vực G6",
-    regionName: "Vùng Trồng G",
-    area: 11000,
-    soilType: "Đất thịt",
-    terrain: ["Cao", "Dốc"],
-    gps: "10.768000,106.666000 10.768100,106.666100 10.768200,106.666200 10.768300,106.666300",
-    numberOfLots: 5,
-  },
-  {
-    id: "K008",
-    code: "KV-H7",
-    name: "Khu vực H7",
-    regionName: "Vùng Trồng H",
-    area: 8000,
-    soilType: "Đất đỏ bazan",
-    terrain: ["Bằng phẳng"],
-    gps: "10.769000,106.667000 10.769100,106.667100 10.769200,106.667200 10.769300,106.667300",
-    numberOfLots: 4,
-  },
-];
+
 const CROP_OPTIONS = [
   "Lúa",
   "Cà phê",
@@ -168,11 +80,67 @@ const TERRAIN_OPTIONS = [
   "Ven sông",
 ];
 const MapManagementAreaPage = () => {
+  const { regions } = useRegionStore();
+
+  const areaZoneData = useMemo<AreaZone[]>(() => {
+    if (!regions || regions.length === 0) return [];
+
+    return regions.flatMap((regionEntity) => {
+      const { region, areas } = regionEntity;
+
+      return (areas || []).map<AreaZone>((area, idx) => ({
+        id: area.code || `${regionEntity.id}-${idx + 1}`,
+        code: area.code || `KV-${idx + 1}`,
+        name: area.name || `Khu vực ${idx + 1}`,
+        regionName: region.name,
+        area: Number(area.area) || 0,
+        soilType: area.soilType || region.soilType || "Chưa cập nhật",
+        terrain:
+          (area.terrain && area.terrain.length > 0
+            ? area.terrain
+            : region.terrain) || [],
+        gps: area.gps || region.gps || "",
+        numberOfLots: 0, // nếu sau này có store lô thì map thật
+        mainCrop: area.mainCrop,
+      }));
+    });
+  }, [regions]);
   const navigate = useNavigate();
   const [crop, setCrop] = useState<string[]>([]);
   const [soil, setSoil] = useState<string[]>([]);
   const [terrain, setTerrain] = useState<string[]>([]);
   const [keyword, setKeyword] = useState("");
+  const [filteredData, setFilteredData] = useState(areaZoneData);
+  const applyFilter = () => {
+    let data = areaZoneData;
+
+    // 1. keyword
+    if (keyword.trim()) {
+      const kw = keyword.toLowerCase();
+      data = data.filter(
+        (item) =>
+          item.code.toLowerCase().includes(kw) ||
+          item.name.toLowerCase().includes(kw) ||
+          item.regionName.toLowerCase().includes(kw) ||
+          item.soilType.toLowerCase().includes(kw)
+      );
+    }
+
+    // 2. soil
+    if (soil.length > 0) {
+      data = data.filter((item) => soil.includes(item.soilType));
+    }
+
+    // 3. terrain
+    if (terrain.length > 0) {
+      data = data.filter((item) =>
+        item.terrain.some((t) => terrain.includes(t))
+      );
+    }
+
+    setFilteredData(data);
+  };
+
   const onAreaDetail = () => {
     navigate(PATH.MAP_AREA_DETAIL);
   };
@@ -255,6 +223,7 @@ const MapManagementAreaPage = () => {
     setCrop([]);
     setSoil([]);
     setTerrain([]);
+    setFilteredData(areaZoneData);
   };
   return (
     <Stack gap="lg">
@@ -293,7 +262,11 @@ const MapManagementAreaPage = () => {
                 Làm mới
               </Button>
             </Tooltip>
-            <Button radius={4} leftSection={<IconSearch size={16} />}>
+            <Button
+              radius={4}
+              leftSection={<IconSearch size={16} />}
+              onClick={applyFilter}
+            >
               Lọc thông tin
             </Button>
           </Group>
@@ -313,19 +286,6 @@ const MapManagementAreaPage = () => {
           />
 
           <SimpleGrid cols={{ base: 1, md: 2, lg: 3 }} spacing="sm">
-            <MultiSelect
-              searchable
-              label="Cây trồng chính"
-              description="Ví dụ: Đậu nành, bắp"
-              placeholder="Chọn thông tin"
-              clearable
-              radius={4}
-              leftSection={<IconLeaf size={18} />}
-              data={CROP_OPTIONS}
-              value={crop}
-              onChange={setCrop}
-            />
-
             <MultiSelect
               searchable
               clearable
@@ -401,7 +361,7 @@ const MapManagementAreaPage = () => {
         </Stack>
       </Card>
 
-      <Table columns={areaZoneColumns} data={areaZoneData} />
+      <Table columns={areaZoneColumns} data={filteredData} />
     </Stack>
   );
 };

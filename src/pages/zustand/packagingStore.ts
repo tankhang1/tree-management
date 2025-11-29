@@ -22,7 +22,6 @@ interface PackagingState {
   getPackagingById: (id: string) => PackagingSpecification | undefined;
 }
 
-// Dữ liệu mẫu
 const MOCK_DATA: PackagingSpecification[] = [
   {
     id: "PKG001",
@@ -37,6 +36,48 @@ const MOCK_DATA: PackagingSpecification[] = [
     packagingType: "Lốc",
     conversionQuantity: 6,
     baseUnit: "Chai",
+  },
+  {
+    id: "PKG003",
+    name: "Bao 50kg",
+    packagingType: "Bao",
+    conversionQuantity: 50,
+    baseUnit: "Kg",
+  },
+  {
+    id: "PKG004",
+    name: "Bao 25kg",
+    packagingType: "Bao",
+    conversionQuantity: 25,
+    baseUnit: "Kg",
+  },
+  {
+    id: "PKG005",
+    name: "Túi 1kg",
+    packagingType: "Túi",
+    conversionQuantity: 1,
+    baseUnit: "Kg",
+  },
+  {
+    id: "PKG006",
+    name: "Thùng 12 chai 1L",
+    packagingType: "Thùng",
+    conversionQuantity: 12,
+    baseUnit: "Chai 1L",
+  },
+  {
+    id: "PKG007",
+    name: "Thùng 20 gói",
+    packagingType: "Thùng",
+    conversionQuantity: 20,
+    baseUnit: "Gói",
+  },
+  {
+    id: "PKG008",
+    name: "Kiện 10 bao 25kg",
+    packagingType: "Kiện",
+    conversionQuantity: 10,
+    baseUnit: "Bao 25kg",
   },
 ];
 

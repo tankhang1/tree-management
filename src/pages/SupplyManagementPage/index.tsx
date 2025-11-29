@@ -21,6 +21,7 @@ import {
   Title,
   Tooltip,
   LoadingOverlay,
+  Textarea,
 } from "@mantine/core";
 import {
   IconDotsVertical,
@@ -42,59 +43,48 @@ import { useMemo, useState } from "react";
 import { notifications } from "@mantine/notifications";
 import { useSupplyStore, type Supply } from "../zustand/supplyStore";
 
-// IMPORT STORE (Đảm bảo đường dẫn đúng với cấu trúc dự án của bạn)
+const getMainSupplierName = (s: Supply) => s.suppliers?.[0]?.supplierName ?? "";
 
 const SupplyManagementPage = () => {
   const navigate = useNavigate();
 
-  // 1. KẾT NỐI STORE
-  // Lấy danh sách và các hàm thao tác từ Store
   const { supplies, deleteSupply, updateSupply, isLoading } = useSupplyStore();
 
-  // UI States (Quản lý ẩn/hiện Modal)
   const [openedSupplyDetail, setOpenedSupplyDetail] = useState(false);
   const [openedEdit, setOpenedEdit] = useState(false);
   const [openedConfirm, setOpenedConfirm] = useState(false);
 
-  // Filter States (Quản lý bộ lọc)
   const [keyword, setKeyword] = useState("");
   const [filterTypes, setFilterTypes] = useState<string[]>([]);
   const [filterSuppliers, setFilterSuppliers] = useState<string[]>([]);
 
-  // Action States (Lưu đối tượng đang được chọn để xem/sửa/xóa)
   const [selectedSupply, setSelectedSupply] = useState<Supply | null>(null);
   const [editDraft, setEditDraft] = useState<Supply | null>(null);
 
-  // Chuyển hướng sang trang Thêm mới
   const onAddSupply = () => navigate(PATH.SUPPLY_ADD_MAIN);
 
-  // 2. LOGIC FILTER
   const filtered = useMemo(() => {
     return supplies.filter((item) => {
       const kw = keyword.trim().toLowerCase();
+      const mainSupplier = getMainSupplierName(item);
 
-      // Lọc theo từ khóa
       const matchKeyword =
         !kw ||
         item.id.toLowerCase().includes(kw) ||
+        item.code.toLowerCase().includes(kw) ||
         item.name.toLowerCase().includes(kw) ||
-        //@ts-expect-error no check
-        item.supplier.toLowerCase().includes(kw) ||
-        item.type.toLowerCase().includes(kw);
+        item.type.toLowerCase().includes(kw) ||
+        mainSupplier.toLowerCase().includes(kw);
 
-      // Lọc theo Loại
       const matchType =
         filterTypes.length === 0 || filterTypes.includes(item.type);
 
-      // Lọc theo Nhà cung cấp
       const matchSupplier =
-        filterSuppliers.length === 0 || filterSuppliers.includes(item.supplier);
+        filterSuppliers.length === 0 || filterSuppliers.includes(mainSupplier);
 
       return matchKeyword && matchType && matchSupplier;
     });
   }, [supplies, keyword, filterTypes, filterSuppliers]);
-
-  // --- HANDLERS (XỬ LÝ SỰ KIỆN) ---
 
   const openDetail = (row: Supply) => {
     setSelectedSupply(row);
@@ -103,13 +93,13 @@ const SupplyManagementPage = () => {
 
   const startEdit = () => {
     if (!selectedSupply) return;
-    setEditDraft({ ...selectedSupply }); // Copy dữ liệu sang bản nháp để sửa
+    setEditDraft({ ...selectedSupply });
     setOpenedEdit(true);
   };
 
   const handleDelete = () => {
     if (selectedSupply) {
-      deleteSupply(selectedSupply.id); // Gọi hàm xóa từ Store
+      deleteSupply(selectedSupply.id);
       notifications.show({
         title: "Thành công",
         message: "Đã xóa vật tư khỏi hệ thống",
@@ -117,14 +107,13 @@ const SupplyManagementPage = () => {
         icon: <IconCheck />,
       });
       setOpenedConfirm(false);
-      setOpenedSupplyDetail(false); // Đóng modal chi tiết nếu đang mở
+      setOpenedSupplyDetail(false);
     }
   };
 
   const handleSaveEdit = async () => {
     if (!editDraft) return;
 
-    // Gọi hàm update từ Store (đã bổ sung ở bước trước)
     const success = await updateSupply(editDraft.id, editDraft);
 
     if (success) {
@@ -135,7 +124,7 @@ const SupplyManagementPage = () => {
         icon: <IconCheck />,
       });
       setOpenedEdit(false);
-      setSelectedSupply(editDraft); // Cập nhật lại modal chi tiết để hiển thị dữ liệu mới
+      setSelectedSupply(editDraft);
     } else {
       notifications.show({
         title: "Lỗi",
@@ -146,27 +135,35 @@ const SupplyManagementPage = () => {
     }
   };
 
-  // Reset bộ lọc
   const handleResetFilter = () => {
     setKeyword("");
     setFilterTypes([]);
     setFilterSuppliers([]);
   };
 
-  // Tạo danh sách Unique cho Select Filter
   const typeOptions = useMemo(
-    () => Array.from(new Set(supplies.map((s) => s.type))),
-    [supplies]
-  );
-  const supplierOptions = useMemo(
-    () => Array.from(new Set(supplies.map((s) => s.supplier))),
+    () =>
+      Array.from(new Set(supplies.map((s) => s.type))).filter(
+        (item): item is string => Boolean(item)
+      ),
     [supplies]
   );
 
-  // Cấu hình cột bảng
+  const supplierOptions = useMemo(
+    () =>
+      Array.from(
+        new Set(
+          supplies.flatMap(
+            (s) => s.suppliers?.map((sp) => sp.supplierName) ?? []
+          )
+        )
+      ).filter((item): item is string => Boolean(item)),
+    [supplies]
+  );
+
   const columns: MRT_ColumnDef<Supply>[] = [
     {
-      accessorKey: "id",
+      accessorKey: "code",
       header: "Mã vật tư",
       size: 100,
       Cell: ({ cell }) => <Text fw={500}>{cell.getValue<string>()}</Text>,
@@ -181,7 +178,14 @@ const SupplyManagementPage = () => {
         </Badge>
       ),
     },
-    { accessorKey: "supplier", header: "Nhà cung cấp" },
+    {
+      header: "Nhà cung cấp chính",
+      accessorKey: "mainSupplier",
+      Cell: ({ row }) => {
+        const supplierName = getMainSupplierName(row.original);
+        return <Text>{supplierName || "Chưa cập nhật"}</Text>;
+      },
+    },
     {
       accessorKey: "actions",
       header: "Tuỳ chọn",
@@ -230,7 +234,6 @@ const SupplyManagementPage = () => {
   return (
     <>
       <Stack gap="lg">
-        {/* HEADER */}
         <Group justify="space-between">
           <Title flex={1} order={2}>
             Quản lý vật tư
@@ -253,7 +256,6 @@ const SupplyManagementPage = () => {
           </Group>
         </Group>
 
-        {/* FILTER CARD */}
         <Card withBorder shadow="sm" radius={4} p="md">
           <Group justify="space-between" align="center" mb="xs">
             <Stack gap={0}>
@@ -315,8 +317,8 @@ const SupplyManagementPage = () => {
           </Stack>
         </Card>
 
-        {/* TABLE */}
         <Table
+          // mantine-react-table generic
           //@ts-expect-error no check
           columns={columns}
           //@ts-expect-error no check
@@ -324,7 +326,6 @@ const SupplyManagementPage = () => {
         />
       </Stack>
 
-      {/* --- MODAL CHI TIẾT --- */}
       <Modal
         opened={openedSupplyDetail}
         onClose={() => setOpenedSupplyDetail(false)}
@@ -350,7 +351,7 @@ const SupplyManagementPage = () => {
                     {selectedSupply.name}
                   </Text>
                   <Group gap={6}>
-                    <Badge variant="light">{selectedSupply.id}</Badge>
+                    <Badge variant="light">{selectedSupply.code}</Badge>
                     <Badge variant="outline" color="gray">
                       {selectedSupply.type}
                     </Badge>
@@ -395,7 +396,7 @@ const SupplyManagementPage = () => {
                       <SimpleGrid cols={1} spacing={6}>
                         <Group justify="space-between">
                           <Text c="dimmed">Mã vật tư</Text>
-                          <Text fw={500}>{selectedSupply.id}</Text>
+                          <Text fw={500}>{selectedSupply.code}</Text>
                         </Group>
                         <Group justify="space-between">
                           <Text c="dimmed">Tên vật tư</Text>
@@ -408,7 +409,8 @@ const SupplyManagementPage = () => {
                         <Group justify="space-between">
                           <Text c="dimmed">NCC Chính</Text>
                           <Text fw={500} c="blue">
-                            {selectedSupply.supplier}
+                            {getMainSupplierName(selectedSupply) ||
+                              "Chưa cập nhật"}
                           </Text>
                         </Group>
                       </SimpleGrid>
@@ -422,7 +424,7 @@ const SupplyManagementPage = () => {
                       <Text size="sm">
                         {selectedSupply.note || "Không có ghi chú"}
                       </Text>
-                      {selectedSupply.hashtags && (
+                      {selectedSupply.hashtags?.length > 0 && (
                         <Group gap={4} mt="xs">
                           {selectedSupply.hashtags.map((tag) => (
                             <Badge key={tag} size="sm" variant="dot">
@@ -437,58 +439,18 @@ const SupplyManagementPage = () => {
               </Tabs.Panel>
 
               <Tabs.Panel value="stock" pt="md">
-                <Stack gap="sm">
-                  {/* Render dữ liệu tồn kho thực tế nếu có trong object supply */}
-                  {selectedSupply.stocks?.length ? (
-                    selectedSupply.stocks.map((s, i) => (
-                      <Paper key={i} withBorder p="sm" radius={4}>
-                        <Group justify="space-between">
-                          <Stack gap={2}>
-                            <Text fw={600}>{s.warehouse}</Text>
-                            <Text size="sm" c="dimmed">
-                              Vị trí: {s.location}
-                            </Text>
-                          </Stack>
-                          <Group>
-                            <Badge variant="light">Tồn: {s.quantity}</Badge>
-                            <Badge color="orange" variant="light">
-                              Min: {s.min}
-                            </Badge>
-                          </Group>
-                        </Group>
-                      </Paper>
-                    ))
-                  ) : (
-                    <Text c="dimmed" fs="italic" ta="center" py="md">
-                      Chưa có dữ liệu tồn kho
-                    </Text>
-                  )}
-                </Stack>
+                <Text c="dimmed" fs="italic" ta="center" py="md">
+                  Chưa có dữ liệu tồn kho
+                </Text>
               </Tabs.Panel>
 
               <Tabs.Panel value="pricing" pt="md">
                 <Card withBorder radius={4} p="md">
                   <Title order={6}>Bảng giá</Title>
                   <Divider my="xs" />
-                  <Stack gap={8}>
-                    {selectedSupply.prices?.length ? (
-                      selectedSupply.prices.map((p, i) => (
-                        <Group key={i} justify="space-between">
-                          <Text fw={500}>{p.vendor}</Text>
-                          <Group>
-                            <Badge variant="outline">{p.price}</Badge>
-                            <Text size="sm" c="dimmed">
-                              Cập nhật: {p.updatedAt}
-                            </Text>
-                          </Group>
-                        </Group>
-                      ))
-                    ) : (
-                      <Text c="dimmed" fs="italic" ta="center" py="md">
-                        Chưa có lịch sử giá
-                      </Text>
-                    )}
-                  </Stack>
+                  <Text c="dimmed" fs="italic" ta="center" py="md">
+                    Chưa có lịch sử giá
+                  </Text>
                 </Card>
               </Tabs.Panel>
             </Tabs>
@@ -496,7 +458,6 @@ const SupplyManagementPage = () => {
         )}
       </Modal>
 
-      {/* --- MODAL EDIT --- */}
       <Modal
         opened={openedEdit}
         onClose={() => setOpenedEdit(false)}
@@ -510,12 +471,11 @@ const SupplyManagementPage = () => {
             <LoadingOverlay visible={isLoading} />
             <TextInput
               label="Mã vật tư"
-              value={editDraft.id}
+              value={editDraft.code}
               onChange={(e) =>
-                setEditDraft({ ...editDraft, id: e.currentTarget.value })
+                setEditDraft({ ...editDraft, code: e.currentTarget.value })
               }
               radius={4}
-              disabled // Không cho sửa ID để đảm bảo toàn vẹn dữ liệu
             />
             <TextInput
               label="Tên vật tư"
@@ -535,10 +495,23 @@ const SupplyManagementPage = () => {
             />
             <TextInput
               label="Nhà cung cấp chính"
-              value={editDraft.supplier}
-              onChange={(e) =>
-                setEditDraft({ ...editDraft, supplier: e.currentTarget.value })
-              }
+              value={editDraft.suppliers?.[0]?.supplierName ?? ""}
+              onChange={(e) => {
+                const first = editDraft.suppliers?.[0] ?? {
+                  supplierId: "",
+                  supplierName: "",
+                  quantity: 0,
+                  unit: "",
+                  spec: "",
+                };
+                setEditDraft({
+                  ...editDraft,
+                  suppliers: [
+                    { ...first, supplierName: e.currentTarget.value },
+                    ...(editDraft.suppliers?.slice(1) ?? []),
+                  ],
+                });
+              }}
               radius={4}
             />
             <Textarea
@@ -566,7 +539,6 @@ const SupplyManagementPage = () => {
         )}
       </Modal>
 
-      {/* --- MODAL CONFIRM DELETE --- */}
       <Modal
         opened={openedConfirm}
         onClose={() => setOpenedConfirm(false)}

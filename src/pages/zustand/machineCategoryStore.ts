@@ -18,12 +18,19 @@ interface MachineCategoryState {
   deleteMachine: (id: string) => void;
   getMachineById: (id: string) => MachineCategory | undefined;
 }
-
 const MOCK_DATA: MachineCategory[] = [
   { id: "MCH01", name: "Máy cày" },
   { id: "MCH02", name: "Máy phun thuốc" },
-  { id: "MCH03", name: "Máy gặt" },
-  { id: "MCH04", name: "Máy bay nông nghiệp" },
+  { id: "MCH03", name: "Máy gặt lúa" },
+  { id: "MCH04", name: "Máy bay nông nghiệp (Drone)" },
+  { id: "MCH05", name: "Máy xới đất" },
+  { id: "MCH06", name: "Máy bơm nước" },
+  { id: "MCH07", name: "Máy làm cỏ" },
+  { id: "MCH08", name: "Máy gieo hạt" },
+  { id: "MCH09", name: "Máy thu hoạch trái cây" },
+  { id: "MCH10", name: "Máy cắt cỏ" },
+  { id: "MCH11", name: "Máy băm nghiền phụ phẩm" },
+  { id: "MCH12", name: "Máy đóng gói nông sản" },
 ];
 
 export const useMachineCategoryStore = create<MachineCategoryState>()(

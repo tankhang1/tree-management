@@ -1,28 +1,45 @@
 import { Card, Stack, Text, Group, Badge, Checkbox } from "@mantine/core";
 import type { AreaOption } from "..";
 import Scrollable from "../../../../../components/Scrollable";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 interface AreaCardSelectorProps {
   areas: AreaOption[];
-  selected: string;
-  onSelect: (code: string) => void;
+  selected?: string;
+  onSelect?: (code: string) => void;
   isMultiple?: boolean;
 }
 
 const AreaCards: React.FC<AreaCardSelectorProps> = ({
   areas,
+  selected,
+  onSelect,
   isMultiple = false,
 }) => {
-  const [selectedId, setSelectedId] = useState<string[]>([]);
+  const [selectedId, setSelectedId] = useState<string[]>(
+    selected ? [selected] : []
+  );
+
+  // Đồng bộ với prop selected khi ở chế độ single select
+  useEffect(() => {
+    if (!isMultiple) {
+      setSelectedId(selected ? [selected] : []);
+    }
+  }, [selected, isMultiple]);
 
   const handleSelect = (id: string) => {
     if (isMultiple) {
-      setSelectedId((prev) =>
-        prev.includes(id) ? prev.filter((i) => i !== id) : [...prev, id]
-      );
+      setSelectedId((prev) => {
+        const next = prev.includes(id)
+          ? prev.filter((i) => i !== id)
+          : [...prev, id];
+
+        onSelect?.(id);
+        return next;
+      });
     } else {
       setSelectedId([id]);
+      onSelect?.(id);
     }
   };
 
@@ -39,7 +56,6 @@ const AreaCards: React.FC<AreaCardSelectorProps> = ({
             style={{
               borderColor: selectedId.includes(area.code) ? "green" : undefined,
               cursor: "pointer",
-
               position: "relative",
               transition: "transform 0.2s ease",
             }}
@@ -58,7 +74,7 @@ const AreaCards: React.FC<AreaCardSelectorProps> = ({
                     <Checkbox
                       radius={4}
                       checked={selectedId.includes(area.code)}
-                      onChange={() => {}}
+                      onChange={() => handleSelect(area.code)}
                     />
                   )}
                 </Group>

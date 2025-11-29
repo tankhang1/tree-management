@@ -1,7 +1,7 @@
 import { Card, Text, Badge, Stack, Group, Checkbox } from "@mantine/core";
 import { useState } from "react";
-import { suppliersData } from "../../../../SupplyManagementPage/Add/components/SelectableSupplierCards";
 import Scrollable from "../../../../../components/Scrollable";
+import { useCompanyStore } from "../../../../zustand/companyStore";
 
 type TSelectableSupplierCards = {
   isCheckbox?: boolean;
@@ -11,6 +11,7 @@ export function SelectableSupplierCards({
   isCheckbox,
   isMultiple = true,
 }: TSelectableSupplierCards) {
+  const { companies } = useCompanyStore();
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
 
   const toggleSelection = (id: string) => {
@@ -26,7 +27,7 @@ export function SelectableSupplierCards({
   return (
     <Scrollable h={280}>
       <Group wrap="nowrap" align="flex-start" p={"xs"} gap={"md"}>
-        {suppliersData.map((s) => (
+        {companies.map((s) => (
           <Card
             key={s.id}
             withBorder
@@ -83,11 +84,9 @@ export function SelectableSupplierCards({
               <Text size="sm">
                 <strong>Ngành hàng:</strong>{" "}
                 <Group gap={4}>
-                  {s.sectors.map((sec) => (
-                    <Badge key={sec} variant="light" color="green">
-                      {sec}
-                    </Badge>
-                  ))}
+                  <Badge variant="light" color="green">
+                    {s.category}
+                  </Badge>
                 </Group>
               </Text>
               {s.note && (
