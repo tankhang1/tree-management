@@ -12,10 +12,10 @@ import {
   Button,
   Input,
   Modal,
-  ActionIcon,
   Image,
-  Badge,
-  Divider,
+  LoadingOverlay,
+  ActionIcon,
+  Box,
 } from "@mantine/core";
 import { useState } from "react";
 import {
@@ -24,57 +24,151 @@ import {
   IconX,
   IconPhoto,
   IconArrowLeft,
+  IconCheck,
   IconTrash,
+  IconFileTypePdf,
 } from "@tabler/icons-react";
-import { Dropzone } from "@mantine/dropzone";
+import {
+  Dropzone,
+  IMAGE_MIME_TYPE,
+  type FileWithPath,
+} from "@mantine/dropzone";
 import SunEditor from "suneditor-react";
-import { cropOptions, seedOptions } from "../../AreaManagementPage/Row/Add";
-import CropCards from "../../SeasonManagementPage/Growth/Add/components/CropCards";
+import "suneditor/dist/css/suneditor.min.css";
 import { DateTimePicker } from "@mantine/dates";
 import { useNavigate } from "react-router-dom";
-import Scrollable from "../../../components/Scrollable";
-import SeedCards from "../../SeasonManagementPage/Growth/Add/components/SeedCards";
+import { useForm } from "@mantine/form";
+import { notifications } from "@mantine/notifications";
 
-const livestockData = [
-  {
-    id: "ANM001",
-    name: "Bò sữa HF",
-    seed: "Giống bò sữa Holstein Friesian",
-    harvestMethod: "Vắt sữa thủ công & máy",
-    growthCycle: "Chu kỳ sữa 305 ngày/năm",
-    note: "Yêu cầu khí hậu mát mẻ, chuồng trại thoáng mát",
-    image:
-      "https://channuoithuy.com.vn/wp-content/uploads/2023/07/bo-ha-lan-1.jpg",
-  },
-  {
-    id: "ANM002",
-    name: "Heo Landrace",
-    seed: "Giống heo Landrace thuần",
-    harvestMethod: "Xuất bán thịt",
-    growthCycle: "5-6 tháng đạt trọng lượng 100kg",
-    note: "Cần khẩu phần ăn giàu protein",
-    image:
-      "https://upload.wikimedia.org/wikipedia/commons/2/24/Truie_Landrace.jpg",
-  },
-  {
-    id: "ANM003",
-    name: "Gà ri",
-    seed: "Giống gà ri thuần",
-    harvestMethod: "Xuất bán thịt hoặc trứng",
-    growthCycle: "5-6 tháng",
-    note: "Chăn thả vườn, ăn tạp",
-    image:
-      "https://gionggaquy.com/uploads/product/size610/product1/1/product_24.jpg",
-  },
-];
+// Components (Giả định đường dẫn đúng trong dự án của bạn)
+import CropCards from "../../SeasonManagementPage/Growth/Add/components/CropCards";
+import SeedCards from "../../SeasonManagementPage/Growth/Add/components/SeedCards";
+import { cropOptions, seedOptions } from "../../AreaManagementPage/Row/Add";
+import {
+  useCertificateStore,
+  type Certificate,
+} from "../../zustand/certificateStore";
+
+// Helper Base64
+const fileToBase64 = (file: File): Promise<string> => {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () => resolve(reader.result as string);
+    reader.onerror = (error) => reject(error);
+  });
+};
 
 export default function CertificateAddPageGroup() {
   const navigate = useNavigate();
+
+  // 1. Kết nối Store
+  const { addCertificate, isLoading } = useCertificateStore();
+
   const [openedFilter, setOpenedFilter] = useState(false);
-  const [fileType, setFileType] = useState<"file" | "editor">("file");
-  const [treeType, setTreeType] = useState("crop");
+  // const [treeType, setTreeType] = useState("crop"); // Dùng nếu mở comment phần chọn cây
+
+  // 2. Form Setup
+  const form = useForm({
+    initialValues: {
+      id: "GCN-" + Math.floor(Math.random() * 10000),
+      orgName: "",
+      orgLogo: "", // Base64 string
+      certCode: "",
+      certName: "",
+      issueDate: new Date(),
+      validYears: 3,
+      definition: "",
+      contentType: "file", // "file" | "editor"
+      content: "", // Base64 PDF hoặc HTML string
+      targets: [] as string[], // ID cây trồng/giống
+    },
+    validate: {
+      orgName: (v) => (!v ? "Vui lòng chọn tổ chức" : null),
+      certCode: (v) => (!v ? "Vui lòng nhập mã số" : null),
+      certName: (v) => (!v ? "Vui lòng nhập tên chứng nhận" : null),
+    },
+  });
+
+  // --- HANDLERS ---
+
+  // Upload Logo (Ảnh)
+  const handleDropLogo = async (files: FileWithPath[]) => {
+    const file = files[0];
+    if (file) {
+      try {
+        const base64 = URL.createObjectURL(file);
+        form.setFieldValue("orgLogo", base64);
+      } catch (error) {
+        console.error(error);
+        notifications.show({ message: "Lỗi khi tải ảnh", color: "red" });
+      }
+    }
+  };
+
+  // Xóa Logo
+  const handleRemoveLogo = () => {
+    form.setFieldValue("orgLogo", "");
+  };
+
+  // Upload PDF Chứng nhận
+  const handleDropContentFile = async (files: FileWithPath[]) => {
+    const file = files[0];
+    if (file) {
+      try {
+        const base64 = URL.createObjectURL(file);
+        form.setFieldValue("content", base64);
+        notifications.show({
+          message: `Đã tải file: ${file.name}`,
+          color: "blue",
+        });
+      } catch (error) {
+        console.error(error);
+        notifications.show({ message: "Lỗi khi tải file", color: "red" });
+      }
+    }
+  };
+
+  // Xóa PDF
+  const handleRemoveContentFile = () => {
+    form.setFieldValue("content", "");
+  };
+
+  // Submit
+  const handleFinish = async () => {
+    const validation = form.validate();
+    if (validation.hasErrors) return;
+
+    const payload: Omit<Certificate, "createdAt"> = {
+      id: form.values.id,
+      orgName: form.values.orgName,
+      orgLogo: form.values.orgLogo,
+      certCode: form.values.certCode,
+      certName: form.values.certName,
+      // Ensure issueDate is treated as a Date object before calling toISOString()
+      issueDate: new Date(form.values.issueDate).toISOString(),
+      validYears: form.values.validYears,
+      definition: form.values.definition,
+      contentType: form.values.contentType as "file" | "editor",
+      content: form.values.content,
+      targets: form.values.targets,
+    };
+
+    const success = await addCertificate(payload);
+    if (success) {
+      notifications.show({
+        title: "Thành công",
+        message: "Đã thêm chứng nhận mới",
+        color: "green",
+        icon: <IconCheck />,
+      });
+      navigate(-1);
+    }
+  };
+
   return (
-    <Card withBorder shadow="sm" radius={4} p="lg">
+    <Card withBorder shadow="sm" radius={4} p="lg" pos="relative">
+      <LoadingOverlay visible={isLoading} />
       <Group mb="md">
         <Button
           variant="subtle"
@@ -86,6 +180,7 @@ export default function CertificateAddPageGroup() {
         </Button>
         <Title order={3}>Thêm mới chứng nhận / chứng chỉ</Title>
       </Group>
+
       <Stack gap="xs">
         {/* Group chứa các Card */}
         <Group grow align="flex-start" wrap="wrap" gap="lg">
@@ -98,15 +193,16 @@ export default function CertificateAddPageGroup() {
               <Stack gap="sm">
                 <Input.Wrapper label="Dấu mộc chứng nhận">
                   <Dropzone
-                    onDrop={(files) => console.log("accepted files", files)}
+                    onDrop={handleDropLogo}
                     maxSize={5 * 1024 ** 2}
                     radius={4}
-                    accept={["application/pdf"]}
+                    accept={IMAGE_MIME_TYPE}
+                    multiple={false}
                   >
                     <Group
                       justify="center"
                       gap="xl"
-                      mih={180}
+                      mih={150}
                       style={{ pointerEvents: "none" }}
                     >
                       <Dropzone.Accept>
@@ -130,21 +226,57 @@ export default function CertificateAddPageGroup() {
                           stroke={1.5}
                         />
                       </Dropzone.Idle>
-
                       <div>
-                        <Text size="lg">Kéo & thả dấu mộc vào đây</Text>
-                        <Text size="sm" c="dimmed">
+                        <Text size="lg" ta="center">
+                          Kéo & thả dấu mộc
+                        </Text>
+                        <Text size="sm" c="dimmed" ta="center">
                           Tối đa 5MB
                         </Text>
                       </div>
                     </Group>
                   </Dropzone>
+                  {form.values.orgLogo && (
+                    <Box
+                      mt={20}
+                      style={{
+                        position: "relative",
+                        display: "inline-block",
+                        width: "fit-content",
+                        margin: "0 auto",
+                      }}
+                    >
+                      <Image
+                        src={form.values.orgLogo}
+                        w={150}
+                        h={150}
+                        fit="contain"
+                        radius="md"
+                        style={{ border: "1px solid #eee" }}
+                      />
+                      <ActionIcon
+                        color="red"
+                        variant="filled"
+                        radius="xl"
+                        size="sm"
+                        style={{
+                          position: "absolute",
+                          top: -8,
+                          right: -8,
+                          zIndex: 10,
+                        }}
+                        onClick={handleRemoveLogo}
+                      >
+                        <IconX size={14} />
+                      </ActionIcon>
+                    </Box>
+                  )}
                 </Input.Wrapper>
                 <Select
                   searchable
                   clearable
                   label="Tên tổ chức cấp"
-                  defaultValue="Tổ chức VietGAP"
+                  placeholder="Chọn tổ chức"
                   required
                   radius={4}
                   data={[
@@ -152,21 +284,22 @@ export default function CertificateAddPageGroup() {
                     "Tổ chức Organic Vietnam",
                     "Tổ chức GlobalGAP",
                   ]}
+                  {...form.getInputProps("orgName")}
                 />
               </Stack>
             </Card>
-            {/* Card: Tiêu chí yêu cầu */}
           </Stack>
-          {/* Card: Thông tin chứng nhận */}
-          <Card withBorder shadow="sm" radius={4} h={385}>
+
+          {/* Card: Tiêu chí yêu cầu (Nội dung) */}
+          <Card withBorder shadow="sm" radius={4}>
             <Title order={5} mb="md">
               📌 Tiêu chí yêu cầu
             </Title>
             <Stack gap="sm">
               <Radio.Group
                 label="Nội dung giấy chứng nhận"
-                value={fileType}
-                onChange={(val) => setFileType(val as "file" | "editor")}
+                value={form.values.contentType}
+                onChange={(val) => form.setFieldValue("contentType", val)}
               >
                 <Group mt="xs">
                   <Radio value="file" label="Tải file PDF" />
@@ -174,60 +307,78 @@ export default function CertificateAddPageGroup() {
                 </Group>
               </Radio.Group>
 
-              {fileType === "file" ? (
-                <Dropzone
-                  onDrop={(files) => console.log("accepted files", files)}
-                  maxSize={5 * 1024 ** 2}
-                  radius={4}
-                  h={240}
-                  accept={["application/pdf"]}
-                >
-                  <Group
-                    justify="center"
-                    align="center"
-                    gap="xl"
-                    h={240}
-                    style={{ pointerEvents: "none" }}
+              {form.values.contentType === "file" ? (
+                <Stack>
+                  <Dropzone
+                    onDrop={handleDropContentFile}
+                    maxSize={5 * 1024 ** 2}
+                    radius={4}
+                    h={100}
+                    accept={["application/pdf"]}
+                    multiple={false}
                   >
-                    <Dropzone.Accept>
-                      <IconUpload
-                        size={52}
-                        color="var(--mantine-color-blue-6)"
-                        stroke={1.5}
+                    <Group
+                      justify="center"
+                      align="center"
+                      gap="xl"
+                      h="100%"
+                      style={{ pointerEvents: "none" }}
+                    >
+                      <Dropzone.Idle>
+                        <IconFileTypePdf
+                          size={52}
+                          color="var(--mantine-color-dimmed)"
+                          stroke={1.5}
+                        />
+                      </Dropzone.Idle>
+                      <Stack gap={0} align="center">
+                        <Text size="lg" ta="center">
+                          Kéo & thả file PDF
+                        </Text>
+                        <Text size="sm" c="dimmed">
+                          Tối đa 5MB
+                        </Text>
+                      </Stack>
+                    </Group>
+                  </Dropzone>
+                  {form.values.content && (
+                    <Box pos="relative" h={275}>
+                      <iframe
+                        src={form.values.content}
+                        width="100%"
+                        height="100%"
+                        style={{ border: "1px solid #eee", borderRadius: 4 }}
+                        title="PDF Preview"
                       />
-                    </Dropzone.Accept>
-                    <Dropzone.Reject>
-                      <IconX
-                        size={52}
-                        color="var(--mantine-color-red-6)"
-                        stroke={1.5}
-                      />
-                    </Dropzone.Reject>
-                    <Dropzone.Idle>
-                      <IconPhoto
-                        size={52}
-                        color="var(--mantine-color-dimmed)"
-                        stroke={1.5}
-                      />
-                    </Dropzone.Idle>
-
-                    <Stack gap={"xs"}>
-                      <Text size="lg">Kéo & thả file PDF vào đây</Text>
-                      <Text size="sm" c="dimmed">
-                        Tối đa 5MB
-                      </Text>
-                    </Stack>
-                  </Group>
-                </Dropzone>
+                      <ActionIcon
+                        color="red"
+                        variant="filled"
+                        radius="xl"
+                        size="md"
+                        style={{
+                          position: "absolute",
+                          top: 10,
+                          right: 10,
+                          zIndex: 10,
+                        }}
+                        onClick={handleRemoveContentFile}
+                      >
+                        <IconTrash size={18} />
+                      </ActionIcon>
+                    </Box>
+                  )}
+                </Stack>
               ) : (
                 <SunEditor
                   height="180px"
+                  setContents={form.values.content}
+                  onChange={(content) => form.setFieldValue("content", content)}
                   setOptions={{
                     buttonList: [
                       ["undo", "redo"],
                       ["bold", "italic", "underline"],
                       ["list", "align", "link"],
-                      ["image", "table", "codeView"],
+                      ["table", "codeView"],
                     ],
                   }}
                 />
@@ -235,6 +386,8 @@ export default function CertificateAddPageGroup() {
             </Stack>
           </Card>
         </Group>
+
+        {/* Card: Thông tin chi tiết */}
         <Card withBorder shadow="sm" radius={4} flex={1}>
           <Title order={5} mb="md">
             📄 Thông tin chứng nhận
@@ -243,158 +396,51 @@ export default function CertificateAddPageGroup() {
             <Group grow>
               <TextInput
                 label="Mã số chứng nhận"
-                defaultValue="GCN-VG-2025-001"
+                withAsterisk
                 radius={4}
+                {...form.getInputProps("certCode")}
               />
               <TextInput
                 label="Tên chứng nhận"
-                defaultValue="Chứng nhận VietGAP"
+                withAsterisk
                 radius={4}
+                {...form.getInputProps("certName")}
               />
             </Group>
             <Group grow>
               <DateTimePicker
                 radius={4}
                 label="Thời gian cấp"
-                defaultValue="01/08/2025"
+                value={form.values.issueDate}
+                onChange={(val) =>
+                  //@ts-expect-error no check
+                  form.setFieldValue("issueDate", val || new Date())
+                }
               />
               <NumberInput
                 label="Thời gian hiệu lực (năm)"
-                defaultValue={3}
                 min={1}
+                radius={4}
+                {...form.getInputProps("validYears")}
               />
             </Group>
             <Textarea
               label="Định nghĩa"
-              defaultValue="VietGAP là tiêu chuẩn sản xuất nông nghiệp tốt..."
               minRows={3}
               radius={4}
+              {...form.getInputProps("definition")}
             />
           </Stack>
         </Card>
-        {/* <Group grow gap={"md"} align="flex-start">
-          <Card withBorder radius={4} shadow="sm">
-            <Stack gap={"xs"}>
-              <Title order={4}>Cây trồng</Title>
-              <Divider />
-              <Radio.Group
-                mt={"md"}
-                defaultValue={treeType}
-                onChange={setTreeType}
-              >
-                <Stack gap={"xs"}>
-                  <Radio value="crop" label="Chứng nhận cấp theo cây trồng" />
-                  <Radio
-                    value="seed"
-                    label="Chứng nhận cấp theo giống cây trồng"
-                  />
-                </Stack>
-              </Radio.Group>
-              <Group>
-                <Button radius={4} onClick={() => setOpenedFilter(true)}>
-                  Thêm mới
-                </Button>
-              </Group>
-              {treeType === "crop" ? (
-                <SeedCards
-                  selected=""
-                  seeds={seedOptions}
-                  onSelect={() => {}}
-                  isDelete
-                  isCheckbox={false}
-                />
-              ) : (
-                <CropCards
-                  selected=""
-                  plants={cropOptions}
-                  onSelect={() => {}}
-                  isCheckbox={false}
-                  isTouchable={false}
-                  isDelete={true}
-                />
-              )}
-            </Stack>
-          </Card>
-          <Card withBorder radius={4} shadow="sm">
-            <Stack gap={"xs"}>
-              <Title order={4}>Chăn nuôi</Title>
-              <Divider />
-              <Radio.Group mt={"md"} value={"animal-s"}>
-                <Stack gap={"xs"}>
-                  <Radio value="animal" label="Chứng nhận cấp theo vật nuôi" />
-                  <Radio
-                    value="animal-s"
-                    label="Chứng nhận cấp theo giống vật nuôi"
-                  />
-                </Stack>
-              </Radio.Group>
-              <Group>
-                <Button radius={4}>Thêm mới</Button>
-              </Group>
-              <Scrollable>
-                <Group wrap="nowrap" gap="md">
-                  {livestockData.map((animal) => (
-                    <Card
-                      key={animal.id}
-                      withBorder
-                      radius="md"
-                      shadow="sm"
-                      w={260}
-                      h={360}
-                    >
-                      <Card.Section>
-                        <Image
-                          src={animal.image}
-                          height={140}
-                          alt={animal.name}
-                        />
-                      </Card.Section>
 
-                      <Stack gap={4} mt="sm">
-                        <Group justify="space-between">
-                          <Text fw={600}>{animal.name}</Text>
-                          <Badge size="sm" variant="light">
-                            {animal.id}
-                          </Badge>
-                        </Group>
-
-                        <Text size="sm">
-                          <strong>Giống:</strong> {animal.seed}
-                        </Text>
-                        <Text size="sm">
-                          <strong>Hình thức chăn nuôi:</strong>{" "}
-                          {animal.harvestMethod}
-                        </Text>
-                        <Text size="sm">
-                          <strong>Chu kỳ sinh trưởng:</strong>{" "}
-                          {animal.growthCycle}
-                        </Text>
-                        <Text size="sm" c="dimmed">
-                          <strong>Ghi chú:</strong> {animal.note}
-                        </Text>
-                      </Stack>
-
-                      <ActionIcon
-                        pos={"absolute"}
-                        bottom={10}
-                        right={10}
-                        color="red"
-                        variant="light"
-                        radius={4}
-                      >
-                        <IconTrash size={16} />
-                      </ActionIcon>
-                    </Card>
-                  ))}
-                </Group>
-              </Scrollable>
-            </Stack>
-          </Card>
-        </Group> */}
         <Group justify="flex-end" mt="md">
-          <Button radius={4}>Hoàn thành</Button>
+          <Button radius={4} onClick={handleFinish} loading={isLoading}>
+            Hoàn thành
+          </Button>
         </Group>
       </Stack>
+
+      {/* Modal Filter (Giữ nguyên logic UI, chỉ thêm mock action) */}
       <Modal
         title={"Tìm kiếm cây trồng"}
         opened={openedFilter}
@@ -415,36 +461,32 @@ export default function CertificateAddPageGroup() {
             ]}
           />
 
-          {treeType === "crop" ? (
-            <Stack gap={"xs"}>
-              <TextInput
-                label="Cây trồng"
-                leftSection={<IconSearch size={18} />}
-                placeholder="Tìm kiếm cây trồng"
-                radius={4}
-              />
-              <SeedCards selected="" seeds={seedOptions} onSelect={() => {}} />
-            </Stack>
-          ) : (
-            <Stack gap={"xs"}>
-              <TextInput
-                label="Cây trồng"
-                leftSection={<IconSearch size={18} />}
-                placeholder="Tìm kiếm cây trồng"
-                radius={4}
-              />
-              <SeedCards selected="" seeds={seedOptions} onSelect={() => {}} />
-              <TextInput
-                label="Giống cây trồng"
-                leftSection={<IconSearch size={18} />}
-                placeholder="Tìm kiếm giống cây trồng"
-                radius={4}
-              />
-              <CropCards selected="" plants={cropOptions} onSelect={() => {}} />
-            </Stack>
-          )}
+          <Stack gap={"xs"}>
+            <TextInput
+              label="Cây trồng"
+              leftSection={<IconSearch size={18} />}
+              placeholder="Tìm kiếm cây trồng"
+              radius={4}
+            />
+            <SeedCards selected="" seeds={seedOptions} onSelect={() => {}} />
+
+            <TextInput
+              label="Giống cây trồng"
+              leftSection={<IconSearch size={18} />}
+              placeholder="Tìm kiếm giống cây trồng"
+              radius={4}
+            />
+            <CropCards selected="" plants={cropOptions} onSelect={() => {}} />
+          </Stack>
+
           <Group justify="flex-end">
-            <Button radius={4} onClick={() => setOpenedFilter(false)}>
+            <Button
+              radius={4}
+              onClick={() => {
+                // Logic giả định: thêm item vào form.values.targets
+                setOpenedFilter(false);
+              }}
+            >
               Xác nhận
             </Button>
           </Group>

@@ -1,141 +1,226 @@
-import { Button, Group, Stack, Title } from "@mantine/core";
-import { IconFileExcel } from "@tabler/icons-react";
+import {
+  ActionIcon,
+  Button,
+  Group,
+  Stack,
+  Title,
+  Image,
+  Menu,
+  Text,
+  Card,
+  TextInput,
+  Tooltip,
+  Modal,
+  Badge,
+} from "@mantine/core";
+import {
+  IconDotsVertical,
+  IconEdit,
+  IconEye,
+  IconFileExcel,
+  IconPlus,
+  IconRefresh,
+  IconSearch,
+  IconTrash,
+  IconCheck,
+} from "@tabler/icons-react";
 import type { MRT_ColumnDef } from "mantine-react-table";
-
 import Table from "../../components/Table";
 import { useNavigate } from "react-router-dom";
 import { PATH } from "../../constants/path.constants";
-type Certificate = {
-  id: string; // ID duy nhất
-  orgLogo: string; // Logo tổ chức chứng nhận (URL)
-  orgName: string; // Tên tổ chức cấp
-  certCode: string; // Mã số chứng nhận
-  certName: string; // Tên chứng nhận
-  issueDate: string; // Thời gian cấp (dd/mm/yyyy)
-  validYears: number; // Thời gian hiệu lực (năm)
-  definition: string; // Định nghĩa
-  scopeType: "trong-trot" | "chan-nuoi"; // Phạm vi áp dụng
-  scopeGroup: string; // Nhóm (VD: Cây ăn trái, Gia cầm...)
-  scopeItem: string; // Mục cụ thể (VD: Sầu riêng Ri6, Gà ta...)
-  criteriaHtml?: string; // Tiêu chí yêu cầu dạng HTML
-  fileUrl?: string; // Link file chứng nhận (nếu upload PDF)
-};
-
-const certificateDataset: Certificate[] = [
-  {
-    id: "#4431223",
-    orgLogo:
-      "https://cdn.thuvienphapluat.vn/phap-luat/2022-2/HD/chung-nhan-vietgap.jpg",
-    orgName: "Tổ chức VietGAP",
-    certCode: "GCN-VG-2025-001",
-    certName: "Chứng nhận VietGAP",
-    issueDate: "01/08/2025",
-    validYears: 3,
-    definition:
-      "VietGAP là bộ tiêu chuẩn thực hành sản xuất nông nghiệp tốt tại Việt Nam nhằm đảm bảo an toàn thực phẩm, bảo vệ môi trường và sức khỏe người lao động.",
-    scopeType: "trong-trot",
-    scopeGroup: "Cây ăn trái",
-    scopeItem: "Sầu riêng Ri6",
-    criteriaHtml:
-      "<ul><li>Đảm bảo không sử dụng hóa chất cấm</li><li>Quy trình chăm sóc chuẩn</li></ul>",
-    fileUrl: "https://example.com/chung-nhan-vietgap.pdf",
-  },
-  {
-    id: "#6665234",
-    orgLogo:
-      "https://file.hstatic.net/200000423303/article/nn_huuco_8ad18ec91a174544837c5d06217ee34a_grande.jpg",
-    orgName: "Tổ chức Organic Vietnam",
-    certCode: "ORG-VN-2025-002",
-    certName: "Chứng nhận Nông nghiệp hữu cơ",
-    issueDate: "15/07/2025",
-    validYears: 5,
-    definition:
-      "Chứng nhận hữu cơ đảm bảo sản phẩm được sản xuất mà không sử dụng hóa chất tổng hợp, phân bón hóa học và thuốc trừ sâu.",
-    scopeType: "chan-nuoi",
-    scopeGroup: "Gia cầm",
-    scopeItem: "Gà ta thả vườn",
-    criteriaHtml:
-      "<p>Sản xuất theo quy trình hữu cơ, không sử dụng kháng sinh.</p>",
-    fileUrl: "https://example.com/chung-nhan-huu-co.pdf",
-  },
-];
+import { useState } from "react";
+import { useDisclosure } from "@mantine/hooks";
+import { notifications } from "@mantine/notifications";
+import dayjs from "dayjs";
+import {
+  useCertificateStore,
+  type Certificate,
+} from "../zustand/certificateStore";
 
 const CertificatePage = () => {
   const navigate = useNavigate();
+
+  // 1. KẾT NỐI STORE
+  const { certificates, deleteCertificate } = useCertificateStore();
+
+  // 2. LOCAL STATE
+
+  // Modal Xóa
+  const [openedDelete, { open: openDelete, close: closeDelete }] =
+    useDisclosure(false);
+  const [selectedId, setSelectedId] = useState<string | null>(null);
+
+  // 3. NAVIGATION
+  const onAddCertificate = () => navigate(PATH.CERTIFICATION_ADD);
+  // Giả định dùng chung trang Add để Edit (kèm ID) nếu cần
+  // const onEditCertificate = (id: string) => navigate(`${PATH.CERTIFICATION_ADD}/${id}`);
+
+  // 4. LOGIC DELETE
+  const confirmDelete = (id: string) => {
+    setSelectedId(id);
+    openDelete();
+  };
+
+  const handleDelete = () => {
+    if (selectedId) {
+      deleteCertificate(selectedId);
+      notifications.show({
+        title: "Đã xóa chứng nhận",
+        color: "green",
+        icon: <IconCheck />,
+        message: "",
+      });
+      closeDelete();
+      setSelectedId(null);
+    }
+  };
+
+  // 6. CẤU HÌNH CỘT
   const certificateColumns: MRT_ColumnDef<Certificate>[] = [
     {
       accessorKey: "orgLogo",
-      header: "Dấu mộc chứng nhận",
-      Cell: ({ cell }) => (
-        <img
-          src={cell.getValue<string>()}
-          alt="Logo"
-          style={{ width: 40, height: 40, objectFit: "contain" }}
-        />
+      header: "Tổ chức",
+      size: 100,
+      Cell: ({ cell, row }) => (
+        <Group gap="xs">
+          <Image
+            src={
+              cell.getValue<string>() || "https://placehold.co/40x40?text=Logo"
+            }
+            alt="Logo"
+            h={40}
+            w={40}
+            fit="contain"
+            radius="sm"
+          />
+          <Text size="xs" c="dimmed" lineClamp={1} w={100}>
+            {row.original.orgName}
+          </Text>
+        </Group>
       ),
     },
-    { accessorKey: "certCode", header: "Mã số" },
-    { accessorKey: "certName", header: "Tên chứng nhận" },
-    { accessorKey: "issueDate", header: "Ngày cấp" },
-    { accessorKey: "validYears", header: "Hiệu lực (năm)" },
     {
-      accessorKey: "scopeType",
+      accessorKey: "certCode",
+      header: "Mã số",
+      Cell: ({ cell }) => <Text fw={500}>{cell.getValue<string>()}</Text>,
+    },
+    { accessorKey: "certName", header: "Tên chứng nhận", size: 200 },
+    {
+      accessorKey: "issueDate",
+      header: "Ngày cấp",
+      Cell: ({ cell }) => dayjs(cell.getValue<string>()).format("DD/MM/YYYY"),
+    },
+    {
+      accessorKey: "validYears",
+      header: "Hiệu lực",
+      Cell: ({ cell }) => (
+        <Badge variant="light" color="blue">
+          {cell.getValue<number>()} năm
+        </Badge>
+      ),
+    },
+    {
+      id: "targets", // Thay thế scopeType bằng số lượng đối tượng áp dụng
       header: "Phạm vi",
-      Cell: ({ cell }) => {
-        const value = cell.getValue<"trong-trot" | "chan-nuoi">();
-        return (
-          <span
-            style={{
-              padding: "2px 6px",
-              borderRadius: 4,
-              backgroundColor: value === "trong-trot" ? "#e0f7e9" : "#e3f2fd",
-              color: value === "trong-trot" ? "#2e7d32" : "#1565c0",
-              fontSize: 12,
-              fontWeight: 500,
-            }}
-          >
-            {value === "trong-trot" ? "Trồng trọt" : "Chăn nuôi"}
-          </span>
+      Cell: ({ row }) => (
+        <Text size="sm">
+          Áp dụng cho {row.original.targets?.length || 0} đối tượng
+        </Text>
+      ),
+    },
+    {
+      accessorKey: "content",
+      header: "Tài liệu",
+      Cell: ({ row }) => {
+        const type = row.original.contentType;
+        return type === "file" ? (
+          <Text c="blue" td="underline" style={{ cursor: "pointer" }}>
+            Tải PDF
+          </Text>
+        ) : (
+          <Text c="dimmed">Nội dung HTML</Text>
         );
       },
     },
-
     {
-      accessorKey: "fileUrl",
-      header: "Tài liệu",
-      Cell: ({ cell }) => {
-        const url = cell.getValue<string>();
-        return url ? (
-          <a href={url} target="_blank" rel="noopener noreferrer">
-            Tải xuống
-          </a>
-        ) : (
-          "-"
-        );
-      },
+      accessorKey: "actions",
+      header: "Tuỳ chọn",
+      enableColumnActions: false,
+      size: 60,
+      Cell: ({ row }) => (
+        <Menu shadow="md" position="bottom-end">
+          <Menu.Target>
+            <ActionIcon variant="transparent" c={"gray"}>
+              <IconDotsVertical />
+            </ActionIcon>
+          </Menu.Target>
+
+          <Menu.Dropdown>
+            <Menu.Item leftSection={<IconEye size={18} color="gray" />}>
+              Chi tiết
+            </Menu.Item>
+            <Menu.Item leftSection={<IconEdit size={18} color="green" />}>
+              Chỉnh sửa
+            </Menu.Item>
+            <Menu.Item
+              leftSection={<IconTrash size={18} />}
+              color="red"
+              onClick={() => confirmDelete(row.original.id)}
+            >
+              Xoá
+            </Menu.Item>
+          </Menu.Dropdown>
+        </Menu>
+      ),
     },
   ];
-  const onAddCertificate = () => {
-    navigate(PATH.CERTIFICATION_ADD);
-  };
+
   return (
     <Stack gap="lg">
       <Group justify="space-between">
         <Title flex={1} order={2}>
-          Quản lý giấy chứng nhận / chứng chỉ
+          Quản lý giấy chứng nhận
         </Title>
         <Group>
           <Button variant="outline" radius={4} leftSection={<IconFileExcel />}>
-            Xuất File
+            Xuất Excel
           </Button>
-          <Button radius={4} onClick={onAddCertificate}>
+          <Button
+            radius={4}
+            onClick={onAddCertificate}
+            leftSection={<IconPlus size={18} />}
+          >
             Thêm mới
           </Button>
         </Group>
       </Group>
 
-      <Table columns={certificateColumns} data={certificateDataset} />
+      <Table
+        //@ts-expect-error no check
+        columns={certificateColumns}
+        //@ts-expect-error no check
+        data={certificates}
+      />
+
+      {/* MODAL DELETE */}
+      <Modal
+        opened={openedDelete}
+        onClose={closeDelete}
+        title="Xác nhận xóa"
+        centered
+      >
+        <Text>Bạn có chắc chắn muốn xóa chứng nhận này không?</Text>
+        <Group justify="flex-end" mt="lg">
+          <Button variant="default" onClick={closeDelete}>
+            Hủy
+          </Button>
+          <Button color="red" onClick={handleDelete}>
+            Xóa ngay
+          </Button>
+        </Group>
+      </Modal>
     </Stack>
   );
 };
+
 export default CertificatePage;
