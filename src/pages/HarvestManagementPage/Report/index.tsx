@@ -5,8 +5,9 @@ import {
   Button,
   Card,
   Collapse,
-  Divider,
   Group,
+  Modal,
+  NumberInput,
   Paper,
   ScrollArea,
   Select,
@@ -16,7 +17,6 @@ import {
   Text,
   ThemeIcon,
   Title,
-  Tooltip,
   UnstyledButton,
 } from "@mantine/core";
 import { DatePickerInput } from "@mantine/dates";
@@ -41,43 +41,38 @@ import {
   Bar,
   BarChart,
   CartesianGrid,
-  Cell,
   ResponsiveContainer,
   Tooltip as RTooltip,
   XAxis,
   YAxis,
 } from "recharts";
 import * as XLSX from "xlsx";
+import { useForm } from "@mantine/form";
 
 dayjs.extend(customParseFormat);
 
-// --- 1. TYPES & DATA MODEL ---
-
 type HarvestRecord = {
   id: string;
-  batchName: string; // Tên đợt (VD: Đợt 1 - 25/11)
+  batchName: string;
   date: string;
   tree: string;
   region: string;
   area: string;
   plot: string;
-  quantity: number; // Số lượng gốc (Kg)
-  unit: string; // Đơn vị gốc (Kg)
-
-  // Quy đổi
+  quantity: number;
+  unit: string;
   convertedQuantity: number;
   convertedUnit: string;
 };
 
-// Cấu hình cây trồng
 const TREE_CONFIG: Record<
   string,
   { unit: string; convUnit: string; rate: number }
 > = {
-  "Sầu riêng": { unit: "Kg", convUnit: "Sọt", rate: 20 }, // 20kg = 1 Sọt
-  Xoài: { unit: "Kg", convUnit: "Rổ", rate: 15 }, // 15kg = 1 Rổ
-  Chuối: { unit: "Kg", convUnit: "Buồng", rate: 12 }, // 12kg = 1 Buồng
-  Bưởi: { unit: "Kg", convUnit: "Bao", rate: 30 }, // 30kg = 1 Bao
+  "Sầu riêng": { unit: "Kg", convUnit: "Sọt", rate: 20 },
+  Xoài: { unit: "Kg", convUnit: "Rổ", rate: 15 },
+  Chuối: { unit: "Kg", convUnit: "Buồng", rate: 12 },
+  Bưởi: { unit: "Kg", convUnit: "Bao", rate: 30 },
 };
 
 const TREES = Object.keys(TREE_CONFIG);
@@ -85,22 +80,19 @@ const REGIONS = ["Miền Đông", "Tây Nguyên", "Miền Tây"];
 const AREAS = ["Khu A", "Khu B", "Khu C"];
 const PLOTS = ["Lô 01", "Lô 02", "Lô 03", "Lô 04", "Lô 05"];
 
-// --- 2. DATA GENERATOR ---
-
 const generateData = (): HarvestRecord[] => {
   const data: HarvestRecord[] = [];
   for (let i = 0; i < 100; i++) {
     const date = dayjs().subtract(i % 60, "day");
     const tree = TREES[i % TREES.length];
     const config = TREE_CONFIG[tree];
-
-    const qty = Math.floor(Math.random() * 500 + 50); // 50 - 550 Kg
+    const qty = Math.floor(Math.random() * 500 + 50);
 
     data.push({
       id: `HV-${i}`,
       batchName: `Đợt thu hoạch ${date.format("DD/MM")}`,
       date: date.format("YYYY-MM-DD"),
-      tree: tree,
+      tree,
       region: REGIONS[i % REGIONS.length],
       area: AREAS[i % AREAS.length],
       plot: PLOTS[i % PLOTS.length],
@@ -115,7 +107,6 @@ const generateData = (): HarvestRecord[] => {
 
 const rawData = generateData();
 
-// --- 3. COMPONENT: STAT CARD ---
 const StatCard = ({ title, value, subtext, icon, color }: any) => (
   <Paper withBorder radius="md" p="md" shadow="sm">
     <Group justify="space-between">
@@ -137,9 +128,6 @@ const StatCard = ({ title, value, subtext, icon, color }: any) => (
   </Paper>
 );
 
-// --- 4. COMPONENT: RECURSIVE DRILL-DOWN ROWS ---
-
-// Cấp 3: Area Row -> Hiển thị chi tiết Plots
 const AreaRow = ({
   areaName,
   records,
@@ -153,7 +141,6 @@ const AreaRow = ({
   const unit = records[0].unit;
   const convUnit = records[0].convertedUnit;
 
-  // Group by Plot
   const plots = useMemo(() => {
     const g = groupBy(records, "plot");
     return Object.entries(g).map(([pName, pItems]) => ({
@@ -232,7 +219,6 @@ const AreaRow = ({
   );
 };
 
-// Cấp 2: Region Row -> Hiển thị chi tiết Areas
 const RegionRow = ({
   regionName,
   records,
@@ -309,7 +295,6 @@ const RegionRow = ({
   );
 };
 
-// Cấp 1: Batch Row (Main Table Row) -> Hiển thị chi tiết Regions
 const BatchRow = ({
   batchData,
   treeType,
@@ -323,7 +308,6 @@ const BatchRow = ({
   const totalQty = sumBy(batchData, "quantity");
   const totalConv = sumBy(batchData, "convertedQuantity");
 
-  // Group by Region
   const regions = useMemo(() => {
     const g = groupBy(batchData, "region");
     return Object.entries(g).map(([rName, rItems]) => ({
@@ -380,7 +364,6 @@ const BatchRow = ({
         </MantineTable.Td>
       </MantineTable.Tr>
 
-      {/* Expanded Content */}
       <MantineTable.Tr style={{ display: opened ? "table-row" : "none" }}>
         <MantineTable.Td colSpan={6} p={0}>
           <Collapse in={opened}>
@@ -399,19 +382,46 @@ const BatchRow = ({
   );
 };
 
-// --- 5. MAIN PAGE ---
-
 const HarvestReportPage = () => {
+  const [data, setData] = useState<HarvestRecord[]>(rawData);
   const [range, setRange] = useState<[Date | null, Date | null]>([
     dayjs().subtract(30, "day").toDate(),
     dayjs().toDate(),
   ]);
   const [selectedTree, setSelectedTree] = useState<string | null>("Sầu riêng");
 
-  // Filter Logic
+  const [modalOpened, setModalOpened] = useState(false);
+
+  const addForm = useForm<{
+    tree: string | null;
+    date: Date | null;
+    region: string | null;
+    area: string | null;
+    plot: string | null;
+    quantity: number | "";
+  }>({
+    initialValues: {
+      tree: "Sầu riêng",
+      date: new Date(),
+      region: REGIONS[0],
+      area: AREAS[0],
+      plot: PLOTS[0],
+      quantity: "",
+    },
+    validate: {
+      tree: (value) => (!value ? "Chọn loại cây" : null),
+      date: (value) => (!value ? "Chọn ngày" : null),
+      region: (value) => (!value ? "Chọn vùng" : null),
+      area: (value) => (!value ? "Chọn khu vực" : null),
+      plot: (value) => (!value ? "Chọn lô" : null),
+      quantity: (value) =>
+        !value || Number(value) <= 0 ? "Số lượng phải > 0" : null,
+    },
+  });
+
   const filteredData = useMemo(() => {
     const [start, end] = range;
-    return rawData.filter((item) => {
+    return data.filter((item) => {
       const d = dayjs(item.date);
       const inDate =
         start && end
@@ -422,9 +432,8 @@ const HarvestReportPage = () => {
       const isTree = selectedTree ? item.tree === selectedTree : true;
       return inDate && isTree;
     });
-  }, [range, selectedTree]);
+  }, [range, selectedTree, data]);
 
-  // Aggregation Logic
   const stats = useMemo(() => {
     const totalQty = sumBy(filteredData, "quantity");
     const currentMonth = dayjs().format("MM-YYYY");
@@ -440,7 +449,6 @@ const HarvestReportPage = () => {
     return { totalQty, monthQty, avgBatch: totalQty / batchCount };
   }, [filteredData]);
 
-  // Chart Logic
   const topBatches = useMemo(() => {
     const g = groupBy(filteredData, "batchName");
     const list = Object.entries(g).map(([name, items]) => ({
@@ -459,9 +467,7 @@ const HarvestReportPage = () => {
     }));
   }, [filteredData]);
 
-  // Table Grouping
   const tableData = useMemo(() => {
-    // Group by Batch Name + Date to ensure uniqueness
     const g = groupBy(filteredData, (d) => `${d.batchName}|${d.date}`);
     return Object.values(g).sort((a, b) =>
       dayjs(b[0].date).diff(dayjs(a[0].date))
@@ -475,12 +481,45 @@ const HarvestReportPage = () => {
     XLSX.writeFile(wb, "Harvest_Report.xlsx");
   };
 
+  const handleAddHarvest = (values: typeof addForm.values) => {
+    const config = values.tree ? TREE_CONFIG[values.tree] : undefined;
+    if (
+      !config ||
+      !values.date ||
+      !values.region ||
+      !values.area ||
+      !values.plot
+    )
+      return;
+
+    const qty = Number(values.quantity);
+    const dateStr = dayjs(values.date).format("YYYY-MM-DD");
+    const batchName = `Đợt thu hoạch ${dayjs(values.date).format("DD/MM")}`;
+
+    const record: HarvestRecord = {
+      id: `HV-${Date.now()}`,
+      batchName,
+      date: dateStr,
+      tree: values.tree || "",
+      region: values.region,
+      area: values.area,
+      plot: values.plot,
+      quantity: qty,
+      unit: config.unit,
+      convertedQuantity: parseFloat((qty / config.rate).toFixed(1)),
+      convertedUnit: config.convUnit,
+    };
+
+    setData((prev) => [record, ...prev]);
+    setModalOpened(false);
+    addForm.reset();
+  };
+
   const currentUnit = TREE_CONFIG[selectedTree || ""]?.unit || "Kg";
   const currentConvUnit = TREE_CONFIG[selectedTree || ""]?.convUnit || "Unit";
 
   return (
     <Stack gap="lg" mih="100vh">
-      {/* 1. HEADER & FILTERS */}
       <Paper p="md" radius="md" shadow="sm" bg="white" withBorder>
         <Group justify="space-between" align="end">
           <div>
@@ -489,7 +528,7 @@ const HarvestReportPage = () => {
               Theo dõi chi tiết sản lượng từ Đợt về Lô trồng
             </Text>
           </div>
-          <Group>
+          <Group align="flex-end">
             <Select
               label="Loại cây trồng (Bắt buộc)"
               data={TREES}
@@ -503,14 +542,21 @@ const HarvestReportPage = () => {
               type="range"
               label="Khoảng thời gian"
               value={range}
-              //@ts-expect-error no check
+              //@ts-expect-error
               onChange={setRange}
               locale="vi"
               leftSection={<IconCalendarStats size={16} />}
               w={220}
             />
             <Button
-              mt={24}
+              variant="light"
+              color="teal"
+              leftSection={<IconLeaf size={18} />}
+              onClick={() => setModalOpened(true)}
+            >
+              Thêm đợt thu hoạch
+            </Button>
+            <Button
               leftSection={<IconFileExcel size={18} />}
               color="green"
               onClick={handleExport}
@@ -521,7 +567,6 @@ const HarvestReportPage = () => {
         </Group>
       </Paper>
 
-      {/* 2. KPI CARDS */}
       <SimpleGrid cols={{ base: 1, sm: 3 }}>
         <StatCard
           title="Tổng sản lượng"
@@ -546,7 +591,6 @@ const HarvestReportPage = () => {
         />
       </SimpleGrid>
 
-      {/* 3. CHARTS */}
       <SimpleGrid cols={{ base: 1, md: 2 }}>
         <Card radius="md" shadow="sm" withBorder p="lg">
           <Title order={5} mb="md">
@@ -596,7 +640,6 @@ const HarvestReportPage = () => {
         </Card>
       </SimpleGrid>
 
-      {/* 4. MAIN DATA TABLE - DRILL DOWN */}
       <Card radius="md" shadow="sm" withBorder p={0}>
         <Box p="md" bg="gray.0" style={{ borderBottom: "1px solid #dee2e6" }}>
           <Title order={4}>Chi tiết thu hoạch</Title>
@@ -638,6 +681,71 @@ const HarvestReportPage = () => {
           </MantineTable>
         </ScrollArea>
       </Card>
+
+      <Modal
+        opened={modalOpened}
+        onClose={() => setModalOpened(false)}
+        title="Thêm đợt thu hoạch"
+        centered
+        size="lg"
+      >
+        <form onSubmit={addForm.onSubmit(handleAddHarvest)}>
+          <Stack gap="sm">
+            <Group grow>
+              <Select
+                label="Loại cây trồng"
+                data={TREES}
+                {...addForm.getInputProps("tree")}
+              />
+              <DatePickerInput
+                label="Ngày thu hoạch"
+                value={addForm.values.date}
+                //@ts-expect-error
+                onChange={(value) => addForm.setFieldValue("date", value)}
+                locale="vi"
+                valueFormat="DD/MM/YYYY"
+                leftSection={<IconCalendarStats size={16} />}
+                error={addForm.errors.date}
+              />
+            </Group>
+
+            <Group grow>
+              <Select
+                label="Vùng"
+                data={REGIONS}
+                {...addForm.getInputProps("region")}
+              />
+              <Select
+                label="Khu vực"
+                data={AREAS}
+                {...addForm.getInputProps("area")}
+              />
+              <Select
+                label="Lô"
+                data={PLOTS}
+                {...addForm.getInputProps("plot")}
+              />
+            </Group>
+
+            <NumberInput
+              label="Số lượng (Kg)"
+              min={0}
+              thousandSeparator="."
+              decimalSeparator=","
+              {...addForm.getInputProps("quantity")}
+            />
+
+            <Group justify="flex-end" mt="md">
+              <Button variant="default" onClick={() => setModalOpened(false)}>
+                Hủy
+              </Button>
+              <Button type="submit" color="teal">
+                Lưu đợt thu hoạch
+              </Button>
+            </Group>
+          </Stack>
+        </form>
+      </Modal>
     </Stack>
   );
 };
