@@ -11,6 +11,8 @@ import {
   TextInput,
   Title,
   Tooltip,
+  Badge,
+  Modal,
 } from "@mantine/core";
 import {
   IconCalendar,
@@ -21,6 +23,7 @@ import {
   IconRefresh,
   IconSearch,
   IconTrash,
+  IconPlus,
 } from "@tabler/icons-react";
 import type { MRT_ColumnDef } from "mantine-react-table";
 import Table from "../../../components/Table";
@@ -28,60 +31,22 @@ import { useNavigate } from "react-router-dom";
 import { PATH } from "../../../constants/path.constants";
 import { DatePickerInput } from "@mantine/dates";
 import { useMemo, useState } from "react";
+import { useDisclosure } from "@mantine/hooks";
+import { notifications } from "@mantine/notifications";
+import { useDeliveryStore } from "../../zustand/deliveryStore";
 
-type WarehouseStockItem = {
-  id: string;
-  warehouseName: string;
-  areaName: string;
-  group: "BVTV" | "Vật tư" | "Phân bón" | "Máy móc";
-  itemName: string;
-  quantity: number;
-  unit: string;
-  packing: string;
-  createdAt: string; // yyyy-mm-dd
-};
+// IMPORT STORE
 
-const warehouseStockDataset: WarehouseStockItem[] = [
-  {
-    id: "W001",
-    warehouseName: "Cơ sở Long An",
-    areaName: "Long An",
-    group: "Phân bón",
-    itemName: "Phân NPK 16-16-8",
-    quantity: 200,
-    unit: "bao",
-    packing: "25kg/bao",
-    createdAt: "2025-07-16",
-  },
-  {
-    id: "W002",
-    warehouseName: "Cơ sở Tiền Giang",
-    areaName: "Tiền Giang",
-    group: "BVTV",
-    itemName: "Thuốc trừ sâu Regent",
-    quantity: 50,
-    unit: "chai",
-    packing: "100ml/chai",
-    createdAt: "2025-07-16",
-  },
-  {
-    id: "W003",
-    warehouseName: "Cơ sở Đà Nẵng",
-    areaName: "Đà Nẵng",
-    group: "Máy móc",
-    itemName: "Máy cày Kubota",
-    quantity: 2,
-    unit: "cái",
-    packing: "1 máy/đơn vị",
-    createdAt: "2025-07-16",
-  },
-];
-
-const groups = ["BVTV", "Vật tư", "Phân bón", "Máy móc"] as const;
+// Mapping Groups for filter
+const groups = ["Phân bón", "BVTV", "Máy móc", "Vật tư"];
 
 const StockManagementDeliveryPage = () => {
   const navigate = useNavigate();
 
+  // 1. KẾT NỐI STORE
+  const { deliveries, deleteDelivery } = useDeliveryStore();
+
+  // 2. STATE BỘ LỌC
   const [keyword, setKeyword] = useState("");
   const [selectedGroups, setSelectedGroups] = useState<string[]>([]);
   const [selectedAreas, setSelectedAreas] = useState<string[]>([]);
@@ -91,41 +56,55 @@ const StockManagementDeliveryPage = () => {
     null,
   ]);
 
+  // State Modal
+  const [openedDelete, { open: openDelete, close: closeDelete }] =
+    useDisclosure(false);
+  const [selectedId, setSelectedId] = useState<string | null>(null);
+
+  // 3. NAVIGATION HANDLERS
   const onAddDelivery = () => navigate(PATH.STOCK_ADD_DELIVERY);
-  const onDeliveryDetail = () => navigate(PATH.STOCK_DELIVERY_DETAIL);
+  const onDeliveryDetail = (id: string) =>
+    navigate(`${PATH.STOCK_DELIVERY_DETAIL}/${id}`);
 
-  const areaOptions = useMemo(
-    () =>
-      Array.from(new Set(warehouseStockDataset.map((d) => d.areaName))).map(
-        (a) => ({
-          value: a,
-          label: a,
-        })
-      ),
-    []
-  );
+  // 4. LOGIC FILTER
+  // Tạo danh sách options động từ dữ liệu store
+  const areaOptions = useMemo(() => {
+    const uniqueAreas = Array.from(new Set(deliveries.map((d) => d.areaName)));
+    return uniqueAreas.map((a) => ({ value: a, label: a }));
+  }, [deliveries]);
 
-  const warehouseOptions = useMemo(
-    () =>
-      Array.from(
-        new Set(warehouseStockDataset.map((d) => d.warehouseName))
-      ).map((w) => ({
-        value: w,
-        label: w,
-      })),
-    []
-  );
+  const warehouseOptions = useMemo(() => {
+    const uniqueWarehouses = Array.from(
+      new Set(deliveries.map((d) => d.warehouseName))
+    );
+    return uniqueWarehouses.map((w) => ({ value: w, label: w }));
+  }, [deliveries]);
 
-  const groupOptions = useMemo(
-    () => groups.map((g) => ({ value: g, label: g })),
-    []
-  );
+  // Logic lọc dữ liệu chi tiết (Flattening Items)
+  // Vì một phiếu nhập (DeliveryNote) có nhiều items, ta cần map ra từng dòng để hiển thị trong bảng thống kê tồn kho/nhập xuất
+  const flatData = useMemo(() => {
+    return deliveries.flatMap((note) =>
+      note.items.map((item, index) => ({
+        id: `${note.id}-${index}`, // Composite ID
+        noteId: note.id, // ID phiếu nhập gốc
+        warehouseName: note.warehouseName,
+        areaName: note.areaName,
+        group: item.group,
+        itemName: item.name,
+        quantity: item.quantity,
+        unit: item.unit,
+        packing: item.packing,
+        createdAt: note.createdAt,
+      }))
+    );
+  }, [deliveries]);
 
   const filteredData = useMemo(() => {
     const [start, end] = dateRange;
     const norm = (s: string) => s.toLowerCase().trim();
 
-    return warehouseStockDataset.filter((row) => {
+    return flatData.filter((row) => {
+      // Lọc Keyword
       if (keyword) {
         const k = norm(keyword);
         const hit =
@@ -133,12 +112,11 @@ const StockManagementDeliveryPage = () => {
           norm(row.warehouseName).includes(k) ||
           norm(row.areaName).includes(k) ||
           norm(row.group).includes(k) ||
-          norm(row.unit).includes(k) ||
-          norm(row.packing).includes(k) ||
-          norm(row.id).includes(k);
+          norm(row.noteId).includes(k);
         if (!hit) return false;
       }
 
+      // Lọc MultiSelect
       if (selectedGroups.length && !selectedGroups.includes(row.group))
         return false;
       if (selectedAreas.length && !selectedAreas.includes(row.areaName))
@@ -149,16 +127,23 @@ const StockManagementDeliveryPage = () => {
       )
         return false;
 
+      // Lọc Date Range
       if (start || end) {
         const d = new Date(row.createdAt);
-        if (Number.isNaN(d.getTime())) return false;
         if (start && d < new Date(start.setHours(0, 0, 0, 0))) return false;
         if (end && d > new Date(end.setHours(23, 59, 59, 999))) return false;
       }
 
       return true;
     });
-  }, [keyword, selectedGroups, selectedAreas, selectedWarehouses, dateRange]);
+  }, [
+    flatData,
+    keyword,
+    selectedGroups,
+    selectedAreas,
+    selectedWarehouses,
+    dateRange,
+  ]);
 
   const resetFilters = () => {
     setKeyword("");
@@ -168,72 +153,98 @@ const StockManagementDeliveryPage = () => {
     setDateRange([null, null]);
   };
 
-  const warehouseStockColumns: MRT_ColumnDef<WarehouseStockItem>[] = [
+  // 5. DELETE LOGIC (Xóa phiếu nhập - Mock vì đang flatten item)
+  const handleDelete = () => {
+    // Logic xóa thực tế cần gọi deleteDelivery(noteId) trong store
+    // Nhưng ở đây flatData là item con, nên ta chỉ demo thông báo
+    if (selectedId) deleteDelivery(selectedId);
+    notifications.show({
+      title: "Chức năng xóa",
+      message: "Cần xóa phiếu nhập gốc ID: " + selectedId,
+      color: "blue",
+    });
+    closeDelete();
+  };
+
+  // 6. TABLE COLUMNS
+  const columns: MRT_ColumnDef<(typeof flatData)[0]>[] = [
     {
       accessorKey: "warehouseName",
-      header: "Cơ sở",
+      header: "Cơ sở / Kho",
+      size: 200,
       Cell: ({ cell }) => <Text fw={600}>{cell.getValue<string>()}</Text>,
     },
     {
       accessorKey: "areaName",
       header: "Khu vực",
-      Cell: ({ cell }) => <Text>{cell.getValue<string>()}</Text>,
+      size: 120,
     },
     {
       accessorKey: "group",
-      header: "Nhóm vật tư",
-      Cell: ({ cell }) => <Text>{cell.getValue<string>()}</Text>,
+      header: "Nhóm hàng",
+      size: 120,
+      Cell: ({ cell }) => (
+        <Badge variant="outline">{cell.getValue<string>()}</Badge>
+      ),
     },
     {
       accessorKey: "itemName",
       header: "Tên vật tư",
-      Cell: ({ cell }) => <Text>{cell.getValue<string>()}</Text>,
+      size: 200,
+      Cell: ({ cell }) => <Text fw={500}>{cell.getValue<string>()}</Text>,
     },
     {
       accessorKey: "quantity",
       header: "Số lượng",
-      Cell: ({ cell }) => <Text>{cell.getValue<number>()}</Text>,
+      size: 100,
+      Cell: ({ row }) => <Text>{row.original.quantity.toLocaleString()}</Text>,
     },
     {
       accessorKey: "unit",
       header: "Đơn vị",
-      Cell: ({ cell }) => <Text>{cell.getValue<string>()}</Text>,
+      size: 80,
     },
     {
       accessorKey: "packing",
       header: "Quy cách",
-      Cell: ({ cell }) => <Text>{cell.getValue<string>()}</Text>,
+      size: 150,
     },
     {
       accessorKey: "createdAt",
-      header: "Ngày tạo",
-      Cell: ({ cell }) => <Text>{cell.getValue<string>()}</Text>,
+      header: "Ngày nhập",
+      size: 120,
+      Cell: ({ cell }) =>
+        new Date(cell.getValue<string>()).toLocaleDateString("vi-VN"),
     },
     {
-      accessorKey: "actions",
-      header: "Tuỳ chọn",
-      enableColumnActions: false,
-      size: 10,
-      Cell: () => (
-        <Menu shadow="md">
+      id: "actions",
+      header: "Thao tác",
+      size: 60,
+      Cell: ({ row }) => (
+        <Menu shadow="md" position="bottom-end">
           <Menu.Target>
-            <ActionIcon variant="transparent" c={"gray"}>
+            <ActionIcon variant="transparent" c="gray">
               <IconDotsVertical />
             </ActionIcon>
           </Menu.Target>
-
           <Menu.Dropdown>
             <Menu.Item
-              leftSection={<IconEye size={18} color="gray" />}
-              onClick={onDeliveryDetail}
+              onClick={() => onDeliveryDetail(row.original.noteId)}
+              leftSection={<IconEye size={18} />}
             >
-              Chi tiết
+              Xem phiếu nhập
             </Menu.Item>
-            <Menu.Item leftSection={<IconEdit size={18} color="green" />}>
-              Chỉnh sửa
+            <Menu.Item leftSection={<IconEdit size={18} color="blue" />}>
+              Sửa phiếu
             </Menu.Item>
-            <Menu.Item leftSection={<IconTrash size={18} />} color="red">
-              Xoá
+            <Menu.Item
+              leftSection={<IconTrash size={18} color="red" />}
+              onClick={() => {
+                setSelectedId(row.original.noteId);
+                openDelete();
+              }}
+            >
+              Xoá phiếu
             </Menu.Item>
           </Menu.Dropdown>
         </Menu>
@@ -249,9 +260,13 @@ const StockManagementDeliveryPage = () => {
         </Title>
         <Group>
           <Button variant="outline" radius={4} leftSection={<IconFileExcel />}>
-            Xuất File
+            Xuất Excel
           </Button>
-          <Button radius={4} onClick={onAddDelivery}>
+          <Button
+            radius={4}
+            onClick={onAddDelivery}
+            leftSection={<IconPlus size={18} />}
+          >
             Thêm mới
           </Button>
         </Group>
@@ -265,9 +280,8 @@ const StockManagementDeliveryPage = () => {
               Nhập từ khoá hoặc chọn Cơ sở, Khu vực, Nhóm
             </Text>
           </Stack>
-
           <Group>
-            <Tooltip label="Xoá tất cả bộ lọc">
+            <Tooltip label="Xoá bộ lọc">
               <Button
                 radius={4}
                 variant="default"
@@ -278,75 +292,86 @@ const StockManagementDeliveryPage = () => {
               </Button>
             </Tooltip>
             <Button radius={4} leftSection={<IconSearch size={16} />}>
-              Lọc thông tin
+              Tìm kiếm
             </Button>
           </Group>
         </Group>
 
         <Stack gap="sm">
-          {/* Từ cơ sởá */}
           <TextInput
             radius={4}
-            label="Từ cơ sở"
-            placeholder="Nhập thông tin"
-            description="Tìm theo mã, tên vật tư, cơ sở, khu vực, nhóm, đơn vị, quy cách. Ví dụ: Kubota, NPK 16-16-8, W002, Long An"
+            label="Từ khóa"
+            placeholder="Nhập tên vật tư, mã phiếu, tên kho..."
             leftSection={<IconSearch size={16} />}
             value={keyword}
             onChange={(e) => setKeyword(e.currentTarget.value)}
           />
 
           <SimpleGrid cols={{ base: 1, md: 2, lg: 4 }} spacing="sm">
-            {/* cơ sở */}
             <MultiSelect
-              label="Cơ sở"
-              placeholder="Chọn cơ sở"
-              description="Lọc theo tên cơ sở chứa hàng. Có thể chọn nhiều cơ sở. Ví dụ: cơ sở Long An, cơ sở Đà Nẵng"
-              searchable
               radius={4}
+              label="Kho / Cơ sở"
+              placeholder="Chọn kho"
               data={warehouseOptions}
               value={selectedWarehouses}
               onChange={setSelectedWarehouses}
+              searchable
+              clearable
             />
-
-            {/* Khu vực */}
             <MultiSelect
+              radius={4}
               label="Khu vực"
               placeholder="Chọn khu vực"
-              description="Lọc theo khu vực địa lý gắn với cơ sở. Ví dụ: Long An, Tiền Giang, Đà Nẵng"
-              searchable
-              radius={4}
               data={areaOptions}
               value={selectedAreas}
               onChange={setSelectedAreas}
+              searchable
+              clearable
             />
-
-            {/* Nhóm */}
             <MultiSelect
-              label="Nhóm vật tư"
-              placeholder="Chọn nhóm vật tư"
-              description="Phân loại vật tư: BVTV, Vật tư, Phân bón, Máy móc. Có thể chọn nhiều nhóm."
               radius={4}
-              data={groupOptions}
+              label="Nhóm hàng"
+              placeholder="Chọn nhóm"
+              data={groups}
               value={selectedGroups}
               onChange={setSelectedGroups}
+              clearable
             />
-
-            {/* cơ sởảng ngày tạo */}
             <DatePickerInput
-              type="range"
               radius={4}
-              label="Ngày tạo"
-              placeholder="Chọn ngày"
-              description="Lọc theo ngày tạo/nhập cơ sở (bao gồm ngày bắt đầu và kết thúc). Ví dụ: 01/07/2025 – 20/07/2025"
+              type="range"
+              label="Ngày nhập"
+              placeholder="Chọn khoảng thời gian"
               leftSection={<IconCalendar size={18} />}
               value={dateRange}
+              //@ts-expect-error no check
               onChange={setDateRange}
+              clearable
             />
           </SimpleGrid>
         </Stack>
       </Card>
 
-      <Table columns={warehouseStockColumns} data={filteredData} />
+      {/* Hiển thị bảng */}
+      <Table columns={columns} data={filteredData} />
+
+      {/* Modal xóa */}
+      <Modal
+        opened={openedDelete}
+        onClose={closeDelete}
+        title="Xác nhận xóa"
+        centered
+      >
+        <Text>Bạn có chắc chắn muốn xóa phiếu nhập này không?</Text>
+        <Group justify="flex-end" mt="lg">
+          <Button variant="default" onClick={closeDelete}>
+            Hủy
+          </Button>
+          <Button color="red" onClick={handleDelete}>
+            Xóa ngay
+          </Button>
+        </Group>
+      </Modal>
     </Stack>
   );
 };

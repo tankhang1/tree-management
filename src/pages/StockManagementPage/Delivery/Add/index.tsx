@@ -18,45 +18,61 @@ import {
   Flex,
   Input,
   Center,
-  MultiSelect,
-  Image,
+  LoadingOverlay,
+  ActionIcon,
+  Avatar,
+  NumberInput, // Thêm Avatar để hiển thị ảnh nhỏ
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
-import { useState } from "react";
+import { useState, useEffect, useMemo } from "react";
 import {
   IconArrowLeft,
   IconBuildingFactory,
+  IconCheck,
   IconDownload,
-  IconMail,
   IconMapPin,
   IconPlant2,
+  IconPlus,
   IconSearch,
   IconSpray,
   IconTools,
   IconTractor,
+  IconTrash,
   IconUser,
 } from "@tabler/icons-react";
 import { useNavigate } from "react-router-dom";
+import { notifications } from "@mantine/notifications";
+import type { MRT_ColumnDef } from "mantine-react-table";
+
+// Components
 import AreaCard from "./components/AreaCard";
 import { SelectableEnterpriseCards } from "./components/SelectableEnterpriseCards";
+import Table from "../../../../components/Table";
 
-type WarehouseItem = {
-  group: string;
-  name: string;
-  quantity: number;
-  unit: string;
-  packing: string;
-};
+// Stores
+import { useCompanyStore } from "../../../zustand/companyStore";
+import { useStockAreaStore } from "../../../zustand/stockAreaStore";
+import {
+  useDeliveryStore,
+  type DeliveryItem,
+  type DeliveryNote,
+} from "../../../zustand/deliveryStore";
+import { useSupplyStore } from "../../../zustand/supplyStore"; // Import Supply Store
+import { useMachineStore } from "../../../zustand/machineStore"; // Import Machine Store
+import { useFertilizerStore } from "../../../zustand/fertilizerStore";
+import { usePesticideStore } from "../../../zustand/pesticideStore";
+
+// Dữ liệu tĩnh
 const warehouseTypes = [
   {
     icon: <IconBuildingFactory size={32} />,
     title: "Kho lạnh",
-    desc: "Bảo quản thực phẩm, dược phẩm, hóa chất",
+    desc: "Bảo quản thực phẩm, dược phẩm",
   },
   {
     icon: <IconMapPin size={32} />,
     title: "Kho khô",
-    desc: "Lưu trữ quần áo, đồ gia dụng",
+    desc: "Lưu trữ vật tư thông thường",
   },
   {
     icon: <IconBuildingFactory size={32} />,
@@ -64,176 +80,317 @@ const warehouseTypes = [
     desc: "Nguyên liệu cho sản xuất",
   },
   {
-    icon: <IconMapPin size={32} />,
-    title: "Kho ngoại quan",
-    desc: "Hàng chưa thông quan",
-  },
-  {
-    icon: <IconBuildingFactory size={32} />,
-    title: "Kho CFS",
-    desc: "Gom hàng, đóng container",
-  },
-  {
     icon: <IconUser size={32} />,
     title: "Kho tự quản",
     desc: "Doanh nghiệp quản lý riêng",
   },
-  {
-    icon: <IconMail size={32} />,
-    title: "Kho TMĐT",
-    desc: "Đơn hàng trực tuyến",
-  },
-  {
-    icon: <IconUser size={32} />,
-    title: "Kho chung",
-    desc: "Dịch vụ lưu trữ chia sẻ",
-  },
 ];
 
-const areaGroups = [
-  {
-    parentId: "KV001",
-    parentName: "Khu vực A",
-    latitude: 10.762622,
-    longitude: 106.660172,
-    areaSize: 1200,
-    note: "Khu vực gần hồ nước",
-    subAreaCount: 2,
-    children: [
-      {
-        id: "KV001-1",
-        name: "Khu phụ A1",
-        latitude: 10.763,
-        longitude: 106.661,
-        areaSize: 500,
-      },
-      {
-        id: "KV001-2",
-        name: "Khu phụ A2",
-        latitude: 10.764,
-        longitude: 106.662,
-        areaSize: 700,
-      },
-    ],
-  },
-  {
-    parentId: "KV002",
-    parentName: "Khu vực B",
-    latitude: 10.776889,
-    longitude: 106.700806,
-    areaSize: 900,
-    note: "Không phân chia",
-    subAreaCount: 0,
-    children: [],
-  },
-];
 const assetTypes = [
   {
     label: "Thuốc BVTV",
     value: "Thuốc bảo vệ thực vật",
     icon: <IconSpray size={18} />,
   },
-  {
-    label: "Vật tư",
-    value: "Vật tư",
-    icon: <IconTools size={18} />,
-  },
-  {
-    label: "Phân bón",
-    value: "Phân bón",
-    icon: <IconPlant2 size={18} />,
-  },
-  {
-    label: "Máy móc",
-    value: "Máy móc",
-    icon: <IconTractor size={18} />,
-  },
+  { label: "Vật tư", value: "Vật tư", icon: <IconTools size={18} /> },
+  { label: "Phân bón", value: "Phân bón", icon: <IconPlant2 size={18} /> },
+  { label: "Máy móc", value: "Máy móc", icon: <IconTractor size={18} /> },
 ];
-const company = {
-  id: "ent-2",
-  name: "HTX Nông nghiệp Bền Vững",
-  type: "hợp tác xã",
-  owner: "Trần Thị B",
-  cccd: "123456789012",
-  phone: "0938123456",
-  email: "info@benvungcoop.vn",
-  address: "Xã Phú Riềng, huyện Phú Riềng, Bình Phước",
-  taxCode: "0401234567",
-  landCode: "HTX-98765432",
-};
+
+// Dữ liệu mẫu cho Select Đơn vị & Quy cách
+export const UNIT_OPTIONS = [
+  "Bao",
+  "Chai",
+  "Gói",
+  "Thùng",
+  "Tấn",
+  "Kg",
+  "Lít",
+  "Cái",
+  "Bộ",
+];
+export const PACKING_OPTIONS = [
+  "25kg/bao",
+  "50kg/bao",
+  "10kg/bao",
+  "1 lít/chai",
+  "500ml/chai",
+  "100ml/chai",
+  "Thùng 24 lon",
+  "1 bộ/hộp",
+];
 
 export default function StockManagementAddDeliveryPage() {
   const navigate = useNavigate();
+
+  // 1. KẾT NỐI STORE
+  const { companies } = useCompanyStore();
+  const { areas } = useStockAreaStore();
+  const { addDelivery, isLoading } = useDeliveryStore();
+  const { supplies } = useSupplyStore(); // Lấy danh sách vật tư
+  const { machines } = useMachineStore(); // Lấy danh sách máy móc
+  const { fertilizers } = useFertilizerStore();
+  const { pesticides } = usePesticideStore();
   const [active, setActive] = useState(0);
-  const [selectedArea, setSelectedArea] = useState<string | null>(null);
-  const [selectedSubArea, setSelectedSubArea] = useState<string | null>(null);
-  const [selectedWarehouse, setSelectedWarehouse] = useState<string | null>(
+
+  // States cho Bước 1 (Chọn vị trí)
+  const [selectedPartnerId, setSelectedPartnerId] = useState<string | null>(
     null
   );
-  const [importedItems, setImportedItems] = useState<WarehouseItem[]>([
-    {
-      group: "Phân bón",
-      name: "Phân NPK 16-16-8",
-      quantity: 100,
-      unit: "bao",
-      packing: "25kg/bao",
-    },
-    {
-      group: "BVTV",
-      name: "Thuốc trừ sâu",
-      quantity: 30,
-      unit: "chai",
-      packing: "100ml",
-    },
-    {
-      group: "Máy móc",
-      name: "Máy xịt thuốc chạy điện",
-      quantity: 2,
-      unit: "cái",
-      packing: "1 bộ/đơn vị",
-    },
-  ]);
+  const [selectedAreaId, setSelectedAreaId] = useState<string | null>(null);
+  const [selectedSubAreaId, setSelectedSubAreaId] = useState<string | null>(
+    null
+  );
+
+  // States cho Bước 2 (Hàng hóa)
+  const [selectedWarehouseType, setSelectedWarehouseType] = useState<
+    string | null
+  >(null);
   const [inputMode, setInputMode] = useState<"upload" | "manual">("upload");
-  const form = useForm<{
-    warehouseName: string;
-    areaId: string;
-    areaDetail: string;
-  }>({
+  const [items, setItems] = useState<DeliveryItem[]>([]);
+
+  // State cho Select Creatable
+  const [unitData, setUnitData] = useState(UNIT_OPTIONS);
+  const [packingData, setPackingData] = useState(PACKING_OPTIONS);
+
+  // Form thêm hàng thủ công
+  const [manualItem, setManualItem] = useState<DeliveryItem>({
+    group: "",
+    name: "",
+    quantity: 1,
+    unit: "",
+    packing: "",
+  });
+
+  // Form chính (Tên kho)
+  const form = useForm({
     initialValues: {
       warehouseName: "",
-      areaId: "",
-      areaDetail: "",
+      code: "NK-" + Math.floor(Math.random() * 10000),
+    },
+    validate: {
+      warehouseName: (val) =>
+        val.trim().length < 3 ? "Tên kho quá ngắn" : null,
     },
   });
 
-  const handleUploadFile = () => {
-    setImportedItems([
+  // --- COMPUTED VALUES ---
+  const selectedPartner = useMemo(
+    () => companies.find((c) => c.id === selectedPartnerId),
+    [companies, selectedPartnerId]
+  );
+  const selectedArea = useMemo(
+    () => areas.find((a) => a.id === selectedAreaId),
+    [areas, selectedAreaId]
+  );
+  const selectedSubArea = useMemo(
+    () => selectedArea?.subAreas?.find((s) => s.id === selectedSubAreaId),
+    [selectedArea, selectedSubAreaId]
+  );
+
+  // --- LOGIC LỌC SẢN PHẨM THEO NHÓM ---
+  const filteredProducts = useMemo(() => {
+    if (!manualItem.group) return [];
+
+    if (manualItem.group === "Máy móc") {
+      // Lấy từ Store Máy móc
+      return machines.map((m) => ({
+        value: m.name, // Dùng tên làm value để lưu vào form
+        label: m.name,
+        image: m.image,
+        unit: "Cái", // Mặc định cho máy móc
+        type: "Máy móc",
+      }));
+    }
+    if (manualItem.group === "Vật tư") {
+      console.log(supplies);
+      return supplies.map((s) => ({
+        value: s.name,
+        label: s.name,
+        image: s.image,
+        unit: "", // Lấy đơn vị có sẵn từ kho
+        type: s.type,
+      }));
+    }
+    if (manualItem.group === "BVTV") {
+      return pesticides.map((s) => ({
+        value: s.name,
+        label: s.name,
+        image: s.image,
+        unit: "", // Lấy đơn vị có sẵn từ kho
+        type: "",
+      }));
+    }
+    if (manualItem.group === "Phân bón") {
+      return fertilizers.map((s) => ({
+        value: s.name,
+        label: s.name,
+        image: s.image,
+        unit: "", // Lấy đơn vị có sẵn từ kho
+        type: "",
+      }));
+    }
+  }, [manualItem.group, supplies, machines]);
+
+  // --- CONFIG TABLE COLUMNS ---
+  const itemColumns = useMemo<MRT_ColumnDef<DeliveryItem>[]>(
+    () => [
       {
-        group: "Phân bón",
-        name: "Phân NPK 16-16-8",
-        quantity: 100,
-        unit: "bao",
-        packing: "25kg/bao",
+        accessorKey: "group",
+        header: "Nhóm hàng",
+        size: 120,
+        Cell: ({ cell }) => (
+          <Badge variant="light" color="blue">
+            {cell.getValue<string>()}
+          </Badge>
+        ),
       },
       {
-        group: "BVTV",
-        name: "Thuốc trừ sâu",
-        quantity: 30,
-        unit: "chai",
-        packing: "100ml",
+        accessorKey: "name",
+        header: "Tên hàng hóa",
+        size: 200,
+        Cell: ({ cell }) => <Text fw={500}>{cell.getValue<string>()}</Text>,
       },
       {
-        group: "Máy móc",
-        name: "Máy xịt thuốc chạy điện",
-        quantity: 2,
-        unit: "cái",
-        packing: "1 bộ/đơn vị",
+        accessorKey: "quantity",
+        header: "Số lượng",
+        size: 100,
+        Cell: ({ row }) => (
+          <Text>
+            {row.original.quantity} {row.original.unit}
+          </Text>
+        ),
       },
-    ]);
+      {
+        accessorKey: "packing",
+        header: "Quy cách",
+      },
+    ],
+    []
+  );
+
+  // --- HANDLERS ---
+
+  // Giả lập upload file Excel
+  const handleUploadFile = (file: File | null) => {
+    if (!file) return;
+    // Giả lập parsing file
+    setTimeout(() => {
+      setItems([
+        {
+          group: "Phân bón",
+          name: "Phân NPK 16-16-8",
+          quantity: 100,
+          unit: "bao",
+          packing: "25kg/bao",
+        },
+        {
+          group: "BVTV",
+          name: "Thuốc trừ sâu",
+          quantity: 30,
+          unit: "chai",
+          packing: "100ml",
+        },
+        {
+          group: "Máy móc",
+          name: "Máy xịt thuốc",
+          quantity: 2,
+          unit: "cái",
+          packing: "1 bộ",
+        },
+      ]);
+      notifications.show({
+        message: "Đã nhập dữ liệu từ file Excel",
+        color: "green",
+      });
+    }, 500);
+  };
+
+  // Thêm hàng thủ công
+  const handleAddManualItem = () => {
+    if (!manualItem.name || !manualItem.group) {
+      notifications.show({
+        message: "Vui lòng nhập tên và nhóm hàng",
+        color: "red",
+      });
+      return;
+    }
+    setItems([...items, { ...manualItem }]);
+    setManualItem({ group: "", name: "", quantity: 1, unit: "", packing: "" }); // Reset form
+  };
+
+  const handleRemoveItem = (index: number) => {
+    setItems(items.filter((_, i) => i !== index));
+  };
+
+  // Chuyển bước
+  const nextStep = () => {
+    if (active === 0) {
+      if (!selectedPartnerId) {
+        notifications.show({
+          message: "Vui lòng chọn doanh nghiệp",
+          color: "red",
+        });
+        return;
+      }
+      if (!selectedAreaId) {
+        notifications.show({ message: "Vui lòng chọn khu vực", color: "red" });
+        return;
+      }
+    }
+    if (active === 1) {
+      if (!form.values.warehouseName) {
+        form.setFieldError("warehouseName", "Vui lòng nhập tên kho");
+        return;
+      }
+      if (!selectedWarehouseType) {
+        notifications.show({ message: "Vui lòng chọn loại kho", color: "red" });
+        return;
+      }
+      if (items.length === 0) {
+        notifications.show({
+          message: "Vui lòng thêm ít nhất 1 mặt hàng",
+          color: "red",
+        });
+        return;
+      }
+    }
+    setActive((cur) => Math.min(cur + 1, 3));
+  };
+
+  const prevStep = () => setActive((cur) => Math.max(cur - 1, 0));
+
+  // Submit Final
+  const handleFinish = async () => {
+    const payload: Omit<DeliveryNote, "id" | "createdAt"> = {
+      code: form.values.code,
+      type: "Import",
+      partnerId: selectedPartnerId!,
+      partnerName: selectedPartner?.name || "N/A",
+      areaId: selectedAreaId!,
+      areaName: selectedArea?.name || "N/A",
+      subAreaId: selectedSubAreaId || undefined,
+      subAreaName: selectedSubArea?.note || undefined,
+      warehouseName: form.values.warehouseName,
+      warehouseType: selectedWarehouseType!,
+      items: items,
+    };
+
+    const success = await addDelivery(payload);
+    if (success) {
+      notifications.show({
+        title: "Thành công",
+        message: "Đã tạo phiếu nhập kho",
+        color: "green",
+        icon: <IconCheck />,
+      });
+      setActive(3); // Done step
+    }
   };
 
   return (
-    <Card withBorder shadow="sm" radius={4} p="lg">
+    <Card withBorder shadow="sm" radius={4} p="lg" pos="relative">
+      <LoadingOverlay visible={isLoading} />
       <Group mb={"md"}>
         <Button
           variant="subtle"
@@ -243,195 +400,166 @@ export default function StockManagementAddDeliveryPage() {
         >
           Quay lại
         </Button>
-        <Title order={3}>Tạo mới kho vận</Title>
+        <Title order={3}>Tạo mới kho vận (Nhập kho)</Title>
       </Group>
+
       <Stepper
         active={active}
         onStepClick={setActive}
         allowNextStepsSelect={false}
         size="md"
       >
+        {/* --- BƯỚC 1: VỊ TRÍ --- */}
         <Stepper.Step label="Bước 1" description="Xác định vị trí">
-          <form onSubmit={form.onSubmit(() => setActive(1))}>
-            <Stack gap="xs">
-              <TextInput
-                label="Doanh nghiệp / nông hộ"
-                placeholder="Tìm kiếm doanh nghiệp"
-                leftSection={<IconSearch size={18} />}
-              />
-              <SelectableEnterpriseCards isCheckbox={false} isMulti={false} />
-              <Text fw={500} fz={15}>
-                Khu vực
+          <Stack gap="xs">
+            <TextInput
+              label="Doanh nghiệp / nông hộ"
+              placeholder="Tìm kiếm doanh nghiệp"
+              leftSection={<IconSearch size={18} />}
+              radius={4}
+            />
+            <SelectableEnterpriseCards
+              isCheckbox={true}
+              isMulti={false}
+              value={selectedPartnerId ? [selectedPartnerId] : []}
+              onChange={(ids) => setSelectedPartnerId(ids[0] || null)}
+            />
+
+            <Text fw={500} fz={15} mt="sm">
+              Khu vực chính
+            </Text>
+            {areas.length === 0 ? (
+              <Text c="dimmed">
+                Chưa có khu vực nào. Vui lòng tạo khu vực trước.
               </Text>
+            ) : (
               <Grid>
-                {areaGroups.map((group) => (
-                  <Grid.Col span={{ base: 12, sm: 6 }} key={group.parentId}>
+                {areas.map((area) => (
+                  <Grid.Col span={{ base: 12, sm: 6 }} key={area.id}>
                     <Card
                       withBorder
                       shadow="xs"
                       radius="md"
-                      // onClick={() => handleAreaCardClick(group)}
                       style={{
                         cursor: "pointer",
-                        position: "relative",
-                        transition: "transform 0.2s ease",
-
                         borderColor:
-                          selectedArea === group.parentId ? "green" : undefined,
+                          selectedAreaId === area.id ? "green" : undefined,
+                        borderWidth: selectedAreaId === area.id ? 2 : 1,
                       }}
-                      onMouseEnter={(e) =>
-                        (e.currentTarget.style.transform = "scale(1.02)")
-                      }
-                      onMouseLeave={(e) =>
-                        (e.currentTarget.style.transform = "scale(1)")
-                      }
                       onClick={() => {
-                        setSelectedArea(group.parentId);
-                        setSelectedSubArea(null);
+                        setSelectedAreaId(area.id);
+                        setSelectedSubAreaId(null);
                       }}
                     >
                       <Group justify="apart">
-                        <Text fw={600}>{group.parentName}</Text>
-                        <Badge color="blue">{group.parentId}</Badge>
+                        <Text fw={600}>{area.name}</Text>
+                        <Badge color="blue">{area.id}</Badge>
                       </Group>
                       <Text size="sm" mt={4}>
-                        📍 {group.latitude}, {group.longitude}
+                        📍 {area.latitude}, {area.longitude}
                       </Text>
-                      <Text size="sm">📏 {group.areaSize} m²</Text>
-                      <Text size="sm">🔧 {group.subAreaCount} khu phụ</Text>
+                      <Text size="sm">📏 {area.area} m²</Text>
                       <Text size="sm" color="dimmed">
-                        {group.note}
+                        {area.note}
                       </Text>
                     </Card>
                   </Grid.Col>
                 ))}
               </Grid>
-              <Stack gap={"xs"}>
+            )}
+
+            {/* Hiển thị SubArea nếu Area đã chọn có SubArea */}
+            {selectedArea && selectedArea.subAreas?.length > 0 && (
+              <Stack gap={"xs"} mt="sm">
                 <Text fw={500} fz={15}>
-                  Khu vực phụ
+                  Khu vực phụ thuộc {selectedArea.name}
                 </Text>
                 <Stack>
                   <Group>
-                    {[
-                      {
-                        id: "KV001-1",
-                        name: "Khu phụ A1",
-                        latitude: 10.763,
-                        longitude: 106.661,
-                        areaSize: 500,
-                      },
-                      {
-                        id: "KV001-2",
-                        name: "Khu phụ A2",
-                        latitude: 10.764,
-                        longitude: 106.662,
-                        areaSize: 700,
-                      },
-                    ].map((group) => (
+                    {selectedArea.subAreas.map((sub) => (
                       <AreaCard
                         isCheckbox
-                        key={group.id}
-                        {...group}
-                        selected={selectedSubArea === group.id}
-                        onToggle={() => {
-                          setSelectedSubArea(group.id);
-                        }}
-                        closable={false}
+                        key={sub.id}
+                        id={sub.id}
+                        name={`Khu phụ ${sub.id}`}
+                        latitude={sub.latitude}
+                        longitude={sub.longitude}
+                        areaSize={sub.area}
+                        selected={selectedSubAreaId === sub.id}
+                        onToggle={() =>
+                          setSelectedSubAreaId(
+                            sub.id === selectedSubAreaId ? null : sub.id
+                          )
+                        }
                       />
                     ))}
                   </Group>
                 </Stack>
               </Stack>
-              <Group justify="right">
-                <Button type="submit" radius={4}>
-                  Tiếp theo
-                </Button>
-              </Group>
-            </Stack>
-          </form>
+            )}
+
+            <Group justify="right" mt="md">
+              <Button onClick={nextStep} radius={4}>
+                Tiếp theo
+              </Button>
+            </Group>
+          </Stack>
         </Stepper.Step>
 
+        {/* --- BƯỚC 2: HÀNG HÓA --- */}
         <Stepper.Step label="Bước 2" description="Thông tin vật tư">
           <Stack gap="xs">
-            <Group>
-              {["Khu A - Khu phụ A1 - Kho A"].map((area) => (
-                <Card
-                  key={area}
-                  withBorder
-                  shadow="md"
-                  radius="4"
-                  p="xs"
-                  style={{ transition: "transform 0.2s", cursor: "pointer" }}
-                  onMouseEnter={(e) =>
-                    (e.currentTarget.style.transform = "scale(1.03)")
-                  }
-                  onMouseLeave={(e) =>
-                    (e.currentTarget.style.transform = "scale(1)")
-                  }
-                >
-                  <Center>
-                    <Group gap="sm">
-                      <IconMapPin size={20} color="green" />
-                      <Text fw={600}>{area}</Text>
-                    </Group>
-                  </Center>
-                </Card>
-              ))}
-            </Group>
+            <Card withBorder shadow="xs" radius={4} p="xs" bg="gray.0">
+              <Center>
+                <Group gap="sm">
+                  <IconMapPin size={20} color="green" />
+                  <Text fw={600}>
+                    {selectedPartner?.name} &rarr; {selectedArea?.name}{" "}
+                    {selectedSubArea
+                      ? `&rarr; Khu phụ ${selectedSubArea.id}`
+                      : ""}
+                  </Text>
+                </Group>
+              </Center>
+            </Card>
+
             <Card withBorder radius="md" shadow="sm" p="md">
               <Stack>
-                <Select
-                  searchable
-                  clearable
-                  label="Kho"
-                  data={[
-                    "Khu A - Khu phụ A1 - Kho A",
-                    "Khu A - Khu phụ A2 - Kho B",
-                  ]}
-                  radius={4}
-                  placeholder="Nhập tên kho mới"
+                <TextInput
+                  label="Tên Kho / Lô hàng"
+                  placeholder="Ví dụ: Kho A - Nhập đợt 1"
                   withAsterisk
+                  radius={4}
                   {...form.getInputProps("warehouseName")}
                 />
-                <Input.Wrapper label="Loại kho">
+
+                <Input.Wrapper label="Loại kho" withAsterisk>
                   <ScrollArea type="always" offsetScrollbars>
-                    <Flex gap="md" py="md" px="xs" wrap="nowrap">
+                    <Flex gap="md" py="xs" wrap="nowrap">
                       {warehouseTypes.map((w, idx) => (
                         <Card
                           key={idx}
                           shadow="sm"
-                          padding="lg"
+                          padding="md"
                           radius="md"
                           withBorder
                           style={{
-                            width: 200,
-                            minWidth: 200,
+                            width: 180,
+                            minWidth: 180,
                             cursor: "pointer",
-                            transition: "all 0.2s",
                             borderColor:
-                              selectedWarehouse === w.title
+                              selectedWarehouseType === w.title
                                 ? "green"
                                 : undefined,
+                            borderWidth:
+                              selectedWarehouseType === w.title ? 2 : 1,
                           }}
-                          onClick={() => {
-                            setSelectedWarehouse(w.title);
-                          }}
-                          onMouseEnter={(e) =>
-                            (e.currentTarget.style.boxShadow =
-                              "0 0 10px rgba(0,0,0,0.1)")
-                          }
-                          onMouseLeave={(e) =>
-                            (e.currentTarget.style.boxShadow =
-                              "var(--mantine-shadow-sm)")
-                          }
+                          onClick={() => setSelectedWarehouseType(w.title)}
                         >
                           <Stack align="center" justify="center" gap={4}>
                             {w.icon}
-                            <Text size="sm" fw={600}>
+                            <Text size="sm" fw={600} ta="center">
                               {w.title}
-                            </Text>
-                            <Text size="xs" c="dimmed" ta="center">
-                              {w.desc}
                             </Text>
                           </Stack>
                         </Card>
@@ -439,6 +567,7 @@ export default function StockManagementAddDeliveryPage() {
                     </Flex>
                   </ScrollArea>
                 </Input.Wrapper>
+
                 <SegmentedControl
                   radius={4}
                   fullWidth
@@ -446,7 +575,7 @@ export default function StockManagementAddDeliveryPage() {
                   onChange={(val) => setInputMode(val as "upload" | "manual")}
                   data={[
                     { label: "Upload file Excel", value: "upload" },
-                    { label: "Tạo mới thủ công", value: "manual" },
+                    { label: "Nhập thủ công", value: "manual" },
                   ]}
                 />
 
@@ -468,117 +597,172 @@ export default function StockManagementAddDeliveryPage() {
                         )}
                       </FileButton>
                       <Text size="sm" color="dimmed">
-                        Chỉ chấp nhận định dạng .xlsx hoặc .xls
+                        Chấp nhận .xlsx, .xls
                       </Text>
                     </Group>
                   </Stack>
                 )}
 
                 {inputMode === "manual" && (
-                  <Stack>
-                    <Input.Wrapper label="Loại tài sản">
-                      <Group gap="sm" wrap="wrap">
-                        {assetTypes.map((type, index) => (
+                  <Stack
+                    gap="xs"
+                    p="sm"
+                    bg="gray.0"
+                    style={{ borderRadius: 8 }}
+                  >
+                    <Input.Wrapper label="Nhóm hàng hóa">
+                      <Group gap="xs">
+                        {assetTypes.map((item) => (
                           <Button
-                            key={type.value}
-                            leftSection={type.icon}
-                            radius={4}
-                            variant={index === 0 ? "filled" : "outline"}
+                            key={item.label}
+                            variant={
+                              manualItem.group === item.label
+                                ? "filled"
+                                : "outline"
+                            }
+                            color={
+                              manualItem.group === item.label ? "green" : "gray"
+                            }
+                            size="sm"
+                            radius="md"
+                            leftSection={item.icon}
+                            onClick={() =>
+                              setManualItem({
+                                ...manualItem,
+                                group: item.label,
+                              })
+                            }
                           >
-                            {type.label}
+                            {item.label}
                           </Button>
                         ))}
                       </Group>
                     </Input.Wrapper>
-                    <TextInput
+
+                    {/* Thay thế TextInput bằng Select có ảnh */}
+                    <Select
+                      label="Tên hàng"
+                      placeholder={
+                        manualItem.group
+                          ? "Chọn hàng hóa"
+                          : "Vui lòng chọn nhóm trước"
+                      }
+                      disabled={!manualItem.group}
                       radius={4}
-                      label="Nhóm vật tư"
-                      placeholder="VD: Phân bón, BVTV, Máy móc"
-                      required
+                      searchable
+                      data={filteredProducts}
+                      value={manualItem.name}
+                      onChange={(val) => {
+                        const selected = filteredProducts?.find(
+                          (p) => p.value === val
+                        );
+                        setManualItem((prev) => ({
+                          ...prev,
+                          name: val || "",
+                          unit: selected?.unit || prev.unit, // Tự động điền đơn vị nếu có
+                        }));
+                      }}
+                      renderOption={({ option }) => {
+                        const item = filteredProducts?.find(
+                          (p) => p.value === option.value
+                        );
+                        return (
+                          <Group gap="sm" wrap="nowrap">
+                            <Avatar src={item?.image} size="sm" radius="sm" />
+                            <div>
+                              <Text size="sm" fw={500}>
+                                {item?.label}
+                              </Text>
+                              <Text size="xs" c="dimmed">
+                                {item?.type}
+                              </Text>
+                            </div>
+                          </Group>
+                        );
+                      }}
                     />
 
-                    <TextInput
-                      radius={4}
-                      label="Số lượng"
-                      placeholder="VD: 100"
-                      type="number"
-                      required
-                    />
+                    <Group grow>
+                      <NumberInput
+                        label="Số lượng"
+                        min={1}
+                        radius={4}
+                        value={manualItem.quantity}
+                        onChange={(v) =>
+                          setManualItem({ ...manualItem, quantity: Number(v) })
+                        }
+                      />
 
-                    <MultiSelect
+                      {/* Select Đơn vị */}
+                      <Select
+                        label="Đơn vị"
+                        placeholder="Chọn đơn vị"
+                        data={unitData}
+                        searchable
+                        radius={4}
+                        value={manualItem.unit}
+                        onChange={(val) =>
+                          setManualItem({ ...manualItem, unit: val || "" })
+                        }
+                      />
+                    </Group>
+
+                    {/* Select Quy cách */}
+                    <Select
                       label="Quy cách"
+                      placeholder="Chọn quy cách"
+                      data={packingData}
+                      searchable
                       radius={4}
-                      placeholder="Quy cách"
-                      data={[
-                        {
-                          value: "PKG001",
-                          label: "Hộp giấy nhỏ (50 cái)",
-                        },
-                        {
-                          value: "PKG002",
-                          label: "Túi nilon lớn (100 cái)",
-                        },
-                        {
-                          value: "PKG003",
-                          label: "Bao tải 25kg (25 cái)",
-                        },
-                        {
-                          value: "PKG004",
-                          label: "Bịch nhựa 1kg (10 cái)",
-                        },
-                        {
-                          value: "PKG005",
-                          label: "Thùng carton lớn (20 cái)",
-                        },
-                        {
-                          value: "PKG006",
-                          label: "Hộp nhựa 500ml (30 cái)",
-                        },
-                      ]}
+                      value={manualItem.packing}
+                      onChange={(val) =>
+                        setManualItem({ ...manualItem, packing: val || "" })
+                      }
                     />
 
                     <Button
-                      radius={4}
                       variant="light"
-                      onClick={() => {
-                        // Tạm tạo dữ liệu mẫu; bạn nên dùng useForm để lấy giá trị từ input
-                        setImportedItems((prev) => [
-                          ...prev,
-                          {
-                            group: "Phân bón",
-                            name: "Phân NPK 16-16-8",
-                            quantity: 100,
-                            unit: "bao",
-                            packing: "25kg/bao",
-                          },
-                        ]);
-                      }}
+                      radius={4}
+                      onClick={handleAddManualItem}
+                      leftSection={<IconPlus size={16} />}
                     >
-                      Thêm vật tư
+                      Thêm vào danh sách
                     </Button>
                   </Stack>
                 )}
 
                 <Divider
-                  label="Danh sách vật tư"
+                  label={`Danh sách hàng hóa (${items.length})`}
                   labelPosition="center"
                   my="sm"
                 />
 
                 <Grid gutter="sm">
-                  {importedItems.map((item, index) => (
+                  {items.map((item, index) => (
                     <Grid.Col span={{ base: 12, sm: 6, md: 4 }} key={index}>
-                      <Card shadow="sm" radius="md" withBorder>
-                        <Stack gap="xs">
-                          <Group justify="space-between">
-                            <Text fw={600}>{item.name}</Text>
-                            <Badge color="green" variant="light">
-                              {item.group}
-                            </Badge>
-                          </Group>
-                          <Text size="sm">Số lượng: {item.quantity}</Text>
-                          <Text size="sm">Quy cách: {item.packing}</Text>
-                        </Stack>
+                      <Card shadow="sm" radius="md" withBorder p="sm">
+                        <Group justify="space-between" mb={4}>
+                          <Badge color="green" variant="light">
+                            {item.group}
+                          </Badge>
+                          <ActionIcon
+                            color="red"
+                            variant="subtle"
+                            size="sm"
+                            onClick={() => handleRemoveItem(index)}
+                          >
+                            <IconTrash size={14} />
+                          </ActionIcon>
+                        </Group>
+                        <Text fw={600} lineClamp={1} title={item.name}>
+                          {item.name}
+                        </Text>
+                        <Text size="sm">
+                          SL: {item.quantity} {item.unit}
+                        </Text>
+                        <Text size="xs" c="dimmed">
+                          {item.packing}
+                        </Text>
                       </Card>
                     </Grid.Col>
                   ))}
@@ -587,154 +771,127 @@ export default function StockManagementAddDeliveryPage() {
             </Card>
 
             <Group justify="space-between">
-              <Button radius={4} variant="default" onClick={() => setActive(0)}>
+              <Button radius={4} variant="default" onClick={prevStep}>
                 Quay lại
               </Button>
-              <Button radius={4} onClick={() => setActive(2)}>
+              <Button radius={4} onClick={nextStep}>
                 Tiếp theo
               </Button>
             </Group>
           </Stack>
         </Stepper.Step>
 
+        {/* --- BƯỚC 3: XÁC NHẬN --- */}
         <Stepper.Step label="Bước 3" description="Xác nhận">
           <Stack gap="lg">
-            <Title order={3}>🗂️ Xác nhận thông tin kho</Title>
+            <Title order={3}>🗂️ Xác nhận nhập kho</Title>
 
-            {/* THÔNG TIN KHO + DOANH NGHIỆP */}
             <SimpleGrid cols={{ base: 1, sm: 2 }} spacing="md">
               {/* Thông tin kho */}
               <Card withBorder radius="md" shadow="sm" p="md">
                 <Title order={5} mb="xs">
-                  🏬 Kho lưu trữ
+                  📍 Vị trí lưu trữ
                 </Title>
                 <Stack gap="xs">
                   <Group justify="space-between">
-                    <Text size="sm" c="dimmed">
+                    <Text c="dimmed" size="sm">
                       Tên kho:
                     </Text>
-                    <Text fw={500}>Kho miền nam</Text>
+                    <Text fw={500}>{form.values.warehouseName}</Text>
                   </Group>
                   <Group justify="space-between">
-                    <Text size="sm" c="dimmed">
-                      Khu vực đã chọn:
+                    <Text c="dimmed" size="sm">
+                      Loại kho:
                     </Text>
-                    <Text fw={500}>Khu vực A</Text>
+                    <Badge>{selectedWarehouseType}</Badge>
                   </Group>
+                  <Divider variant="dashed" />
                   <Group justify="space-between">
-                    <Text size="sm" c="dimmed">
-                      Mã khu phụ:
+                    <Text c="dimmed" size="sm">
+                      Khu vực:
                     </Text>
-                    <Text fw={500}>Khu phụ A1</Text>
+                    <Text fw={500}>{selectedArea?.name}</Text>
                   </Group>
+                  {selectedSubArea && (
+                    <Group justify="space-between">
+                      <Text c="dimmed" size="sm">
+                        Khu phụ:
+                      </Text>
+                      <Text fw={500}>ID {selectedSubArea.id}</Text>
+                    </Group>
+                  )}
                 </Stack>
               </Card>
 
               {/* Doanh nghiệp */}
               <Card withBorder radius="md" shadow="sm" p="md">
                 <Title order={5} mb="xs">
-                  🏢 {company.name}
+                  🏢 Đối tác cung cấp
                 </Title>
-                <Stack gap={4}>
-                  <Text size="sm">
-                    <strong>Loại hình:</strong> {company.type}
+                <Stack gap="xs">
+                  <Text fw={600} size="lg">
+                    {selectedPartner?.name}
                   </Text>
                   <Text size="sm">
-                    <strong>Chủ sở hữu:</strong> {company.owner}
+                    <strong>Đại diện:</strong> {selectedPartner?.representative}
                   </Text>
                   <Text size="sm">
-                    <strong>CCCD/CMND:</strong> {company.cccd}
+                    <strong>SĐT:</strong> {selectedPartner?.phone}
                   </Text>
                   <Text size="sm">
-                    <strong>Số điện thoại:</strong> {company.phone}
+                    <strong>Địa chỉ:</strong> {selectedPartner?.address}
                   </Text>
-                  <Text size="sm">
-                    <strong>Email:</strong> {company.email}
-                  </Text>
-                  <Text size="sm">
-                    <strong>Địa chỉ:</strong> {company.address}
-                  </Text>
-                  {company.taxCode && (
-                    <Text size="sm">
-                      <strong>Mã số thuế:</strong> {company.taxCode}
-                    </Text>
-                  )}
                 </Stack>
               </Card>
             </SimpleGrid>
 
-            {/* DANH SÁCH VẬT TƯ */}
-            <Divider label="Danh sách vật tư" labelPosition="center" my="md" />
+            <Divider
+              label={`Danh sách hàng hóa (${items.length})`}
+              labelPosition="center"
+            />
 
-            {importedItems.length === 0 ? (
+            {/* --- TABLE HÀNG HÓA --- */}
+            {items.length === 0 ? (
               <Text color="dimmed" ta="center">
-                Không có vật tư nào được thêm.
+                Chưa có hàng hóa.
               </Text>
             ) : (
-              <SimpleGrid cols={{ base: 1, sm: 2, md: 3 }} spacing="md">
-                {importedItems.map((item, index) => (
-                  <Card key={index} withBorder shadow="sm" radius="md" p="md">
-                    <Stack gap="xs">
-                      <Group justify="space-between">
-                        <Text fw={600}>{item.name}</Text>
-                        <Badge color="green" variant="light">
-                          {item.group}
-                        </Badge>
-                      </Group>
-                      <Group justify="space-between">
-                        <Text size="sm" c="dimmed">
-                          Số lượng:
-                        </Text>
-                        <Text size="sm" fw={500}>
-                          {item.quantity}
-                        </Text>
-                      </Group>
-
-                      <Group justify="space-between">
-                        <Text size="sm" c="dimmed">
-                          Quy cách:
-                        </Text>
-                        <Text size="sm" fw={500}>
-                          {item.packing}
-                        </Text>
-                      </Group>
-                    </Stack>
-                  </Card>
-                ))}
-              </SimpleGrid>
+              <Table
+                //@ts-expect-error no check
+                data={items}
+                //@ts-expect-error no check
+                columns={itemColumns}
+              />
             )}
 
-            {/* Nút xác nhận */}
             <Group justify="space-between" mt="lg">
-              <Button variant="default" radius={4} onClick={() => setActive(1)}>
+              <Button variant="default" radius={4} onClick={prevStep}>
                 Quay lại
               </Button>
-              <Button radius={4} onClick={() => setActive(4)}>
+              <Button
+                radius={4}
+                color="green"
+                onClick={handleFinish}
+                loading={isLoading}
+              >
                 Hoàn thành
               </Button>
             </Group>
           </Stack>
         </Stepper.Step>
 
+        {/* --- HOÀN TẤT --- */}
         <Stepper.Completed>
           <Stack align="center" justify="center" mt="xl">
-            <Image
-              src={
-                "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQjPNbBpZeXnXfTuA6AWek-Kj8NYEVbYdG6ayi5bIWarDuryXDrILdKMTd597quLD0PBKM&usqp=CAU"
-              }
-              w={200}
-              fit="cover"
-            />
+            <IconCheck size={60} color="green" />
             <Text fz={"h2"} ta="center">
-              Thêm mới kho vận thành công!
+              Nhập kho thành công!
             </Text>
             <Text fz={"md"} ta="center" c="dimmed">
-              Kho vận mới đã được thêm thành công. Bạn có thể xem lại thông tin
-              chi tiết trong danh sách kho vận.
+              Phiếu nhập <b>{form.values.code}</b> đã được tạo.
             </Text>
-
             <Button size="md" mt="md" radius={4} onClick={() => navigate(-1)}>
-              Xác nhận
+              Quay về danh sách
             </Button>
           </Stack>
         </Stepper.Completed>

@@ -6,156 +6,136 @@ import {
   Badge,
   Title,
   Checkbox,
+  LoadingOverlay,
 } from "@mantine/core";
 import Scrollable from "../../../../../components/Scrollable";
-import { useState } from "react";
-
-const departments = [
-  {
-    code: "PB-KT",
-    name: "Phòng Kỹ thuật",
-    description: "Phụ trách kỹ thuật canh tác và máy móc",
-    createdAt: "2024-06-01",
-    updatedAt: "2025-01-15",
-  },
-  {
-    code: "PB-NC",
-    name: "Phòng Nghiên cứu",
-    description: "Nghiên cứu giống cây trồng và phân tích đất",
-    createdAt: "2024-06-10",
-    updatedAt: "2025-03-10",
-  },
-  {
-    code: "PB-TCHC",
-    name: "Phòng Tổ chức Hành chính",
-    description: "Quản lý nhân sự, hành chính",
-    createdAt: "2024-07-01",
-    updatedAt: "2025-04-22",
-  },
-  {
-    code: "PB-KD",
-    name: "Phòng Kinh doanh",
-    description: "Lập kế hoạch tiêu thụ sản phẩm, tìm kiếm thị trường",
-    createdAt: "2024-05-15",
-    updatedAt: "2025-02-10",
-  },
-  {
-    code: "PB-TC",
-    name: "Phòng Tài chính",
-    description: "Quản lý thu chi, kế toán, báo cáo tài chính",
-    createdAt: "2024-04-20",
-    updatedAt: "2025-01-30",
-  },
-  {
-    code: "PB-CL",
-    name: "Phòng Quản lý Chất lượng",
-    description: "Đảm bảo chất lượng nông sản, kiểm định quy trình",
-    createdAt: "2024-06-25",
-    updatedAt: "2025-03-18",
-  },
-  {
-    code: "PB-KH",
-    name: "Phòng Kế hoạch",
-    description: "Lập kế hoạch mùa vụ, phân bổ tài nguyên và nhân lực",
-    createdAt: "2024-05-01",
-    updatedAt: "2025-02-25",
-  },
-  {
-    code: "PB-VT",
-    name: "Phòng Vật tư",
-    description: "Quản lý kho vật tư nông nghiệp, cấp phát thiết bị",
-    createdAt: "2024-06-05",
-    updatedAt: "2025-04-01",
-  },
-  {
-    code: "PB-CNTT",
-    name: "Phòng Công nghệ Thông tin",
-    description: "Xây dựng, bảo trì hệ thống phần mềm, hạ tầng công nghệ",
-    createdAt: "2024-08-01",
-    updatedAt: "2025-05-10",
-  },
-  {
-    code: "PB-HTKH",
-    name: "Phòng Hợp tác & Khoa học",
-    description: "Hợp tác với các viện nghiên cứu và chuyển giao công nghệ",
-    createdAt: "2024-07-20",
-    updatedAt: "2025-03-30",
-  },
-];
+import { useState, useEffect } from "react";
+import { useDepartmentStore } from "../../../../zustand/departmentStore";
 
 type DepartmentProps = {
   isCheckbox?: boolean;
+  isMulti?: boolean;
+  value?: string[]; // Danh sách ID đã chọn
+  onChange?: (ids: string[]) => void;
 };
-export function DepartmentCardList({ isCheckbox = true }: DepartmentProps) {
-  const [selectedIds, setSelectedIds] = useState<string[]>([]);
 
-  const toggleSelection = (code: string) => {
-    setSelectedIds((prev) =>
-      prev.includes(code) ? prev.filter((s) => s !== code) : [...prev, code]
-    );
+export function DepartmentCardList({
+  isCheckbox = true,
+  isMulti = true,
+  value = [],
+  onChange,
+}: DepartmentProps) {
+  // 1. KẾT NỐI STORE
+  const { departments, isLoading } = useDepartmentStore();
+
+  // 2. STATE LOCAL
+  const [selectedIds, setSelectedIds] = useState<string[]>(value);
+
+  // 3. XỬ LÝ CHỌN
+  const toggleSelection = (id: string) => {
+    let newSelected: string[] = [];
+
+    if (!isMulti) {
+      // Chọn đơn: Click lại thì bỏ chọn, click mới thì thay thế
+      newSelected = selectedIds.includes(id) ? [] : [id];
+    } else {
+      // Chọn nhiều: Toggle
+      newSelected = selectedIds.includes(id)
+        ? selectedIds.filter((s) => s !== id)
+        : [...selectedIds, id];
+    }
+
+    setSelectedIds(newSelected);
+    onChange?.(newSelected);
   };
+
   return (
-    <Scrollable h={150}>
-      <Group wrap="nowrap" gap={"md"} p={"xs"}>
-        {departments.map((dept) => (
-          <Card
-            h={130}
-            miw={300}
-            key={dept.code}
-            withBorder
-            radius={4}
-            shadow="xs"
-            p="md"
-            style={{
-              position: "relative",
-              transition: "transform 0.2s ease",
-              borderColor: selectedIds.includes(dept.code)
-                ? "green"
-                : undefined,
-            }}
-            onClick={() => toggleSelection(dept.code)}
-            onMouseEnter={(e) =>
-              (e.currentTarget.style.transform = "scale(1.02)")
-            }
-            onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
-          >
-            <Stack gap="xs">
-              <Group justify="space-between">
-                <Title order={5}>{dept.name}</Title>
-                <Group gap={"xs"}>
-                  <Badge variant="light" color="gray">
-                    {dept.code}
-                  </Badge>
-                  {isCheckbox && (
-                    <Checkbox
-                      radius={4}
-                      onChange={() => {}}
-                      checked={selectedIds.includes(dept.code)}
-                    />
-                  )}
+    <div style={{ position: "relative" }}>
+      <LoadingOverlay
+        visible={isLoading}
+        zIndex={10}
+        overlayProps={{ radius: "sm", blur: 1 }}
+      />
+
+      <Scrollable h={160}>
+        <Group wrap="nowrap" gap={"md"} p={"xs"}>
+          {departments.length === 0 && !isLoading && (
+            <Text c="dimmed" size="sm">
+              Chưa có phòng ban nào.
+            </Text>
+          )}
+
+          {departments.map((dept) => (
+            <Card
+              h={140}
+              miw={300}
+              key={dept.id}
+              withBorder
+              radius={4}
+              shadow="xs"
+              p="md"
+              style={{
+                position: "relative",
+                transition: "all 0.2s ease",
+                cursor: "pointer",
+                borderColor: selectedIds.includes(dept.id)
+                  ? "green"
+                  : undefined,
+                borderWidth: selectedIds.includes(dept.id) ? 2 : 1,
+                backgroundColor: selectedIds.includes(dept.id)
+                  ? "#f0fdf4"
+                  : undefined,
+              }}
+              onClick={() => toggleSelection(dept.id)}
+              onMouseEnter={(e) =>
+                (e.currentTarget.style.transform = "scale(1.02)")
+              }
+              onMouseLeave={(e) =>
+                (e.currentTarget.style.transform = "scale(1)")
+              }
+            >
+              <Stack gap="xs">
+                <Group justify="space-between">
+                  <Title order={5} lineClamp={1} title={dept.name}>
+                    {dept.name}
+                  </Title>
+                  <Group gap={"xs"}>
+                    <Badge variant="light" color="gray">
+                      {dept.code}
+                    </Badge>
+                    {isCheckbox && (
+                      <Checkbox
+                        radius={4}
+                        checked={selectedIds.includes(dept.id)}
+                        readOnly
+                        color="green"
+                        tabIndex={-1}
+                        style={{ pointerEvents: "none" }}
+                      />
+                    )}
+                  </Group>
                 </Group>
-              </Group>
-              <Text size="sm" c="dimmed">
-                {dept.description}
-              </Text>
-              <Group justify="space-between" mt="xs">
-                <Text size="xs" c="dimmed">
-                  Ngày tạo:{" "}
-                  <Text span fw={500}>
-                    {dept.createdAt}
-                  </Text>
+                <Text
+                  size="sm"
+                  c="dimmed"
+                  lineClamp={2}
+                  title={dept.description}
+                >
+                  {dept.description || "Không có mô tả"}
                 </Text>
-                <Text size="xs" c="dimmed">
-                  Cập nhật:{" "}
-                  <Text span fw={500}>
-                    {dept.updatedAt}
+                <Group justify="space-between" mt="xs">
+                  <Text size="xs" c="dimmed">
+                    Ngày tạo:{" "}
+                    <Text span fw={500}>
+                      {dept.createdAt}
+                    </Text>
                   </Text>
-                </Text>
-              </Group>
-            </Stack>
-          </Card>
-        ))}
-      </Group>
-    </Scrollable>
+                </Group>
+              </Stack>
+            </Card>
+          ))}
+        </Group>
+      </Scrollable>
+    </div>
   );
 }

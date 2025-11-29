@@ -18,12 +18,6 @@ import { useNavigate } from "react-router-dom";
 import { DepartmentCardList } from "./components/DepartmentCardList";
 import { EmployeeCardList } from "./components/EmployeeCardList";
 
-// const mockRoles = [
-//   { value: "leader", label: "Trưởng nhóm" },
-//   { value: "member", label: "Thành viên" },
-//   { value: "viewer", label: "Người xem" },
-// ];
-
 const HRManagementTeamAddPage = () => {
   const navigate = useNavigate();
   const [active, setActive] = useState(0);
