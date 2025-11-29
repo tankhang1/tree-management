@@ -6,93 +6,107 @@ import {
   Title,
   Divider,
   Accordion,
+  Badge,
+  Box,
 } from "@mantine/core";
-import { IconClockHour4 } from "@tabler/icons-react";
+import { IconClockHour4, IconFileText, IconLeaf } from "@tabler/icons-react";
 
-const ConfirmStep = () => {
-  const data = {
-    treeGroup: "Cây ngắn ngày",
-    treeCategory: "Đậu nành",
-    duration: 100, // trung bình 90–110 ngày
-    stages: [
-      {
-        name: "Nảy mầm",
-        duration: 7,
-        documentType: "editor",
-        document:
-          "Gieo hạt khi nhiệt độ đất 25–30°C, giữ ẩm 70–80%. Sau 3–5 ngày hạt nảy mầm, đảm bảo đất tơi xốp và không đọng nước.",
-      },
-      {
-        name: "Sinh trưởng sinh dưỡng",
-        duration: 30,
-        documentType: "editor",
-        document:
-          "Cây phát triển thân lá mạnh, cần ánh sáng đầy đủ. Làm cỏ và bón thúc NPK đợt 1 sau 10–12 ngày, duy trì ẩm độ 70%.",
-      },
-      {
-        name: "Ra hoa",
-        duration: 10,
-        documentType: "editor",
-        document:
-          "Giữ ẩm ổn định, tránh ngập úng. Bón bổ sung Lân và Kali để tăng tỉ lệ đậu hoa. Phun phòng sâu cuốn lá, rỉ sắt.",
-      },
-      {
-        name: "Tạo hạt",
-        duration: 30,
-        documentType: "editor",
-        document:
-          "Tiếp tục tưới đều, tránh thiếu nước. Giai đoạn này cần nhiều Kali và vi lượng. Theo dõi sâu đục quả.",
-      },
-      {
-        name: "Chín và thu hoạch",
-        duration: 23,
-        documentType: "file",
-        document: "Hướng_dẫn_thu_hoạch_đậu_nành.pdf",
-      },
-    ],
+// Định nghĩa props nhận dữ liệu từ form cha
+interface ConfirmStepProps {
+  data: {
+    varietyId: string;
+    varietyLabel?: string; // Tên hiển thị của giống
+    duration: number;
+    stages: {
+      name: string;
+      duration: number;
+      conditionNote?: string;
+      documentType: string;
+      documentContent: string;
+    }[];
   };
+}
 
+const ConfirmStep = ({ data }: ConfirmStepProps) => {
   return (
     <Stack mb={"md"}>
-      <Title order={3}>Xác nhận chu kỳ sinh trưởng</Title>
+      <Title order={4} c="blue">
+        Xác nhận chu kỳ sinh trưởng
+      </Title>
 
-      <Card withBorder>
-        <Stack>
-          <Group>
-            <Text fw={500}>Nhóm cây trồng:</Text>
-            <Text>{data.treeGroup}</Text>
+      <Card withBorder radius="md" p="md">
+        <Stack gap="xs">
+          <Group justify="space-between">
+            <Text c="dimmed" size="sm">
+              Giống cây trồng:
+            </Text>
+            <Group gap="xs">
+              <IconLeaf size={16} color="green" />
+              <Text fw={500}>{data.varietyLabel || data.varietyId}</Text>
+            </Group>
           </Group>
-          <Group>
-            <Text fw={500}>Loại cây trồng:</Text>
-            <Text>{data.treeCategory}</Text>
+          <Divider variant="dashed" />
+          <Group justify="space-between">
+            <Text c="dimmed" size="sm">
+              Tổng thời gian:
+            </Text>
+            <Badge size="lg" color="blue">
+              {data.duration} ngày
+            </Badge>
           </Group>
-          <Group>
-            <Text fw={500}>Thời gian diễn ra chu kỳ:</Text>
-            <Text>{data.duration} ngày</Text>
+          <Group justify="space-between">
+            <Text c="dimmed" size="sm">
+              Số giai đoạn:
+            </Text>
+            <Text fw={500}>{data.stages.length} giai đoạn</Text>
           </Group>
         </Stack>
       </Card>
 
-      <Divider label="Danh sách giai đoạn" labelPosition="center" my="md" />
+      <Divider label="Chi tiết các giai đoạn" labelPosition="center" my="sm" />
 
-      <Accordion multiple variant="separated">
+      <Accordion multiple variant="contained" radius="md">
         {data.stages.map((stage, idx) => (
           <Accordion.Item value={`stage-${idx}`} key={idx}>
-            <Accordion.Control>
-              <Group>
-                <IconClockHour4 size={16} />
-                <Text fw={600}>
-                  {stage.name} ({stage.duration} ngày)
-                </Text>
+            <Accordion.Control
+              icon={<IconClockHour4 size={20} color="orange" />}
+            >
+              <Group justify="space-between" mr="md">
+                <Text fw={600}>{stage.name}</Text>
+                <Badge variant="light" color="gray">
+                  {stage.duration} ngày
+                </Badge>
               </Group>
             </Accordion.Control>
             <Accordion.Panel>
-              <Stack>
-                <Text fw={500}>Tài liệu kỹ thuật:</Text>
+              <Stack gap="xs">
+                <Text size="sm" fw={500}>
+                  Tài liệu kỹ thuật (
+                  {stage.documentType === "file" ? "PDF" : "Soạn thảo"}):
+                </Text>
                 {stage.documentType === "file" ? (
-                  <Text size="sm">📎 {stage.document}</Text>
+                  <Group gap="xs">
+                    <IconFileText size={16} />
+                    <Text
+                      size="sm"
+                      c="blue"
+                      td="underline"
+                      style={{ cursor: "pointer" }}
+                    >
+                      {stage.documentContent
+                        ? "Đã đính kèm file"
+                        : "Chưa có file"}
+                    </Text>
+                  </Group>
                 ) : (
-                  <Text size="sm">📝 {stage.document}</Text>
+                  <Box
+                    p="xs"
+                    bg="gray.0"
+                    style={{ borderRadius: 4 }}
+                    dangerouslySetInnerHTML={{
+                      __html: stage.documentContent || "Chưa có nội dung",
+                    }}
+                  />
                 )}
               </Stack>
             </Accordion.Panel>
