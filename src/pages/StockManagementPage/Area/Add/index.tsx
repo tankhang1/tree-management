@@ -12,113 +12,119 @@ import {
   Divider,
   Image,
   Text,
+  LoadingOverlay,
+  ActionIcon,
+  Box,
+  Badge,
+  Grid,
+  ThemeIcon,
+  ScrollArea,
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
-import { useEffect, useState } from "react";
-import { IconMapPin, IconRuler, IconArrowLeft } from "@tabler/icons-react";
+import { useState } from "react";
+import {
+  IconMapPin,
+  IconRuler,
+  IconArrowLeft,
+  IconCheck,
+  IconTrash,
+  IconInfoCircle,
+  IconMap,
+  IconListDetails,
+} from "@tabler/icons-react";
 import { useNavigate } from "react-router-dom";
-import { MapContainer, Polygon, TileLayer } from "react-leaflet";
+import { notifications } from "@mantine/notifications";
+import { useStockAreaStore, type Area } from "../../../zustand/stockAreaStore";
 
-interface SubArea {
-  id: string;
-  latitude: number;
-  longitude: number;
-  area: number;
-  note?: string;
-}
-
-interface Area {
-  name: string;
-  latitude: number;
-  longitude: number;
-  area: number;
-  note?: string;
-  subAreas: SubArea[];
-}
+// IMPORT STORE
 
 export default function StockManagementAddAreaPage() {
   const navigate = useNavigate();
+
+  // 1. KẾT NỐI STORE
+  const { addArea, isLoading } = useStockAreaStore();
+
   const [active, setActive] = useState(0);
   const [hasSubArea, setHasSubArea] = useState(false);
-  const [subAreas, setSubAreas] = useState<SubArea[]>([]);
 
-  const form = useForm<Area>({
+  // 2. FORM SETUP
+  const form = useForm<Omit<Area, "id">>({
     initialValues: {
       name: "",
-      latitude: 0,
-      longitude: 0,
+      latitude: 10.762622, // Default HCM coordinate
+      longitude: 106.660172,
       area: 0,
       note: "",
       subAreas: [],
     },
+    validate: {
+      name: (value) =>
+        value.length < 2 ? "Tên khu vực phải có ít nhất 2 ký tự" : null,
+      area: (value) => (value <= 0 ? "Diện tích phải lớn hơn 0" : null),
+    },
   });
 
-  useEffect(() => {
-    const mockMainArea = {
-      name: "Khu A1",
-      latitude: 10.762622,
-      longitude: 106.660172,
-      area: 1500,
-      note: "Khu chính gần hồ trung tâm",
-    };
-
-    const mockSubAreas: SubArea[] = [
-      {
-        id: "PHU-1",
-        latitude: 10.7628,
-        longitude: 106.6603,
-        area: 500,
-        note: "Khu phụ phía Bắc",
-      },
-      {
-        id: "PHU-2",
-        latitude: 10.7625,
-        longitude: 106.66,
-        area: 600,
-        note: "Khu phụ phía Nam",
-      },
-    ];
-
-    form.setValues({
-      ...mockMainArea,
-      subAreas: mockSubAreas,
-    });
-    setSubAreas(mockSubAreas);
-    setHasSubArea(true);
-    // setActive(2); // Bỏ comment nếu muốn tự vào bước xác nhận
-  }, []);
+  // --- HANDLERS ---
 
   const nextStep = () => {
-    if (active === 1) {
-      form.setFieldValue("subAreas", hasSubArea ? subAreas : []);
+    // Validate Bước 1
+    if (active === 0) {
+      const validation = form.validate();
+      if (validation.hasErrors) return;
     }
+
+    // Nếu không chọn phân chia khu phụ, xóa dữ liệu subAreas
+    if (active === 1 && !hasSubArea) {
+      form.setFieldValue("subAreas", []);
+    }
+
     setActive((prev) => (prev < 3 ? prev + 1 : prev));
   };
 
   const prevStep = () => setActive((prev) => (prev > 0 ? prev - 1 : prev));
 
   const addSubArea = () => {
-    setSubAreas((prev) => [
-      ...prev,
-      {
-        id: `PHU-${prev.length + 1}`,
-        latitude: 0,
-        longitude: 0,
-        area: 0,
-        note: "",
-      },
-    ]);
+    form.insertListItem("subAreas", {
+      id: `PHU-${Date.now()}`, // Temp ID
+      latitude: form.values.latitude, // Kế thừa tọa độ cha để dễ sửa
+      longitude: form.values.longitude,
+      area: 0,
+      note: "",
+    });
   };
 
-  const updateSubArea = (index: number, key: keyof SubArea, value: any) => {
-    const updated = [...subAreas];
-    //@ts-expect-error no check
-    updated[index][key] = value;
-    setSubAreas(updated);
+  // Submit Handler
+  const handleFinish = async () => {
+    const newArea: Area = {
+      id: `KV-${Math.floor(Math.random() * 10000)}`, // Auto ID
+      ...form.values,
+      // Đảm bảo subAreas không null
+      subAreas: hasSubArea ? form.values.subAreas : [],
+    };
+
+    const success = await addArea(newArea);
+
+    if (success) {
+      notifications.show({
+        title: "Thành công",
+        message: "Đã tạo khu vực mới",
+        color: "green",
+        icon: <IconCheck />,
+      });
+      setActive(3); // Chuyển sang bước hoàn tất
+    } else {
+      notifications.show({
+        title: "Lỗi",
+        message: "Có lỗi xảy ra",
+        color: "red",
+      });
+    }
   };
 
   return (
-    <Card withBorder shadow="sm" radius={4} p="lg">
+    <Card withBorder shadow="sm" radius={4} p="lg" pos="relative">
+      <LoadingOverlay visible={isLoading} />
+
       <Group mb={"md"}>
         <Button
           variant="subtle"
@@ -130,7 +136,13 @@ export default function StockManagementAddAreaPage() {
         </Button>
         <Title order={3}>Tạo mới khu vực quản lý</Title>
       </Group>
-      <Stepper active={active} onStepClick={setActive} mb="xl">
+
+      <Stepper
+        active={active}
+        onStepClick={setActive}
+        mb="xl"
+        allowNextStepsSelect={false}
+      >
         <Stepper.Step label="Bước 1" description="Thông tin chính" />
         <Stepper.Step label="Bước 2" description="Phân chia khu vực phụ" />
         <Stepper.Step label="Bước 3" description="Xác nhận" />
@@ -152,12 +164,13 @@ export default function StockManagementAddAreaPage() {
             </Text>
 
             <Button size="md" mt="md" radius={4} onClick={() => navigate(-1)}>
-              Xác nhận
+              Quay về danh sách
             </Button>
           </Stack>
         </Stepper.Completed>
       </Stepper>
 
+      {/* BƯỚC 1: THÔNG TIN CHÍNH */}
       {active === 0 && (
         <Stack gap={"xs"}>
           <Title order={4} mb="md">
@@ -167,54 +180,70 @@ export default function StockManagementAddAreaPage() {
             leftSection={<IconMapPin size={18} />}
             radius={4}
             label="Tên khu vực"
-            required
+            placeholder="Ví dụ: Khu A"
+            withAsterisk
             {...form.getInputProps("name")}
           />
           <Group align="flex-end">
-            <TextInput
-              label="Latitude"
+            <NumberInput
+              label="Vĩ độ (Latitude)"
               placeholder="10.762622"
+              decimalScale={6}
               radius={4}
               flex={1}
+              {...form.getInputProps("latitude")}
             />
-            <TextInput
-              label="Longitude"
+            <NumberInput
+              label="Kinh độ (Longitude)"
               placeholder="106.660172"
+              decimalScale={6}
               radius={4}
               flex={1}
+              {...form.getInputProps("longitude")}
             />
           </Group>
 
-          <Stack mt={"md"}>
-            <MapContainer
-              center={[10.762622, 106.660172]}
-              zoom={16}
-              style={{
-                height: "300px",
-                width: "100%",
-                borderRadius: 8,
-              }}
-            >
-              <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
-              <Polygon positions={[]} color="green" />
-            </MapContainer>
-          </Stack>
+          {/* Map Preview Iframe */}
+          <Box
+            mt="xs"
+            style={{
+              borderRadius: 8,
+              overflow: "hidden",
+              border: "1px solid #eee",
+            }}
+          >
+            <iframe
+              title="map-main"
+              width="100%"
+              height="300"
+              style={{ border: 0 }}
+              loading="lazy"
+              allowFullScreen
+              src={`https://maps.google.com/maps?q=${form.values.latitude},${form.values.longitude}&z=16&output=embed`}
+            />
+          </Box>
+          <Text size="xs" c="dimmed">
+            * Bản đồ cập nhật tự động khi thay đổi tọa độ.
+          </Text>
+
           <NumberInput
             radius={4}
             leftSection={<IconRuler size={18} />}
             label="Diện tích (m²)"
-            required
+            min={0}
+            withAsterisk
             {...form.getInputProps("area")}
           />
           <Textarea
             radius={4}
             label="Ghi chú"
-            h={200}
+            minRows={3}
             {...form.getInputProps("note")}
           />
         </Stack>
       )}
 
+      {/* BƯỚC 2: KHU VỰC PHỤ */}
       {active === 1 && (
         <Stack gap={"xs"}>
           <Title order={4} mb="md">
@@ -222,66 +251,86 @@ export default function StockManagementAddAreaPage() {
           </Title>
           <Checkbox
             radius={4}
-            label="Tôi muốn phân chia khu vực"
+            label="Tôi muốn phân chia khu vực này thành các khu phụ"
             checked={hasSubArea}
             onChange={(e) => setHasSubArea(e.currentTarget.checked)}
           />
+
           {hasSubArea && (
-            <Stack gap={"xs"}>
-              {subAreas.map((sub, index) => (
-                <Card key={sub.id} shadow="xs" radius="xs" withBorder>
-                  <TextInput
-                    radius={4}
-                    label={`Tên khu vực phụ ${index + 1}`}
-                  ></TextInput>
-                  <Group mt="xs" align="flex-end">
-                    <TextInput
-                      label="Latitude"
-                      placeholder="10.762622"
+            <Stack gap={"md"} mt="md">
+              {form.values.subAreas.map((sub, index) => (
+                <Card key={index} shadow="xs" radius="md" withBorder p="md">
+                  <Group justify="space-between" mb="xs">
+                    <Text fw={500}>Khu phụ #{index + 1}</Text>
+                    <ActionIcon
+                      color="red"
+                      variant="subtle"
+                      onClick={() => form.removeListItem("subAreas", index)}
+                    >
+                      <IconTrash size={16} />
+                    </ActionIcon>
+                  </Group>
+
+                  <Group mt="xs" grow>
+                    <NumberInput
+                      label="Vĩ độ"
+                      decimalScale={6}
                       radius={4}
-                      flex={1}
+                      {...form.getInputProps(`subAreas.${index}.latitude`)}
                     />
-                    <TextInput
-                      label="Longitude"
-                      placeholder="106.660172"
+                    <NumberInput
+                      label="Kinh độ"
+                      decimalScale={6}
                       radius={4}
-                      flex={1}
+                      {...form.getInputProps(`subAreas.${index}.longitude`)}
                     />
                   </Group>
 
-                  <Stack mt={"md"}>
-                    <MapContainer
-                      center={[10.762622, 106.660172]}
-                      zoom={16}
-                      style={{
-                        height: "300px",
-                        width: "100%",
-                        borderRadius: 8,
-                      }}
-                    >
-                      <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
-                      <Polygon positions={[]} color="green" />
-                    </MapContainer>
-                  </Stack>
+                  {/* Sub Area Map Preview */}
+                  <Box
+                    mt="xs"
+                    style={{
+                      borderRadius: 8,
+                      overflow: "hidden",
+                      border: "1px solid #eee",
+                    }}
+                  >
+                    <iframe
+                      title={`map-sub-${index}`}
+                      width="100%"
+                      height="200"
+                      style={{ border: 0 }}
+                      loading="lazy"
+                      allowFullScreen
+                      src={`https://maps.google.com/maps?q=${sub.latitude},${sub.longitude}&z=16&output=embed`}
+                    />
+                  </Box>
+
                   <NumberInput
                     mt="xs"
                     radius={4}
                     label="Diện tích (m²)"
-                    value={sub.area}
-                    onChange={(v) => updateSubArea(index, "area", v)}
+                    min={0}
+                    {...form.getInputProps(`subAreas.${index}.area`)}
                   />
                   <Textarea
                     mt="xs"
                     radius={4}
                     label="Ghi chú"
-                    value={sub.note}
-                    onChange={(e) =>
-                      updateSubArea(index, "note", e.currentTarget.value)
-                    }
+                    autosize
+                    minRows={2}
+                    {...form.getInputProps(`subAreas.${index}.note`)}
                   />
                 </Card>
               ))}
-              <Button variant="light" radius={4} onClick={addSubArea}>
+
+              <Button
+                variant="dashed"
+                radius={4}
+                onClick={addSubArea}
+                fullWidth
+                leftSection={<IconMapPin size={16} />}
+              >
                 + Thêm khu phụ
               </Button>
             </Stack>
@@ -289,124 +338,185 @@ export default function StockManagementAddAreaPage() {
         </Stack>
       )}
 
+      {/* BƯỚC 3: XÁC NHẬN */}
       {active === 2 && (
-        <Stack gap={"xs"}>
-          <Title order={4} mb="sm">
-            📦 Xác nhận khu vực
+        <Stack gap="lg">
+          <Title order={4} c="blue.8">
+            🚀 Xác nhận thông tin khu vực
           </Title>
-          <Card withBorder mb="md" shadow="sm" radius="md">
-            <Title order={5} mb="xs">
-              Khu vực chính
-            </Title>
-            <Stack gap="xs">
-              <TextInput
-                label="Tên"
-                value={form.values.name}
-                readOnly
-                radius={4}
-                w="100%"
-              />
-              <Group grow>
-                <TextInput
-                  radius={4}
-                  label="Vĩ độ"
-                  value={form.values.latitude.toString()}
-                  readOnly
-                />
-                <TextInput
-                  radius={4}
-                  label="Kinh độ"
-                  value={form.values.longitude.toString()}
-                  readOnly
-                />
-              </Group>
-              <Stack mt={"md"}>
-                <MapContainer
-                  center={[10.762622, 106.660172]}
-                  zoom={16}
+
+          <Grid gutter="md">
+            {/* Cột trái: Thông tin chính */}
+            <Grid.Col span={{ base: 12, md: 6 }}>
+              <Card withBorder shadow="sm" radius="md" h="100%">
+                <Group mb="md">
+                  <ThemeIcon size="lg" radius="md" variant="light" color="blue">
+                    <IconInfoCircle style={{ width: "70%", height: "70%" }} />
+                  </ThemeIcon>
+                  <Text fw={700} size="lg">
+                    Thông tin chung
+                  </Text>
+                </Group>
+                <Stack gap="sm">
+                  <Group justify="space-between">
+                    <Text c="dimmed" size="sm">
+                      Tên khu vực
+                    </Text>
+                    <Text fw={600}>{form.values.name}</Text>
+                  </Group>
+                  <Divider variant="dashed" />
+                  <Group justify="space-between">
+                    <Text c="dimmed" size="sm">
+                      Diện tích
+                    </Text>
+                    <Badge size="lg" variant="light">
+                      {form.values.area} m²
+                    </Badge>
+                  </Group>
+                  <Divider variant="dashed" />
+                  <Stack gap={4}>
+                    <Text c="dimmed" size="sm">
+                      Ghi chú
+                    </Text>
+                    <Text size="sm" style={{ whiteSpace: "pre-line" }}>
+                      {form.values.note || "Không có"}
+                    </Text>
+                  </Stack>
+                </Stack>
+              </Card>
+            </Grid.Col>
+
+            {/* Cột phải: Bản đồ & Tọa độ */}
+            <Grid.Col span={{ base: 12, md: 6 }}>
+              <Card withBorder shadow="sm" radius="md" h="100%">
+                <Group mb="md">
+                  <ThemeIcon size="lg" radius="md" variant="light" color="red">
+                    <IconMap style={{ width: "70%", height: "70%" }} />
+                  </ThemeIcon>
+                  <Text fw={700} size="lg">
+                    Vị trí địa lý
+                  </Text>
+                </Group>
+
+                <Box
                   style={{
-                    height: "300px",
-                    width: "100%",
                     borderRadius: 8,
+                    overflow: "hidden",
+                    border: "1px solid #eee",
+                    height: 200,
+                    marginBottom: 12,
                   }}
                 >
-                  <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
-                  <Polygon positions={[]} color="green" />
-                </MapContainer>
-              </Stack>
-              <NumberInput
-                radius={4}
-                label="Diện tích (m²)"
-                value={form.values.area}
-                readOnly
-              />
-              <Textarea
-                radius={4}
-                label="Ghi chú"
-                value={form.values.note || ""}
-                readOnly
-              />
-            </Stack>
-          </Card>
+                  <iframe
+                    title="map-confirm"
+                    width="100%"
+                    height="100%"
+                    style={{ border: 0 }}
+                    loading="lazy"
+                    src={`https://maps.google.com/maps?q=${form.values.latitude},${form.values.longitude}&z=16&output=embed`}
+                  />
+                </Box>
 
-          {form.values.subAreas.length > 0 && (
-            <Stack gap="md">
-              <Divider
-                label={`Danh sách ${form.values.subAreas.length} khu phụ`}
-                labelPosition="center"
-              />
-              {form.values.subAreas.map((s, idx) => (
-                <Card key={s.id} withBorder shadow="xs" radius="md">
-                  <Title order={6}>Khu phụ {idx + 1}</Title>
-                  <Stack gap="xs" mt="xs">
-                    <Group grow>
-                      <TextInput
-                        label="Vĩ độ"
-                        radius={4}
-                        value={s.latitude.toString()}
-                        readOnly
-                      />
-                      <TextInput
-                        label="Kinh độ"
-                        radius={4}
-                        value={s.longitude.toString()}
-                        readOnly
-                      />
-                    </Group>
-                    <Stack mt={"md"}>
-                      <MapContainer
-                        center={[10.762622, 106.660172]}
-                        zoom={16}
-                        style={{
-                          height: "300px",
-                          width: "100%",
-                          borderRadius: 8,
-                        }}
-                      >
-                        <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
-                        <Polygon positions={[]} color="green" />
-                      </MapContainer>
-                    </Stack>
-                    <NumberInput
-                      label="Diện tích (m²)"
-                      value={s.area}
-                      radius={4}
-                      readOnly
-                    />
-                    <Textarea
-                      radius={4}
-                      label="Ghi chú"
-                      value={s.note || ""}
-                      readOnly
-                    />
-                  </Stack>
-                </Card>
-              ))}
-            </Stack>
+                <Group justify="space-between">
+                  <Badge
+                    variant="outline"
+                    color="gray"
+                    leftSection={<IconMapPin size={12} />}
+                  >
+                    Lat: {form.values.latitude}
+                  </Badge>
+                  <Badge
+                    variant="outline"
+                    color="gray"
+                    leftSection={<IconMapPin size={12} />}
+                  >
+                    Lng: {form.values.longitude}
+                  </Badge>
+                </Group>
+              </Card>
+            </Grid.Col>
+          </Grid>
+
+          {/* DANH SÁCH KHU VỰC PHỤ */}
+          {hasSubArea && form.values.subAreas.length > 0 && (
+            <Card withBorder shadow="sm" radius="md">
+              <Group mb="md">
+                <ThemeIcon size="lg" radius="md" variant="light" color="teal">
+                  <IconListDetails style={{ width: "70%", height: "70%" }} />
+                </ThemeIcon>
+                <Text fw={700} size="lg">
+                  Danh sách khu phụ ({form.values.subAreas.length})
+                </Text>
+              </Group>
+
+              <ScrollArea h={400} offsetScrollbars>
+                <Grid>
+                  {form.values.subAreas.map((s, idx) => (
+                    <Grid.Col span={{ base: 12, sm: 6 }} key={idx}>
+                      <Card withBorder p="sm" radius="md" bg="gray.0">
+                        <Group justify="space-between" mb={4}>
+                          <Text fw={600} size="sm">
+                            Khu phụ #{idx + 1}
+                          </Text>
+                          <Badge color="teal" size="sm" variant="white">
+                            {s.area} m²
+                          </Badge>
+                        </Group>
+
+                        {/* Map Preview cho SubArea */}
+                        <Box
+                          my="xs"
+                          style={{
+                            borderRadius: 6,
+                            overflow: "hidden",
+                            border: "1px solid #dee2e6",
+                            height: 150,
+                          }}
+                        >
+                          <iframe
+                            title={`map-sub-confirm-${idx}`}
+                            width="100%"
+                            height="100%"
+                            style={{ border: 0 }}
+                            loading="lazy"
+                            src={`https://maps.google.com/maps?q=${s.latitude},${s.longitude}&z=17&output=embed`}
+                          />
+                        </Box>
+
+                        <Group justify="space-between" mb={4}>
+                          <Badge variant="outline" color="gray" size="xs">
+                            Lat: {s.latitude}
+                          </Badge>
+                          <Badge variant="outline" color="gray" size="xs">
+                            Lng: {s.longitude}
+                          </Badge>
+                        </Group>
+
+                        {s.note && (
+                          <Text
+                            size="xs"
+                            bg="white"
+                            p={6}
+                            style={{
+                              borderRadius: 4,
+                              border: "1px solid #eee",
+                            }}
+                            c="dimmed"
+                          >
+                            📝 {s.note}
+                          </Text>
+                        )}
+                      </Card>
+                    </Grid.Col>
+                  ))}
+                </Grid>
+              </ScrollArea>
+            </Card>
           )}
         </Stack>
       )}
 
+      {/* NÚT ĐIỀU HƯỚNG */}
       {active < 3 && (
         <Group justify="space-between" mt="xl">
           <Button
@@ -422,8 +532,13 @@ export default function StockManagementAddAreaPage() {
               Tiếp tục
             </Button>
           ) : (
-            <Button radius={4} color="green" onClick={nextStep}>
-              Hoàn thành
+            <Button
+              radius={4}
+              color="green"
+              onClick={handleFinish}
+              loading={isLoading}
+            >
+              Hoàn thành & Lưu
             </Button>
           )}
         </Group>

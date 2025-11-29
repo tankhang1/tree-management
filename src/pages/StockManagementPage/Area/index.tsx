@@ -1,4 +1,13 @@
-import { ActionIcon, Button, Group, Menu, Stack, Title } from "@mantine/core";
+import {
+  ActionIcon,
+  Button,
+  Group,
+  Menu,
+  Modal,
+  Stack,
+  Text,
+  Title,
+} from "@mantine/core";
 import {
   IconDotsVertical,
   IconEdit,
@@ -10,90 +19,87 @@ import type { MRT_ColumnDef } from "mantine-react-table";
 import Table from "../../../components/Table";
 import { useNavigate } from "react-router-dom";
 import { PATH } from "../../../constants/path.constants";
-interface SubArea {
-  id: string;
-  latitude: number;
-  longitude: number;
-  area: number;
-  note?: string;
-}
+import { useState } from "react";
+import { useDisclosure } from "@mantine/hooks";
+import { notifications } from "@mantine/notifications";
 
-interface Area {
-  id: string;
-  name: string;
-  latitude: number;
-  longitude: number;
-  area: number;
-  note?: string;
-  subAreas?: SubArea[];
-}
-const areaList: Area[] = [
-  {
-    id: "KV001",
-    name: "Khu vực A",
-    latitude: 10.762622,
-    longitude: 106.660172,
-    area: 1200,
-    note: "Khu vực gần hồ nước",
-    subAreas: [
-      {
-        id: "KV001-1",
-        latitude: 10.7627,
-        longitude: 106.6601,
-        area: 400,
-        note: "Phân khu phía đông",
-      },
-      {
-        id: "KV001-2",
-        latitude: 10.7629,
-        longitude: 106.6602,
-        area: 800,
-        note: "Phân khu phía tây",
-      },
-    ],
-  },
-  {
-    id: "KV002",
-    name: "Khu vực B",
-    latitude: 10.776889,
-    longitude: 106.700806,
-    area: 900,
-    note: "Không phân chia",
-    subAreas: [],
-  },
-];
+// IMPORT STORE
+import {
+  useStockAreaStore,
+  type Area,
+  type SubArea,
+} from "../../zustand/stockAreaStore";
 
 const StockManagementAreaPage = () => {
   const navigate = useNavigate();
 
+  // 1. KẾT NỐI STORE
+  const { areas, deleteArea } = useStockAreaStore();
+
+  // 2. STATE CHO MODAL XÓA
+  const [openedDelete, { open: openDelete, close: closeDelete }] =
+    useDisclosure(false);
+  const [selectedId, setSelectedId] = useState<string | null>(null);
+
+  // 3. NAVIGATION HANDLERS
   const onAddArea = () => {
     navigate(PATH.STOCK_ADD_AREA);
   };
-  const onAreaDetail = () => {
-    navigate(PATH.STOCK_AREA_DETAIL);
+
+  const onAreaDetail = (id: string) => {
+    navigate(`${PATH.STOCK_AREA_DETAIL}/${id}`);
   };
+
+  // 4. LOGIC DELETE
+  const confirmDelete = (id: string) => {
+    setSelectedId(id);
+    openDelete();
+  };
+
+  const handleDelete = () => {
+    if (selectedId) {
+      deleteArea(selectedId);
+      notifications.show({
+        title: "Đã xóa khu vực",
+        color: "green",
+        message: "",
+      });
+      closeDelete();
+      setSelectedId(null);
+    }
+  };
+
+  // 5. CẤU HÌNH CỘT
   const areaColumns: MRT_ColumnDef<Area>[] = [
-    { accessorKey: "id", header: "ID" },
+    { accessorKey: "id", header: "ID", size: 100 },
     { accessorKey: "name", header: "Tên khu vực" },
     { accessorKey: "latitude", header: "Vĩ độ" },
     { accessorKey: "longitude", header: "Kinh độ" },
     { accessorKey: "area", header: "Diện tích (m²)" },
-    { accessorKey: "note", header: "Ghi chú" },
+    {
+      accessorKey: "note",
+      header: "Ghi chú",
+      Cell: ({ cell }) => (
+        <Text c="dimmed" size="sm" lineClamp={1}>
+          {cell.getValue<string>()}
+        </Text>
+      ),
+    },
     {
       accessorKey: "subAreas",
       header: "Số khu phụ",
       Cell: ({ cell }) => {
         const subAreas = cell.getValue<SubArea[]>();
-        return subAreas?.length ?? "0";
+        return subAreas?.length ?? 0;
       },
     },
     {
       accessorKey: "actions",
       header: "Tuỳ chọn",
       enableColumnActions: false,
-      size: 10,
-      Cell: () => (
-        <Menu shadow="md">
+      size: 60,
+      Cell: ({ row }) => (
+        <Menu shadow="md" position="bottom-end">
           <Menu.Target>
             <ActionIcon variant="transparent" c={"gray"}>
               <IconDotsVertical />
@@ -103,16 +109,23 @@ const StockManagementAreaPage = () => {
           <Menu.Dropdown>
             <Menu.Item
               leftSection={<IconEye size={18} color="gray" />}
-              onClick={onAreaDetail}
+              onClick={() => onAreaDetail(row.original.id)}
             >
               Chi tiết
             </Menu.Item>
 
-            <Menu.Item leftSection={<IconEdit size={18} color="green" />}>
+            <Menu.Item
+              leftSection={<IconEdit size={18} color="green" />}
+              onClick={() => onAreaDetail(row.original.id)} // Vào chi tiết để sửa
+            >
               Chỉnh sửa
             </Menu.Item>
 
-            <Menu.Item leftSection={<IconTrash size={18} />} color="red">
+            <Menu.Item
+              leftSection={<IconTrash size={18} />}
+              color="red"
+              onClick={() => confirmDelete(row.original.id)}
+            >
               Xoá
             </Menu.Item>
           </Menu.Dropdown>
@@ -120,6 +133,7 @@ const StockManagementAreaPage = () => {
       ),
     },
   ];
+
   return (
     <Stack gap="lg">
       <Group justify="space-between">
@@ -136,12 +150,31 @@ const StockManagementAreaPage = () => {
         </Group>
       </Group>
 
+      {/* Truyền dữ liệu từ Store vào Table */}
       <Table
         //@ts-expect-error no check
         columns={areaColumns}
         //@ts-expect-error no check
-        data={areaList}
+        data={areas}
       />
+
+      {/* Modal xác nhận xóa */}
+      <Modal
+        opened={openedDelete}
+        onClose={closeDelete}
+        title="Xác nhận xóa"
+        centered
+      >
+        <Text>Bạn có chắc chắn muốn xóa khu vực này không?</Text>
+        <Group justify="flex-end" mt="lg">
+          <Button variant="default" onClick={closeDelete}>
+            Hủy
+          </Button>
+          <Button color="red" onClick={handleDelete}>
+            Xóa ngay
+          </Button>
+        </Group>
+      </Modal>
     </Stack>
   );
 };
