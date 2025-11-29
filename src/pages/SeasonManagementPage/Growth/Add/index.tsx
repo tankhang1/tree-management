@@ -23,6 +23,7 @@ import SeedCards from "./components/SeedCards";
 import ConfirmStep from "./components/ConfirmStep";
 import { cropOptions, seedOptions } from "../../../AreaManagementPage/Row/Add";
 import SeedDetailCards from "../../../AreaManagementPage/Region/Add/components/SeedDetailCards";
+import { useSeasonStore, type CycleStage } from "../../../zustand/seasonStore";
 
 const growthCycleOptions = [
   { value: "cycle1", label: "Chu kỳ A" },
@@ -39,17 +40,14 @@ const growthStageOptions = [
   { value: "stage6", label: "Thu hoạch" },
 ];
 
-type CycleStage = {
-  cycleId: string;
-  stageIds: string[];
-};
 export interface SeedOption {
   code: string;
   cropName: string;
   seedName: string;
   description: string;
-  image: string; // URL hoặc base64 string
+  image: string;
 }
+
 export interface CropOption {
   code: string;
   name: string;
@@ -57,7 +55,7 @@ export interface CropOption {
   harvestMethod: string;
   growthCycle: string;
   note?: string;
-  image: string; // URL or base64
+  image: string;
 }
 
 export const plantGroups = [
@@ -67,52 +65,92 @@ export const plantGroups = [
   { value: "industrial", label: "Cây công nghiệp" },
   { value: "ornamental", label: "Cây cảnh" },
 ];
+
 const SeasonManagementGrowthAddPage = () => {
   const navigate = useNavigate();
+  const { addSeason } = useSeasonStore();
+
   const [type, setType] = useState<"crop" | "seed" | "seed-detail">("crop");
   const [activeStep, setActiveStep] = useState(0);
   const [cycleStageList, setCycleStageList] = useState<CycleStage[]>([]);
   const [openedFilter, setOpenedFilter] = useState(false);
+
+  const [selectedCropCode, setSelectedCropCode] = useState<string>("");
+  const [selectedSeedCode, setSelectedSeedCode] = useState<string>("");
+  const [selectedSeedDetails, setSelectedSeedDetails] = useState<any[]>([]);
+
   const form = useForm({
     initialValues: {
       name: "",
       estimatedDuration: 0,
       cropId: "",
     },
-    validate: {},
+    validate: {
+      name: (value) =>
+        value.trim().length === 0 ? "Tên mùa vụ không được để trống" : null,
+      estimatedDuration: (value) =>
+        value <= 0 ? "Thời gian phải lớn hơn 0" : null,
+    },
   });
 
   const [currentCycle, setCurrentCycle] = useState<string | null>(null);
   const [currentStages, setCurrentStages] = useState<string[]>([]);
 
   const addCycleStage = () => {
-    if (!currentCycle) return;
-    if (currentStages.length === 0) return;
+    if (!currentCycle || currentStages.length === 0) return;
 
-    setCycleStageList([
-      ...cycleStageList,
+    setCycleStageList((prev) => [
+      ...prev,
       { cycleId: currentCycle, stageIds: currentStages },
     ]);
     setCurrentCycle(null);
     setCurrentStages([]);
   };
 
+  const removeCycleStage = (index: number) => {
+    setCycleStageList((prev) => prev.filter((_, i) => i !== index));
+  };
+
   const nextStep = () => {
-    if (activeStep === 0 && !form.validate().hasErrors) {
+    if (activeStep === 0) {
+      const validation = form.validate();
+      if (validation.hasErrors) return;
       setActiveStep(1);
-    } else if (activeStep === 1) {
-      if (cycleStageList.length === 0)
-        return alert("Vui lòng thêm ít nhất 1 chu kỳ và giai đoạn.");
-      console.log("Dữ liệu gửi đi:", {
-        ...form.values,
+      return;
+    }
+
+    if (activeStep === 1) {
+      if (cycleStageList.length === 0) {
+        alert("Vui lòng thêm ít nhất 1 chu kỳ và giai đoạn.");
+        return;
+      }
+      setActiveStep(2);
+      return;
+    }
+
+    if (activeStep === 2) {
+      const selectedCrop = cropOptions.find((c) => c.code === selectedCropCode);
+      const selectedSeed = seedOptions.find((s) => s.code === selectedSeedCode);
+
+      const payload = {
+        name: form.values.name,
+        estimatedDuration: form.values.estimatedDuration,
+        cropId: selectedCropCode || "",
+        selectedCrop,
+        selectedSeed,
+        selectedSeedDetails,
         growthCycles: cycleStageList,
-      });
+      };
+
+      addSeason(payload as any);
+      setActiveStep(3);
+      return;
     }
   };
 
   return (
     <Card withBorder shadow="sm" radius={4} p="lg">
-      <Group mb={"md"}>
+      <Group mb="md">
         <Button
           variant="subtle"
           radius={4}
@@ -123,6 +161,7 @@ const SeasonManagementGrowthAddPage = () => {
         </Button>
         <Title order={3}>Tạo mới mùa vụ</Title>
       </Group>
+
       <Stepper active={activeStep} onStepClick={setActiveStep} my="md">
         <Stepper.Step label="Bước 1" description="Thông tin cơ bản" />
         <Stepper.Step label="Bước 2" description="Chu kỳ & giai đoạn" />
@@ -130,16 +169,14 @@ const SeasonManagementGrowthAddPage = () => {
         <Stepper.Completed>
           <Stack align="center" justify="center" mt="xl">
             <Image
-              src={
-                "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQjPNbBpZeXnXfTuA6AWek-Kj8NYEVbYdG6ayi5bIWarDuryXDrILdKMTd597quLD0PBKM&usqp=CAU"
-              }
+              src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQjPNbBpZeXnXfTuA6AWek-Kj8NYEVbYdG6ayi5bIWarDuryXDrILdKMTd597quLD0PBKM&usqp=CAU"
               w={200}
               fit="cover"
             />
-            <Text fz={"h2"} ta="center">
+            <Text fz="h2" ta="center">
               Thêm mới mùa vụ thành công
             </Text>
-            <Text fz={"md"} ta="center" c="dimmed">
+            <Text fz="md" ta="center" c="dimmed">
               Thêm mới mùa vụ thành công, bạn có thể xem lại trong danh sách mùa
               vụ hoặc tiếp tục thêm mới mùa vụ khác.
               <br />
@@ -156,7 +193,7 @@ const SeasonManagementGrowthAddPage = () => {
 
       <form onSubmit={form.onSubmit(nextStep)}>
         {activeStep === 0 && (
-          <Stack gap={"xs"}>
+          <Stack gap="xs">
             <TextInput
               label="Mùa vụ"
               radius={4}
@@ -168,8 +205,9 @@ const SeasonManagementGrowthAddPage = () => {
               radius={4}
               {...form.getInputProps("estimatedDuration")}
             />
+
             <Group align="center">
-              <Text fz={14} fw={"500"}>
+              <Text fz={14} fw={500}>
                 Cây trồng
               </Text>
               <Button
@@ -180,22 +218,22 @@ const SeasonManagementGrowthAddPage = () => {
                   setType("crop");
                 }}
               >
-                Thêm mới
+                Tìm kiếm
               </Button>
             </Group>
             <CropCards
-              selected=""
+              selected={selectedCropCode}
               plants={cropOptions}
               isCheckbox={false}
-              isTouchable={false}
-              onSelect={() => {}}
-              isDelete={true}
+              isTouchable
+              isDelete={false}
+              onSelect={setSelectedCropCode}
             />
+
             <Group align="center">
-              <Text fz={14} fw={"500"}>
+              <Text fz={14} fw={500}>
                 Giống cây trồng
               </Text>
-
               <Button
                 variant="outline"
                 radius={4}
@@ -204,20 +242,20 @@ const SeasonManagementGrowthAddPage = () => {
                   setType("seed");
                 }}
               >
-                Thêm mới
+                Tìm kiếm
               </Button>
             </Group>
             <SeedCards
               isCheckbox={false}
-              isTouchable={false}
-              selected=""
+              isTouchable
+              selected={selectedSeedCode}
               seeds={seedOptions}
-              onSelect={() => {}}
-              isDelete
+              onSelect={setSelectedSeedCode}
+              isDelete={false}
             />
 
             <Group align="center">
-              <Text fz={14} fw={"500"}>
+              <Text fz={14} fw={500}>
                 Hạt giống
               </Text>
               <Button
@@ -228,16 +266,15 @@ const SeasonManagementGrowthAddPage = () => {
                   setType("seed-detail");
                 }}
               >
-                Thêm mới
+                Tìm kiếm
               </Button>
             </Group>
-            <SeedDetailCards isTouchable={false} isDelete={true} />
+            <SeedDetailCards isTouchable={true} isDelete />
           </Stack>
         )}
 
         {activeStep === 1 && (
           <Stack>
-            {/**Dạng drag & drop và trình bày như cột thư mục */}
             <Select
               searchable
               clearable
@@ -286,9 +323,17 @@ const SeasonManagementGrowthAddPage = () => {
                     return (
                       <Accordion.Item key={index} value={`cycle-${index}`}>
                         <Accordion.Control>
-                          <Group justify="space-between" w="100%" pr={"lg"}>
+                          <Group justify="space-between" w="100%" pr="lg">
                             <Text fw={500}>{cycleLabel}</Text>
-                            <Button color="red" variant="light" radius={4}>
+                            <Button
+                              color="red"
+                              variant="light"
+                              radius={4}
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                removeCycleStage(index);
+                              }}
+                            >
                               Xoá
                             </Button>
                           </Group>
@@ -310,30 +355,39 @@ const SeasonManagementGrowthAddPage = () => {
             )}
           </Stack>
         )}
+
         {activeStep === 2 && <ConfirmStep />}
+
         {activeStep < 3 && (
           <Group justify="space-between" mt="md">
             <Button
               variant="default"
-              onClick={() => setActiveStep(0)}
+              onClick={() => setActiveStep((prev) => (prev > 0 ? prev - 1 : 0))}
               radius={4}
             >
               Quay lại
             </Button>
 
-            <Button onClick={() => setActiveStep(activeStep + 1)} radius={4}>
+            <Button type="submit" radius={4}>
               {activeStep === 2 ? "Hoàn thành" : "Tiếp tục"}
             </Button>
           </Group>
         )}
       </form>
+
       <Modal
         opened={openedFilter}
         onClose={() => setOpenedFilter(false)}
-        title="Tìm kiếm cây trồng"
+        title={
+          type === "crop"
+            ? "Tìm kiếm cây trồng"
+            : type === "seed"
+            ? "Tìm kiếm giống cây trồng"
+            : "Tìm kiếm hạt giống"
+        }
         size="lg"
       >
-        <Stack gap={"xs"}>
+        <Stack gap="xs">
           <Select
             searchable
             clearable
@@ -349,9 +403,14 @@ const SeasonManagementGrowthAddPage = () => {
             placeholder="Tìm kiếm loại cây trồng"
             radius={4}
           />
-          <CropCards selected="" plants={cropOptions} onSelect={() => {}} />
+          <CropCards
+            selected={selectedCropCode}
+            plants={cropOptions}
+            onSelect={setSelectedCropCode}
+          />
+
           {(type === "seed" || type === "seed-detail") && (
-            <Stack gap={"xs"}>
+            <Stack gap="xs">
               <TextInput
                 label="Giống cây trồng"
                 leftSection={<IconSearch size={18} />}
@@ -360,12 +419,16 @@ const SeasonManagementGrowthAddPage = () => {
                 flex={1}
               />
 
-              <SeedCards selected="" seeds={seedOptions} onSelect={() => {}} />
+              <SeedCards
+                selected={selectedSeedCode}
+                seeds={seedOptions}
+                onSelect={setSelectedSeedCode}
+              />
             </Stack>
           )}
 
           {type === "seed-detail" && (
-            <Stack gap={"xs"}>
+            <Stack gap="xs">
               <TextInput
                 label="Hạt giống"
                 leftSection={<IconSearch size={18} />}

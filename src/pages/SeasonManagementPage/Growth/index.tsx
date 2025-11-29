@@ -29,105 +29,46 @@ import type { MRT_ColumnDef } from "mantine-react-table";
 import Table from "../../../components/Table";
 import { useNavigate } from "react-router-dom";
 import { PATH } from "../../../constants/path.constants";
-import { useState } from "react";
-
-type CropSeason = {
-  id: string;
-  name: string;
-  estimatedDuration: number; // in days
-  cropId: string;
-  cropName: string;
-  growthCycleId: string;
-  growthCycleName: string;
-};
-const cropSeasonData: CropSeason[] = [
-  {
-    id: "MSV2025XUAN",
-    name: "Mùa vụ Xuân 2025",
-    estimatedDuration: 95,
-    cropId: "CR025XUAN01",
-    cropName: "Đậu nành DT84",
-    growthCycleId: "GC025XUAN01",
-    growthCycleName: "Nảy mầm (5–7 ngày)",
-  },
-  {
-    id: "MSV2025HE",
-    name: "Mùa vụ Hè 2025",
-    estimatedDuration: 105,
-    cropId: "CR025HE01",
-    cropName: "Đậu nành ĐX11",
-    growthCycleId: "GC025HE01",
-    growthCycleName: "Ra hoa (7–10 ngày)",
-  },
-  {
-    id: "MSV2025THU",
-    name: "Mùa vụ Thu 2025",
-    estimatedDuration: 115,
-    cropId: "CR025THU01",
-    cropName: "Bắp LVN10",
-    growthCycleId: "GC025THU01",
-    growthCycleName: "Trỗ cờ/Phun râu (7–10 ngày)",
-  },
-  {
-    id: "MSV2025DONG",
-    name: "Mùa vụ Đông 2025",
-    estimatedDuration: 120,
-    cropId: "CR025DONG01",
-    cropName: "Bắp NK66",
-    growthCycleId: "GC025DONG01",
-    growthCycleName: "Làm hạt (25–35 ngày)",
-  },
-  {
-    id: "MSV2026XUAN",
-    name: "Mùa vụ Xuân 2026",
-    estimatedDuration: 100,
-    cropId: "CR026XUAN01",
-    cropName: "Đậu nành DT84",
-    growthCycleId: "GC026XUAN01",
-    growthCycleName: "Tạo hạt (25–35 ngày)",
-  },
-  {
-    id: "MSV2026HE",
-    name: "Mùa vụ Hè 2026",
-    estimatedDuration: 110,
-    cropId: "CR026HE01",
-    cropName: "Đậu nành ĐX11",
-    growthCycleId: "GC026HE01",
-    growthCycleName: "Chín (10–15 ngày)",
-  },
-  {
-    id: "MSV2026THU",
-    name: "Mùa vụ Thu 2026",
-    estimatedDuration: 125,
-    cropId: "CR026THU01",
-    cropName: "Bắp LVN10",
-    growthCycleId: "GC026THU01",
-    growthCycleName: "Trỗ cờ/Phun râu (7–10 ngày)",
-  },
-  {
-    id: "MSV2026DONG",
-    name: "Mùa vụ Đông 2026",
-    estimatedDuration: 130,
-    cropId: "CR026DONG01",
-    cropName: "Bắp NK66",
-    growthCycleId: "GC026DONG01",
-    growthCycleName: "Chín sáp/Chín khô (20–30 ngày)",
-  },
-];
+import { useMemo, useState } from "react";
+import { useSeasonStore } from "../../zustand/seasonStore";
+import type { GrowthCycle } from "../../zustand/treeStore";
 
 const SeasonManagementGrowthPage = () => {
   const navigate = useNavigate();
+  const seasons = useSeasonStore((state) => state.seasons);
+
   const [keyword, setKeyword] = useState("");
+  const [mainCrops, setMainCrops] = useState<string[]>([]);
+  const [growthFilters, setGrowthFilters] = useState<string[]>([]);
+
   const onClearAll = () => {
     setKeyword("");
+    setMainCrops([]);
+    setGrowthFilters([]);
   };
+
   const onAddGrowth = () => {
     navigate(PATH.SEASON_ADD_GROWTH);
   };
+
   const onGrowthDetail = () => {
     navigate(PATH.SEASON_GROWTH_DETAIL);
   };
-  const cropSeasonColumns: MRT_ColumnDef<CropSeason>[] = [
+
+  const filteredData = useMemo(() => {
+    const kw = keyword.trim().toLowerCase();
+
+    return seasons.filter((row) => {
+      const matchKeyword = kw
+        ? row.name.toLowerCase().includes(kw) ||
+          row.id.toLowerCase().includes(kw)
+        : true;
+
+      return matchKeyword;
+    });
+  }, [seasons, keyword, mainCrops, growthFilters]);
+
+  const cropSeasonColumns: MRT_ColumnDef<GrowthCycle>[] = [
     {
       accessorKey: "id",
       header: "Mã mùa vụ",
@@ -139,7 +80,7 @@ const SeasonManagementGrowthPage = () => {
     {
       accessorKey: "estimatedDuration",
       header: "Thời gian ước tính (ngày)",
-      Cell: ({ row }) => `${row.original.estimatedDuration} ngày`,
+      Cell: ({ row }) => `${row.original.estimatedTime} ngày`,
     },
     {
       accessorKey: "cropName",
@@ -157,7 +98,7 @@ const SeasonManagementGrowthPage = () => {
       Cell: () => (
         <Menu shadow="md">
           <Menu.Target>
-            <ActionIcon variant="transparent" c={"gray"}>
+            <ActionIcon variant="transparent" c="gray">
               <IconDotsVertical />
             </ActionIcon>
           </Menu.Target>
@@ -187,6 +128,7 @@ const SeasonManagementGrowthPage = () => {
       ),
     },
   ];
+
   return (
     <Stack gap="lg">
       <Group justify="space-between">
@@ -202,8 +144,8 @@ const SeasonManagementGrowthPage = () => {
           </Button>
         </Group>
       </Group>
+
       <Card withBorder shadow="sm" radius={4} p="md">
-        {/* Header */}
         <Group justify="space-between" align="center" mb="xs">
           <Stack gap={0}>
             <Title order={4}>Tìm kiếm mùa vụ</Title>
@@ -229,9 +171,7 @@ const SeasonManagementGrowthPage = () => {
           </Group>
         </Group>
 
-        {/* Form */}
         <Stack gap="sm">
-          {/* Khung tìm kiếm (keyword) */}
           <TextInput
             radius={4}
             label="Khung tìm kiếm"
@@ -246,29 +186,33 @@ const SeasonManagementGrowthPage = () => {
             <MultiSelect
               radius={4}
               label="Cây trồng chính"
-              description="Ví dụ: Đậu Nành"
+              description="Ví dụ: Đậu nành, Bắp"
               placeholder="Chọn thông tin"
               data={[
-                { value: "rice", label: "Lúa" },
-                { value: "corn", label: "Ngô" },
-                { value: "wheat", label: "Lúa mì" },
+                { value: "Đậu nành", label: "Đậu nành" },
+                { value: "Bắp", label: "Bắp" },
+                { value: "Lúa", label: "Lúa" },
               ]}
+              value={mainCrops}
+              onChange={setMainCrops}
             />
             <MultiSelect
               radius={4}
               label="Chu kỳ sinh trưởng"
-              description="Ví dụ: Ra hoa, Đậu quả, Chín và thu hoạch"
+              description="Ví dụ: Nảy mầm, Ra hoa, Chín"
               placeholder="Chọn thông tin"
               data={[
-                { value: "flowering", label: "Ra hoa" },
-                { value: "fruiting", label: "Đậu quả" },
-                { value: "harvesting", label: "Chín và thu hoạch" },
+                { value: "Nảy mầm", label: "Nảy mầm" },
+                { value: "Ra hoa", label: "Ra hoa" },
+                { value: "Trỗ cờ", label: "Trỗ cờ/Phun râu" },
+                { value: "Chín", label: "Chín, Chín sáp" },
               ]}
+              value={growthFilters}
+              onChange={setGrowthFilters}
             />
           </SimpleGrid>
 
-          {/* Tóm tắt filter bằng chips (UI) */}
-          {keyword && (
+          {keyword || mainCrops.length > 0 || growthFilters.length > 0 ? (
             <Group gap={8}>
               {keyword && (
                 <Badge
@@ -279,6 +223,42 @@ const SeasonManagementGrowthPage = () => {
                 </Badge>
               )}
 
+              {mainCrops.map((value) => (
+                <Badge
+                  key={value}
+                  variant="light"
+                  rightSection={
+                    <CloseButton
+                      onClick={() =>
+                        setMainCrops((prev) =>
+                          prev.filter((item) => item !== value)
+                        )
+                      }
+                    />
+                  }
+                >
+                  Cây trồng: {value}
+                </Badge>
+              ))}
+
+              {growthFilters.map((value) => (
+                <Badge
+                  key={value}
+                  variant="light"
+                  rightSection={
+                    <CloseButton
+                      onClick={() =>
+                        setGrowthFilters((prev) =>
+                          prev.filter((item) => item !== value)
+                        )
+                      }
+                    />
+                  }
+                >
+                  Chu kỳ: {value}
+                </Badge>
+              ))}
+
               <ActionIcon
                 variant="subtle"
                 onClick={onClearAll}
@@ -287,11 +267,13 @@ const SeasonManagementGrowthPage = () => {
                 <IconX size={16} />
               </ActionIcon>
             </Group>
-          )}
+          ) : null}
         </Stack>
       </Card>
-      <Table columns={cropSeasonColumns} data={cropSeasonData} />
+
+      <Table columns={cropSeasonColumns} data={filteredData} />
     </Stack>
   );
 };
+
 export default SeasonManagementGrowthPage;

@@ -1,14 +1,21 @@
-import { Group } from "@mantine/core";
+import { Group, Text } from "@mantine/core";
 import Scrollable from "../../../../../components/Scrollable";
 import SeedDetailCard from "./SeedDetailCard";
-import { useState } from "react";
+// import { useState } from "react"; // Loại bỏ useState không cần thiết
 
-type SeedDetailCardsProps = {
-  isMultiple?: boolean;
-  isTouchable?: boolean;
-  isDelete?: boolean;
+// Định nghĩa lại cấu trúc dữ liệu cho Seed Detail
+export type SeedDetail = {
+  imageUrl: string;
+  seedCode: string; // Tạm thời dùng làm ID/Code
+  seedName: string;
+  supplier: string;
+  origin: string;
+  germinationRate: number;
+  uniformityRate: number;
+  yieldPerHectare: string;
 };
-const soybeanCornSeeds = [
+
+const soybeanCornSeeds: SeedDetail[] = [
   {
     imageUrl:
       "https://lh6.googleusercontent.com/proxy/MkmLTr7RaC47H6aLuMX0yGGlXhtKf77bRQ0sEwVhPiHI01aj7WPJYpuBWIbN422tMgVbH5Z67gqzUj9h-LmQpjem8pVrKg",
@@ -64,29 +71,51 @@ const soybeanCornSeeds = [
     yieldPerHectare: "8.5 tấn/ha",
   },
 ];
+
+interface SeedDetailCardsProps {
+  isMultiple?: boolean;
+  isTouchable?: boolean;
+  isDelete?: boolean;
+  // BỔ SUNG PROPS ĐỂ QUẢN LÝ TRẠNG THÁI BÊN NGOÀI
+  selected?: string[]; // Danh sách các seedCode đã chọn
+  onSelect?: (seed: SeedDetail) => void; // Xử lý khi chọn/bỏ chọn
+  onDelete?: (seedCode: string) => void; // Xử lý khi nhấn xóa
+}
+
 const SeedDetailCards = ({
-  isMultiple,
+  isMultiple = false,
   isTouchable = true,
   isDelete = false,
-}: SeedDetailCardsProps) => {
-  const [selectedSeeds, setSelectedSeeds] = useState<string[]>([]);
+  selected = [], // Danh sách seedCode đã chọn từ bên ngoài
+  onSelect,
+}: // onDelete, // Không cần thiết ở đây vì logic xóa thường nằm ở component cha
+SeedDetailCardsProps) => {
+  // Hàm xử lý việc chọn/bỏ chọn, truyền ra ngoài thông qua onSelect prop
+  const handleSelectSeed = (seed: SeedDetail) => {
+    if (!isTouchable || !onSelect) return;
 
-  const onSelectSeed = (seedCode: string) => {
-    if (!isTouchable) return;
+    // Nếu không cho phép chọn nhiều, chỉ cần gửi code ra ngoài
     if (!isMultiple) {
-      setSelectedSeeds([seedCode]);
+      onSelect(seed);
       return;
     }
-    if (!selectedSeeds.includes(seedCode)) {
-      setSelectedSeeds((prev) => [...prev, seedCode]);
-    } else {
-      setSelectedSeeds((prev) => prev.filter((code) => code !== seedCode));
-    }
+
+    // Nếu cho phép chọn nhiều: Logic toggle chọn
+    // Note: Logic này phải được xử lý ở component cha (ví dụ: Zustand Store)
+    // Tuy nhiên, để tiện demo, chúng ta gọi onSelect với code, và component cha sẽ quyết định toggle.
+    // Nếu component cha quản lý trạng thái, chỉ cần gọi onSelect(seedCode).
+    onSelect(seed);
   };
 
   return (
-    <Scrollable>
+    <Scrollable h={320}>
       <Group wrap="nowrap" p="xs">
+        {soybeanCornSeeds.length === 0 && (
+          <Text c="dimmed" size="sm" p="md">
+            Không có dữ liệu hạt giống chi tiết.
+          </Text>
+        )}
+
         {soybeanCornSeeds.map((s) => (
           <SeedDetailCard
             key={s.seedCode}
@@ -99,9 +128,13 @@ const SeedDetailCards = ({
             uniformityRate={s.uniformityRate}
             yieldPerHectare={s.yieldPerHectare}
             isMultiple={isMultiple}
-            isActive={selectedSeeds.includes(s.seedCode)}
-            onClick={() => onSelectSeed(s.seedCode)}
+            // Kiểm tra trạng thái kích hoạt dựa trên selected props
+            isActive={selected.includes(s.seedCode)}
+            onClick={() => handleSelectSeed(s)} // Gửi sự kiện ra ngoài
             isDelete={isDelete}
+            // Giả định SeedDetailCard cũng nhận onDelete,
+            // nếu không dùng, cần xóa prop này đi hoặc tạo hàm handleDelete
+            // onDelete={() => onDelete?.(s.seedCode)}
           />
         ))}
       </Group>

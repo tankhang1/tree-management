@@ -1,8 +1,35 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { MapContainer, TileLayer, GeoJSON, Pane, Marker } from "react-leaflet";
 import type { GeoJsonObject, Feature, Point } from "geojson";
 import ZoomListener from "./ZoomListener";
+import type { Map } from "leaflet";
+const crops = [
+  "Sầu riêng Ri6",
+  "Sầu riêng Musang King",
+  "Sầu riêng Dona",
+  "Cà phê Robusta",
+  "Cà phê Arabica",
+  "Tiêu Vĩnh Linh",
+];
 
+const cultivationTypes = [
+  "Hữu cơ",
+  "Bán hữu cơ",
+  "Theo VietGAP",
+  "Theo GlobalGAP",
+];
+
+const soilTypes = ["Đất đỏ bazan", "Đất pha cát", "Đất thịt nhẹ", "Đất phù sa"];
+
+const terrains = ["Bằng phẳng", "Dốc nhẹ", "Dốc vừa", "Thoai thoải"];
+
+const treeStatusList = [
+  "Tốt",
+  "Đang phục hồi",
+  "Cần kiểm tra",
+  "Đang ra hoa",
+  "Đang mang trái",
+];
 interface LayerConfig {
   key: string;
   color?: string;
@@ -10,6 +37,20 @@ interface LayerConfig {
   point?: boolean;
   label: string;
 }
+const randomInt = (min: number, max: number) =>
+  Math.floor(Math.random() * (max - min + 1)) + min;
+const formatArea = (min: number, max: number) => {
+  const value = randomInt(min, max) * 100;
+  return value.toLocaleString("vi-VN") + " m²";
+};
+const randomItem = <T,>(arr: T[]): T => arr[randomInt(0, arr.length - 1)];
+
+const randomDateString = () => {
+  const now = new Date();
+  const daysAgo = randomInt(1, 30);
+  const d = new Date(now.getTime() - daysAgo * 24 * 60 * 60 * 1000);
+  return d.toLocaleDateString("vi-VN");
+};
 
 const LAYERS: LayerConfig[] = [
   { key: "zone", color: "#2b8cbe", fill: true, label: "Vùng" },
@@ -37,6 +78,7 @@ const MapBox = ({
   plant = false,
   marker = false,
 }: TMapBox) => {
+  const mapRef = useRef<Map | null>(null);
   const [data, setData] = useState<Record<string, GeoJsonObject>>({});
   const [plantFeatures, setPlantFeatures] = useState<Feature<Point>[]>([]);
   const [visibleLayers, setVisibleLayers] = useState<Record<string, boolean>>({
@@ -148,59 +190,133 @@ const MapBox = ({
                   fillColor: color,
                   dashArray: key === "row" ? "4" : undefined,
                 })}
-                onEachFeature={(feature: Feature, layer) => {
-                  const content = `
-    <div style="font-family: 'Roboto', Arial, sans-serif; min-width: 220px;">
-      <div style="font-weight: bold; font-size: 16px;">Lô A1</div>
-      <div style="position: absolute; top: 12px; right: 12px; background: #e0e0e0; border-radius: 8px; padding: 2px 10px; font-size: 12px; font-weight: bold;">
-        LO-A1
-      </div>
-      <div style="margin-top: 8px;">
-        <b>Giống cây:</b> Sầu riêng Ri6
-      </div>
-      <div>
-        <b>Diện tích:</b> 2,000 m²
-       
-      </div>
-      <div>
-        <b>Canh tác:</b> Hữu cơ
-      </div>
-      <div>
-        <b>Địa hình:</b> <span style="background: #e6f4ec; color: #388E3C; border-radius: 6px; padding: 2px 8px; font-weight: bold;">
-          Dốc nhẹ (48 - 56M)
-        </span>
-      </div>
-    </div>
-  `;
-                  layer.bindPopup(content);
+                onEachFeature={(feature, layer) => {
+                  const props: any = feature.properties || {};
+                  const name =
+                    props.name || `${key.toUpperCase()}-${randomInt(1, 50)}`;
+                  const code = props.code || `Mã-${randomInt(100, 999)}`;
+                  const crop = randomItem(crops);
+                  const cultivation = randomItem(cultivationTypes);
+                  const soil = randomItem(soilTypes);
+                  const terrain = randomItem(terrains);
+                  const elevation = randomInt(400, 650);
+                  const treeCount =
+                    key === "zone"
+                      ? randomInt(800, 2000)
+                      : key === "area"
+                      ? randomInt(300, 800)
+                      : key === "plot"
+                      ? randomInt(80, 200)
+                      : randomInt(10, 60);
+                  const density = randomInt(180, 280);
+                  const areaText =
+                    key === "zone"
+                      ? formatArea(80, 150)
+                      : key === "area"
+                      ? formatArea(30, 60)
+                      : key === "plot"
+                      ? formatArea(10, 30)
+                      : formatArea(2, 10);
+
+                  const popupHtml = `
+                          <div style="
+                            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+                            min-width: 230px;
+                            padding: 10px 10px 8px 10px;
+                          ">
+                            <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px;">
+                              <div>
+                                <div style="font-weight:600;font-size:14px;margin-bottom:2px;">
+                                  ${name}
+                                </div>
+                                <div style="font-size:11px;color:#6b7280;">
+                                  ${
+                                    key === "zone"
+                                      ? "Vùng"
+                                      : key === "area"
+                                      ? "Khu vực"
+                                      : key === "plot"
+                                      ? "Lô"
+                                      : "Hàng"
+                                  } · Nông trại demo
+                                </div>
+                              </div>
+                              <div style="
+                                background:#e5e7eb;
+                                border-radius:999px;
+                                padding:2px 10px;
+                                font-size:11px;
+                                font-weight:600;
+                                color:#111827;
+                                white-space:nowrap;
+                              ">
+                                ${code}
+                              </div>
+                            </div>
+
+                            <div style="
+                              margin-top:8px;
+                              padding-top:8px;
+                              border-top:1px solid #e5e7eb;
+                              display:grid;
+                              row-gap:4px;
+                              font-size:12px;
+                              color:#111827;
+                            ">
+                              <div><b>Diện tích:</b> ${areaText}</div>
+                              <div><b>Giống chính:</b> ${crop}</div>
+                              <div><b>Số cây:</b> ${treeCount.toLocaleString(
+                                "vi-VN"
+                              )} cây</div>
+                              <div><b>Mật độ trồng:</b> ~${density} cây/ha</div>
+                              <div><b>Loại đất:</b> ${soil}</div>
+                              <div><b>Địa hình:</b> ${terrain} · ${elevation} m</div>
+                              <div><b>Hình thức canh tác:</b> ${cultivation}</div>
+                            </div>
+                          </div>
+                        `;
+
+                  layer.on("click", () => {
+                    if (mapRef.current) {
+                      const map = mapRef.current;
+                      const bounds = (layer as any).getBounds?.();
+                      if (bounds) {
+                        map.fitBounds(bounds, {
+                          maxZoom: 19,
+                          padding: [24, 24],
+                        });
+                      }
+                    }
+                    layer.bindPopup(popupHtml).openPopup();
+                  });
                 }}
               />
 
-              {
+              {data?.[key] &&
                 //@ts-expect-error no check
-                data?.[key] &&
-                  data?.[key]?.features &&
-                  data[key].features.map((feature: Feature) => {
-                    //@ts-expect-error no check
-                    const { center, properties } = feature;
-                    if (!center) return null;
-                    //@ts-expect-error no check
-                    const icon = L.divIcon({
-                      className: "text-label",
-                      html: `<div style="color: #fff;font-size:16px; font-weight: bold;">${
-                        properties?.name || ""
-                      }</div>`,
-                    });
+                data?.[key]?.features &&
+                //@ts-expect-error no check
 
-                    return (
-                      <Marker
-                        key={properties?.id}
-                        position={[center[1], center[0]]} // [lat, lng]
-                        icon={icon}
-                      />
-                    );
-                  })
-              }
+                data[key].features.map((feature: Feature) => {
+                  //@ts-expect-error no check
+                  const { center, properties } = feature;
+                  if (!center) return null;
+                  //@ts-expect-error no check
+                  const icon = L.divIcon({
+                    className: "text-label",
+                    html: `<div style="color: #fff;font-size:16px; font-weight: bold;">${
+                      properties?.name || ""
+                    }</div>`,
+                  });
+
+                  return (
+                    <Marker
+                      key={properties?.id}
+                      position={[center[1], center[0]]} // [lat, lng]
+                      icon={icon}
+                    />
+                  );
+                })}
             </Pane>
           )
       )}
