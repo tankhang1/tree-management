@@ -41,7 +41,7 @@ import { useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Scrollable from "../../../../components/Scrollable";
 import { SelectableSupplierCards } from "../../../SupplyManagementPage/Add/components/SelectableSupplierCards";
-import { companies } from "../../../SupplyManagementPage/Add";
+import { useCompanyStore } from "../../../zustand/companyStore";
 
 type PackageItem = {
   id: string;
@@ -108,6 +108,7 @@ const currencyFmt = (n: number) =>
 
 const FertilizerManagementOnePageModalEdit = () => {
   const navigate = useNavigate();
+  const { companies } = useCompanyStore();
   const [packages, setPackages] = useState<PackageItem[]>(defaultPackages);
   const [documents, setDocuments] = useState<DocItem[]>(defaultDocs);
   const [priceTiers, setPriceTiers] = useState<PriceTier[]>(defaultTiers);
@@ -140,7 +141,7 @@ const FertilizerManagementOnePageModalEdit = () => {
       currentStock: 1260,
       lotTraceable: true,
       storage: ["khô ráo", "thoáng mát"],
-      supplierId: companies?.[0]?.companyName ?? "",
+      supplierId: companies?.[0]?.name ?? "",
       supplierTerms: "Thanh toán 30 ngày • Giao trong 72h • Đổi trả 7 ngày",
       packagingUnit: "kg",
       packagingSpec: ["Bao 25kg", "Bao 50kg"],
@@ -797,7 +798,7 @@ const FertilizerManagementOnePageModalEdit = () => {
             >
               Quay lại
             </Button>
-            <Title order={3}>🌿 Thêm phân bón</Title>
+            <Title order={3}>🌿 Thông tin phân bón</Title>
             <Badge color="green" variant="light">
               Đã điền sẵn
             </Badge>
@@ -905,15 +906,15 @@ const FertilizerManagementOnePageModalEdit = () => {
                       p="sm"
                     >
                       <Stack gap={2}>
-                        <Text fw={600}>{item.companyName}</Text>
+                        <Text fw={600}>{item.name}</Text>
                         <Text size="sm">
-                          <b>Loại DN:</b> {item.businessType}
+                          <b>Loại DN:</b> {item.type}
                         </Text>
                         <Text size="sm">
                           <b>Đại diện:</b> {item.representative}
                         </Text>
                         <Text size="sm">
-                          <b>SĐT:</b> {item.phoneNumber}
+                          <b>SĐT:</b> {item.phone}
                         </Text>
                         <Group gap="xs" mt={4}>
                           <Anchor size="sm" href="#" c="blue.6">

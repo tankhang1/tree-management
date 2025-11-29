@@ -1586,7 +1586,7 @@ const ROUTES = [
   />,
   <Route
     key="fertilizer_main_detail"
-    path={PATH.FERTILIZER_MAIN_DETAIL}
+    path={`${PATH.FERTILIZER_MAIN_DETAIL}/:id`}
     element={withSuspense(<FertilizerManagementMainDetailPage />)}
   />,
   <Route

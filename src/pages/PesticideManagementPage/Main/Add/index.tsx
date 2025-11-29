@@ -1,5 +1,3 @@
-// Updated: PesticideManagementMainAddPage with new requirements
-
 import {
   Button,
   Card,
@@ -17,47 +15,82 @@ import {
   Image,
   NumberInput,
   Radio,
+  Select,
+  LoadingOverlay,
+  ActionIcon,
+  Badge,
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import {
   IconArrowLeft,
+  IconCheck,
   IconPhoto,
   IconPlus,
+  IconTrash,
   IconUpload,
   IconX,
 } from "@tabler/icons-react";
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { SelectableSupplierCards } from "../../../SupplyManagementPage/Add/components/SelectableSupplierCards";
-import { Dropzone, IMAGE_MIME_TYPE } from "@mantine/dropzone";
+import {
+  Dropzone,
+  IMAGE_MIME_TYPE,
+  type FileWithPath,
+} from "@mantine/dropzone";
 import SunEditor from "suneditor-react";
-import { companies } from "../../../SupplyManagementPage/Add";
 import Scrollable from "../../../../components/Scrollable";
+import { notifications } from "@mantine/notifications";
+import "suneditor/dist/css/suneditor.min.css";
 
-const pesticideTypes = [
-  { value: "TYPE01", label: "Thuốc trừ sâu" },
-  { value: "TYPE02", label: "Thuốc trừ bệnh" },
-  { value: "TYPE03", label: "Phân bón lá" },
-  { value: "TYPE04", label: "Chất kích thích sinh trưởng" },
-];
+// STORES
+import { useCompanyStore } from "../../../zustand/companyStore";
+import {
+  usePesticideStore,
+  type Pesticide,
+  type PesticideSupplier,
+} from "../../../zustand/pesticideStore";
+import { usePesticideTypeStore } from "../../../zustand/pesticideTypeStore";
+
+// Helper Base64
+const fileToBase64 = (file: File): Promise<string> => {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () => resolve(reader.result as string);
+    reader.onerror = (error) => reject(error);
+  });
+};
 
 const PesticideManagementMainAddPage = () => {
   const navigate = useNavigate();
-  const [active, setActive] = useState(0);
+  const { types } = usePesticideTypeStore();
+  // 1. Kết nối Store
+  const { addPesticide, isLoading } = usePesticideStore();
+  const { companies } = useCompanyStore();
 
+  const [active, setActive] = useState(0);
+  const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const [techDocName, setTechDocName] = useState<string>("");
+
+  // 2. Form Setup
   const form = useForm({
     initialValues: {
-      image: null,
-      id: "TH001",
-      name: "Thuốc trừ sâu sinh học Bio-X",
-      typeIds: ["sinh-hoc", "hữu-cơ"], // phải khớp với pesticideTypes
-      ingredients: "Azadirachtin 0.15%",
-      usage: "Phòng và trị sâu cuốn lá, rệp sáp, bọ trĩ",
-      note: "Sử dụng vào sáng sớm hoặc chiều mát. Không trộn với thuốc có tính kiềm.",
-      suppliers: [],
-      units: [],
-      packages: [],
+      id: "TH-" + Math.floor(Math.random() * 1000),
+      name: "",
+      typeIds: [] as string[],
+      ingredients: "",
+      usage: "",
+      note: "",
+      image: "", // Base64
+      hashtags: [] as string[],
+
+      // Tài liệu
       fileType: "0",
+      technicalDoc: "",
+
+      // Nhà cung cấp
+      suppliers: [] as PesticideSupplier[],
     },
     validate: {
       id: (val) => (!val ? "Vui lòng nhập mã thuốc" : null),
@@ -66,11 +99,115 @@ const PesticideManagementMainAddPage = () => {
     },
   });
 
-  const nextStep = () => setActive((cur) => (cur < 4 ? cur + 1 : cur));
+  // State tạm cho bước NCC
+  const [tempSupplierId, setTempSupplierId] = useState<string | null>(null);
+  const [tempQty, setTempQty] = useState<number>(1);
+  const [tempUnit, setTempUnit] = useState<string | null>(null);
+  const [tempSpec, setTempSpec] = useState<string[]>([]);
+
+  // --- HANDLERS ---
+
+  const handleDropImage = async (files: FileWithPath[]) => {
+    const file = files[0];
+    if (file) {
+      const previewUrl = URL.createObjectURL(file);
+      setImagePreview(previewUrl);
+      form.setFieldValue("image", previewUrl);
+    }
+  };
+
+  const handleRemoveImage = () => {
+    setImagePreview(null);
+    form.setFieldValue("image", "");
+  };
+
+  const handleDropDoc = async (files: FileWithPath[]) => {
+    const file = files[0];
+    if (file) {
+      const base64 = await fileToBase64(file);
+      setTechDocName(file.name);
+      form.setFieldValue("technicalDoc", base64 as any);
+      notifications.show({ message: "Đã tải tài liệu lên", color: "blue" });
+    }
+  };
+
+  const handleAddSupplier = () => {
+    if (!tempSupplierId) {
+      notifications.show({
+        message: "Vui lòng chọn nhà cung cấp",
+        color: "red",
+      });
+      return;
+    }
+    const supObj = companies.find((c) => c.id === tempSupplierId);
+
+    form.insertListItem("suppliers", {
+      supplierId: tempSupplierId,
+      supplierName: supObj?.name || "N/A",
+      quantity: tempQty,
+      unit: tempUnit || "Chai",
+      spec: tempSpec.join(", "),
+    });
+
+    // Reset temp inputs
+    setTempSupplierId(null);
+    setTempQty(1);
+    setTempUnit(null);
+    setTempSpec([]);
+    notifications.show({ message: "Đã thêm nhà cung cấp", color: "green" });
+  };
+
+  const removeSupplier = (index: number) => {
+    form.removeListItem("suppliers", index);
+  };
+
+  const handleFinish = async () => {
+    const values = form.values;
+
+    const payload: Omit<Pesticide, "createdAt"> = {
+      id: values.id,
+      name: values.name,
+      typeIds: values.typeIds,
+      ingredients: values.ingredients,
+      usage: values.usage,
+      note: values.note,
+      image: values.image,
+      hashtags: values.hashtags,
+      fileType: values.fileType,
+      technicalDoc: values.technicalDoc,
+      suppliers: values.suppliers,
+    };
+
+    const success = await addPesticide(payload);
+    if (success) {
+      notifications.show({
+        title: "Thành công",
+        message: "Đã thêm thuốc BVTV mới",
+        color: "green",
+        icon: <IconCheck />,
+      });
+      setActive(4); // Chuyển sang bước hoàn tất
+    }
+  };
+
+  const nextStep = () => {
+    if (active === 0) {
+      const validation = form.validate();
+      if (validation.hasErrors) return;
+    }
+    setActive((cur) => (cur < 4 ? cur + 1 : cur));
+  };
   const prevStep = () => setActive((cur) => (cur > 0 ? cur - 1 : cur));
 
+  // Options cho Select NCC
+  const supplierOptions = useMemo(
+    () => companies.map((c) => ({ value: c.id, label: c.name })),
+    [companies]
+  );
+
   return (
-    <Card shadow="sm" padding="lg" radius="md" withBorder>
+    <Card shadow="sm" padding="lg" radius="md" withBorder pos="relative">
+      <LoadingOverlay visible={isLoading} />
       <Group mb="xs">
         <Button
           variant="subtle"
@@ -88,31 +225,33 @@ const PesticideManagementMainAddPage = () => {
         onStepClick={setActive}
         allowNextStepsSelect={false}
       >
-        {/* Step 1 */}
+        {/* Step 1: Thông tin cơ bản */}
         <Stepper.Step label="Bước 1" description="Thông tin cơ bản">
           <Stack gap={"xs"}>
             <Group grow align="flex-start">
               <Stack gap={"xs"}>
                 <TextInput
                   label="Mã thuốc"
-                  required
+                  withAsterisk
                   radius={4}
                   {...form.getInputProps("id")}
                 />
                 <TextInput
                   label="Tên thuốc"
-                  required
+                  withAsterisk
                   radius={4}
                   {...form.getInputProps("name")}
                 />
                 <MultiSelect
                   label="Loại thuốc"
-                  data={pesticideTypes}
-                  required
+                  data={types.map((item) => ({
+                    value: item.id,
+                    label: item.name,
+                  }))}
+                  withAsterisk
                   radius={4}
                   {...form.getInputProps("typeIds")}
                 />
-
                 <Textarea
                   label="Công thức hoạt chất"
                   radius={4}
@@ -124,13 +263,13 @@ const PesticideManagementMainAddPage = () => {
                   {...form.getInputProps("usage")}
                 />
               </Stack>
+
               <Stack gap={"xs"}>
                 <Input.Wrapper label="Ảnh thuốc">
                   <Dropzone
-                    onDrop={(files) => console.log("accepted files", files)}
-                    onReject={(files) => console.log("rejected files", files)}
-                    maxSize={5 * 1024 ** 2}
+                    onDrop={handleDropImage}
                     accept={IMAGE_MIME_TYPE}
+                    maxSize={5 * 1024 ** 2}
                   >
                     <Group
                       justify="center"
@@ -138,39 +277,48 @@ const PesticideManagementMainAddPage = () => {
                       mih={220}
                       style={{ pointerEvents: "none" }}
                     >
-                      <Dropzone.Accept>
-                        <IconUpload
-                          size={52}
-                          color="var(--mantine-color-blue-6)"
-                          stroke={1.5}
-                        />
-                      </Dropzone.Accept>
-                      <Dropzone.Reject>
-                        <IconX
-                          size={52}
-                          color="var(--mantine-color-red-6)"
-                          stroke={1.5}
-                        />
-                      </Dropzone.Reject>
                       <Dropzone.Idle>
-                        <IconPhoto
-                          size={52}
-                          color="var(--mantine-color-dimmed)"
-                          stroke={1.5}
-                        />
+                        <IconPhoto size={52} color="gray" />
                       </Dropzone.Idle>
-
                       <div>
                         <Text size="xl" inline>
-                          Bỏ và thả ảnh thuốc tại đây
+                          Kéo hoặc chọn ảnh thuốc
                         </Text>
-                        <Text size="sm" c="dimmed" inline mt={7}>
-                          Đính kèm ảnh thuốc (tối đa 5MB)
+                        <Text size="sm" c="dimmed">
+                          Tối đa 5MB
                         </Text>
                       </div>
                     </Group>
                   </Dropzone>
                 </Input.Wrapper>
+
+                {imagePreview && (
+                  <div
+                    style={{
+                      position: "relative",
+                      display: "inline-block",
+                      alignSelf: "center",
+                    }}
+                  >
+                    <Image
+                      src={imagePreview}
+                      h={200}
+                      fit="contain"
+                      radius="md"
+                      bg="gray.1"
+                    />
+                    <ActionIcon
+                      color="red"
+                      variant="filled"
+                      radius="xl"
+                      style={{ position: "absolute", top: 5, right: 5 }}
+                      onClick={handleRemoveImage}
+                    >
+                      <IconX size={14} />
+                    </ActionIcon>
+                  </div>
+                )}
+
                 <Textarea
                   label="Ghi chú"
                   radius={4}
@@ -178,7 +326,9 @@ const PesticideManagementMainAddPage = () => {
                 />
                 <MultiSelect
                   label="HashTag"
-                  data={["Sử dụng thường xuyên", "Sử dụng mùa hè"]}
+                  data={["Sử dụng thường xuyên", "Sử dụng mùa hè", "Hữu cơ"]}
+                  {...form.getInputProps("hashtags")}
+                  searchable
                   radius={4}
                 />
               </Stack>
@@ -186,238 +336,150 @@ const PesticideManagementMainAddPage = () => {
           </Stack>
         </Stepper.Step>
 
+        {/* Step 2: Tài liệu kỹ thuật */}
         <Stepper.Step label="Bước 2" description="Tài liệu kỹ thuật">
           <Stack gap={"xs"}>
             <Radio.Group
               label="Tài liệu kỹ thuật"
+              value={form.values.fileType}
               onChange={(val) => form.setFieldValue(`fileType`, val)}
             >
               <Group mt="xs">
                 <Radio value="0" label="Tải file PDF" />
-                <Radio value="1" label="Tài liệu kỹ thuật" />
+                <Radio value="1" label="Soạn thảo nội dung" />
               </Group>
             </Radio.Group>
 
-            {form.getValues().fileType === "0" ? (
-              <Dropzone
-                onDrop={(files) => console.log("accepted files", files)}
-                onReject={(files) => console.log("rejected files", files)}
-                maxSize={5 * 1024 ** 2}
-                accept={["application/pdf"]}
-              >
-                <Group
-                  justify="center"
-                  gap="xl"
-                  mih={220}
-                  style={{ pointerEvents: "none" }}
+            {form.values.fileType === "0" ? (
+              <Stack>
+                <Dropzone
+                  onDrop={handleDropDoc}
+                  accept={["application/pdf"]}
+                  maxSize={5 * 1024 ** 2}
                 >
-                  <Dropzone.Accept>
-                    <IconUpload
-                      size={52}
-                      color="var(--mantine-color-blue-6)"
-                      stroke={1.5}
-                    />
-                  </Dropzone.Accept>
-                  <Dropzone.Reject>
-                    <IconX
-                      size={52}
-                      color="var(--mantine-color-red-6)"
-                      stroke={1.5}
-                    />
-                  </Dropzone.Reject>
-                  <Dropzone.Idle>
-                    <IconPhoto
-                      size={52}
-                      color="var(--mantine-color-dimmed)"
-                      stroke={1.5}
-                    />
-                  </Dropzone.Idle>
-
-                  <div>
-                    <Text size="xl" inline>
-                      Bỏ và thả tài liệu kỹ thuật tại đây
-                    </Text>
-                    <Text size="sm" c="dimmed" inline mt={7}>
-                      Đính kèm tài liệu (tối đa 5MB)
-                    </Text>
-                  </div>
-                </Group>
-              </Dropzone>
+                  <Group
+                    justify="center"
+                    gap="xl"
+                    mih={220}
+                    style={{ pointerEvents: "none" }}
+                  >
+                    <Dropzone.Idle>
+                      <IconUpload size={52} color="gray" />
+                    </Dropzone.Idle>
+                    <div>
+                      <Text size="xl" inline>
+                        Upload tài liệu PDF
+                      </Text>
+                      <Text size="sm" c="dimmed">
+                        Kéo thả hoặc click để chọn
+                      </Text>
+                    </div>
+                  </Group>
+                </Dropzone>
+                {form.values.technicalDoc && (
+                  <iframe
+                    src={form.values.technicalDoc}
+                    width="100%"
+                    height="500px"
+                    style={{ border: "1px solid #dee2e6", borderRadius: 8 }}
+                    title="Tài liệu kỹ thuật"
+                  />
+                )}
+              </Stack>
             ) : (
               <Stack>
                 <Text style={{ fontSize: 14, fontWeight: 500 }}>
-                  Tài liệu kỹ thuật
+                  Nội dung kỹ thuật
                 </Text>
-                <SunEditor setOptions={{ height: "200px" }} />
+                <SunEditor
+                  setOptions={{ height: "200px" }}
+                  setContents={form.values.technicalDoc}
+                  onChange={(content) =>
+                    form.setFieldValue("technicalDoc", content)
+                  }
+                />
               </Stack>
             )}
           </Stack>
         </Stepper.Step>
 
+        {/* Step 3: Nhà cung cấp */}
         <Stepper.Step label="Bước 3" description="Nhà cung cấp">
           <Stack gap={"xs"}>
-            <Card withBorder radius={4} p="md">
+            <Card withBorder radius={4} p="md" bg="gray.0">
               <Stack gap={"xs"}>
-                <TextInput
+                <Select
                   label="Nhà cung cấp"
+                  placeholder="Chọn NCC"
                   radius={4}
-                  placeholder="Chọn nhà cung cấp"
-                  {...form.getInputProps("suppliers")}
+                  searchable
+                  data={supplierOptions}
+                  value={tempSupplierId}
+                  onChange={setTempSupplierId}
                 />
-                <SelectableSupplierCards
-                  isCheckbox={false}
-                  isMultiple={false}
-                />
-                <Group grow>
+                {/* <SelectableSupplierCards isCheckbox={false} isMultiple={false} /> */}
+
+                <Group grow align="flex-end">
                   <NumberInput
                     label="Số lượng"
-                    placeholder="Số lượng"
+                    min={1}
                     radius={4}
+                    value={tempQty}
+                    onChange={(v) => setTempQty(Number(v))}
                   />
-                  <MultiSelect
+                  <Select
                     label="Đơn vị"
-                    clearable
+                    data={["Chai", "Gói", "Thùng"]}
                     radius={4}
-                    placeholder="Chọn đơn vị"
-                    data={["Cái", "Hộp", "Thùng"]}
+                    value={tempUnit}
+                    onChange={setTempUnit}
                   />
                   <MultiSelect
                     label="Quy cách"
+                    data={["Chai 500ml", "Gói 1kg"]}
+                    searchable
                     radius={4}
-                    clearable
-                    placeholder="Quy cách"
-                    data={[
-                      {
-                        value: "PKG001",
-                        label: "Hộp giấy nhỏ (50 cái)",
-                      },
-                      {
-                        value: "PKG002",
-                        label: "Túi nilon lớn (100 cái)",
-                      },
-                      {
-                        value: "PKG003",
-                        label: "Bao tải 25kg (25 cái)",
-                      },
-                      {
-                        value: "PKG004",
-                        label: "Bịch nhựa 1kg (10 cái)",
-                      },
-                      {
-                        value: "PKG005",
-                        label: "Thùng carton lớn (20 cái)",
-                      },
-                      {
-                        value: "PKG006",
-                        label: "Hộp nhựa 500ml (30 cái)",
-                      },
-                    ]}
+                    value={tempSpec}
+                    onChange={setTempSpec}
                   />
                 </Group>
+                <Button
+                  variant="outline"
+                  radius={4}
+                  leftSection={<IconPlus size={18} />}
+                  onClick={handleAddSupplier}
+                  disabled={!tempSupplierId}
+                >
+                  Thêm vào danh sách
+                </Button>
               </Stack>
             </Card>
-            <Button
-              variant="outline"
-              radius={4}
-              leftSection={<IconPlus size={18} />}
-              onClick={() => console.log("Thêm nhà cung cấp")}
-            >
-              Thêm nhà cung cấp
-            </Button>
-          </Stack>
-        </Stepper.Step>
 
-        {/* Step 3 */}
-        <Stepper.Step label="Bước 4" description="Xác nhận thông tin">
-          <Stack gap="sm">
-            <Title order={4}>📦 Thông tin chung</Title>
-            <Group align="flex-start" grow>
-              <Paper p="md" withBorder radius="md" h={300}>
-                <Stack gap="xs">
-                  <Text>
-                    <b>Mã thuốc:</b> {form.values.id}
+            <Divider label="Danh sách đã chọn" labelPosition="left" />
+            <Scrollable h={200}>
+              <Group align="flex-start" gap="xs">
+                {form.values.suppliers.length === 0 && (
+                  <Text c="dimmed" fs="italic">
+                    Chưa có nhà cung cấp.
                   </Text>
-                  <Text>
-                    <b>Tên thuốc:</b> {form.values.name}
-                  </Text>
-                  <Text>
-                    <b>Loại thuốc:</b>{" "}
-                    {form.values.typeIds
-                      .map(
-                        (v) => pesticideTypes.find((t) => t.value === v)?.label
-                      )
-                      .join(", ")}
-                  </Text>
-                  <Text>
-                    <b>Hoạt chất:</b> {form.values.ingredients}
-                  </Text>
-                  <Text>
-                    <b>Công dụng:</b> {form.values.usage}
-                  </Text>
-                  <Text>
-                    <b>Ghi chú:</b> {form.values.note}
-                  </Text>
-                </Stack>
-              </Paper>
-              <Paper p="md" withBorder radius="md" h={300}>
-                <Title order={5} mb="xs">
-                  Hình ảnh vật tư
-                </Title>
-                <Stack justify="center" align="center" h="100%">
-                  <Image
-                    src={
-                      "https://product.hstatic.net/200000722083/product/hinh_thuoc___41__fefe01ef5e524613a722da13c8250a50_1024x1024.png"
-                    }
-                    alt="Hình ảnh sản phẩm"
-                    width={100}
-                    height={200}
-                    fit="contain"
-                    radius="md"
-                  />
-                </Stack>
-              </Paper>
-            </Group>
-            <Divider
-              label="Nhà cung cấp & đóng gói"
-              labelPosition="center"
-              my="md"
-            />
-            <Scrollable h={300}>
-              <Group align="flex-start" gap={"md"} wrap="nowrap">
-                {companies.map((item, index) => (
-                  <Card
-                    key={index}
-                    withBorder
-                    shadow="sm"
-                    radius={4}
-                    miw={400}
-                    p="md"
-                    mb="sm"
-                  >
-                    <Stack gap="xs">
-                      <Text fw="bold">{item.companyName}</Text>
-                      <Text>
-                        <strong>Loại doanh nghiệp:</strong> {item.businessType}
-                      </Text>
-                      <Text>
-                        <strong>Người đại diện:</strong> {item.representative}
-                      </Text>
-                      <Text>
-                        <strong>SĐT:</strong> {item.phoneNumber}
-                      </Text>
-                      <Text>
-                        <strong>Đơn vị tính:</strong> {item.unit}
-                      </Text>
-                      <Text>
-                        <strong>Quy cách:</strong> {item.specification}
-                      </Text>
-                      <Text>
-                        <strong>Số lượng:</strong> {item.quantity}
-                      </Text>
-                      <Text>
-                        <strong>Ghi chú:</strong> {item.note || "Không có"}
-                      </Text>
-                    </Stack>
+                )}
+                {form.values.suppliers.map((s, idx) => (
+                  <Card key={idx} withBorder p="xs" radius="md" miw={300}>
+                    <Group justify="space-between">
+                      <Stack gap={0}>
+                        <Text fw={600}>{s.supplierName}</Text>
+                        <Text size="xs" c="dimmed">
+                          Cung ứng: {s.quantity} {s.unit} | {s.spec}
+                        </Text>
+                      </Stack>
+                      <ActionIcon
+                        color="red"
+                        variant="subtle"
+                        onClick={() => removeSupplier(idx)}
+                      >
+                        <IconTrash size={16} />
+                      </ActionIcon>
+                    </Group>
                   </Card>
                 ))}
               </Group>
@@ -425,23 +487,103 @@ const PesticideManagementMainAddPage = () => {
           </Stack>
         </Stepper.Step>
 
+        {/* Step 4: Xác nhận */}
+        <Stepper.Step label="Bước 4" description="Xác nhận thông tin">
+          <Stack gap="sm">
+            <Title order={4}>📦 Thông tin chung</Title>
+            <Group align="flex-start" grow>
+              <Paper p="md" withBorder radius="md" h={300}>
+                <Stack gap="xs">
+                  <Group justify="space-between">
+                    <Text c="dimmed">Mã:</Text>
+                    <Text fw={500}>{form.values.id}</Text>
+                  </Group>
+                  <Group justify="space-between">
+                    <Text c="dimmed">Tên:</Text>
+                    <Text fw={500}>{form.values.name}</Text>
+                  </Group>
+                  <Group justify="space-between">
+                    <Text c="dimmed">Loại:</Text>
+                    <Group gap={4}>
+                      {form.values.typeIds.map((id) => {
+                        const label = types.find((t) => t.id === id)?.name;
+                        return (
+                          <Badge key={id} size="sm" variant="light">
+                            {label}
+                          </Badge>
+                        );
+                      })}
+                    </Group>
+                  </Group>
+                  <Divider />
+                  <Text size="sm">
+                    <b>Hoạt chất:</b> {form.values.ingredients}
+                  </Text>
+                  <Text size="sm">
+                    <b>Công dụng:</b> {form.values.usage}
+                  </Text>
+                  <Text size="sm" c="dimmed">
+                    <b>Ghi chú:</b> {form.values.note}
+                  </Text>
+                </Stack>
+              </Paper>
+              <Paper p="md" withBorder radius="md" h={300}>
+                <Stack align="center" justify="center" h="100%">
+                  <Text fw={500}>Hình ảnh minh họa</Text>
+                  {imagePreview ? (
+                    <Image src={imagePreview} h={200} fit="contain" />
+                  ) : (
+                    <Text c="dimmed">Chưa có ảnh</Text>
+                  )}
+                </Stack>
+              </Paper>
+            </Group>
+
+            <Divider label="Nhà cung cấp" labelPosition="center" my="md" />
+            <Scrollable h={200}>
+              <Group gap="xs">
+                {form.values.suppliers.map((s, i) => (
+                  <Card
+                    key={i}
+                    withBorder
+                    shadow="sm"
+                    p="sm"
+                    radius={4}
+                    miw={250}
+                  >
+                    <Text fw={600} size="sm">
+                      {s.supplierName}
+                    </Text>
+                    <Text size="xs" c="dimmed">
+                      {s.quantity} {s.unit} • {s.spec}
+                    </Text>
+                  </Card>
+                ))}
+              </Group>
+            </Scrollable>
+
+            <Group justify="space-between" mt="md">
+              <Button variant="default" radius={4} onClick={prevStep}>
+                Quay lại
+              </Button>
+              <Button
+                color="green"
+                radius={4}
+                onClick={handleFinish}
+                loading={isLoading}
+              >
+                Hoàn thành & Lưu
+              </Button>
+            </Group>
+          </Stack>
+        </Stepper.Step>
+
         <Stepper.Completed>
           <Stack align="center" justify="center" mt="xl">
-            <Image
-              src={
-                "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQjPNbBpZeXnXfTuA6AWek-Kj8NYEVbYdG6ayi5bIWarDuryXDrILdKMTd597quLD0PBKM&usqp=CAU"
-              }
-              w={200}
-              fit="cover"
-            />
+            <IconCheck size={60} color="green" />
             <Text fz={"h2"} ta="center">
               Thêm mới thuốc bảo vệ thực vật thành công!
             </Text>
-            <Text fz={"md"} ta="center" c="dimmed">
-              Thuốc mới đã được tạo thành công. Bạn có thể xem lại thông tin chi
-              tiết trong danh sách thuốc bảo vệ thực vật.
-            </Text>
-
             <Button size="md" mt="md" radius={4} onClick={() => navigate(-1)}>
               Xác nhận
             </Button>
@@ -449,7 +591,7 @@ const PesticideManagementMainAddPage = () => {
         </Stepper.Completed>
       </Stepper>
 
-      {active < 4 && (
+      {active < 3 && (
         <Group mt="xl" justify="space-between">
           <Button
             variant="default"
@@ -459,16 +601,11 @@ const PesticideManagementMainAddPage = () => {
           >
             Quay lại
           </Button>
-          {active < 3 && (
+          {active < 3 ? (
             <Button onClick={nextStep} radius={4}>
               Tiếp theo
             </Button>
-          )}
-          {active === 3 && (
-            <Button onClick={nextStep} radius={4}>
-              Hoàn thành
-            </Button>
-          )}
+          ) : null}
         </Group>
       )}
     </Card>

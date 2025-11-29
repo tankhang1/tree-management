@@ -11,6 +11,8 @@ import {
   TextInput,
   Title,
   Tooltip,
+  Modal,
+  Badge,
 } from "@mantine/core";
 import {
   IconDotsVertical,
@@ -20,99 +22,163 @@ import {
   IconRefresh,
   IconSearch,
   IconTrash,
+  IconPlus,
+  IconCheck,
 } from "@tabler/icons-react";
 import type { MRT_ColumnDef } from "mantine-react-table";
 import Table from "../../../components/Table";
 import { useNavigate } from "react-router-dom";
 import { PATH } from "../../../constants/path.constants";
-type Fertilizer = {
-  id: string;
-  name: string; // Tên phân bón
-  type: string; // Loại: ví dụ "Hữu cơ", "Vô cơ", "Vi sinh"
-  nutrientContent: string; // Hàm lượng dinh dưỡng: "NPK 16-16-8", "Đạm 46%"
-  unit: string; // Đơn vị tính: "kg", "bao", "gói"
-  manufacturer: string; // Nhà sản xuất
-  description?: string; // Ghi chú thêm
-};
-const mockFertilizers: Fertilizer[] = [
-  {
-    id: "F001",
-    name: "Phân NPK tổng hợp",
-    type: "Vô cơ",
-    nutrientContent: "NPK 16-16-8",
-    unit: "kg",
-    manufacturer: "Công ty Phân bón Miền Nam",
-    description: "Phù hợp cho cây ăn trái và rau màu",
-  },
-  {
-    id: "F002",
-    name: "Phân hữu cơ vi sinh",
-    type: "Hữu cơ",
-    nutrientContent: "Hữu cơ 30%",
-    unit: "bao",
-    manufacturer: "Công ty Hữu Cơ Việt",
-    description: "Cải tạo đất, tăng độ tơi xốp",
-  },
-  {
-    id: "F003",
-    name: "Phân Urê",
-    type: "Vô cơ",
-    nutrientContent: "Đạm 46%",
-    unit: "kg",
-    manufacturer: "Đạm Phú Mỹ",
-    description: "Cung cấp đạm giai đoạn phát triển thân lá",
-  },
-];
+import { useState, useMemo } from "react";
+import { useDisclosure } from "@mantine/hooks";
+import { notifications } from "@mantine/notifications";
+
+// IMPORT STORE
+import {
+  useFertilizerStore,
+  type Fertilizer,
+} from "../../zustand/fertilizerStore";
+
 const FertilizerManagementMainPage = () => {
   const navigate = useNavigate();
-  const onFertilizerDetail = () => {
-    navigate(PATH.FERTILIZER_MAIN_DETAIL);
+
+  // 1. KẾT NỐI STORE
+  const { fertilizers, deleteFertilizer } = useFertilizerStore();
+
+  // 2. STATE BỘ LỌC
+  const [keyword, setKeyword] = useState("");
+  const [selectedTypes, setSelectedTypes] = useState<string[]>([]);
+  const [selectedManufacturers, setSelectedManufacturers] = useState<string[]>(
+    []
+  );
+
+  // State Modal Xóa
+  const [openedDelete, { open: openDelete, close: closeDelete }] =
+    useDisclosure(false);
+  const [selectedId, setSelectedId] = useState<string | null>(null);
+
+  // 3. NAVIGATION
+  const onFertilizerAdd = () => navigate(PATH.FERTILIZER_MAIN_ADD);
+
+  // Điều hướng kèm ID để Sửa/Xem chi tiết (Dùng chung trang Add hoặc trang Detail riêng)
+  const onEditFertilizer = (id: string) =>
+    navigate(`${PATH.FERTILIZER_MAIN_ADD}/${id}`);
+  const onFertilizerDetail = (id: string) =>
+    navigate(`${PATH.FERTILIZER_MAIN_DETAIL}/${id}`);
+
+  // 4. LOGIC DELETE
+  const confirmDelete = (id: string) => {
+    setSelectedId(id);
+    openDelete();
   };
+
+  const handleDelete = () => {
+    if (selectedId) {
+      deleteFertilizer(selectedId);
+      notifications.show({
+        title: "Thành công",
+        message: "Đã xóa phân bón khỏi hệ thống",
+        color: "green",
+        icon: <IconCheck />,
+      });
+      closeDelete();
+      setSelectedId(null);
+    }
+  };
+
+  const handleResetFilters = () => {
+    setKeyword("");
+    setSelectedTypes([]);
+    setSelectedManufacturers([]);
+  };
+
+  // 5. LOGIC FILTER
+  const filteredData = useMemo(() => {
+    return fertilizers.filter((item) => {
+      // Lọc theo từ khóa (Mã, Tên)
+      const matchKeyword =
+        !keyword ||
+        item.name.toLowerCase().includes(keyword.toLowerCase()) ||
+        item.id.toLowerCase().includes(keyword.toLowerCase());
+
+      // Lọc theo Loại
+      const matchType =
+        selectedTypes.length === 0 || selectedTypes.includes(item.type);
+
+      // Lọc theo Nhà sản xuất
+      const matchManufacturer =
+        selectedManufacturers.length === 0 ||
+        selectedManufacturers.includes(item.manufacturer);
+
+      return matchKeyword && matchType && matchManufacturer;
+    });
+  }, [fertilizers, keyword, selectedTypes, selectedManufacturers]);
+
+  // Tạo danh sách Options động cho bộ lọc
+  const typeOptions = useMemo(
+    () => Array.from(new Set(fertilizers.map((f) => f.type))),
+    [fertilizers]
+  );
+  const manufacturerOptions = useMemo(
+    () => Array.from(new Set(fertilizers.map((f) => f.manufacturer))),
+    [fertilizers]
+  );
+
+  // 6. CẤU HÌNH CỘT
   const fertilizerColumns: MRT_ColumnDef<Fertilizer>[] = [
     {
-      accessorKey: "id",
+      accessorKey: "code", // Dùng code thay vì id để hiển thị mã thân thiện
       header: "Mã phân bón",
-      Cell: ({ cell }) => <Text>{cell.getValue<string>()}</Text>,
+      size: 120,
+      Cell: ({ cell }) => <Text fw={500}>{cell.getValue<string>()}</Text>,
     },
     {
       accessorKey: "name",
       header: "Tên phân bón",
+      size: 200,
       Cell: ({ cell }) => <Text fw={600}>{cell.getValue<string>()}</Text>,
     },
     {
       accessorKey: "type",
       header: "Loại",
-      Cell: ({ cell }) => <Text>{cell.getValue<string>()}</Text>,
+      size: 120,
+      Cell: ({ cell }) => (
+        <Badge variant="outline" color="blue">
+          {cell.getValue<string>()}
+        </Badge>
+      ),
     },
     {
       accessorKey: "nutrientContent",
-      header: "Hàm lượng dinh dưỡng",
-      Cell: ({ cell }) => <Text>{cell.getValue<string>()}</Text>,
+      header: "Hàm lượng",
+      size: 150,
     },
     {
       accessorKey: "unit",
       header: "Đơn vị",
-      Cell: ({ cell }) => <Text>{cell.getValue<string>()}</Text>,
+      size: 100,
     },
     {
       accessorKey: "manufacturer",
       header: "Nhà sản xuất",
-      Cell: ({ cell }) => <Text>{cell.getValue<string>()}</Text>,
+      size: 180,
     },
     {
       accessorKey: "description",
       header: "Ghi chú",
       Cell: ({ cell }) => (
-        <Text>{cell.getValue<string>() || "Không có ghi chú"}</Text>
+        <Text size="sm" c="dimmed" lineClamp={1}>
+          {cell.getValue<string>() || "—"}
+        </Text>
       ),
     },
     {
       accessorKey: "actions",
       header: "Tuỳ chọn",
       enableColumnActions: false,
-      size: 10,
-      Cell: () => (
-        <Menu shadow="md">
+      size: 60,
+      Cell: ({ row }) => (
+        <Menu shadow="md" position="bottom-end">
           <Menu.Target>
             <ActionIcon variant="transparent" c={"gray"}>
               <IconDotsVertical />
@@ -121,15 +187,22 @@ const FertilizerManagementMainPage = () => {
 
           <Menu.Dropdown>
             <Menu.Item
-              onClick={onFertilizerDetail}
+              onClick={() => onFertilizerDetail(row.original.id)}
               leftSection={<IconEye size={18} color="gray" />}
             >
               Chi tiết
             </Menu.Item>
-            <Menu.Item leftSection={<IconEdit size={18} color="green" />}>
+            <Menu.Item
+              leftSection={<IconEdit size={18} color="green" />}
+              onClick={() => onEditFertilizer(row.original.id)}
+            >
               Chỉnh sửa
             </Menu.Item>
-            <Menu.Item leftSection={<IconTrash size={18} />} color="red">
+            <Menu.Item
+              leftSection={<IconTrash size={18} />}
+              color="red"
+              onClick={() => confirmDelete(row.original.id)}
+            >
               Xoá
             </Menu.Item>
           </Menu.Dropdown>
@@ -137,9 +210,7 @@ const FertilizerManagementMainPage = () => {
       ),
     },
   ];
-  const onFertilizerAdd = () => {
-    navigate(PATH.FERTILIZER_MAIN_ADD);
-  };
+
   return (
     <Stack gap="lg">
       <Group justify="space-between">
@@ -148,15 +219,20 @@ const FertilizerManagementMainPage = () => {
         </Title>
         <Group>
           <Button variant="outline" radius={4} leftSection={<IconFileExcel />}>
-            Xuất File
+            Xuất Excel
           </Button>
-          <Button radius={4} onClick={onFertilizerAdd}>
+          <Button
+            radius={4}
+            onClick={onFertilizerAdd}
+            leftSection={<IconPlus size={18} />}
+          >
             Thêm mới
           </Button>
         </Group>
       </Group>
+
+      {/* --- FILTER CARD --- */}
       <Card withBorder shadow="sm" radius={4} p="md">
-        {/* Header */}
         <Group justify="space-between" align="center" mb="xs">
           <Stack gap={0}>
             <Title order={4}>Tìm kiếm phân bón</Title>
@@ -171,43 +247,47 @@ const FertilizerManagementMainPage = () => {
                 radius={4}
                 variant="default"
                 leftSection={<IconRefresh size={16} />}
-                onClick={() => {}}
+                onClick={handleResetFilters}
               >
                 Làm mới
               </Button>
             </Tooltip>
             <Button radius={4} leftSection={<IconSearch size={16} />}>
-              Lọc thông tin
+              Tìm kiếm
             </Button>
           </Group>
         </Group>
 
-        {/* Form */}
         <Stack gap="sm">
-          {/* Khung tìm kiếm (keyword) */}
           <TextInput
             radius={4}
             label="Khung tìm kiếm"
-            description="Ví dụ: Phân NPK"
-            placeholder="Nhập thông tin"
+            description="Ví dụ: Phân NPK, F001"
+            placeholder="Nhập tên hoặc mã phân bón..."
             leftSection={<IconSearch size={16} />}
+            value={keyword}
+            onChange={(e) => setKeyword(e.currentTarget.value)}
           />
 
           <SimpleGrid cols={{ base: 1, md: 2, lg: 3 }} spacing="sm">
             <MultiSelect
               label="Loại phân"
               description="Ví dụ: Phân NPK, Phân hữu cơ"
-              data={["Phân NPK", "Phân hữu cơ", "Phân vi sinh"]}
-              placeholder="Chọn thông tin"
+              placeholder="Chọn loại"
+              data={typeOptions} // Data động từ store
+              value={selectedTypes}
+              onChange={setSelectedTypes}
               searchable
               clearable
               radius={4}
             />
             <MultiSelect
               label="Nhà sản xuất"
-              description="Ví dụ: Công ty A, Công ty B"
-              data={["Công ty A", "Công ty B", "Công ty C"]}
-              placeholder="Chọn thông tin"
+              description="Ví dụ: Bình Điền, Đạm Phú Mỹ"
+              placeholder="Chọn nhà sản xuất"
+              data={manufacturerOptions} // Data động từ store
+              value={selectedManufacturers}
+              onChange={setSelectedManufacturers}
               searchable
               clearable
               radius={4}
@@ -215,8 +295,34 @@ const FertilizerManagementMainPage = () => {
           </SimpleGrid>
         </Stack>
       </Card>
-      <Table columns={fertilizerColumns} data={mockFertilizers} />
+
+      {/* --- TABLE --- */}
+      <Table
+        //@ts-expect-error no check
+        columns={fertilizerColumns}
+        //@ts-expect-error no check
+        data={filteredData}
+      />
+
+      {/* --- DELETE MODAL --- */}
+      <Modal
+        opened={openedDelete}
+        onClose={closeDelete}
+        title="Xác nhận xóa"
+        centered
+      >
+        <Text>Bạn có chắc chắn muốn xóa loại phân bón này không?</Text>
+        <Group justify="flex-end" mt="lg">
+          <Button variant="default" onClick={closeDelete}>
+            Hủy
+          </Button>
+          <Button color="red" onClick={handleDelete}>
+            Xóa ngay
+          </Button>
+        </Group>
+      </Modal>
     </Stack>
   );
 };
+
 export default FertilizerManagementMainPage;

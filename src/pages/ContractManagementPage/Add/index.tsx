@@ -208,6 +208,7 @@ const ContractManagementAddPage = () => {
                 label="Ngày ký kết"
                 value={form.signDate}
                 locale="vi"
+                //@ts-expect-error no check
                 onChange={(val) => setForm({ ...form, signDate: val })}
                 radius={4}
               />
@@ -217,6 +218,7 @@ const ContractManagementAddPage = () => {
                 label="Loại hợp đồng"
                 data={contractTypes}
                 value={form.type}
+                //@ts-expect-error no check
                 onChange={(val) => setForm({ ...form, type: val })}
                 radius={4}
               />

@@ -7,53 +7,78 @@ import {
   Stack,
   Text,
   Title,
+  TextInput,
+  Card,
+  Tooltip,
 } from "@mantine/core";
 import {
   IconDotsVertical,
   IconEdit,
-  IconEye,
   IconFileExcel,
   IconTrash,
+  IconPlus,
+  IconSearch,
+  IconRefresh,
 } from "@tabler/icons-react";
 import type { MRT_ColumnDef } from "mantine-react-table";
 import Table from "../../../components/Table";
 import { useDisclosure } from "@mantine/hooks";
-import AddFertilizerForm from "./components/AddFertilizerForm";
+import { useState, useMemo } from "react";
+import { notifications } from "@mantine/notifications";
 
-type FertilizerType = {
-  id: string;
-  name: string;
-  nutrientContent: string; // Hàm lượng dinh dưỡng, ví dụ: "NPK 16-16-8"
-  description?: string;
-};
-const mockFertilizerTypes: FertilizerType[] = [
-  {
-    id: "FT001",
-    name: "Phân NPK tổng hợp",
-    nutrientContent: "NPK 16-16-8",
-    description: "Phù hợp cho cây ăn trái và rau màu",
-  },
-  {
-    id: "FT002",
-    name: "Phân hữu cơ vi sinh",
-    nutrientContent: "Chất hữu cơ 30%",
-    description: "Tăng độ tơi xốp cho đất",
-  },
-  {
-    id: "FT003",
-    name: "Phân Urê",
-    nutrientContent: "Đạm 46%",
-    description: "Cung cấp đạm cho giai đoạn phát triển lá",
-  },
-];
+import AddFertilizerForm from "./components/AddFertilizerForm";
+import {
+  useFertilizerTypeStore,
+  type FertilizerType,
+} from "../../zustand/fertilizerTypeStore";
+
 const FertilizerManagementTypePage = () => {
-  const [openedAddForm, { open: openAddForm, close: closeAddForm }] =
+  // 1. Kết nối Store
+  const { types, deleteType } = useFertilizerTypeStore();
+
+  // 2. State quản lý
+  const [openedForm, { open: openForm, close: closeForm }] =
     useDisclosure(false);
+  const [openedDelete, { open: openDelete, close: closeDelete }] =
+    useDisclosure(false);
+
+  const [selectedId, setSelectedId] = useState<string | null>(null);
+
+  // 3. Handlers
+  const handleCreate = () => {
+    setSelectedId(null);
+    openForm();
+  };
+
+  const handleEdit = (id: string) => {
+    setSelectedId(id);
+    openForm();
+  };
+
+  const confirmDelete = (id: string) => {
+    setSelectedId(id);
+    openDelete();
+  };
+
+  const handleDelete = () => {
+    if (selectedId) {
+      deleteType(selectedId);
+      notifications.show({
+        title: "Đã xóa thành công",
+        color: "green",
+        message: "",
+      });
+      closeDelete();
+      setSelectedId(null);
+    }
+  };
+
   const fertilizerColumns: MRT_ColumnDef<FertilizerType>[] = [
     {
       accessorKey: "id",
       header: "Mã loại",
-      Cell: ({ cell }) => <Text>{cell.getValue<string>()}</Text>,
+      size: 100,
+      Cell: ({ cell }) => <Text fw={500}>{cell.getValue<string>()}</Text>,
     },
     {
       accessorKey: "name",
@@ -63,36 +88,45 @@ const FertilizerManagementTypePage = () => {
     {
       accessorKey: "nutrientContent",
       header: "Hàm lượng dinh dưỡng",
-      Cell: ({ cell }) => <Text>{cell.getValue<string>()}</Text>,
+    },
+    {
+      accessorKey: "unit",
+      header: "ĐVT",
+      size: 80,
     },
     {
       accessorKey: "description",
       header: "Ghi chú",
       Cell: ({ cell }) => (
-        <Text>{cell.getValue<string>() || "Không có ghi chú"}</Text>
+        <Text c="dimmed" size="sm" lineClamp={1}>
+          {cell.getValue<string>() || "—"}
+        </Text>
       ),
     },
     {
       accessorKey: "actions",
       header: "Tuỳ chọn",
       enableColumnActions: false,
-      size: 10,
-      Cell: () => (
-        <Menu shadow="md">
+      size: 60,
+      Cell: ({ row }) => (
+        <Menu shadow="md" position="bottom-end">
           <Menu.Target>
-            <ActionIcon variant="transparent" c={"gray"}>
+            <ActionIcon variant="subtle" c={"gray"}>
               <IconDotsVertical />
             </ActionIcon>
           </Menu.Target>
 
           <Menu.Dropdown>
-            <Menu.Item leftSection={<IconEye size={18} color="gray" />}>
-              Chi tiết
-            </Menu.Item>
-            <Menu.Item leftSection={<IconEdit size={18} color="green" />}>
+            <Menu.Item
+              leftSection={<IconEdit size={18} color="green" />}
+              onClick={() => handleEdit(row.original.id)}
+            >
               Chỉnh sửa
             </Menu.Item>
-            <Menu.Item leftSection={<IconTrash size={18} />} color="red">
+            <Menu.Item
+              leftSection={<IconTrash size={18} color="red" />}
+              onClick={() => confirmDelete(row.original.id)}
+            >
               Xoá
             </Menu.Item>
           </Menu.Dropdown>
@@ -109,21 +143,55 @@ const FertilizerManagementTypePage = () => {
         </Title>
         <Group>
           <Button variant="outline" radius={4} leftSection={<IconFileExcel />}>
-            Xuất File
+            Xuất Excel
           </Button>
-          <Button radius={4} onClick={openAddForm}>
+          <Button
+            radius={4}
+            onClick={handleCreate}
+            leftSection={<IconPlus size={18} />}
+          >
             Thêm mới
           </Button>
         </Group>
       </Group>
 
-      <Table columns={fertilizerColumns} data={mockFertilizerTypes} />
+      <Table
+        //@ts-expect-error no check
+        columns={fertilizerColumns}
+        //@ts-expect-error no check
+        data={types}
+      />
+
+      {/* MODAL THÊM / SỬA */}
       <Modal
-        opened={openedAddForm}
-        onClose={closeAddForm}
-        title={<Text fw={"bold"}>Tạo mới loại phân bón</Text>}
+        opened={openedForm}
+        onClose={closeForm}
+        title={
+          <Text fw={"bold"}>
+            {selectedId ? "Cập nhật loại phân bón" : "Tạo mới loại phân bón"}
+          </Text>
+        }
+        centered
       >
-        <AddFertilizerForm onSubmit={() => {}} />
+        <AddFertilizerForm editId={selectedId} onClose={closeForm} />
+      </Modal>
+
+      {/* MODAL XÓA */}
+      <Modal
+        opened={openedDelete}
+        onClose={closeDelete}
+        title="Xác nhận xóa"
+        centered
+      >
+        <Text>Bạn có chắc chắn muốn xóa loại phân bón này không?</Text>
+        <Group justify="flex-end" mt="lg">
+          <Button variant="default" onClick={closeDelete}>
+            Hủy
+          </Button>
+          <Button color="red" onClick={handleDelete}>
+            Xóa ngay
+          </Button>
+        </Group>
       </Modal>
     </Stack>
   );
