@@ -241,17 +241,17 @@ export const NAV_BAR = [
     link: PATH.COMPANY,
     children: [
       {
-        label: "Danh sách nhà cung cấp",
+        label: "Danh sách thông tin",
         link: PATH.COMPANY,
       },
-      {
-        label: "Danh sách khách hàng",
-        link: PATH.COMPANY_CUSTOMER,
-      },
-      {
-        label: "Danh sách đối tác",
-        link: PATH.COMPANY_PARTNER,
-      },
+      // {
+      //   label: "Danh sách khách hàng",
+      //   link: PATH.COMPANY_CUSTOMER,
+      // },
+      // {
+      //   label: "Danh sách đối tác",
+      //   link: PATH.COMPANY_PARTNER,
+      // },
       {
         label: "Địa chỉ giao nhận",
         link: PATH.COMPANY_ADDRESS,
