@@ -1,6 +1,7 @@
 // stores/region-store.ts
 import { create } from "zustand";
 import { createJSONStorage, persist } from "zustand/middleware";
+import type { Certificate } from "./certificateStore";
 
 export type LatLngPoint = { lat: number; lng: number };
 

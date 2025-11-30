@@ -31,7 +31,10 @@ import {
 } from "@tabler/icons-react";
 import { useNavigate } from "react-router-dom";
 import { PATH } from "../../../constants/path.constants";
-import { useState } from "react";
+import { useMemo, useState } from "react";
+import { useRegionStore } from "../../zustand/regionStore";
+import { useAreaSetupStore } from "../../zustand/areaSetupStore";
+import { usePlotStore } from "../../zustand/plotStore";
 type AreaZone = {
   id: string;
   code: string;
@@ -40,7 +43,7 @@ type AreaZone = {
   areaName?: string;
   plotName?: string;
   employee: string;
-  area: number; // diện tích (m²)
+  area: number;
   soilType: string;
   terrain: string[];
   mainCrop: string;
@@ -51,205 +54,272 @@ type AreaZone = {
   province: string;
   district: string;
 };
-const areaZoneData: AreaZone[] = [
-  {
-    id: "V001",
-    code: "V-AG1",
-    name: "Khu đậu nành Vàm Nao",
-    regionName: "Vùng Đậu Nành An Giang",
-    employee: "Nguyễn Văn A",
-    area: 10000,
-    tree: "Đậu nành",
-    province: "An Giang",
-    district: "TP. Long Xuyên",
-    soilType: "Đất phù sa",
-    terrain: ["Bằng phẳng", "Ven sông"],
-    mainCrop: "Đậu nành",
-    gps: "10.3862,105.4351 10.3868,105.4362 10.3857,105.4367 10.3853,105.4356",
-    numberOfLots: 5,
-    cultivationZone: "Khu canh tác ĐBSCL",
-  },
-  {
-    id: "V006",
-    code: "V-VL2",
-    name: "Bắp Bình Minh",
-    areaName: "Cánh đồng C2",
-    regionName: "Vùng Bắp Vĩnh Long",
-    employee: "Hoàng Thị F",
-    area: 7000,
-    soilType: "Đất phù sa",
-    tree: "Bắp (Ngô)",
-    terrain: ["Trũng"],
-    mainCrop: "Bắp (Ngô)",
-    gps: "10.2124,105.9726 10.2130,105.9734 10.2121,105.9740 10.2116,105.9732",
-    numberOfLots: 3,
-    cultivationZone: "Khu canh tác ĐBSCL",
-    province: "Vĩnh Long",
-    district: "Thị xã Bình Minh",
-  },
-  {
-    id: "V002",
-    code: "V-TG2",
-    name: "Khu bắp Mỹ Tho",
-    regionName: "Vùng Bắp Tiền Giang",
-    employee: "Trần Thị B",
-    area: 8500,
-    tree: "Bắp (Ngô)",
-    soilType: "Đất phù sa",
-    terrain: ["Bằng phẳng", "Trũng"],
-    mainCrop: "Bắp (Ngô)",
-    gps: "10.3521,106.3562 10.3529,106.3569 10.3520,106.3576 10.3514,106.3568",
-    numberOfLots: 3,
-    cultivationZone: "Khu canh tác ĐBSCL",
-    province: "Tiền Giang",
-    district: "TP. Mỹ Tho",
-  },
-  {
-    id: "V003",
-    code: "V-LA1",
-    name: "Đậu nành Đức Hòa",
-    regionName: "Vùng Đậu Nành Long An",
-    employee: "Lê Văn C",
-    area: 6000,
-    soilType: "Đất thịt",
-    terrain: ["Bằng phẳng"],
-    mainCrop: "Đậu nành",
-    gps: "10.7918,106.4152 10.7925,106.4161 10.7917,106.4169 10.7910,106.4160",
-    numberOfLots: 4,
-    cultivationZone: "Khu canh tác Đông Nam Bộ",
-    tree: "Đậu nành",
-    province: "Long An",
-    district: "Huyện Đức Hòa",
-  },
-  {
-    id: "V004",
-    code: "V-DT3",
-    name: "Bắp Tháp Mười",
-    regionName: "Vùng Bắp Đồng Tháp",
-    employee: "Phạm Thị D",
-    area: 12000,
-    soilType: "Đất đỏ bazan",
-    terrain: ["Cao", "Bằng phẳng"],
-    mainCrop: "Bắp (Ngô)",
-    gps: "10.5234,105.7215 10.5240,105.7226 10.5230,105.7232 10.5224,105.7221",
-    numberOfLots: 6,
-    cultivationZone: "Khu canh tác ĐBSCL",
-    tree: "Bắp (Ngô)",
-    province: "Đồng Tháp",
-    district: "Huyện Tháp Mười",
-  },
-  {
-    id: "V005",
-    code: "V-KG1",
-    name: "Đậu nành Tân Hiệp",
-    regionName: "Vùng Đậu Nành Kiên Giang",
-    employee: "Nguyễn Văn E",
-    area: 9500,
-    soilType: "Đất thịt",
-    terrain: ["Thấp", "Trũng"],
-    mainCrop: "Đậu nành",
-    gps: "10.1035,105.1981 10.1043,105.1989 10.1036,105.1997 10.1029,105.1989",
-    numberOfLots: 4,
-    cultivationZone: "Khu canh tác ĐBSCL",
-    tree: "Đậu nành",
-    province: "Kiên Giang",
-    district: "Huyện Tân Hiệp",
-  },
 
-  {
-    id: "V007",
-    code: "V-GL1",
-    areaName: "Khu Ia Grai",
-    plotName: "Lô G61, Lô G62",
-    name: "Đậu nành Tây Nguyên",
-    regionName: "Vùng Đậu Nành Gia Lai",
-    employee: "Vũ Văn G",
-    area: 11000,
-    tree: "Đậu nành",
-    soilType: "Đất đỏ bazan",
-    terrain: ["Cao", "Dốc"],
-    mainCrop: "Đậu nành",
-    gps: "13.9918,107.9792 13.9926,107.9801 13.9917,107.9809 13.9910,107.9800",
-    numberOfLots: 5,
-    cultivationZone: "Khu canh tác Tây Nguyên",
-    province: "Gia Lai",
-    district: "Huyện Ia Grai",
-  },
-  {
-    id: "V008",
-    code: "V-NA1",
-    name: "Bắp Quỳnh Lưu",
-    regionName: "Vùng Bắp Nghệ An",
-    employee: "Trần Văn H",
-    area: 8000,
-    tree: "Bắp (Ngô)",
-    soilType: "Đất cát",
-    terrain: ["Bằng phẳng"],
-    mainCrop: "Bắp (Ngô)",
-    gps: "19.2752,105.6213 19.2761,105.6221 19.2753,105.6228 19.2746,105.6219",
-    numberOfLots: 4,
-    cultivationZone: "Khu canh tác Bắc Trung Bộ",
-    province: "Nghệ An",
-    district: "Huyện Quỳnh Lưu",
-  },
-];
-const mainCrops = ["Sầu riêng", "Xoài", "Chuối", "Cà phê", "Mít", "Bưởi"];
-const soilTypes = [
-  "Đất thịt",
-  "Đất phù sa",
-  "Đất cát",
-  "Đất sét",
-  "Đất đỏ bazan",
-];
 const terrains = ["Cao", "Thấp", "Dốc", "Bằng phẳng", "Trũng"];
+
 const AreaManagementRegionPage = () => {
   const navigate = useNavigate();
+
+  const { regions } = useRegionStore();
+  const { plots } = usePlotStore();
+  const { setups } = useAreaSetupStore();
+
   const [keyword, setKeyword] = useState<string>("");
+  const [selectedMainCrops, setSelectedMainCrops] = useState<string[]>([]);
+  const [selectedSoilTypes, setSelectedSoilTypes] = useState<string[]>([]);
+  const [selectedTerrains, setSelectedTerrains] = useState<string[]>([]);
+  const [selectedProvinces, setSelectedProvinces] = useState<string[]>([]);
+  const [selectedDistricts, setSelectedDistricts] = useState<string[]>([]);
+
+  const areaZoneData: AreaZone[] = useMemo(() => {
+    return setups.map((setup) => {
+      const region =
+        regions.find((r) => r.id === setup.regionId) ??
+        regions.find((r) => r.region.codeSystem === setup.regionId);
+
+      const selectedAreas = region
+        ? region.areas.filter((a) => setup.areaCodes.includes(a.code))
+        : [];
+
+      const selectedPlots = plots.filter((p) =>
+        setup.plotCodes.includes(p.plot.code)
+      );
+
+      let areaName: string | undefined;
+      let plotName: string | undefined;
+      let areaValue = 0;
+      let soilType = "";
+      let terrain: string[] = [];
+      let mainCrop = "";
+
+      if (setup.type === "region" && region) {
+        areaValue = Number(region.region.area) || 0;
+        soilType = region.region.soilType;
+        terrain = region.region.terrain;
+        if (region.areas.length === 1) {
+          mainCrop = region.areas[0].mainCrop;
+        } else if (region.areas.length > 1) {
+          const crops = Array.from(
+            new Set(region.areas.map((a) => a.mainCrop))
+          );
+          mainCrop = crops.length === 1 ? crops[0] : "Đa cây trồng";
+        }
+      }
+
+      if (setup.type === "area" && selectedAreas.length) {
+        areaName = selectedAreas.map((a) => a.name).join(", ");
+        areaValue = selectedAreas.reduce(
+          (sum, a) => sum + (Number(a.area) || 0),
+          0
+        );
+        const soilSet = new Set(selectedAreas.map((a) => a.soilType));
+        soilType = Array.from(soilSet).join(", ");
+        terrain = Array.from(new Set(selectedAreas.flatMap((a) => a.terrain)));
+        const crops = Array.from(new Set(selectedAreas.map((a) => a.mainCrop)));
+        mainCrop = crops.length === 1 ? crops[0] : "Đa cây trồng";
+      }
+
+      if (setup.type === "plot" && selectedPlots.length) {
+        plotName = selectedPlots.map((p) => p.plot.name).join(", ");
+        areaValue = selectedPlots.reduce(
+          (sum, p) => sum + (Number(p.plot.area) || 0),
+          0
+        );
+
+        const areaCodesInPlots = new Set(
+          selectedPlots.map((p) => p.plot.areaCode)
+        );
+        const areasOfPlots =
+          region?.areas.filter((a) => areaCodesInPlots.has(a.code)) ?? [];
+
+        if (areasOfPlots.length) {
+          if (!soilType) {
+            const soilSet = new Set(areasOfPlots.map((a) => a.soilType));
+            soilType = Array.from(soilSet).join(", ");
+          }
+          if (!terrain.length) {
+            terrain = Array.from(
+              new Set(areasOfPlots.flatMap((a) => a.terrain))
+            );
+          }
+          const crops = Array.from(
+            new Set(areasOfPlots.map((a) => a.mainCrop))
+          );
+          mainCrop = crops.length === 1 ? crops[0] : "Đa cây trồng";
+        }
+      }
+
+      if (!soilType && region) soilType = region.region.soilType;
+      if (!terrain.length && region) terrain = region.region.terrain;
+      if (!mainCrop) mainCrop = "Chưa thiết lập";
+      const tree = mainCrop;
+
+      const province = region?.region.province ?? "";
+      const district = region?.region.ward ?? "";
+
+      return {
+        id: setup.id,
+        code: setup.id,
+        name: setup.name,
+        regionName: region?.region.name ?? "",
+        areaName,
+        plotName,
+        employee:
+          setup.managerIds.length > 0
+            ? setup.managerIds.join(", ")
+            : "Chưa phân công",
+        area: areaValue,
+        soilType,
+        terrain,
+        mainCrop,
+        gps: region?.region.gps ?? "",
+        numberOfLots: setup.plotCodes.length,
+        cultivationZone: setup.name,
+        tree,
+        province,
+        district,
+      };
+    });
+  }, [setups, regions, plots]);
+
+  const provinceOptions = useMemo(
+    () =>
+      Array.from(new Set(areaZoneData.map((item) => item.province))).filter(
+        Boolean
+      ),
+    [areaZoneData]
+  );
+
+  const districtOptions = useMemo(
+    () =>
+      Array.from(new Set(areaZoneData.map((item) => item.district))).filter(
+        Boolean
+      ),
+    [areaZoneData]
+  );
+
+  const mainCropOptions = useMemo(
+    () =>
+      Array.from(new Set(areaZoneData.map((item) => item.tree))).filter(
+        Boolean
+      ),
+    [areaZoneData]
+  );
+
+  const soilTypeOptions = useMemo(
+    () =>
+      Array.from(
+        new Set(
+          areaZoneData
+            .flatMap((item) => item.soilType.split(","))
+            .map((s) => s.trim())
+        )
+      ).filter(Boolean),
+    [areaZoneData]
+  );
+
+  const filteredData = useMemo(() => {
+    const q = keyword.trim().toLowerCase();
+
+    return areaZoneData.filter((item) => {
+      if (q) {
+        const target = (
+          item.code +
+          " " +
+          item.name +
+          " " +
+          item.regionName +
+          " " +
+          (item.areaName ?? "") +
+          " " +
+          (item.plotName ?? "") +
+          " " +
+          item.employee +
+          " " +
+          item.tree +
+          " " +
+          item.province +
+          " " +
+          item.district
+        ).toLowerCase();
+
+        if (!target.includes(q)) return false;
+      }
+
+      if (
+        selectedMainCrops.length > 0 &&
+        !selectedMainCrops.includes(item.tree)
+      )
+        return false;
+
+      if (
+        selectedSoilTypes.length > 0 &&
+        !selectedSoilTypes.some((s) => item.soilType.includes(s))
+      )
+        return false;
+
+      if (selectedTerrains.length > 0) {
+        const hasTerrain = item.terrain.some((t) =>
+          selectedTerrains.includes(t)
+        );
+        if (!hasTerrain) return false;
+      }
+
+      if (
+        selectedProvinces.length > 0 &&
+        !selectedProvinces.includes(item.province)
+      )
+        return false;
+
+      if (
+        selectedDistricts.length > 0 &&
+        !selectedDistricts.includes(item.district)
+      )
+        return false;
+
+      return true;
+    });
+  }, [
+    keyword,
+    areaZoneData,
+    selectedMainCrops,
+    selectedSoilTypes,
+    selectedTerrains,
+    selectedProvinces,
+    selectedDistricts,
+  ]);
+
   const onRegionDetail = () => {
     navigate(PATH.AREA_REGION_DETAIL);
   };
+
+  const onAddRegion = () => {
+    navigate(PATH.AREA_ADD_REGION);
+  };
+
   const onClearAll = () => {
     setKeyword("");
+    setSelectedMainCrops([]);
+    setSelectedSoilTypes([]);
+    setSelectedTerrains([]);
+    setSelectedProvinces([]);
+    setSelectedDistricts([]);
   };
+
   const areaZoneColumns: MRT_ColumnDef<AreaZone>[] = [
-    {
-      accessorKey: "cultivationZone",
-      header: "Khu vực canh tác",
-    },
-    {
-      accessorKey: "province",
-      header: "Tỉnh/Thành phố",
-    },
-    {
-      accessorKey: "district",
-      header: "Phường/Xã",
-    },
-    {
-      accessorKey: "regionName",
-      header: "Vùng",
-    },
-    {
-      accessorKey: "areaName",
-      header: "Khu vực",
-    },
-    {
-      accessorKey: "plotName",
-      header: "Lô",
-    },
+    { accessorKey: "cultivationZone", header: "Khu vực canh tác" },
+    { accessorKey: "province", header: "Tỉnh/Thành phố" },
+    { accessorKey: "district", header: "Phường/Xã" },
+    { accessorKey: "regionName", header: "Vùng" },
+    { accessorKey: "areaName", header: "Khu vực" },
+    { accessorKey: "plotName", header: "Lô" },
     {
       accessorKey: "area",
       header: "Diện tích canh tác (m²)",
       Cell: ({ row }) => <Text>{row.original.area.toLocaleString()} m²</Text>,
     },
-    {
-      accessorKey: "tree",
-      header: "Cây trồng",
-    },
-    {
-      accessorKey: "employee",
-      header: "Người quản lý",
-    },
-
+    { accessorKey: "tree", header: "Cây trồng" },
+    { accessorKey: "employee", header: "Người quản lý" },
     {
       accessorKey: "actions",
       header: "Tuỳ chọn",
@@ -258,11 +328,10 @@ const AreaManagementRegionPage = () => {
       Cell: () => (
         <Menu shadow="md">
           <Menu.Target>
-            <ActionIcon variant="transparent" c={"gray"}>
+            <ActionIcon variant="transparent" c="gray">
               <IconDotsVertical />
             </ActionIcon>
           </Menu.Target>
-
           <Menu.Dropdown>
             <Menu.Item
               leftSection={<IconEye size={18} color="gray" />}
@@ -281,9 +350,7 @@ const AreaManagementRegionPage = () => {
       ),
     },
   ];
-  const onAddRegion = () => {
-    navigate(PATH.AREA_ADD_REGION);
-  };
+
   return (
     <Stack gap="lg">
       <Group justify="space-between">
@@ -301,7 +368,6 @@ const AreaManagementRegionPage = () => {
       </Group>
 
       <Card withBorder shadow="sm" radius={4} p="md">
-        {/* Header */}
         <Group justify="space-between" align="center" mb="xs">
           <Stack gap={0}>
             <Title order={4}>Tìm kiếm khu vực canh tác</Title>
@@ -328,9 +394,7 @@ const AreaManagementRegionPage = () => {
           </Group>
         </Group>
 
-        {/* Form */}
         <Stack gap="sm">
-          {/* Khung tìm kiếm (keyword) */}
           <TextInput
             radius={4}
             label="Khung tìm kiếm"
@@ -350,7 +414,9 @@ const AreaManagementRegionPage = () => {
               label="Cây trồng chính"
               description="Ví dụ: Đậu nành, bắp"
               placeholder="Chọn thông tin"
-              data={mainCrops}
+              data={mainCropOptions}
+              value={selectedMainCrops}
+              onChange={setSelectedMainCrops}
             />
             <MultiSelect
               searchable
@@ -360,8 +426,9 @@ const AreaManagementRegionPage = () => {
               label="Loại đất"
               description="Ví dụ: Đất phù sa, Đất mặn, Đất cát"
               placeholder="Chọn thông tin"
-              multiple
-              data={soilTypes}
+              data={soilTypeOptions}
+              value={selectedSoilTypes}
+              onChange={setSelectedSoilTypes}
             />
             <MultiSelect
               searchable
@@ -373,6 +440,8 @@ const AreaManagementRegionPage = () => {
               description="Ví dụ: Đồi núi, Đồng bằng, Ven biển"
               placeholder="Chọn thông tin"
               data={terrains}
+              value={selectedTerrains}
+              onChange={setSelectedTerrains}
             />
             <MultiSelect
               searchable
@@ -382,65 +451,9 @@ const AreaManagementRegionPage = () => {
               label="Tỉnh/Thành phố"
               description="Ví dụ: An Giang, Đồng Nai, Đắk Lắk"
               placeholder="Chọn thông tin"
-              data={[
-                "Hà Nội",
-                "TP. Hồ Chí Minh",
-                "Đà Nẵng",
-                "Cần Thơ",
-                "Hải Phòng",
-                "Nha Trang",
-                "Bình Dương",
-                "Đồng Nai",
-                "Bà Rịa - Vũng Tàu",
-                "Quảng Ninh",
-                "Thanh Hóa",
-                "Nghệ An",
-                "Huế",
-                "Quảng Nam",
-                "Quảng Ngãi",
-                "Bắc Ninh",
-                "Bắc Giang",
-                "Lâm Đồng",
-                "Tiền Giang",
-                "Long An",
-                "Vĩnh Long",
-                "Sóc Trăng",
-                "Kiên Giang",
-                "Cà Mau",
-                "Bình Thuận",
-                "Phú Yên",
-                "Khánh Hòa",
-                "Tây Ninh",
-                "Trà Vinh",
-                "Bến Tre",
-                "Hậu Giang",
-                "Đắk Lắk",
-                "Đắk Nông",
-                "Gia Lai",
-                "Kon Tum",
-                "Hà Tĩnh",
-                "Quảng Bình",
-                "Quảng Trị",
-                "Thái Bình",
-                "Nam Định",
-                "Ninh Bình",
-                "Hòa Bình",
-                "Sơn La",
-                "Lai Châu",
-                "Điện Biên",
-                "Lào Cai",
-                "Yên Bái",
-                "Tuyên Quang",
-                "Phú Thọ",
-                "Vĩnh Phúc",
-                "Hà Nam",
-                "Hưng Yên",
-                "Hải Dương",
-                "Thái Nguyên",
-                "Bắc Kạn",
-                "Cao Bằng",
-                "Lạng Sơn",
-              ]}
+              data={provinceOptions}
+              value={selectedProvinces}
+              onChange={setSelectedProvinces}
             />
             <MultiSelect
               label="Phường/Xã"
@@ -449,84 +462,19 @@ const AreaManagementRegionPage = () => {
               radius={4}
               searchable
               placeholder="Chọn thông tin"
-              data={[
-                "Phường Bến Nghé",
-                "Phường Bến Thành",
-                "Phường Nguyễn Thái Bình",
-                "Phường Phạm Ngũ Lão",
-                "Phường Tân Định",
-                "Phường Đa Kao",
-                "Phường 1 (Quận 3)",
-                "Phường 2 (Quận 3)",
-                "Phường 3 (Quận 3)",
-                "Phường 4 (Quận 3)",
-                "Phường 5 (Quận 3)",
-                "Phường 6 (Quận 3)",
-                "Phường 7 (Quận 3)",
-                "Phường 8 (Quận 3)",
-                "Phường 9 (Quận 3)",
-                "Phường 10 (Quận 3)",
-                "Phường 11 (Quận 3)",
-                "Phường 12 (Quận 3)",
-                "Xã Tân Phú Trung",
-                "Xã Bình Mỹ",
-                "Xã Thới Tam Thôn",
-                "Xã Trung An",
-                "Xã Phước Vĩnh An",
-                "Xã Phước Hiệp",
-                "Xã Phước Thạnh",
-                "Xã An Nhơn Tây",
-                "Xã Nhuận Đức",
-                "Xã Phạm Văn Cội",
-                "Xã Phú Hòa Đông",
-                "Xã Phú Mỹ Hưng",
-                "Xã Phước Lộc",
-                "Xã Long Thới",
-                "Xã Nhơn Đức",
-                "Xã Phước Kiển",
-                "Xã Bình Hưng",
-                "Xã Đa Phước",
-                "Xã Tân Kiên",
-                "Xã Tân Nhựt",
-                "Xã Lê Minh Xuân",
-                "Xã Vĩnh Lộc A",
-                "Xã Vĩnh Lộc B",
-                "Xã Phạm Văn Hai",
-                "Xã Quy Đức",
-                "Xã Hưng Long",
-                "Xã Bình Chánh",
-                "Xã An Phú Tây",
-                "Xã Tân Quý Tây",
-                "Xã Tân Túc",
-                "Xã Bình Lợi",
-                "Xã Bình Thắng",
-                "Xã Bình An",
-                "Xã Bình Chuẩn",
-                "Xã Bình Hòa",
-                "Xã Bình Nhâm",
-                "Xã Bình Phước",
-                "Xã Bình Sơn",
-                "Xã Bình Tân",
-                "Xã Bình Thạnh",
-                "Xã Bình Thuận",
-                "Xã Bình Trị",
-                "Xã Bình Xuyên",
-                "Xã Bình Yên",
-                "Xã Bình Định",
-                "Xã Bình Dương",
-                "Xã Bình Phú",
-                "Xã Bình Quới",
-                "Xã Bình Thới",
-                "Xã Bình Thành",
-                "Xã Bình Tiến",
-                "Xã Bình Trưng",
-              ]}
+              data={districtOptions}
+              value={selectedDistricts}
+              onChange={setSelectedDistricts}
             />
           </SimpleGrid>
 
-          {/* Tóm tắt filter bằng chips (UI) */}
-          {keyword && (
-            <Group gap={8}>
+          {(keyword ||
+            selectedMainCrops.length ||
+            selectedSoilTypes.length ||
+            selectedTerrains.length ||
+            selectedProvinces.length ||
+            selectedDistricts.length) && (
+            <Group gap={8} mt="xs">
               {keyword && (
                 <Badge
                   variant="light"
@@ -535,6 +483,96 @@ const AreaManagementRegionPage = () => {
                   Từ khoá: {keyword}
                 </Badge>
               )}
+
+              {selectedMainCrops.map((c) => (
+                <Badge
+                  key={c}
+                  variant="light"
+                  rightSection={
+                    <CloseButton
+                      onClick={() =>
+                        setSelectedMainCrops((prev) =>
+                          prev.filter((item) => item !== c)
+                        )
+                      }
+                    />
+                  }
+                >
+                  Cây trồng: {c}
+                </Badge>
+              ))}
+
+              {selectedSoilTypes.map((s) => (
+                <Badge
+                  key={s}
+                  variant="light"
+                  rightSection={
+                    <CloseButton
+                      onClick={() =>
+                        setSelectedSoilTypes((prev) =>
+                          prev.filter((item) => item !== s)
+                        )
+                      }
+                    />
+                  }
+                >
+                  Loại đất: {s}
+                </Badge>
+              ))}
+
+              {selectedTerrains.map((t) => (
+                <Badge
+                  key={t}
+                  variant="light"
+                  rightSection={
+                    <CloseButton
+                      onClick={() =>
+                        setSelectedTerrains((prev) =>
+                          prev.filter((item) => item !== t)
+                        )
+                      }
+                    />
+                  }
+                >
+                  Địa hình: {t}
+                </Badge>
+              ))}
+
+              {selectedProvinces.map((p) => (
+                <Badge
+                  key={p}
+                  variant="light"
+                  rightSection={
+                    <CloseButton
+                      onClick={() =>
+                        setSelectedProvinces((prev) =>
+                          prev.filter((item) => item !== p)
+                        )
+                      }
+                    />
+                  }
+                >
+                  Tỉnh: {p}
+                </Badge>
+              ))}
+
+              {selectedDistricts.map((d) => (
+                <Badge
+                  key={d}
+                  variant="light"
+                  rightSection={
+                    <CloseButton
+                      onClick={() =>
+                        setSelectedDistricts((prev) =>
+                          prev.filter((item) => item !== d)
+                        )
+                      }
+                    />
+                  }
+                >
+                  Huyện/Xã: {d}
+                </Badge>
+              ))}
 
               <ActionIcon
                 variant="subtle"
@@ -547,8 +585,10 @@ const AreaManagementRegionPage = () => {
           )}
         </Stack>
       </Card>
-      <Table columns={areaZoneColumns} data={areaZoneData} />
+
+      <Table columns={areaZoneColumns} data={filteredData} />
     </Stack>
   );
 };
+
 export default AreaManagementRegionPage;

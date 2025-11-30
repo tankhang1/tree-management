@@ -8,7 +8,6 @@ import {
   Checkbox,
   ActionIcon,
 } from "@mantine/core";
-import type { SeedOption } from "..";
 import Scrollable from "../../../../../components/Scrollable";
 import { useState } from "react";
 import { IconTrash } from "@tabler/icons-react";
@@ -17,7 +16,7 @@ import type { Seed } from "../../../../zustand/seedStore";
 interface SeedCardSelectorProps {
   seeds: Seed[];
   selected: string;
-  onSelect: (code: string) => void;
+  onSelect: (seed: Seed) => void;
   isMultiple?: boolean;
   isTouchable?: boolean;
   isDelete?: boolean;
@@ -28,16 +27,20 @@ const SeedCards: React.FC<SeedCardSelectorProps> = ({
   isMultiple = false,
   isDelete = false,
   isTouchable = true,
+  onSelect,
 }) => {
-  const [selected, setSelected] = useState<string[]>([]);
-  const onSelect = (code: string) => {
+  const [selected, setSelected] = useState<Seed[]>([]);
+  const handleSelect = (seed: Seed) => {
     if (!isTouchable) return;
     if (isMultiple) {
       setSelected((prev) =>
-        prev.includes(code) ? prev.filter((id) => id !== code) : [...prev, code]
+        prev.map((item) => item.id).includes(seed.id)
+          ? prev.filter((item) => item.id !== seed.id)
+          : [...prev, seed]
       );
     } else {
-      setSelected([code]);
+      setSelected([seed]);
+      onSelect(seed);
     }
   };
   return (
@@ -55,13 +58,15 @@ const SeedCards: React.FC<SeedCardSelectorProps> = ({
               cursor: "pointer",
               position: "relative",
               transition: "transform 0.2s ease",
-              borderColor: selected.includes(seed.id) ? "green" : undefined,
+              borderColor: selected.map((item) => item.id).includes(seed.id)
+                ? "green"
+                : undefined,
             }}
             onMouseEnter={(e) =>
               (e.currentTarget.style.transform = "scale(1.02)")
             }
             onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
-            onClick={() => onSelect(seed.id)}
+            onClick={() => handleSelect(seed)}
           >
             <Group gap="xs" align="flex-start">
               <Image
@@ -80,7 +85,9 @@ const SeedCards: React.FC<SeedCardSelectorProps> = ({
                       <Checkbox
                         radius={4}
                         onChange={() => {}}
-                        checked={selected.includes(seed.id)}
+                        checked={selected
+                          .map((item) => item.id)
+                          .includes(seed.id)}
                       />
                     )}
                   </Group>

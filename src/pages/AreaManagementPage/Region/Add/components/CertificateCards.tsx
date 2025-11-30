@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   Badge,
   Card,
@@ -15,18 +15,13 @@ import {
 } from "../../../../zustand/certificateStore";
 import Scrollable from "../../../../../components/Scrollable";
 
-// ===== Types & mock =====
-export type CertificateItem = {
-  id: string | number;
-  title: string;
-  code: string;
-  org: string;
-  thumb?: string; // ảnh minh hoạ giấy chứng nhận
-  seal?: string; // ảnh dấu mộc/chứng nhận
-  tags?: string[];
+type CertificateId = Certificate["id"];
+
+type CertificateCardListProps = {
+  selected?: CertificateId[];
+  onChange?: (ids: CertificateId[]) => void;
 };
 
-// ===== Card component =====
 function CertificateCard({
   item,
   selected,
@@ -34,7 +29,7 @@ function CertificateCard({
 }: {
   item: Certificate;
   selected: boolean;
-  onToggle: (id: Certificate["id"]) => void;
+  onToggle: (id: CertificateId) => void;
 }) {
   return (
     <Card
@@ -64,8 +59,6 @@ function CertificateCard({
         <Stack flex={1} gap={6} mt="sm">
           <Group justify="space-between" align="center" wrap="nowrap">
             <Text fw={600}>{item.certName}</Text>
-
-            {/* STOP PROPAGATION để Checkbox không click vào Card */}
             <Checkbox
               radius={4}
               checked={selected}
@@ -77,7 +70,7 @@ function CertificateCard({
           </Group>
 
           <Group gap={8} wrap="wrap">
-            <Badge variant="light">{item.certCode}</Badge>
+            {item.certCode && <Badge variant="light">{item.certCode}</Badge>}
             {item.targets?.map((t) => (
               <Badge key={t} variant="outline">
                 {t}
@@ -95,29 +88,35 @@ function CertificateCard({
 }
 
 export default function CertificateCardList({
-  onSelectedChange,
-}: {
-  onSelectedChange?: (ids: Array<Certificate["id"]>) => void;
-}) {
+  selected,
+  onChange,
+}: CertificateCardListProps) {
   const { certificates } = useCertificateStore();
-  const [selected, setSelected] = useState<Array<Certificate["id"]>>([]);
+  const [internalSelected, setInternalSelected] = useState<CertificateId[]>(
+    selected ?? []
+  );
   const [search, setSearch] = useState("");
 
-  const toggle = (id: Certificate["id"]) => {
-    setSelected((prev) => {
+  useEffect(() => {
+    if (selected) {
+      setInternalSelected(selected);
+    }
+  }, [selected]);
+
+  const toggle = (id: CertificateId) => {
+    setInternalSelected((prev) => {
       const updated = prev.includes(id)
         ? prev.filter((x) => x !== id)
         : [...prev, id];
 
-      // 🔥 Bắn callback ra ngoài
-      onSelectedChange?.(updated);
-
+      onChange?.(updated);
       return updated;
     });
   };
 
   const filtered = certificates.filter((item) => {
     const q = search.trim().toLowerCase();
+    if (!q) return true;
 
     return (
       item.certName.toLowerCase().includes(q) ||
@@ -133,7 +132,7 @@ export default function CertificateCardList({
         radius={4}
         placeholder="Tìm kiếm giấy chứng nhận"
         value={search}
-        onChange={(e) => setSearch(e.target.value)}
+        onChange={(e) => setSearch(e.currentTarget.value)}
       />
 
       <Scrollable h={140}>
@@ -142,7 +141,7 @@ export default function CertificateCardList({
             <CertificateCard
               key={item.id}
               item={item}
-              selected={selected.includes(item.id)}
+              selected={internalSelected.includes(item.id)}
               onToggle={toggle}
             />
           ))}
