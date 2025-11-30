@@ -52,6 +52,8 @@ import {
   IconMist,
 } from "@tabler/icons-react";
 import { useNavigate } from "react-router-dom";
+import EditProtocolModal from "./components/EditProtocolModal";
+import ApplyProtocolModal from "./components/ApplyProtocolModal";
 
 // --- 1. TYPE DEFINITIONS & DATA (GIỮ NGUYÊN DỮ LIỆU CỦA BẠN) ---
 // (Tôi xin phép ẩn phần data để code ngắn gọn, hãy paste lại data cũ vào đây)
@@ -980,7 +982,8 @@ export default function TreatmentProtocolPage() {
   const [filterDiseaseType, setFilterDiseaseType] = useState<string | null>(
     null
   );
-
+  const [editModalOpen, setEditModalOpen] = useState(false);
+  const [applyModalOpen, setApplyModalOpen] = useState(false);
   const [filtersOpen, setFiltersOpen] = useState(true);
 
   // Derived Logic
@@ -1586,10 +1589,22 @@ export default function TreatmentProtocolPage() {
                       </Group>
                     </Stack>
 
-                    <Button fullWidth mt="xl" color="teal" size="md">
+                    <Button
+                      fullWidth
+                      mt="xl"
+                      color="teal"
+                      size="md"
+                      onClick={() => setApplyModalOpen(true)}
+                    >
                       Áp dụng phác đồ này
                     </Button>
-                    <Button fullWidth mt="sm" variant="default" size="md">
+                    <Button
+                      fullWidth
+                      mt="sm"
+                      variant="default"
+                      size="md"
+                      onClick={() => setEditModalOpen(true)}
+                    >
                       Chỉnh sửa
                     </Button>
                   </Paper>
@@ -1599,6 +1614,17 @@ export default function TreatmentProtocolPage() {
           </Container>
         </ScrollArea>
       </Flex>
+      <EditProtocolModal
+        opened={editModalOpen}
+        onClose={() => setEditModalOpen(false)}
+        data={selectedData}
+      />
+
+      <ApplyProtocolModal
+        opened={applyModalOpen}
+        onClose={() => setApplyModalOpen(false)}
+        data={selectedData}
+      />
     </Flex>
   );
 }

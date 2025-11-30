@@ -52,7 +52,7 @@ const MOCK_TEAMS: Team[] = [
 export const useTeamStore = create<TeamState>()(
   persist(
     (set, get) => ({
-      teams: [],
+      teams: MOCK_TEAMS,
       isLoading: false,
 
       fetchTeams: async () => {

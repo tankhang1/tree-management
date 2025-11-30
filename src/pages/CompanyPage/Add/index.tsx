@@ -394,7 +394,7 @@ const CompanyAddPage = () => {
                   </Group>
                 </Scrollable>
 
-                <Input.Wrapper label="Phân loại">
+                {/* <Input.Wrapper label="Phân loại">
                   <Group gap="md">
                     <Button
                       variant={
@@ -414,7 +414,7 @@ const CompanyAddPage = () => {
                       onClick={() => setSelectedCategory("partner")}
                       radius={4}
                     >
-                      Đối tác
+                     Khác
                     </Button>
                     <Button
                       variant={
@@ -437,7 +437,7 @@ const CompanyAddPage = () => {
                       Ngân hàng
                     </Button>
                   </Group>
-                </Input.Wrapper>
+                </Input.Wrapper> */}
               </Stack>
             </Card>
 
@@ -860,28 +860,26 @@ const CompanyAddPage = () => {
 
               <Stack>
                 <Title order={5}>🏢 Chi nhánh ({branches.length})</Title>
-                <Scrollable h={150}>
-                  <Stack gap="xs">
-                    {branches.map((b, i) => (
-                      <Text key={i} size="sm">
-                        - {b.name} ({b.phone})
-                      </Text>
-                    ))}
-                  </Stack>
-                </Scrollable>
+
+                <Stack gap="xs">
+                  {branches.map((b, i) => (
+                    <Text key={i} size="sm">
+                      - {b.name} ({b.phone})
+                    </Text>
+                  ))}
+                </Stack>
               </Stack>
 
               <Stack>
                 <Title order={5}>🏦 Ngân hàng ({banks.length})</Title>
-                <Scrollable h={150}>
-                  <Stack gap="xs">
-                    {banks.map((b, i) => (
-                      <Text key={i} size="sm">
-                        - {b.bank} - {b.accountNumber}
-                      </Text>
-                    ))}
-                  </Stack>
-                </Scrollable>
+
+                <Stack gap="xs">
+                  {banks.map((b, i) => (
+                    <Text key={i} size="sm">
+                      - {b.bank} - {b.accountNumber}
+                    </Text>
+                  ))}
+                </Stack>
               </Stack>
             </Stack>
           </Card>

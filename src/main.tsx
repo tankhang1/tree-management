@@ -599,6 +599,7 @@ const CompanyPage = L(() => import("./pages/CompanyPage"));
 const VendorPage = L(() => import("./pages/VendorPage"));
 const CompanyDetailPage = L(() => import("./pages/CompanyPage/Detail"));
 const CompanyAddPage = L(() => import("./pages/CompanyPage/Add"));
+const CompanyHistoryPage = L(() => import("./pages/CompanyPage/History"));
 const HRManagementEmployeeAddPage2 = HRManagementEmployeeAddPage; // alias tránh nhầm tên
 const HRManagementEmployeeDetailPage2 = HRManagementEmployeeDetailPage; // alias
 const SupplyManagementAddPage = L(
@@ -693,7 +694,6 @@ const ProductHistoryPage = AreaManagementHistoryPage;
 const FertilizerHistoryAlias = AreaManagementHistoryPage;
 const PesticideHistoryAlias = AreaManagementHistoryPage;
 const SupplyHistoryPage = AreaManagementHistoryPage;
-const CompanyHistoryPage = AreaManagementHistoryPage;
 const HRHistoryPage = AreaManagementHistoryPage;
 const ContractHistoryPage = AreaManagementHistoryPage;
 const PurchaseManagementHistoryPage = AreaManagementHistoryPage;
