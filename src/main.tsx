@@ -2,7 +2,13 @@
 import { StrictMode, Suspense, lazy, type ComponentType } from "react";
 import { createRoot } from "react-dom/client";
 import "./index.css";
-import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
+import {
+  BrowserRouter,
+  HashRouter,
+  Navigate,
+  Route,
+  Routes,
+} from "react-router-dom";
 
 import "@mantine/dates/styles.css"; // if using mantine date picker features
 import "mantine-react-table/styles.css"; // import MRT styles
@@ -1917,7 +1923,7 @@ const ROUTES = [
 // =============================
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
-    <BrowserRouter>
+    <HashRouter>
       <MantineProvider
         theme={theme}
         withCssVariables
@@ -1944,6 +1950,6 @@ createRoot(document.getElementById("root")!).render(
           </Suspense>
         </ModalsProvider>
       </MantineProvider>
-    </BrowserRouter>
+    </HashRouter>
   </StrictMode>
 );
