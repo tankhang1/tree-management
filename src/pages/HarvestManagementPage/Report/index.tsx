@@ -546,7 +546,7 @@ const HarvestReportPage = () => {
               onChange={setRange}
               locale="vi"
               leftSection={<IconCalendarStats size={16} />}
-              w={220}
+              w={300}
             />
             <Button
               variant="light"
