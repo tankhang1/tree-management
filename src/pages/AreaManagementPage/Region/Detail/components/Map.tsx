@@ -159,14 +159,12 @@ const MapBox = ({
       preferCanvas
       center={[11.553203605968022, 107.12999664743181]}
       // maxZoom={22}
+      attributionControl={false}
       zoom={zoom}
-      maxZoom={zoom}
-      minZoom={zoom}
-      scrollWheelZoom={false}
+      scrollWheelZoom={true}
       zoomControl={true}
-      // zoomSnap={1}
-      // minZoom={15}
-      boxZoom={false}
+      minZoom={17}
+      maxZoom={22}
       style={{ height: `${h}px`, width: "auto", borderRadius: 4 }}
     >
       <ZoomListener onChange={onZoomChange} />
@@ -345,9 +343,38 @@ const MapBox = ({
                 interactive: true,
               });
             }}
-            onEachFeature={async (_, layer) => {
-              layer.on("click", async () => {
-                layer.bindPopup("<b>Đang tải thông tin cây...</b>").openPopup();
+            onEachFeature={(feature, layer) => {
+              const props: any = feature.properties || {};
+              const name = props.name || `Cây ${randomInt(1, 500)}`;
+              const code = props.code || `CT-${randomInt(1000, 9999)}`;
+              const crop = randomItem(crops);
+              const age = randomInt(2, 8);
+              const status = randomItem(treeStatusList);
+              const lastCare = randomDateString();
+
+              const popupHtml = `
+                      <div style="
+                        font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+                        min-width: 180px;
+                        padding: 8px 10px;
+                      ">
+                        <div style="font-weight:600;font-size:13px;margin-bottom:2px;">
+                          ${name}
+                        </div>
+                        <div style="font-size:11px;color:#6b7280;margin-bottom:4px;">
+                          Mã cây: ${code}
+                        </div>
+                        <div style="font-size:12px;color:#111827;">
+                          <div><b>Giống:</b> ${crop}</div>
+                          <div><b>Tuổi cây:</b> ${age} năm</div>
+                          <div><b>Tình trạng:</b> ${status}</div>
+                          <div><b>Chăm sóc gần nhất:</b> ${lastCare}</div>
+                        </div>
+                      </div>
+                    `;
+
+              layer.on("click", () => {
+                layer.bindPopup(popupHtml).openPopup();
               });
             }}
           />

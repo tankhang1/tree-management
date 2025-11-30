@@ -89,7 +89,7 @@ const MapManagementMapPage = () => {
 
   return (
     <Stack pos={"relative"}>
-      <MapBox h={810} area plot zone zoom={17} />
+      <MapBox h={850} area plot zone zoom={17} />
 
       <Group pos={"absolute"} bottom={10} style={{ zIndex: 9999 }} pl={"lg"}>
         <Group gap={4}>
