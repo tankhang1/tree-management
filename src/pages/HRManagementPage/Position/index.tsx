@@ -28,6 +28,7 @@ import { useState, useMemo } from "react";
 import { useDisclosure } from "@mantine/hooks";
 import { notifications } from "@mantine/notifications";
 import { usePositionStore, type Position } from "../../zustand/positionStore";
+import { useHistoryStore } from "../../zustand/hrHistoryStore";
 
 // IMPORT STORE
 
@@ -35,7 +36,7 @@ const HRManagementPositionPage = () => {
   // 1. STORE HOOKS
   const { positions, addPosition, updatePosition, deletePosition, isLoading } =
     usePositionStore();
-
+  const { addLog } = useHistoryStore();
   // 2. STATES
   const [opened, { open, close }] = useDisclosure(false); // Modal Form
   const [openedDelete, { open: openDelete, close: closeDelete }] =
@@ -104,6 +105,18 @@ const HRManagementPositionPage = () => {
     }
 
     if (success) {
+      addLog({
+        action: isEditing
+          ? `Cập nhật vị trí: ${values.name}`
+          : `Thêm mới vị trí: ${values.name}`,
+        entityType: "Position",
+        // Nếu đang sửa thì dùng ID thật, nếu thêm mới mà chưa có ID trả về thì dùng tên hoặc timestamp
+        performedBy: isEditing ? selectedId || "" : `POS-${Date.now()}`,
+        targetName: "Admin System",
+        details: values.description
+          ? `Mô tả: ${values.description}`
+          : "Không có mô tả",
+      });
       close();
       form.reset();
     } else {

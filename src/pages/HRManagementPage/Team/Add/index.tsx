@@ -24,12 +24,13 @@ import { EmployeeCardList } from "./components/EmployeeCardList";
 import { useTeamStore } from "../../../zustand/teamStore";
 import type { Department } from "../../../zustand/departmentStore";
 import type { Employee } from "../../../zustand/employeeStore";
+import { useHistoryStore } from "../../../zustand/hrHistoryStore";
 
 const HRManagementTeamAddPage = () => {
   const navigate = useNavigate();
   const [active, setActive] = useState(0);
   const [loading, setLoading] = useState(false);
-
+  const { addLog } = useHistoryStore();
   // 1. Get Add Action
   const addTeam = useTeamStore((state) => state.addTeam);
 
@@ -95,6 +96,14 @@ const HRManagementTeamAddPage = () => {
           role: item.role,
         })), // Mapping form 'members' -> store 'memberIds'
         roles: [],
+      });
+      addLog({
+        action: `Tạo đội nhóm mới: ${form.values.name}`,
+        entityType: "Team", // Đảm bảo bạn đã thêm "Team" vào type LogEntityType
+        performedBy: `TEAM-${Date.now()}`, // Tạo ID giả lập hoặc dùng tên nhóm làm định danh
+        targetName: "Admin System",
+        // Lưu số lượng thành viên và phòng ban vào chi tiết log
+        details: `Thành viên: ${form.values.members.length} | Phòng ban: ${form.values.departments.length}`,
       });
       setActive(3);
     } catch (error) {

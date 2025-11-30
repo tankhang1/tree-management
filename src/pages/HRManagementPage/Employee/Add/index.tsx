@@ -2,7 +2,6 @@ import {
   Badge,
   Button,
   Card,
-  Grid,
   Group,
   Image,
   Input,
@@ -17,6 +16,7 @@ import {
   Title,
   Avatar,
   SimpleGrid,
+  Grid,
 } from "@mantine/core";
 import { Dropzone, IMAGE_MIME_TYPE } from "@mantine/dropzone";
 import { useForm } from "@mantine/form";
@@ -38,6 +38,8 @@ import {
 import { useDepartmentStore } from "../../../zustand/departmentStore";
 import { usePositionStore } from "../../../zustand/positionStore";
 import { useTeamStore } from "../../../zustand/teamStore";
+import { useHistoryStore } from "../../../zustand/hrHistoryStore";
+import Scrollable from "../../../../components/Scrollable";
 
 const HRManagementEmployeeAddPage = () => {
   const navigate = useNavigate();
@@ -45,9 +47,9 @@ const HRManagementEmployeeAddPage = () => {
   // Stores
   const { departments } = useDepartmentStore();
   const { positions } = usePositionStore();
-  const { teams } = useTeamStore(); // Lấy danh sách team để mapping tên ở bước cuối
+  const { teams } = useTeamStore();
   const { addEmployee, isLoading } = useEmployeeStore();
-
+  const { addLog } = useHistoryStore();
   const [active, setActive] = useState(0);
 
   // Form management
@@ -102,8 +104,9 @@ const HRManagementEmployeeAddPage = () => {
   const handleImageDrop = (files: File[]) => {
     const file = files[0];
     const reader = new FileReader();
-    form.setFieldValue("avatarUrl", URL.createObjectURL(file) as string);
-
+    reader.onload = (e) => {
+      form.setFieldValue("avatarUrl", e.target?.result as string);
+    };
     reader.readAsDataURL(file);
   };
 
@@ -131,7 +134,17 @@ const HRManagementEmployeeAddPage = () => {
       banks: banks.filter((b) => b.bank && b.accountNumber),
     };
     const success = await addEmployee(payload);
+
     if (success) {
+      addLog({
+        action: `Thêm mới nhân sự: ${form.values.fullName}`,
+        entityType: "Employee",
+        details: `Chức vụ: ${
+          form.values.role
+        } | Phòng ban: ${form.values.departments.join(", ")}`,
+        performedBy: "Admin",
+        targetName: form.values.fullName,
+      });
       setActive(4);
     }
   };
@@ -163,7 +176,6 @@ const HRManagementEmployeeAddPage = () => {
       >
         {/* --- STEP 1: BASIC INFO --- */}
         <Stepper.Step label="Bước 1" description="Thông tin cơ bản">
-          {/* ... (Giữ nguyên code phần Step 1 của bạn) ... */}
           <Group grow align="flex-start">
             <Stack gap={"xs"}>
               <TextInput
@@ -319,7 +331,6 @@ const HRManagementEmployeeAddPage = () => {
               radius={4}
             />
 
-            {/* Truyền selectedIds và hàm onToggle xuống component con */}
             <SelectableTeamCards
               isCheckbox={true}
               selectedIds={form.values.teams}
@@ -337,7 +348,7 @@ const HRManagementEmployeeAddPage = () => {
           </Stack>
         </Stepper.Step>
 
-        {/* --- STEP 3: BANKING (Giữ nguyên) --- */}
+        {/* --- STEP 3: BANKING --- */}
         <Stepper.Step label="Bước 3" description="Thông tin ngân hàng">
           <Stack gap={"xs"}>
             {banks.map((bank, idx) => (
@@ -449,7 +460,6 @@ const HRManagementEmployeeAddPage = () => {
         <Stepper.Step label="Bước 4" description="Xác nhận thông tin">
           <Stack gap="md">
             <Group grow align="flex-start">
-              {/* Basic Info Card */}
               <Card h={220} flex={1} withBorder radius="md" shadow="xs" p="md">
                 <Group justify="space-between">
                   <Title order={5} mb="xs">
@@ -489,7 +499,6 @@ const HRManagementEmployeeAddPage = () => {
                 </Stack>
               </Card>
 
-              {/* Banking Card */}
               <Card h={220} withBorder radius="md" shadow="xs" p="md">
                 <Title order={5} mb="xs">
                   🏦 Thông tin ngân hàng
@@ -540,7 +549,7 @@ const HRManagementEmployeeAddPage = () => {
                   <Badge color="orange">{form.values.level}</Badge>
                 </Group>
 
-                {/* Hiển thị các Team đã chọn */}
+                {/* Hiển thị các Team đã chọn dưới dạng Badge */}
                 {form.values.teams.length > 0 && (
                   <Group gap="xs">
                     {getSelectedTeamNames().map((name) => (
@@ -558,11 +567,43 @@ const HRManagementEmployeeAddPage = () => {
               </Stack>
             </Input.Wrapper>
 
-            {/* Readonly Team Cards view in Step 4 */}
-            <SelectableTeamCards
-              isCheckbox={false}
-              selectedIds={form.values.teams}
-            />
+            {/* 🔥 UPDATED: Only show selected teams here via filterIds */}
+            <Scrollable h={180}>
+              <Group wrap="nowrap" gap="md" p={"xs"}>
+                {teams
+                  .filter((item) => form.getValues().teams.includes(item.id!))
+                  .map((team) => (
+                    <Card
+                      key={team.id}
+                      shadow="sm"
+                      padding="lg"
+                      radius={4}
+                      miw={350}
+                      h={150}
+                      withBorder
+                    >
+                      <Group justify="space-between" mb="xs">
+                        <Text fw={600}>{team.name}</Text>
+                      </Group>
+
+                      <Text size="sm" mb="sm" lineClamp={2}>
+                        {team.description}
+                      </Text>
+
+                      <Text size="xs" fw={500}>
+                        Phòng ban:
+                      </Text>
+                      <Group gap={4} mb={4}>
+                        {team.departments.map((d) => (
+                          <Badge key={d} color="blue" variant="light">
+                            {d}
+                          </Badge>
+                        ))}
+                      </Group>
+                    </Card>
+                  ))}
+              </Group>
+            </Scrollable>
 
             <Group justify="space-between" mt="xl">
               <Button variant="default" onClick={prevStep} radius={4}>

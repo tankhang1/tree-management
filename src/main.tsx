@@ -348,6 +348,7 @@ const HRManagementTeamPage = L(() => import("./pages/HRManagementPage/Team"));
 const HRManagementEmployeePage = L(
   () => import("./pages/HRManagementPage/Employee")
 );
+const HRHistoryPage = L(() => import("./pages/HRManagementPage/History"));
 const HRManagementTeamDetailPage = L(
   () => import("./pages/HRManagementPage/Team/Detail")
 );
@@ -694,7 +695,6 @@ const ProductHistoryPage = AreaManagementHistoryPage;
 const FertilizerHistoryAlias = AreaManagementHistoryPage;
 const PesticideHistoryAlias = AreaManagementHistoryPage;
 const SupplyHistoryPage = AreaManagementHistoryPage;
-const HRHistoryPage = AreaManagementHistoryPage;
 const ContractHistoryPage = AreaManagementHistoryPage;
 const PurchaseManagementHistoryPage = AreaManagementHistoryPage;
 const OrderManagementHistoryPage = AreaManagementHistoryPage;
