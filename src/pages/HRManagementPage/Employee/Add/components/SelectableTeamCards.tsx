@@ -35,6 +35,8 @@ export function SelectableTeamCards({
             onClick={() => isCheckbox && onToggle(team.id)}
           >
             <Group justify="space-between" mb="xs">
+              <Text fw={600}>{team.name}</Text>
+
               {isCheckbox && (
                 <Checkbox
                   radius={4}
@@ -44,7 +46,6 @@ export function SelectableTeamCards({
                   style={{ pointerEvents: "none" }}
                 />
               )}
-              <Text fw={600}>{team.name}</Text>
             </Group>
 
             <Text size="sm" mb="sm" lineClamp={2}>
