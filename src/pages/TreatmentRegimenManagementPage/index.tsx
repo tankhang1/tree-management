@@ -8,7 +8,6 @@ import {
   TextInput,
   Select,
   ScrollArea,
-  Tabs,
   Stack,
   ThemeIcon,
   Timeline,
@@ -24,14 +23,15 @@ import {
   Divider,
   Overlay,
   BackgroundImage,
-  Progress,
   List,
   ActionIcon,
   rem,
-  UnstyledButton,
   MultiSelect,
   Collapse,
   Alert,
+  SegmentedControl,
+  Container,
+  UnstyledButton,
 } from "@mantine/core";
 import {
   IconSearch,
@@ -43,22 +43,22 @@ import {
   IconAlertTriangle,
   IconCheck,
   IconDroplet,
-  IconSun,
   IconCurrencyDollar,
   IconInfoCircle,
   IconArrowRight,
-  IconMist,
   IconFilter,
   IconX,
   IconBiohazard,
+  IconMist,
 } from "@tabler/icons-react";
 import { useNavigate } from "react-router-dom";
 
-// --- 1. TYPE DEFINITIONS ---
+// --- 1. TYPE DEFINITIONS & DATA (GIỮ NGUYÊN DỮ LIỆU CỦA BẠN) ---
+// (Tôi xin phép ẩn phần data để code ngắn gọn, hãy paste lại data cũ vào đây)
 
 type Severity = "nhẹ" | "trung-binh" | "nang";
 type ProtocolStatus = "dang-ap-dung" | "de-xuat" | "tam-dung" | "luu-tru";
-type DiseaseType = "nấm" | "sâu-hại" | "vi-khuẩn" | "dinh-dưỡng";
+type DiseaseType = "nấm" | "sâu-hại" | "vi-khuẩn" | "dinh-dưỡng" | "virus";
 
 type TreatmentStep = {
   id: string;
@@ -74,20 +74,14 @@ type TreatmentProtocol = {
   id: string;
   code: string;
   name: string;
-
-  // Header Info
   species: string;
   variety: string;
   plantImage: string;
   growthStage: string;
-
-  // Disease Info
   disease: string;
   diseaseType: DiseaseType;
   diseaseImage: string;
   symptoms: string[];
-
-  // Meta Info
   severity: Severity;
   status: ProtocolStatus;
   durationDays: number;
@@ -95,8 +89,6 @@ type TreatmentProtocol = {
   expertName: string;
   expertAvatar: string;
   weatherCondition: string;
-
-  // Content
   medicineList: {
     name: string;
     type: string;
@@ -109,9 +101,9 @@ type TreatmentProtocol = {
   safetyNotes: string[];
 };
 
-// --- 2. RICH MOCK DATA ---
-
+// --- PASTE MOCK DATA HERE (protocols) ---
 const protocols: TreatmentProtocol[] = [
+  // ... (Sử dụng lại toàn bộ data từ code trước)
   {
     id: "P01",
     code: "LUA-DAOON-01",
@@ -185,6 +177,71 @@ const protocols: TreatmentProtocol[] = [
     safetyNotes: ["Cách ly 14 ngày", "Đeo bảo hộ khi phun"],
   },
   {
+    id: "P05",
+    code: "LUA-RAYNAU-02",
+    name: "Rầy nâu hại lúa",
+    species: "Lúa",
+    variety: "Đài Thơm 8",
+    plantImage:
+      "https://images.unsplash.com/photo-1586771107445-d3ca888129ff?q=80&w=600&fit=crop",
+    growthStage: "Làm đòng - Trổ",
+    disease: "Rầy nâu (Nilaparvata lugens)",
+    diseaseType: "sâu-hại",
+    diseaseImage:
+      "https://live.staticflickr.com/65535/51152062639_b7289b7b2c_z.jpg",
+    symptoms: [
+      "Lúa vàng lá, khô héo (cháy rầy)",
+      "Rầy cám tập trung gốc lúa",
+      "Lan truyền bệnh vàng lùn",
+    ],
+    severity: "nang",
+    status: "dang-ap-dung",
+    durationDays: 5,
+    estimatedCost: "900.000 đ/ha",
+    expertName: "Ks. Lê Văn Tám",
+    expertAvatar:
+      "https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/avatars/avatar-2.png",
+    weatherCondition: "Nắng nóng xen kẽ mưa",
+    medicineList: [
+      {
+        name: "Pymeterozine",
+        type: "Trừ rầy",
+        dosage: "15g/25L",
+        unit: "kg/ha",
+        img: "PY",
+      },
+      {
+        name: "Fenobucarb",
+        type: "Trừ rầy",
+        dosage: "Theo nhãn",
+        unit: "lít/ha",
+        img: "FE",
+      },
+    ],
+    steps: [
+      {
+        id: "s1",
+        name: "Tháo nước",
+        type: "monitor",
+        time: "Trước phun",
+        desc: "Tháo nước để lộ gốc lúa.",
+      },
+      {
+        id: "s2",
+        name: "Phun rẽ lúa",
+        type: "spray",
+        time: "Ngày 1",
+        desc: "Phun thuốc vào gốc lúa nơi rầy trú ẩn.",
+        medicine: "Pymeterozine",
+        dosage: "Pha loãng 0.05%",
+      },
+    ],
+    withdrawalDays: 10,
+    safetyNotes: ["Tránh phun khi lúa đang phơi màu", "Độc với tôm cá"],
+  },
+
+  // --- NGÔ (BẮP) ---
+  {
     id: "P02",
     code: "BAP-SAUKEO-02",
     name: "Sâu keo mùa thu hại Ngô",
@@ -240,6 +297,8 @@ const protocols: TreatmentProtocol[] = [
     withdrawalDays: 7,
     safetyNotes: ["Độc với ong", "Cách ly 7 ngày"],
   },
+
+  // --- SẦU RIÊNG ---
   {
     id: "P03",
     code: "SR-NUTTHAN-01",
@@ -316,6 +375,71 @@ const protocols: TreatmentProtocol[] = [
     ],
   },
   {
+    id: "P06",
+    code: "SR-NHENDO-02",
+    name: "Nhện đỏ hại Sầu riêng",
+    species: "Sầu riêng",
+    variety: "Tất cả",
+    plantImage:
+      "https://images.unsplash.com/photo-1550989460-0adf9ea622e2?q=80&w=600&fit=crop",
+    growthStage: "Cơi đọt - Lá lụa",
+    disease: "Nhện đỏ (Oligonychus)",
+    diseaseType: "sâu-hại",
+    diseaseImage:
+      "https://upload.wikimedia.org/wikipedia/commons/2/23/Tetranychus_urticae.jpg",
+    symptoms: [
+      "Mặt trên lá có chấm trắng li ti",
+      "Lá chuyển màu vàng xám (bạc lá)",
+      "Cây còi cọc",
+    ],
+    severity: "trung-binh",
+    status: "dang-ap-dung",
+    durationDays: 10,
+    estimatedCost: "1.500.000 đ/ha",
+    expertName: "Ks. Đỗ Minh Quân",
+    expertAvatar:
+      "https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/avatars/avatar-7.png",
+    weatherCondition: "Nắng nóng, khô hạn",
+    medicineList: [
+      {
+        name: "Abamectin",
+        type: "Trừ nhện",
+        dosage: "Theo nhãn",
+        unit: "lít",
+        img: "AB",
+      },
+      {
+        name: "Dầu khoáng SK",
+        type: "Bám dính",
+        dosage: "0.5%",
+        unit: "lít",
+        img: "SK",
+      },
+    ],
+    steps: [
+      {
+        id: "s1",
+        name: "Tưới phun mưa",
+        type: "monitor",
+        time: "Sáng sớm",
+        desc: "Tạo độ ẩm cao để hạn chế nhện.",
+      },
+      {
+        id: "s2",
+        name: "Phun thuốc kép",
+        type: "spray",
+        time: "Ngày 1 & 4",
+        desc: "Phun 2 lần cách nhau 3-4 ngày.",
+        medicine: "Abamectin + Dầu khoáng",
+        dosage: "Pha loãng",
+      },
+    ],
+    withdrawalDays: 7,
+    safetyNotes: ["Luân phiên thuốc để tránh kháng"],
+  },
+
+  // --- CÀ PHÊ ---
+  {
     id: "P04",
     code: "CF-REPSAP-01",
     name: "Rệp sáp hại Cà phê",
@@ -385,6 +509,399 @@ const protocols: TreatmentProtocol[] = [
     withdrawalDays: 21,
     safetyNotes: ["Rất độc", "Tránh nguồn nước"],
   },
+  {
+    id: "P07",
+    code: "CF-RISAT-02",
+    name: "Bệnh rỉ sắt Cà phê",
+    species: "Cà phê",
+    variety: "Arabica / Robusta",
+    plantImage:
+      "https://images.unsplash.com/photo-1611162458320-966971c2298e?q=80&w=600&fit=crop",
+    growthStage: "Mùa mưa",
+    disease: "Nấm Hemileia vastatrix",
+    diseaseType: "nấm",
+    diseaseImage:
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Coffee_Rust.JPG/640px-Coffee_Rust.JPG",
+    symptoms: [
+      "Đốm vàng nhạt mặt dưới lá",
+      "Lớp bột phấn màu cam như rỉ sắt",
+      "Rụng lá hàng loạt",
+    ],
+    severity: "trung-binh",
+    status: "de-xuat",
+    durationDays: 10,
+    estimatedCost: "750.000 đ/ha",
+    expertName: "Ths. Trần Bình",
+    expertAvatar:
+      "https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/avatars/avatar-3.png",
+    weatherCondition: "Độ ẩm cao, thiếu sáng",
+    medicineList: [
+      {
+        name: "Hexaconazole",
+        type: "Trừ nấm",
+        dosage: "Theo nhãn",
+        unit: "lít",
+        img: "HE",
+      },
+      {
+        name: "Đồng đỏ (Copper)",
+        type: "Sát khuẩn",
+        dosage: "Pha loãng",
+        unit: "kg",
+        img: "CO",
+      },
+    ],
+    steps: [
+      {
+        id: "s1",
+        name: "Vệ sinh vườn",
+        type: "prune",
+        time: "Đầu mùa mưa",
+        desc: "Tỉa cành tạo tán thông thoáng.",
+      },
+      {
+        id: "s2",
+        name: "Phun phòng",
+        type: "spray",
+        time: "Khi chớm bệnh",
+        desc: "Phun ướt đều 2 mặt lá.",
+        medicine: "Hexaconazole",
+        dosage: "0.2%",
+      },
+    ],
+    withdrawalDays: 14,
+    safetyNotes: ["Không phun khi trời nắng gắt"],
+  },
+
+  // --- HỒ TIÊU ---
+  {
+    id: "P08",
+    code: "PEP-CHETNHANH-01",
+    name: "Bệnh chết nhanh Hồ tiêu",
+    species: "Hồ tiêu",
+    variety: "Vĩnh Linh",
+    plantImage:
+      "https://images.unsplash.com/photo-1509316975850-ff9c5deb0cd9?q=80&w=600&fit=crop",
+    growthStage: "Mọi giai đoạn",
+    disease: "Nấm Phytophthora capsici",
+    diseaseType: "nấm",
+    diseaseImage:
+      "https://live.staticflickr.com/4083/5036986422_9422d76550_z.jpg",
+    symptoms: [
+      "Dây tiêu héo rũ nhanh chóng",
+      "Lá vẫn xanh nhưng héo rủ",
+      "Thối gốc, rễ đen",
+    ],
+    severity: "nang",
+    status: "dang-ap-dung",
+    durationDays: 30,
+    estimatedCost: "3.000.000 đ/ha",
+    expertName: "Ts. Nguyễn Hữu Quan",
+    expertAvatar:
+      "https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/avatars/avatar-6.png",
+    weatherCondition: "Mưa nhiều, ngập úng",
+    medicineList: [
+      {
+        name: "Fosetyl-Aluminium",
+        type: "Lưu dẫn",
+        dosage: "Tưới gốc",
+        unit: "kg",
+        img: "FO",
+      },
+      {
+        name: "Trichoderma",
+        type: "Nấm đối kháng",
+        dosage: "Rải gốc",
+        unit: "kg",
+        img: "TR",
+      },
+    ],
+    steps: [
+      {
+        id: "s1",
+        name: "Đánh rãnh thoát nước",
+        type: "monitor",
+        time: "Ngay lập tức",
+        desc: "Không để vườn bị đọng nước.",
+      },
+      {
+        id: "s2",
+        name: "Xử lý thuốc hoá học",
+        type: "fertilize",
+        time: "Ngày 1",
+        desc: "Tưới gốc thuốc đặc trị nấm.",
+        medicine: "Fosetyl-Aluminium",
+        dosage: "30g/gốc",
+      },
+      {
+        id: "s3",
+        name: "Bổ sung vi sinh",
+        type: "fertilize",
+        time: "Sau 15 ngày",
+        desc: "Bón Trichoderma để tái tạo hệ vi sinh.",
+        medicine: "Trichoderma",
+        dosage: "Trộn phân hữu cơ",
+      },
+    ],
+    withdrawalDays: 20,
+    safetyNotes: ["Tiêu hủy cây bệnh xa vườn", "Cách ly khu vực bệnh"],
+  },
+  {
+    id: "P09",
+    code: "PEP-TUYENTRUNG-02",
+    name: "Bệnh chết chậm (Tuyến trùng)",
+    species: "Hồ tiêu",
+    variety: "Sẻ đất",
+    plantImage:
+      "https://images.unsplash.com/photo-1621961458348-209252576392?q=80&w=600&fit=crop",
+    growthStage: "Kinh doanh",
+    disease: "Tuyến trùng & Nấm",
+    diseaseType: "sâu-hại",
+    diseaseImage:
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/8/87/Root-knot_nematode.jpg/640px-Root-knot_nematode.jpg",
+    symptoms: [
+      "Cây vàng lá, còi cọc chậm lớn",
+      "Rễ có nốt sưng (u sưng)",
+      "Rụng đốt tháo khớp",
+    ],
+    severity: "nang",
+    status: "luu-tru",
+    durationDays: 45,
+    estimatedCost: "4.000.000 đ/ha",
+    expertName: "Ks. Vũ Thị Mai",
+    expertAvatar:
+      "https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/avatars/avatar-9.png",
+    weatherCondition: "Đất thiếu hữu cơ",
+    medicineList: [
+      {
+        name: "Tervigo 020SC",
+        type: "Trừ tuyến trùng",
+        dosage: "Tưới gốc",
+        unit: "lít",
+        img: "TE",
+      },
+      {
+        name: "Phân hữu cơ vi sinh",
+        type: "Dinh dưỡng",
+        dosage: "5kg/gốc",
+        unit: "tấn",
+        img: "HC",
+      },
+    ],
+    steps: [
+      {
+        id: "s1",
+        name: "Xới đất nhẹ",
+        type: "monitor",
+        time: "Đầu mùa mưa",
+        desc: "Phá váng đất quanh gốc.",
+      },
+      {
+        id: "s2",
+        name: "Xử lý tuyến trùng",
+        type: "fertilize",
+        time: "Ngày 1",
+        desc: "Tưới thuốc quanh vùng rễ.",
+        medicine: "Tervigo 020SC",
+        dosage: "Theo hướng dẫn",
+      },
+    ],
+    withdrawalDays: 14,
+    safetyNotes: ["Không dùng thuốc quá liều gây chai đất"],
+  },
+
+  // --- THANH LONG ---
+  {
+    id: "P10",
+    code: "TL-DOMTRANG-01",
+    name: "Đốm trắng (Đốm nâu/Tắc kè)",
+    species: "Thanh long",
+    variety: "Ruột đỏ / Ruột trắng",
+    plantImage:
+      "https://images.unsplash.com/photo-1529503197623-6cc3795a2304?q=80&w=600&fit=crop",
+    growthStage: "Ra cành - Ra quả",
+    disease: "Nấm Neoscytalidium dimidiatum",
+    diseaseType: "nấm",
+    diseaseImage:
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/Dragon_Fruit_Pitaya.jpg/640px-Dragon_Fruit_Pitaya.jpg",
+    symptoms: [
+      "Đốm trắng nhỏ lõm xuống",
+      "Vết bệnh chuyển nâu, sần sùi",
+      "Gây thối cành, thối quả",
+    ],
+    severity: "nang",
+    status: "dang-ap-dung",
+    durationDays: 15,
+    estimatedCost: "2.000.000 đ/ha",
+    expertName: "Ks. Phạm Văn Dũng",
+    expertAvatar:
+      "https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/avatars/avatar-4.png",
+    weatherCondition: "Mưa nhiều, ẩm độ cao",
+    medicineList: [
+      {
+        name: "Mancozeb",
+        type: "Trừ nấm",
+        dosage: "Phun phủ",
+        unit: "kg",
+        img: "MN",
+      },
+      {
+        name: "Propiconazole",
+        type: "Trừ nấm",
+        dosage: "0.1%",
+        unit: "lít",
+        img: "PR",
+      },
+    ],
+    steps: [
+      {
+        id: "s1",
+        name: "Vệ sinh vườn",
+        type: "prune",
+        time: "Thường xuyên",
+        desc: "Cắt bỏ cành bệnh đem tiêu hủy.",
+      },
+      {
+        id: "s2",
+        name: "Phun thuốc",
+        type: "spray",
+        time: "Sau mưa",
+        desc: "Phun thuốc khi vết bệnh mới xuất hiện.",
+        medicine: "Mancozeb + Propiconazole",
+        dosage: "Hỗn hợp",
+      },
+    ],
+    withdrawalDays: 10,
+    safetyNotes: ["Rửa sạch quả sau thu hoạch"],
+  },
+
+  // --- CAM/BƯỞI ---
+  {
+    id: "P11",
+    code: "CAM-GREENING-01",
+    name: "Bệnh Vàng lá Greening (Gân xanh)",
+    species: "Cam / Bưởi",
+    variety: "Cam sành / Da xanh",
+    plantImage:
+      "https://images.unsplash.com/photo-1582236932599-4c3e803d1976?q=80&w=600&fit=crop",
+    growthStage: "Mọi giai đoạn",
+    disease: "Vi khuẩn Liberibacter (rầy chổng cánh)",
+    diseaseType: "vi-khuẩn",
+    diseaseImage:
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c2/Citrus_greening_symptoms.jpg/640px-Citrus_greening_symptoms.jpg",
+    symptoms: [
+      "Lá vàng lốm đốm, gân xanh",
+      "Quả nhỏ, méo mó, tâm lệch",
+      "Hạt bị thui đen",
+    ],
+    severity: "nang",
+    status: "dang-ap-dung",
+    durationDays: 60,
+    estimatedCost: "Phá bỏ / Trồng mới",
+    expertName: "Ts. Lê Quốc Phong",
+    expertAvatar:
+      "https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/avatars/avatar-10.png",
+    weatherCondition: "Mật độ rầy chổng cánh cao",
+    medicineList: [
+      {
+        name: "Imidacloprid",
+        type: "Trừ rầy",
+        dosage: "Phun định kỳ",
+        unit: "lít",
+        img: "IM",
+      },
+    ],
+    steps: [
+      {
+        id: "s1",
+        name: "Kiểm tra rầy",
+        type: "monitor",
+        time: "Ra đọt non",
+        desc: "Quan sát mật độ rầy chổng cánh.",
+      },
+      {
+        id: "s2",
+        name: "Tiêu huỷ cây bệnh",
+        type: "prune",
+        time: "Phát hiện bệnh",
+        desc: "Chặt bỏ cây bệnh, đào gốc.",
+      },
+      {
+        id: "s3",
+        name: "Phun trừ rầy",
+        type: "spray",
+        time: "Cơi đọt",
+        desc: "Phun bảo vệ đọt non.",
+        medicine: "Imidacloprid",
+        dosage: "Theo nhãn",
+      },
+    ],
+    withdrawalDays: 14,
+    safetyNotes: ["Chưa có thuốc trị dứt điểm", "Phòng trừ môi giới là chính"],
+  },
+  {
+    id: "P12",
+    code: "CAM-LOET-02",
+    name: "Bệnh loét Cam (Canker)",
+    species: "Cam / Bưởi",
+    variety: "Tất cả",
+    plantImage:
+      "https://images.unsplash.com/photo-1590502593747-42a996133562?q=80&w=600&fit=crop",
+    growthStage: "Lá non - Quả non",
+    disease: "Vi khuẩn Xanthomonas",
+    diseaseType: "vi-khuẩn",
+    diseaseImage:
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3b/Citrus_canker_fruit.jpg/640px-Citrus_canker_fruit.jpg",
+    symptoms: [
+      "Vết bệnh sần sùi, gờ nổi",
+      "Xung quanh có quầng vàng",
+      "Gây rụng lá và quả",
+    ],
+    severity: "trung-binh",
+    status: "de-xuat",
+    durationDays: 10,
+    estimatedCost: "1.000.000 đ/ha",
+    expertName: "Ks. Nguyễn Thị Lan",
+    expertAvatar:
+      "https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/avatars/avatar-5.png",
+    weatherCondition: "Mưa bão, gió lớn",
+    medicineList: [
+      {
+        name: "Kasugamycin",
+        type: "Kháng sinh",
+        dosage: "2%",
+        unit: "lít",
+        img: "KA",
+      },
+      {
+        name: "Copper Oxychloride",
+        type: "Đồng",
+        dosage: "0.3%",
+        unit: "kg",
+        img: "COC",
+      },
+    ],
+    steps: [
+      {
+        id: "s1",
+        name: "Phun sau mưa",
+        type: "spray",
+        time: "Sau cơn mưa",
+        desc: "Phun thuốc gốc đồng để sát khuẩn.",
+      },
+      {
+        id: "s2",
+        name: "Phun trị",
+        type: "spray",
+        time: "Bệnh nặng",
+        desc: "Dùng kháng sinh thực vật.",
+        medicine: "Kasugamycin",
+        dosage: "Pha loãng",
+      },
+    ],
+    withdrawalDays: 7,
+    safetyNotes: ["Tránh phun đồng khi hoa đang nở"],
+  },
 ];
 
 // --- 3. HELPER COMPONENTS ---
@@ -412,11 +929,13 @@ const ActionTypeBadge = ({ type }: { type: string }) => {
 
 const MedicineCard = ({ item }: { item: any }) => (
   <Paper
-    withBorder
+    withBorder={false}
+    shadow="xs"
     p="sm"
     radius="md"
     bg="white"
     className="hover:shadow-md transition-all"
+    style={{ border: "1px solid #f1f3f5" }}
   >
     <Group wrap="nowrap" align="flex-start">
       <Avatar src={item.img} size="md" radius="md" color="teal" variant="light">
@@ -446,30 +965,6 @@ const MedicineCard = ({ item }: { item: any }) => (
   </Paper>
 );
 
-const CustomTab = ({ active, label, icon: Icon, onClick }: any) => (
-  <UnstyledButton
-    onClick={onClick}
-    py="sm"
-    px="md"
-    style={{
-      borderBottom: active
-        ? `2px solid var(--mantine-color-teal-6)`
-        : "2px solid transparent",
-      color: active
-        ? "var(--mantine-color-teal-7)"
-        : "var(--mantine-color-gray-6)",
-      transition: "all 0.2s ease",
-      fontWeight: 600,
-      fontSize: rem(14),
-    }}
-  >
-    <Group gap={6}>
-      <Icon size={16} />
-      <Text inherit>{label}</Text>
-    </Group>
-  </UnstyledButton>
-);
-
 // --- 4. MAIN PAGE COMPONENT ---
 
 export default function TreatmentProtocolPage() {
@@ -489,6 +984,11 @@ export default function TreatmentProtocolPage() {
   const [filtersOpen, setFiltersOpen] = useState(true);
 
   // Derived Logic
+  const uniqueSpecies = useMemo(() => {
+    const speciesSet = new Set(protocols.map((p) => p.species));
+    return Array.from(speciesSet);
+  }, []);
+
   const selectedData = useMemo(
     () => protocols.find((p) => p.id === selectedId) || protocols[0],
     [selectedId]
@@ -496,9 +996,13 @@ export default function TreatmentProtocolPage() {
 
   const filteredList = useMemo(() => {
     return protocols.filter((p) => {
+      const normSearch = search.toLowerCase();
       const matchesSearch =
-        p.name.toLowerCase().includes(search.toLowerCase()) ||
-        p.code.toLowerCase().includes(search.toLowerCase());
+        p.name.toLowerCase().includes(normSearch) ||
+        p.code.toLowerCase().includes(normSearch) ||
+        p.disease.toLowerCase().includes(normSearch) ||
+        p.symptoms.some((s) => s.toLowerCase().includes(normSearch));
+
       const matchesSpecies =
         filterSpecies.length === 0 || filterSpecies.includes(p.species);
       const matchesStatus = !filterStatus || p.status === filterStatus;
@@ -525,28 +1029,37 @@ export default function TreatmentProtocolPage() {
   };
 
   return (
-    <Flex direction={"column"} bg="#f8f9fa" style={{ overflow: "hidden" }}>
-      {/* --- SIDEBAR: ADVANCED FILTER & LIST --- */}
-      <Flex bg="white" style={{ borderRight: "1px solid #f1f3f5", zIndex: 10 }}>
-        {/* Sidebar Header */}
-        <Box p="md" pb={0} w={"40%"}>
-          <Group justify="space-between" mb="sm">
-            <Title order={4} fw={800} c="dark.7">
+    <Flex h="100vh" bg="#f8f9fa" style={{ overflow: "hidden" }}>
+      {/* --- SIDEBAR: NAVIGATION & FILTER --- */}
+      <Flex
+        direction="column"
+        w={380}
+        bg="white"
+        style={{ borderRight: "1px solid #e9ecef", zIndex: 10 }}
+      >
+        <Box p="md" pb={0}>
+          <Group justify="space-between" mb="md">
+            <Title
+              order={4}
+              fw={800}
+              c="dark.8"
+              style={{ letterSpacing: -0.5 }}
+            >
               Phác Đồ Điều Trị
             </Title>
             <ActionIcon
-              variant="light"
-              color="teal"
+              variant="subtle"
+              color="gray"
               onClick={clearFilters}
               disabled={!search && filterSpecies.length === 0}
-              title="Xóa bộ lọc"
+              title="Làm mới"
             >
               <IconX size={18} />
             </ActionIcon>
           </Group>
 
           <TextInput
-            placeholder="Tìm kiếm tên, mã..."
+            placeholder="Tìm kiếm phác đồ..."
             leftSection={<IconSearch size={16} />}
             value={search}
             onChange={(e) => setSearch(e.target.value)}
@@ -557,31 +1070,33 @@ export default function TreatmentProtocolPage() {
 
           <UnstyledButton
             onClick={() => setFiltersOpen((o) => !o)}
-            mb="xs"
+            mb="sm"
             c="dimmed"
             style={{
               fontSize: 13,
               display: "flex",
               alignItems: "center",
-              gap: 4,
+              gap: 6,
+              fontWeight: 500,
             }}
           >
             <IconFilter size={14} />{" "}
-            {filtersOpen ? "Thu gọn bộ lọc" : "Bộ lọc nâng cao"}
+            {filtersOpen ? "Thu gọn bộ lọc" : "Mở bộ lọc nâng cao"}
           </UnstyledButton>
 
           <Collapse in={filtersOpen}>
             <Stack gap="xs" mb="md">
               <MultiSelect
-                placeholder="Chọn cây trồng"
-                data={["Lúa", "Bắp (Ngô)", "Sầu riêng", "Cà phê"]}
+                placeholder="Lọc theo cây trồng"
+                data={uniqueSpecies}
                 value={filterSpecies}
                 onChange={setFilterSpecies}
                 variant="filled"
                 radius="md"
                 searchable
                 clearable
-                maxValues={3}
+                maxValues={5}
+                hidePickedOptions
               />
               <Grid gutter="xs">
                 <Grid.Col span={6}>
@@ -591,6 +1106,7 @@ export default function TreatmentProtocolPage() {
                       { value: "nấm", label: "Nấm bệnh" },
                       { value: "sâu-hại", label: "Sâu hại" },
                       { value: "vi-khuẩn", label: "Vi khuẩn" },
+                      { value: "virus", label: "Virus" },
                     ]}
                     value={filterDiseaseType}
                     onChange={setFilterDiseaseType}
@@ -617,23 +1133,118 @@ export default function TreatmentProtocolPage() {
               </Grid>
             </Stack>
           </Collapse>
+
+          <Divider mb="sm" />
+          <Text size="xs" fw={700} c="dimmed" mb="xs" tt="uppercase">
+            Danh sách ({filteredList.length})
+          </Text>
         </Box>
-        <Box h={280} w="100%" pos="relative">
+
+        <ScrollArea style={{ flex: 1 }} px="md">
+          <Stack gap={10} pb="xl">
+            {filteredList.map((item) => {
+              const active = item.id === selectedId;
+              return (
+                <Card
+                  key={item.id}
+                  padding="md"
+                  radius="md"
+                  withBorder={!active}
+                  onClick={() => setSelectedId(item.id)}
+                  style={{
+                    cursor: "pointer",
+                    backgroundColor: active
+                      ? "var(--mantine-color-teal-0)"
+                      : "white",
+                    borderColor: active
+                      ? "transparent"
+                      : "var(--mantine-color-gray-2)",
+                    borderLeft: active
+                      ? "4px solid var(--mantine-color-teal-6)"
+                      : "1px solid var(--mantine-color-gray-2)",
+                    transition: "all 0.2s ease",
+                  }}
+                  className="hover:shadow-sm"
+                >
+                  <Group align="start" wrap="nowrap">
+                    <Avatar src={item.plantImage} radius="md" size="md" />
+                    <Box style={{ flex: 1 }}>
+                      <Text size="sm" fw={700} c="dark.8" lineClamp={1}>
+                        {item.name}
+                      </Text>
+                      <Group gap={6} mt={6}>
+                        <Badge
+                          size="xs"
+                          variant="white"
+                          color="gray"
+                          radius="sm"
+                          style={{ border: "1px solid #dee2e6" }}
+                        >
+                          {item.species}
+                        </Badge>
+                        <Badge
+                          size="xs"
+                          variant="light"
+                          color={
+                            item.severity === "nang"
+                              ? "red"
+                              : item.severity === "trung-binh"
+                              ? "yellow"
+                              : "green"
+                          }
+                        >
+                          {item.severity === "nang"
+                            ? "Cao"
+                            : item.severity === "trung-binh"
+                            ? "Vừa"
+                            : "Thấp"}
+                        </Badge>
+                      </Group>
+                    </Box>
+                  </Group>
+                </Card>
+              );
+            })}
+            {filteredList.length === 0 && (
+              <Box ta="center" py="xl">
+                <Text size="sm" c="dimmed">
+                  Không tìm thấy kết quả nào
+                </Text>
+              </Box>
+            )}
+          </Stack>
+        </ScrollArea>
+
+        <Box p="md" style={{ borderTop: "1px solid #f1f3f5" }}>
+          <Button
+            fullWidth
+            radius="md"
+            color="dark"
+            onClick={() => navigate("/treatment-regimen-management/add")}
+          >
+            + Thêm phác đồ mới
+          </Button>
+        </Box>
+      </Flex>
+
+      {/* --- MAIN CONTENT AREA --- */}
+      <Flex direction="column" style={{ flex: 1, overflow: "hidden" }}>
+        {/* HERO HEADER */}
+        <Box h={220} pos="relative">
           <BackgroundImage src={selectedData.plantImage} h="100%" radius={0}>
             <Overlay
-              gradient="linear-gradient(0deg, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.3) 100%)"
+              gradient="linear-gradient(90deg, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.4) 100%)"
               opacity={1}
               zIndex={1}
             />
-            <Flex
-              h="100%"
-              direction="column"
-              justify="flex-end"
-              p={32}
-              pos="relative"
-              style={{ zIndex: 2 }}
-            >
-              <Group align="flex-end" justify="space-between">
+            <Container size="xl" h="100%" px="xl">
+              <Flex
+                h="100%"
+                align="center"
+                justify="space-between"
+                pos="relative"
+                style={{ zIndex: 2 }}
+              >
                 <Box>
                   <Group mb="sm">
                     <Badge size="lg" radius="sm" variant="filled" color="teal">
@@ -648,37 +1259,34 @@ export default function TreatmentProtocolPage() {
                     >
                       {selectedData.growthStage}
                     </Badge>
-                    {selectedData.status === "de-xuat" && (
-                      <Badge color="yellow" variant="filled">
-                        Đề xuất
-                      </Badge>
-                    )}
                   </Group>
                   <Title
                     c="white"
                     order={1}
                     fw={800}
-                    style={{ letterSpacing: -0.5, fontSize: "2rem" }}
+                    style={{ fontSize: "2.2rem" }}
                   >
                     {selectedData.name}
                   </Title>
-                  <Text c="gray.4" size="lg" mt={4} fw={500}>
-                    Áp dụng cho: {selectedData.variety}
+                  <Text c="gray.3" size="lg" mt={4} fw={500}>
+                    Áp dụng cho giống: {selectedData.variety}
                   </Text>
                 </Box>
 
                 <Paper
-                  pl={6}
-                  pr="md"
-                  py={6}
+                  px="md"
+                  py="xs"
                   radius="xl"
-                  bg="rgba(255,255,255,0.15)"
-                  style={{ backdropFilter: "blur(10px)" }}
+                  bg="rgba(255,255,255,0.1)"
+                  style={{
+                    backdropFilter: "blur(5px)",
+                    border: "1px solid rgba(255,255,255,0.2)",
+                  }}
                 >
                   <Group gap="sm">
                     <Avatar
                       src={selectedData.expertAvatar}
-                      size={42}
+                      size={40}
                       radius="xl"
                     />
                     <Box>
@@ -691,628 +1299,305 @@ export default function TreatmentProtocolPage() {
                     </Box>
                   </Group>
                 </Paper>
-              </Group>
-            </Flex>
+              </Flex>
+            </Container>
           </BackgroundImage>
         </Box>
-      </Flex>
 
-      {/* --- MAIN CONTENT --- */}
-      <Flex style={{ flex: 1, overflow: "hidden", position: "relative" }}>
-        {/* HERO HEADER */}
-        <Flex direction={"column"} w={"35%"} p="lg">
-          {/* List of Protocols */}
-          <Text size="xs" fw={700} c="dimmed" mb="xs">
-            KẾT QUẢ ({filteredList.length})
-          </Text>
-          <ScrollArea style={{ flex: 1 }} px="md">
-            <Stack gap={8} pb="md">
-              {filteredList.map((item) => {
-                const active = item.id === selectedId;
-                return (
-                  <UnstyledButton
-                    key={item.id}
-                    onClick={() => setSelectedId(item.id)}
-                    p="md"
-                    style={{
-                      backgroundColor: active
-                        ? "var(--mantine-color-teal-0)"
-                        : "white",
-                      borderRadius: "12px",
-                      border: active
-                        ? "1px solid var(--mantine-color-teal-2)"
-                        : "0.1px solid gray",
-                      transition: "all 0.2s ease",
-                      position: "relative",
-                    }}
-                    className="hover:bg-gray-50"
-                  >
-                    <Group align="start" wrap="nowrap">
-                      <Avatar src={item.plantImage} radius="md" size="md" />
-                      <Box style={{ flex: 1 }}>
-                        <Text size="sm" fw={700} c="dark.8" lineClamp={1}>
-                          {item.name}
-                        </Text>
-                        <Group gap={6} mt={4}>
-                          <Badge
-                            size="xs"
-                            variant="filled"
-                            color="teal"
-                            radius="sm"
-                          >
-                            {item.species}
-                          </Badge>
-                          <Badge
-                            size="xs"
-                            variant="outline"
-                            color={
-                              item.severity === "nang"
-                                ? "red"
-                                : item.severity === "trung-binh"
-                                ? "yellow"
-                                : "green"
-                            }
-                          >
-                            {item.severity === "nang"
-                              ? "Nghiêm trọng"
-                              : item.severity === "trung-binh"
-                              ? "Trung bình"
-                              : "Nhẹ"}
-                          </Badge>
-                        </Group>
-                      </Box>
-                      {active && (
-                        <IconArrowRight
-                          size={16}
-                          color="var(--mantine-color-teal-6)"
-                          style={{
-                            position: "absolute",
-                            right: 16,
-                            top: "50%",
-                            transform: "translateY(-50%)",
-                          }}
-                        />
-                      )}
-                    </Group>
-                  </UnstyledButton>
-                );
-              })}
-              {filteredList.length === 0 && (
-                <Box ta="center" py="xl">
-                  <Text size="sm" c="dimmed">
-                    Không tìm thấy phác đồ nào
-                  </Text>
-                </Box>
-              )}
-            </Stack>
-            <Box p="md" style={{ borderTop: "1px solid #f1f3f5" }}>
-              <Button
-                fullWidth
-                radius="md"
-                color="dark"
-                size="md"
-                onClick={() => navigate("/treatment-regimen-management/add")}
-              >
-                Tạo phác đồ mới
-              </Button>
-            </Box>
-          </ScrollArea>
-        </Flex>
-        <Box p={"lg"} w="100%" mx="auto">
-          <Grid gutter={32}>
-            {/* CENTER COLUMN - TABS & CONTENT */}
-            <Grid.Col span={{ base: 12, lg: 8 }}>
-              <Paper shadow="xs" bg="white" mb="lg">
-                <Group
-                  gap={0}
-                  px="md"
-                  style={{ borderBottom: "1px solid #f1f3f5" }}
-                >
-                  <CustomTab
-                    active={activeTab === "overview"}
-                    label="Tổng quan"
-                    icon={IconInfoCircle}
-                    onClick={() => setActiveTab("overview")}
-                  />
-                  <CustomTab
-                    active={activeTab === "protocol"}
-                    label="Phác đồ & Thuốc"
-                    icon={IconPrescription}
-                    onClick={() => setActiveTab("protocol")}
-                  />
-                  <CustomTab
-                    active={activeTab === "safety"}
-                    label="An toàn"
-                    icon={IconShieldCheck}
-                    onClick={() => setActiveTab("safety")}
-                  />
-                </Group>
+        {/* TABS & CONTENT */}
+        <Box
+          bg="white"
+          style={{ borderBottom: "1px solid #e9ecef" }}
+          px="xl"
+          py="xs"
+        >
+          <Container size="xl" p={0}>
+            <SegmentedControl
+              value={activeTab}
+              onChange={setActiveTab}
+              data={[
+                { label: "Tổng quan", value: "overview" },
+                { label: "Phác đồ & Thuốc", value: "protocol" },
+                { label: "An toàn & Cảnh báo", value: "safety" },
+              ]}
+              radius="md"
+              size="md"
+              color="teal"
+              w={400}
+            />
+          </Container>
+        </Box>
 
-                <Box p={0}>
-                  {/* TAB 1: OVERVIEW */}
-                  {activeTab === "overview" && (
-                    <Box p="xl">
-                      <Grid gutter="xl">
+        <ScrollArea style={{ flex: 1 }} bg="#f8f9fa">
+          <Container size="xl" py="xl">
+            <Grid gutter={32}>
+              {/* LEFT CONTENT COLUMN */}
+              <Grid.Col span={{ base: 12, lg: 8 }}>
+                {/* TAB 1: OVERVIEW */}
+                {activeTab === "overview" && (
+                  <Stack gap="lg">
+                    <Paper p="xl" radius="md" shadow="xs" withBorder>
+                      <Group mb="md" align="center">
+                        <ThemeIcon
+                          size="lg"
+                          radius="md"
+                          variant="light"
+                          color="red"
+                        >
+                          <IconBiohazard size={20} />
+                        </ThemeIcon>
+                        <Title order={4}>Thông tin bệnh hại</Title>
+                      </Group>
+
+                      <Grid>
                         <Grid.Col span={7}>
-                          <Group gap="xs" mb="xs">
-                            <ThemeIcon variant="light" color="red" radius="xl">
-                              <IconBiohazard size={16} />
-                            </ThemeIcon>
-                            <Text tt="uppercase" c="red.8" fw={700} size="xs">
-                              Đối tượng gây hại
-                            </Text>
-                          </Group>
-                          <Title order={3} c="dark.8" mb="sm">
+                          <Text fw={700} size="lg" c="dark.8" mb="xs">
                             {selectedData.disease}
-                          </Title>
-                          <Text c="dimmed" size="sm" mb="lg">
-                            Triệu chứng điển hình và dấu hiệu nhận biết sớm trên
-                            đồng ruộng:
+                          </Text>
+                          <Text size="sm" c="dimmed" mb="md">
+                            Loại: {selectedData.diseaseType}
                           </Text>
 
-                          <Stack gap="xs">
+                          <Text size="sm" fw={600} mb="xs">
+                            Triệu chứng nhận biết:
+                          </Text>
+                          <List
+                            spacing="xs"
+                            size="sm"
+                            center
+                            icon={
+                              <IconCheck
+                                size={16}
+                                color="var(--mantine-color-teal-6)"
+                              />
+                            }
+                          >
                             {selectedData.symptoms.map((s, i) => (
-                              <Group
-                                key={i}
-                                gap="md"
-                                align="flex-start"
-                                wrap="nowrap"
-                              >
-                                <IconCheck
-                                  size={18}
-                                  color="var(--mantine-color-teal-6)"
-                                  style={{ marginTop: 2 }}
-                                />
-                                <Text size="sm" fw={500}>
-                                  {s}
-                                </Text>
-                              </Group>
+                              <List.Item key={i}>{s}</List.Item>
                             ))}
-                          </Stack>
+                          </List>
                         </Grid.Col>
                         <Grid.Col span={5}>
-                          <Card bg="gray.0" radius="md" p="md">
-                            <Text fw={600} mb="md">
-                              Điều kiện thuận lợi
-                            </Text>
+                          <Paper bg="gray.0" p="md" radius="md">
                             <Group mb="xs">
-                              <ThemeIcon
-                                color="blue"
-                                variant="white"
-                                radius="md"
-                              >
-                                <IconMist size={18} />
-                              </ThemeIcon>
-                              <Text size="sm">Độ ẩm & Thời tiết</Text>
+                              <IconMist size={18} color="gray" />
+                              <Text size="sm" fw={600}>
+                                Điều kiện phát sinh
+                              </Text>
                             </Group>
-                            <Text size="sm" c="dimmed" mb="md" pl={34}>
+                            <Text size="sm" c="dimmed">
                               {selectedData.weatherCondition}
                             </Text>
-
-                            <Group mb="xs">
-                              <ThemeIcon
-                                color="orange"
-                                variant="white"
-                                radius="md"
-                              >
-                                <IconBug size={18} />
-                              </ThemeIcon>
-                              <Text size="sm">Loại bệnh</Text>
-                            </Group>
-                            <Badge variant="outline" color="orange" ml={34}>
-                              {selectedData.diseaseType}
-                            </Badge>
-                          </Card>
-                        </Grid.Col>
-                      </Grid>
-                    </Box>
-                  )}
-
-                  {/* TAB 2: PROTOCOL (REDESIGNED SPLIT VIEW) */}
-                  {activeTab === "protocol" && (
-                    <Flex direction={"column"} gap={10} bg="#f8f9fa" p={"lg"}>
-                      <Flex direction={"column"}>
-                        <Group justify="space-between" mb="md">
-                          <Title order={5} c="teal.9" tt="uppercase">
-                            Vật tư chuẩn bị
-                          </Title>
-                          <Badge variant="light" color="teal" size="lg" circle>
-                            {selectedData.medicineList.length}
-                          </Badge>
-                        </Group>
-
-                        <Alert
-                          variant="light"
-                          color="blue"
-                          title="Lưu ý mua hàng"
-                          icon={<IconInfoCircle size={16} />}
-                          radius="md"
-                          mb="md"
-                        >
-                          <Text size="xs">
-                            Kiểm tra kỹ thời hạn sử dụng và nguồn gốc xuất xứ
-                            trước khi mua.
-                          </Text>
-                        </Alert>
-
-                        <ScrollArea>
-                          <Group gap="sm">
-                            {selectedData.medicineList.map((med, i) => (
-                              <MedicineCard key={i} item={med} />
-                            ))}
-                          </Group>
-                        </ScrollArea>
-
-                        <Divider
-                          my="lg"
-                          label="Tổng chi phí ước tính"
-                          labelPosition="center"
-                        />
-
-                        <Card
-                          bg="teal.0"
-                          radius="md"
-                          p="md"
-                          withBorder
-                          style={{
-                            borderColor: "var(--mantine-color-teal-2)",
-                          }}
-                        >
-                          <Group justify="space-between" align="center">
-                            <Text size="sm" c="teal.9" fw={600}>
-                              Chi phí / Ha
-                            </Text>
-                            <Text size="xl" fw={800} c="teal.8">
-                              {selectedData.estimatedCost}
-                            </Text>
-                          </Group>
-                          <Text size="xs" c="dimmed" mt={4} ta="right">
-                            *Chưa bao gồm nhân công
-                          </Text>
-                        </Card>
-                      </Flex>
-                      {/* LEFT: TIMELINE */}
-                      <Title order={5} mb="lg" c="dark.7" tt="uppercase">
-                        Lộ trình xử lý ({selectedData.durationDays} ngày)
-                      </Title>
-
-                      <Timeline
-                        active={1}
-                        bulletSize={40}
-                        lineWidth={2}
-                        color="teal"
-                      >
-                        {selectedData.steps.map((step, idx) => (
-                          <Timeline.Item
-                            key={step.id}
-                            bullet={
-                              <ThemeIcon
-                                size={40}
-                                radius="xl"
-                                color={
-                                  step.type === "spray"
-                                    ? "blue"
-                                    : step.type === "fertilize"
-                                    ? "teal"
-                                    : step.type === "inject"
-                                    ? "red"
-                                    : "gray"
-                                }
-                                variant="filled"
-                              >
-                                {step.type === "spray" ? (
-                                  <IconDroplet size={20} />
-                                ) : step.type === "fertilize" ? (
-                                  <IconLeaf size={20} />
-                                ) : step.type === "inject" ? (
-                                  <IconPrescription size={20} />
-                                ) : step.type === "prune" ? (
-                                  <IconBug size={20} />
-                                ) : (
-                                  <IconInfoCircle size={20} />
-                                )}
-                              </ThemeIcon>
-                            }
-                            title={null}
-                            lineVariant={
-                              idx === selectedData.steps.length - 1
-                                ? "dashed"
-                                : "solid"
-                            }
-                          >
-                            <Group gap={6} mb={3}>
-                              <IconClock size={14} color="gray" />
-                              <Text
-                                size="xs"
-                                c="dimmed"
-                                fw={600}
-                                tt="uppercase"
-                              >
-                                Thời điểm: {step.time}
-                              </Text>
-                            </Group>
-                            <Paper
-                              withBorder
-                              radius="md"
-                              p="md"
-                              mb="xl"
-                              bg="white"
-                              style={{
-                                borderLeft: `4px solid var(--mantine-color-${
-                                  step.type === "spray"
-                                    ? "blue"
-                                    : step.type === "fertilize"
-                                    ? "teal"
-                                    : "gray"
-                                }-5)`,
-                              }}
-                            >
-                              <Group
-                                justify="space-between"
-                                mb="xs"
-                                align="start"
-                              >
-                                <Box>
-                                  <Group gap="sm" mb={4}>
-                                    <Text fw={700} size="md" c="dark.9">
-                                      {step.name}
-                                    </Text>
-                                    <ActionTypeBadge type={step.type} />
-                                  </Group>
-                                </Box>
-                              </Group>
-
-                              <Text size="sm" c="dark.6" mb="md" lh={1.6}>
-                                {step.desc}
-                              </Text>
-
-                              <Card bg="gray.0" radius="md" p="sm" withBorder>
-                                <Grid align="center">
-                                  <Grid.Col
-                                    span={7}
-                                    style={{
-                                      borderRight: "1px dashed #dee2e6",
-                                    }}
-                                  >
-                                    {step.medicine ? (
-                                      <Group gap="xs">
-                                        <ThemeIcon
-                                          variant="white"
-                                          color="blue"
-                                          size="md"
-                                        >
-                                          <IconDroplet size={16} />
-                                        </ThemeIcon>
-                                        <Box>
-                                          <Text size="xs" c="dimmed">
-                                            Sản phẩm sử dụng
-                                          </Text>
-                                          <Text size="sm" fw={600} c="blue.8">
-                                            {step.medicine}
-                                          </Text>
-                                        </Box>
-                                      </Group>
-                                    ) : (
-                                      <Group gap="xs">
-                                        <ThemeIcon
-                                          variant="white"
-                                          color="orange"
-                                          size="md"
-                                        >
-                                          <IconBug size={16} />
-                                        </ThemeIcon>
-                                        <Box>
-                                          <Text size="xs" c="dimmed">
-                                            Hành động
-                                          </Text>
-                                          <Text size="sm" fw={600} c="orange.8">
-                                            Thủ công / Canh tác
-                                          </Text>
-                                        </Box>
-                                      </Group>
-                                    )}
-                                  </Grid.Col>
-                                  <Grid.Col span={5} pl="lg">
-                                    <Text size="xs" c="dimmed">
-                                      Liều lượng / Cách dùng
-                                    </Text>
-                                    <Text size="sm" fw={500}>
-                                      {step.dosage ||
-                                        step.desc.slice(0, 20) + "..."}
-                                    </Text>
-                                  </Grid.Col>
-                                </Grid>
-                              </Card>
-                            </Paper>
-                          </Timeline.Item>
-                        ))}
-                      </Timeline>
-                    </Flex>
-                  )}
-
-                  {/* TAB 3: SAFETY */}
-                  {activeTab === "safety" && (
-                    <Box p="xl">
-                      <Grid align="center">
-                        <Grid.Col span={6}>
-                          <Paper radius="md" p="lg" bg="red.0">
-                            <Title order={5} c="red.8" mb="md">
-                              Cảnh báo an toàn
-                            </Title>
-                            <List
-                              spacing="xs"
-                              icon={
-                                <IconAlertTriangle
-                                  size={16}
-                                  color="var(--mantine-color-red-6)"
-                                />
-                              }
-                            >
-                              {selectedData.safetyNotes.map((note, i) => (
-                                <List.Item key={i}>
-                                  <Text size="sm" c="red.9">
-                                    {note}
-                                  </Text>
-                                </List.Item>
-                              ))}
-                            </List>
                           </Paper>
                         </Grid.Col>
-                        <Grid.Col span={6}>
-                          <Stack align="center" gap={0}>
-                            <RingProgress
-                              size={160}
-                              thickness={12}
-                              roundCaps
-                              sections={[
-                                {
-                                  value:
-                                    (selectedData.withdrawalDays / 30) * 100,
-                                  color: "orange",
-                                },
-                              ]}
-                              label={
-                                <Stack align="center" gap={0}>
-                                  <Text fz={32} fw={800} c="dark.7">
-                                    {selectedData.withdrawalDays}
-                                  </Text>
-                                  <Text
-                                    size="xs"
-                                    fw={700}
-                                    tt="uppercase"
-                                    c="dimmed"
-                                  >
-                                    Ngày cách ly
-                                  </Text>
-                                </Stack>
-                              }
-                            />
-                            <Text size="xs" c="dimmed" mt="sm" ta="center">
-                              Thời gian tối thiểu ngừng thuốc
-                              <br />
-                              trước khi thu hoạch
-                            </Text>
-                          </Stack>
-                        </Grid.Col>
+                      </Grid>
+                    </Paper>
+                  </Stack>
+                )}
+
+                {/* TAB 2: PROTOCOL */}
+                {activeTab === "protocol" && (
+                  <Stack gap="xl">
+                    {/* Medicine List */}
+                    <Box>
+                      <Title
+                        order={5}
+                        mb="md"
+                        c="dimmed"
+                        tt="uppercase"
+                        size="xs"
+                        fw={700}
+                      >
+                        Danh mục thuốc bảo vệ thực vật
+                      </Title>
+                      <Grid>
+                        {selectedData.medicineList.map((med, i) => (
+                          <Grid.Col span={6} key={i}>
+                            <MedicineCard item={med} />
+                          </Grid.Col>
+                        ))}
                       </Grid>
                     </Box>
-                  )}
-                </Box>
-              </Paper>
-            </Grid.Col>
 
-            {/* RIGHT COLUMN - SUMMARY */}
-            <Grid.Col span={{ base: 12, lg: 4 }}>
-              <Stack>
-                <Card p="lg" bg="white" shadow="sm" withBorder>
-                  <Text size="xs" fw={700} c="dimmed" tt="uppercase" mb="md">
-                    Thông tin quản trị
-                  </Text>
-
-                  <Group justify="space-between" mb="sm">
-                    <Text size="sm" fw={500}>
-                      Trạng thái
-                    </Text>
-                    {selectedData.status === "dang-ap-dung" ? (
-                      <Badge
-                        size="lg"
-                        color="green"
-                        variant="light"
-                        leftSection={<IconCheck size={14} />}
+                    {/* Timeline */}
+                    <Box>
+                      <Title
+                        order={5}
+                        mb="lg"
+                        c="dimmed"
+                        tt="uppercase"
+                        size="xs"
+                        fw={700}
                       >
-                        Đang áp dụng
-                      </Badge>
-                    ) : selectedData.status === "de-xuat" ? (
-                      <Badge size="lg" color="yellow" variant="light">
-                        Đang đề xuất
-                      </Badge>
-                    ) : (
-                      <Badge size="lg" color="gray" variant="light">
-                        Lưu trữ
-                      </Badge>
-                    )}
-                  </Group>
-                  <Group justify="space-between" mb="sm">
-                    <Text size="sm" fw={500}>
-                      Mức độ
-                    </Text>
-                    <Badge
-                      color={
-                        selectedData.severity === "nang"
-                          ? "red"
-                          : selectedData.severity === "trung-binh"
-                          ? "yellow"
-                          : "green"
-                      }
-                      variant="light"
-                    >
-                      {selectedData.severity === "nang"
-                        ? "Nghiêm trọng"
-                        : selectedData.severity === "trung-binh"
-                        ? "Trung bình"
-                        : "Nhẹ"}
-                    </Badge>
-                  </Group>
-                  <Divider my="md" />
+                        Quy trình xử lý ({selectedData.durationDays} ngày)
+                      </Title>
+                      <Box pl="sm">
+                        <Timeline
+                          active={1}
+                          bulletSize={36}
+                          lineWidth={2}
+                          color="teal"
+                        >
+                          {selectedData.steps.map((step, idx) => (
+                            <Timeline.Item
+                              key={step.id}
+                              bullet={
+                                <ThemeIcon
+                                  size={36}
+                                  radius="xl"
+                                  color={
+                                    step.type === "spray"
+                                      ? "blue"
+                                      : step.type === "fertilize"
+                                      ? "teal"
+                                      : "white"
+                                  }
+                                  variant="light"
+                                >
+                                  {step.type === "spray" ? (
+                                    <IconDroplet size={18} />
+                                  ) : (
+                                    <IconInfoCircle size={18} />
+                                  )}
+                                </ThemeIcon>
+                              }
+                              title={
+                                <Text size="sm" fw={700} c="dark.9">
+                                  {step.name}
+                                </Text>
+                              }
+                            >
+                              <Text size="xs" c="dimmed" mb={4}>
+                                {step.time}
+                              </Text>
+                              <Paper
+                                withBorder
+                                radius="md"
+                                p="md"
+                                mt="xs"
+                                bg="white"
+                                shadow="xs"
+                              >
+                                <Text size="sm" c="dark.7" mb="xs">
+                                  {step.desc}
+                                </Text>
+                                {step.medicine && (
+                                  <Group
+                                    gap="xs"
+                                    bg="blue.0"
+                                    p="xs"
+                                    radius="sm"
+                                    style={{
+                                      border:
+                                        "1px dashed var(--mantine-color-blue-3)",
+                                    }}
+                                  >
+                                    <IconPrescription
+                                      size={14}
+                                      color="var(--mantine-color-blue-6)"
+                                    />
+                                    <Text size="xs" c="blue.8" fw={500}>
+                                      {step.medicine} -{" "}
+                                      <span style={{ fontWeight: 400 }}>
+                                        {step.dosage}
+                                      </span>
+                                    </Text>
+                                  </Group>
+                                )}
+                              </Paper>
+                            </Timeline.Item>
+                          ))}
+                        </Timeline>
+                      </Box>
+                    </Box>
+                  </Stack>
+                )}
 
-                  <Group justify="space-between" mb="xs">
-                    <Group gap="xs">
-                      <ThemeIcon variant="light" color="blue" size="md">
-                        <IconClock size={16} />
-                      </ThemeIcon>
-                      <Text size="sm" c="dimmed">
-                        Thời gian
-                      </Text>
-                    </Group>
-                    <Text fw={600} size="sm">
-                      {selectedData.durationDays} Ngày
-                    </Text>
-                  </Group>
-                  <Group justify="space-between">
-                    <Group gap="xs">
-                      <ThemeIcon variant="light" color="green" size="md">
-                        <IconCurrencyDollar size={16} />
-                      </ThemeIcon>
-                      <Text size="sm" c="dimmed">
-                        Chi phí (Est)
-                      </Text>
-                    </Group>
-                    <Text fw={600} size="sm">
-                      {selectedData.estimatedCost}
-                    </Text>
-                  </Group>
-                </Card>
+                {/* TAB 3: SAFETY */}
+                {activeTab === "safety" && (
+                  <Grid>
+                    <Grid.Col span={12}>
+                      <Alert
+                        variant="light"
+                        color="red"
+                        title="Lưu ý an toàn quan trọng"
+                        icon={<IconAlertTriangle />}
+                      >
+                        {selectedData.safetyNotes.map((n) => (
+                          <Text size="sm" key={n}>
+                            • {n}
+                          </Text>
+                        ))}
+                      </Alert>
+                    </Grid.Col>
+                  </Grid>
+                )}
+              </Grid.Col>
 
-                <Card p="lg" bg="teal.9" c="white" shadow="md">
-                  <Group mb="sm">
-                    <IconPrescription size={24} color="white" />
-                    <Text fw={700} size="lg">
-                      Thao tác
-                    </Text>
-                  </Group>
-                  <Button
-                    variant="white"
-                    color="teal"
-                    fullWidth
-                    radius="md"
-                    mb="xs"
-                  >
-                    Đưa vào áp dụng
-                  </Button>
-                  <Button
-                    variant="outline"
-                    color="white"
-                    fullWidth
-                    radius="md"
-                    style={{ border: "1px solid rgba(255,255,255,0.3)" }}
-                  >
-                    Chỉnh sửa nội dung
-                  </Button>
-                </Card>
-              </Stack>
-            </Grid.Col>
-          </Grid>
-        </Box>
+              {/* RIGHT SUMMARY COLUMN */}
+              <Grid.Col span={{ base: 12, lg: 4 }}>
+                <Stack>
+                  <Paper p="lg" radius="md" withBorder shadow="sm">
+                    <Title order={5} mb="lg">
+                      Thông tin quản trị
+                    </Title>
+
+                    <Stack gap="md">
+                      <Group justify="space-between">
+                        <Text size="sm" c="dimmed">
+                          Trạng thái
+                        </Text>
+                        <Badge
+                          color={
+                            selectedData.status === "dang-ap-dung"
+                              ? "green"
+                              : "gray"
+                          }
+                        >
+                          {selectedData.status === "dang-ap-dung"
+                            ? "Đang áp dụng"
+                            : "Lưu trữ"}
+                        </Badge>
+                      </Group>
+                      <Group justify="space-between">
+                        <Text size="sm" c="dimmed">
+                          Mức độ nghiêm trọng
+                        </Text>
+                        <Badge variant="dot" color="red">
+                          {selectedData.severity}
+                        </Badge>
+                      </Group>
+                      <Divider />
+                      <Group justify="space-between">
+                        <Text size="sm" c="dimmed">
+                          Thời gian xử lý
+                        </Text>
+                        <Text fw={600} size="sm">
+                          {selectedData.durationDays} Ngày
+                        </Text>
+                      </Group>
+                      <Group justify="space-between">
+                        <Text size="sm" c="dimmed">
+                          Chi phí ước tính
+                        </Text>
+                        <Text fw={700} size="lg" c="teal.7">
+                          {selectedData.estimatedCost}
+                        </Text>
+                      </Group>
+                    </Stack>
+
+                    <Button fullWidth mt="xl" color="teal" size="md">
+                      Áp dụng phác đồ này
+                    </Button>
+                    <Button fullWidth mt="sm" variant="default" size="md">
+                      Chỉnh sửa
+                    </Button>
+                  </Paper>
+                </Stack>
+              </Grid.Col>
+            </Grid>
+          </Container>
+        </ScrollArea>
       </Flex>
     </Flex>
   );
