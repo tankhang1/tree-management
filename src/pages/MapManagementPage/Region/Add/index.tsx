@@ -26,8 +26,8 @@ import {
   IconPlus,
   IconTrash,
 } from "@tabler/icons-react";
-import { useState } from "react";
-import { MapContainer, Polygon, TileLayer } from "react-leaflet";
+import { useEffect, useState } from "react";
+import { MapContainer, Polygon, TileLayer, useMap } from "react-leaflet";
 import { useNavigate } from "react-router-dom";
 import { ConfirmStep } from "./components/ConfirmStep";
 import { CompanyList } from "../../../../components/CompanyList";
@@ -38,7 +38,24 @@ import {
 } from "../../../zustand/regionStore";
 
 type LatLng = [number, number];
+const MapUpdater = ({ coords }: { coords: LatLng[] }) => {
+  const map = useMap();
 
+  useEffect(() => {
+    if (coords.length > 0) {
+      // Pan the map to the most recently added point
+      map.setView(coords[coords.length - 1], map.getZoom());
+
+      // ALTERNATIVE: If you want to zoom out to fit the whole polygon, use this instead:
+      // if (coords.length > 1) {
+      //   const bounds = coords.map(c => c);
+      //   map.fitBounds(bounds);
+      // }
+    }
+  }, [coords, map]);
+
+  return null;
+};
 const MapManagementAddRegionPage = () => {
   const [
     openedAddLocation,
@@ -468,10 +485,15 @@ const MapManagementAddRegionPage = () => {
             <MapContainer
               center={coords.length >= 1 ? coords[0] : [10.762622, 106.660172]}
               zoom={16}
-              style={{ height: "300px", width: "100%", borderRadius: 8 }}
+              style={{ height: "600px", width: "100%", borderRadius: 8 }}
+              attributionControl={false}
             >
-              <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
-              <Polygon positions={coords} color="green" />
+              <TileLayer
+                url="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"
+                attribution="Tiles &copy; Esri"
+              />
+              <MapUpdater coords={coords} />
+              <Polygon positions={coords} color="green" weight={2} />
             </MapContainer>
           </Stack>
         )}
@@ -611,7 +633,11 @@ const MapManagementAddRegionPage = () => {
                         borderRadius: 8,
                       }}
                     >
-                      <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
+                      <TileLayer
+                        url="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"
+                        attribution="Tiles &copy; Esri"
+                      />
+                      <MapUpdater coords={coords} />
                       <Polygon positions={coords} color="green" />
                     </MapContainer>
                   </Stack>
