@@ -299,6 +299,31 @@ const MapManagementAddRegionPage = () => {
               required
               {...form.getInputProps("region.name")}
             />
+            <Select
+              searchable
+              clearable
+              placeholder="Chọn tỉnh thành/ thành phố"
+              label="Tỉnh thành"
+              radius={4}
+              data={["Hà Nội", "TP.HCM", "Đà Nẵng", "Cần Thơ", "Bình Dương"]}
+              {...form.getInputProps("region.province")}
+            />
+
+            <Select
+              searchable
+              clearable
+              placeholder="Chọn quận/huyện"
+              label="Quận/Huyện"
+              radius={4}
+              data={["Quận 1", "Quận 2", "Quận 3", "Thủ Đức", "Bình Thạnh"]}
+              {...form.getInputProps("region.ward")}
+            />
+            <TextInput
+              label="Địa chỉ chi tiết"
+              placeholder="Số nhà, đường..."
+              radius={4}
+              {...form.getInputProps("region.address")}
+            />
             <CompanyList
               isMultiple
               value={companyIds}
@@ -619,6 +644,8 @@ const MapManagementAddRegionPage = () => {
                 ? area.terrain.join(", ")
                 : "Chưa chọn",
             }))}
+            province={form.values.region.province}
+            ward={form.values.region.ward}
           />
         )}
         {/* NAV BUTTONS */}

@@ -30,6 +30,8 @@ export function ConfirmStep({
   note,
   gps = [], // Default value để tránh lỗi undefined
   zones,
+  province,
+  ward,
 }: {
   code?: string;
   govCode?: string;
@@ -46,6 +48,8 @@ export function ConfirmStep({
     soilType: string;
     terrain: string;
   }[];
+  province: string;
+  ward: string;
 }) {
   // 1. Logic chuyển đổi dữ liệu GPS cho bản đồ
   const mapData = useMemo(() => {
@@ -107,7 +111,7 @@ export function ConfirmStep({
               <IconMapPin size={18} />
               <Text fw={500}>Tỉnh/Thành phố:</Text>
               <Badge color="blue" variant="light">
-                Tỉnh Đắk Lắk
+                {province}
               </Badge>
             </Group>
           </Grid.Col>
@@ -123,7 +127,7 @@ export function ConfirmStep({
             <Group gap="xs">
               <IconMapPin size={18} />
               <Text fw={500}>Phường/Xã:</Text>
-              <Text>Xã Krông Pắk</Text>
+              <Text>{ward}</Text>
             </Group>
           </Grid.Col>
           <Grid.Col span={6}>
