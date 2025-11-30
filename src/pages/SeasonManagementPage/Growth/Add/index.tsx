@@ -77,7 +77,9 @@ const SeasonManagementGrowthAddPage = () => {
 
   const [selectedCropCode, setSelectedCropCode] = useState<string>("");
   const [selectedSeedCode, setSelectedSeedCode] = useState<string>("");
-  const [selectedSeedDetails, setSelectedSeedDetails] = useState<any[]>([]);
+  const [selectedSeedDetailCodes, setSelectedSeedDetailCodes] = useState<
+    string[]
+  >([]);
 
   const form = useForm({
     initialValues: {
@@ -111,10 +113,36 @@ const SeasonManagementGrowthAddPage = () => {
     setCycleStageList((prev) => prev.filter((_, i) => i !== index));
   };
 
+  const handleSelectCrop = (code: string) => {
+    setSelectedCropCode(code);
+    form.setFieldValue("cropId", code);
+  };
+
+  const handleSelectSeed = (code: string) => {
+    setSelectedSeedCode((prev) => (prev === code ? "" : code));
+  };
+
+  const handleSelectSeedDetail = (code: string) => {
+    setSelectedSeedDetailCodes((prev) =>
+      prev.includes(code) ? prev.filter((c) => c !== code) : [...prev, code]
+    );
+  };
+
   const nextStep = () => {
     if (activeStep === 0) {
       const validation = form.validate();
       if (validation.hasErrors) return;
+
+      if (!selectedCropCode) {
+        alert("Vui lòng chọn cây trồng.");
+        return;
+      }
+
+      if (!selectedSeedCode) {
+        alert("Vui lòng chọn giống cây trồng.");
+        return;
+      }
+
       setActiveStep(1);
       return;
     }
@@ -138,7 +166,7 @@ const SeasonManagementGrowthAddPage = () => {
         cropId: selectedCropCode || "",
         selectedCrop,
         selectedSeed,
-        selectedSeedDetails,
+        selectedSeedDetails: selectedSeedDetailCodes,
         growthCycles: cycleStageList,
       };
 
@@ -227,7 +255,7 @@ const SeasonManagementGrowthAddPage = () => {
               isCheckbox={false}
               isTouchable
               isDelete={false}
-              onSelect={setSelectedCropCode}
+              onSelect={handleSelectCrop}
             />
 
             <Group align="center">
@@ -250,7 +278,7 @@ const SeasonManagementGrowthAddPage = () => {
               isTouchable
               selected={selectedSeedCode}
               seeds={seedOptions}
-              onSelect={setSelectedSeedCode}
+              onSelect={handleSelectSeed}
               isDelete={false}
             />
 
@@ -269,7 +297,13 @@ const SeasonManagementGrowthAddPage = () => {
                 Tìm kiếm
               </Button>
             </Group>
-            <SeedDetailCards isTouchable={true} isDelete />
+            <SeedDetailCards
+              isTouchable
+              isDelete
+              isMultiple
+              selected={selectedSeedDetailCodes}
+              onSelect={handleSelectSeedDetail}
+            />
           </Stack>
         )}
 
@@ -397,20 +431,25 @@ const SeasonManagementGrowthAddPage = () => {
             radius={4}
           />
 
-          <TextInput
-            label="Cây trồng"
-            leftSection={<IconSearch size={18} />}
-            placeholder="Tìm kiếm loại cây trồng"
-            radius={4}
-          />
-          <CropCards
-            selected={selectedCropCode}
-            plants={cropOptions}
-            onSelect={setSelectedCropCode}
-          />
+          {type === "crop" && (
+            <>
+              <TextInput
+                label="Cây trồng"
+                leftSection={<IconSearch size={18} />}
+                placeholder="Tìm kiếm loại cây trồng"
+                radius={4}
+              />
+              <CropCards
+                selected={selectedCropCode}
+                plants={cropOptions}
+                onSelect={handleSelectCrop}
+                isCheckbox={false}
+              />
+            </>
+          )}
 
-          {(type === "seed" || type === "seed-detail") && (
-            <Stack gap="xs">
+          {type === "seed" && (
+            <>
               <TextInput
                 label="Giống cây trồng"
                 leftSection={<IconSearch size={18} />}
@@ -418,13 +457,13 @@ const SeasonManagementGrowthAddPage = () => {
                 radius={4}
                 flex={1}
               />
-
               <SeedCards
                 selected={selectedSeedCode}
                 seeds={seedOptions}
-                onSelect={setSelectedSeedCode}
+                onSelect={handleSelectSeed}
+                isCheckbox={false}
               />
-            </Stack>
+            </>
           )}
 
           {type === "seed-detail" && (
@@ -436,10 +475,15 @@ const SeasonManagementGrowthAddPage = () => {
                 radius={4}
                 flex={1}
               />
-
-              <SeedDetailCards isMultiple />
+              <SeedDetailCards
+                isMultiple
+                isTouchable
+                selected={selectedSeedDetailCodes}
+                onSelect={handleSelectSeedDetail}
+              />
             </Stack>
           )}
+
           <Group justify="flex-end">
             <Button radius={4} onClick={() => setOpenedFilter(false)}>
               Xác nhận
