@@ -485,11 +485,23 @@ const AreaManagementAddRegionPage = () => {
               </Button>
             </Group>
             <EmployeeCardList
-              isDelete
               isMultiple
               isTouchable
-              value={form.values.managers}
-              onChange={(ids) => form.setFieldValue("managers", ids)}
+              selectedIds={form.values.managers}
+              onToggle={(employee) => {
+                const currentIds = form.values.managers;
+
+                if (currentIds.includes(employee.id)) {
+                  // Case 1: ID exists -> Remove it using filter
+                  form.setFieldValue(
+                    "managers",
+                    currentIds.filter((id) => id !== employee.id)
+                  );
+                } else {
+                  // Case 2: ID does not exist -> Add it
+                  form.setFieldValue("managers", [...currentIds, employee.id]);
+                }
+              }}
             />
 
             <Textarea
