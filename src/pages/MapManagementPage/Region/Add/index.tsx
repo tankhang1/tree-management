@@ -63,7 +63,7 @@ const MapManagementAddRegionPage = () => {
   const form = useForm({
     initialValues: {
       region: {
-        codeSystem: "",
+        codeSystem: `A-${Math.floor(Math.random() * 1000)}`,
         codeGov: "",
         name: "",
         area: "",
