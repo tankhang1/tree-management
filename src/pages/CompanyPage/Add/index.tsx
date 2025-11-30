@@ -16,6 +16,8 @@ import {
   Select,
   Image,
   LoadingOverlay,
+  Badge,
+  Divider,
 } from "@mantine/core";
 import { useState } from "react";
 import {
@@ -823,66 +825,216 @@ const CompanyAddPage = () => {
 
         {/* --- BƯỚC 5: XÁC NHẬN --- */}
         <Stepper.Step label="Bước 5" description="Xác nhận thông tin">
-          <Card withBorder radius="md" shadow="xs" p="lg">
-            <Stack gap="md">
-              <Stack>
-                <Title order={5}>📄 Thông tin cơ bản</Title>
-                <Group grow>
-                  <Card h={230} withBorder radius="md" p="sm">
-                    <Stack gap={"xs"}>
-                      <Group gap="xs">
-                        <IconBuildingFactory size={18} />
-                        <Text size="sm">Loại: {formData.type}</Text>
+          <Stack gap="lg">
+            {/* 1. THÔNG TIN CHUNG */}
+            <Card withBorder radius="md" shadow="sm" padding="lg">
+              <Title order={5} mb="md" c="blue">
+                📄 Thông tin chung
+              </Title>
+              <Grid gutter="md">
+                <Grid.Col span={6}>
+                  <Stack gap="xs">
+                    <Group justify="space-between">
+                      <Text size="sm" c="dimmed">
+                        Loại đối tượng:
+                      </Text>
+                      <Badge variant="light" color="blue" size="lg">
+                        {formData.type}
+                      </Badge>
+                    </Group>
+                    <Group justify="space-between">
+                      <Text size="sm" c="dimmed">
+                        Mã định danh:
+                      </Text>
+                      <Text size="sm" fw={600}>
+                        {formData.code}
+                      </Text>
+                    </Group>
+                    <Group justify="space-between">
+                      <Text size="sm" c="dimmed">
+                        Tên đối tượng:
+                      </Text>
+                      <Text size="sm" fw={700}>
+                        {formData.name}
+                      </Text>
+                    </Group>
+                    <Group justify="space-between">
+                      <Text size="sm" c="dimmed">
+                        Thương hiệu:
+                      </Text>
+                      <Text size="sm">{formData.brand || "---"}</Text>
+                    </Group>
+                  </Stack>
+                </Grid.Col>
+                <Grid.Col span={6}>
+                  <Stack gap="xs">
+                    <Group justify="space-between">
+                      <Text size="sm" c="dimmed">
+                        Người đại diện:
+                      </Text>
+                      <Text size="sm" fw={500}>
+                        {formData.representative || "---"}
+                      </Text>
+                    </Group>
+                    <Group justify="space-between">
+                      <Text size="sm" c="dimmed">
+                        Số điện thoại:
+                      </Text>
+                      <Text size="sm">{formData.phone}</Text>
+                    </Group>
+                    <Group justify="space-between">
+                      <Text size="sm" c="dimmed">
+                        Email:
+                      </Text>
+                      <Text size="sm">{formData.email}</Text>
+                    </Group>
+                    <Group justify="space-between">
+                      <Text size="sm" c="dimmed">
+                        Phân loại:
+                      </Text>
+                      <Badge color="orange" variant="outline">
+                        {selectedCategory.toUpperCase()}
+                      </Badge>
+                    </Group>
+                  </Stack>
+                </Grid.Col>
+                <Grid.Col span={12}>
+                  <Divider
+                    my="xs"
+                    label="Địa chỉ & Thuế"
+                    labelPosition="center"
+                  />
+                  <Stack gap="xs">
+                    <Group>
+                      <IconMapPin size={16} color="gray" />
+                      <Text size="sm">
+                        <b>Địa chỉ chính:</b> {formData.address}
+                      </Text>
+                    </Group>
+                    <Group>
+                      <IconId size={16} color="gray" />
+                      <Text size="sm">
+                        <b>Mã số thuế:</b> {formData.taxCode} - <b>ĐC Thuế:</b>{" "}
+                        {formData.taxAddress}
+                      </Text>
+                    </Group>
+                    {formData.note && (
+                      <Group align="flex-start">
+                        <IconNote
+                          size={16}
+                          color="gray"
+                          style={{ marginTop: 4 }}
+                        />
+                        <Text size="sm" c="dimmed">
+                          <i>Ghi chú: {formData.note}</i>
+                        </Text>
                       </Group>
-                      <Group gap="xs">
-                        <IconId size={18} />
-                        <Text size="sm">Mã: {formData.code}</Text>
-                      </Group>
-                      <Group gap="xs">
-                        <IconUser size={18} />
-                        <Text size="sm">Tên: {formData.name}</Text>
-                      </Group>
-                      <Group gap="xs">
-                        <IconPhone size={18} />
-                        <Text size="sm">SĐT: {formData.phone}</Text>
-                      </Group>
+                    )}
+                  </Stack>
+                </Grid.Col>
+              </Grid>
+            </Card>
+
+            {/* 2. CHI NHÁNH & NGÂN HÀNG (2 Cột) */}
+            <Grid>
+              <Grid.Col span={6}>
+                <Card withBorder radius="md" shadow="sm" h="100%">
+                  <Title order={5} mb="md" c="teal">
+                    🏢 Chi nhánh ({branches.length})
+                  </Title>
+                  {branches.length > 0 ? (
+                    <Stack gap="sm">
+                      {branches.map((b, i) => (
+                        <Paper key={i} withBorder p="xs" bg="gray.0">
+                          <Text size="sm" fw={600}>
+                            {b.name}
+                          </Text>
+                          <Text size="xs" c="dimmed">
+                            {b.address}
+                          </Text>
+                          <Text size="xs">SĐT: {b.phone || "---"}</Text>
+                        </Paper>
+                      ))}
                     </Stack>
-                  </Card>
-                  <Card h={230} withBorder radius="md" p="sm">
-                    <Stack gap={"xs"}>
-                      <Text size="sm">MST: {formData.taxCode}</Text>
-                      <Text size="sm">Địa chỉ: {formData.address}</Text>
-                      <Text size="sm">Phân loại: {selectedCategory}</Text>
+                  ) : (
+                    <Text size="sm" c="dimmed" fs="italic">
+                      Chưa có chi nhánh
+                    </Text>
+                  )}
+                </Card>
+              </Grid.Col>
+
+              <Grid.Col span={6}>
+                <Card withBorder radius="md" shadow="sm" h="100%">
+                  <Title order={5} mb="md" c="indigo">
+                    🏦 Tài khoản ngân hàng ({banks.length})
+                  </Title>
+                  {banks.length > 0 && banks[0].bank ? (
+                    <Stack gap="sm">
+                      {banks.map((b, i) => (
+                        <Paper key={i} withBorder p="xs" bg="gray.0">
+                          <Group justify="space-between">
+                            <Text size="sm" fw={600}>
+                              {b.bank}
+                            </Text>
+                            <Badge size="sm" variant="light">
+                              {b.accountNumber}
+                            </Badge>
+                          </Group>
+                          <Text size="xs" c="dimmed">
+                            Chủ TK: {b.accountHolder}
+                          </Text>
+                          <Text size="xs">CN: {b.branch}</Text>
+                        </Paper>
+                      ))}
                     </Stack>
-                  </Card>
-                </Group>
-              </Stack>
-
-              <Stack>
-                <Title order={5}>🏢 Chi nhánh ({branches.length})</Title>
-
-                <Stack gap="xs">
-                  {branches.map((b, i) => (
-                    <Text key={i} size="sm">
-                      - {b.name} ({b.phone})
+                  ) : (
+                    <Text size="sm" c="dimmed" fs="italic">
+                      Chưa có thông tin ngân hàng
                     </Text>
-                  ))}
-                </Stack>
-              </Stack>
+                  )}
+                </Card>
+              </Grid.Col>
+            </Grid>
 
-              <Stack>
-                <Title order={5}>🏦 Ngân hàng ({banks.length})</Title>
-
-                <Stack gap="xs">
-                  {banks.map((b, i) => (
-                    <Text key={i} size="sm">
-                      - {b.bank} - {b.accountNumber}
-                    </Text>
+            {/* 3. LIÊN HỆ */}
+            <Card withBorder radius="md" shadow="sm">
+              <Title order={5} mb="md" c="grape">
+                📞 Người liên hệ ({contacts.length})
+              </Title>
+              {contacts.length > 0 && contacts[0].name ? (
+                <Grid>
+                  {contacts.map((c, i) => (
+                    <Grid.Col span={4} key={i}>
+                      <Paper withBorder p="sm" radius="md">
+                        <Group gap="xs" mb={4}>
+                          <IconUser size={16} />
+                          <Text size="sm" fw={600}>
+                            {c.name}
+                          </Text>
+                        </Group>
+                        <Text size="xs" c="dimmed" mb={4}>
+                          {c.role} - {c.organization}
+                        </Text>
+                        <Group gap="xs">
+                          <IconPhone size={14} color="gray" />
+                          <Text size="xs">{c.phone}</Text>
+                        </Group>
+                        <Group gap="xs">
+                          <IconMail size={14} color="gray" />
+                          <Text size="xs">{c.email}</Text>
+                        </Group>
+                      </Paper>
+                    </Grid.Col>
                   ))}
-                </Stack>
-              </Stack>
-            </Stack>
-          </Card>
+                </Grid>
+              ) : (
+                <Text size="sm" c="dimmed" fs="italic">
+                  Chưa có thông tin người liên hệ
+                </Text>
+              )}
+            </Card>
+          </Stack>
         </Stepper.Step>
 
         {/* --- HOÀN THÀNH --- */}
@@ -899,7 +1051,12 @@ const CompanyAddPage = () => {
             <Text fz={"md"} ta="center" c="dimmed">
               Doanh nghiệp {formData.name} đã được lưu vào hệ thống.
             </Text>
-            <Button size="md" mt="md" radius={4} onClick={() => navigate(-1)}>
+            <Button
+              size="md"
+              mt="md"
+              radius={4}
+              onClick={() => navigate("/company")}
+            >
               Quay về danh sách
             </Button>
           </Stack>
