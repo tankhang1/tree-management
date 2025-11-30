@@ -9,6 +9,11 @@ import {
   TextInput,
   Checkbox,
 } from "@mantine/core";
+import {
+  useCertificateStore,
+  type Certificate,
+} from "../../../../zustand/certificateStore";
+import Scrollable from "../../../../../components/Scrollable";
 
 // ===== Types & mock =====
 export type CertificateItem = {
@@ -21,53 +26,21 @@ export type CertificateItem = {
   tags?: string[];
 };
 
-const ITEMS: CertificateItem[] = [
-  {
-    id: 1,
-    title: "Chứng nhận VietGAP",
-    code: "GCN-VG-2025-001",
-    org: "Tổ chức VietGAP",
-    thumb: "https://cdn.vietnambiz.vn/2020/3/2/vg-15831176957661073999454.jpg",
-    seal: "https://sutech.vn/wp-content/uploads/2021/09/logo-vietgap-chan-nuoi.jpg",
-    tags: ["Cây trồng", "Phổ biến"],
-  },
-  {
-    id: 2,
-    title: "GlobalG.A.P.",
-    code: "GG-2025-013",
-    org: "GLOBALG.A.P.",
-    thumb:
-      "https://clv.vn/wp-content/uploads/2023/08/tong-quan-ve-global-gap-1.jpg",
-    seal: "https://natekvn.com/public/upload/images/GGAP.jpg",
-    tags: ["Quốc tế"],
-  },
-  {
-    id: 3,
-    title: "Hữu cơ (Organic)",
-    code: "ORG-2025-009",
-    org: "Tổ chức Organic",
-    thumb:
-      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT6gVh1iA6YqokjIWbv7NOW74DpRMFBAqOO5Su6HzrevyCWDG0dBwxzZxCTLAyo6RQ6agY&usqp=CAU",
-    tags: ["Organic"],
-  },
-];
-
 // ===== Card component =====
 function CertificateCard({
   item,
   selected,
   onToggle,
 }: {
-  item: CertificateItem;
+  item: Certificate;
   selected: boolean;
-  onToggle: (id: CertificateItem["id"]) => void;
+  onToggle: (id: Certificate["id"]) => void;
 }) {
   return (
     <Card
       withBorder
       radius={4}
       padding="sm"
-      w={300}
       h={140}
       className="relative"
       style={{
@@ -80,31 +53,40 @@ function CertificateCard({
     >
       <Group align="center" justify="flex-start">
         <Image
-          src={item.thumb}
+          src={item.orgLogo}
           h={100}
           w={"30%"}
           radius={4}
-          alt={item.title}
+          alt={item.orgName}
           fit="scale-down"
         />
 
         <Stack flex={1} gap={6} mt="sm">
-          <Group justify="space-between" align="flex-start" wrap="nowrap">
-            <Text fw={600} lineClamp={1}>
-              {item.title}
-            </Text>
-            <Checkbox radius={4} checked={selected} onChange={() => {}} />
+          <Group justify="space-between" align="center" wrap="nowrap">
+            <Text fw={600}>{item.certName}</Text>
+
+            {/* STOP PROPAGATION để Checkbox không click vào Card */}
+            <Checkbox
+              radius={4}
+              checked={selected}
+              onChange={(e) => {
+                e.stopPropagation();
+                onToggle(item.id);
+              }}
+            />
           </Group>
+
           <Group gap={8} wrap="wrap">
-            <Badge variant="light">{item.code}</Badge>
-            {item.tags?.map((t) => (
+            <Badge variant="light">{item.certCode}</Badge>
+            {item.targets?.map((t) => (
               <Badge key={t} variant="outline">
                 {t}
               </Badge>
             ))}
           </Group>
-          <Text size="sm" c="dimmed" lineClamp={1}>
-            {item.org}
+
+          <Text size="sm" c="dimmed">
+            {item.orgName}
           </Text>
         </Stack>
       </Group>
@@ -112,15 +94,37 @@ function CertificateCard({
   );
 }
 
-// ===== Main list (multiple select) =====
-export default function CertificateCardList() {
-  const [selected, setSelected] = useState<Array<CertificateItem["id"]>>([]);
+export default function CertificateCardList({
+  onSelectedChange,
+}: {
+  onSelectedChange?: (ids: Array<Certificate["id"]>) => void;
+}) {
+  const { certificates } = useCertificateStore();
+  const [selected, setSelected] = useState<Array<Certificate["id"]>>([]);
+  const [search, setSearch] = useState("");
 
-  const toggle = (id: CertificateItem["id"]) => {
-    setSelected((prev) =>
-      prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]
-    );
+  const toggle = (id: Certificate["id"]) => {
+    setSelected((prev) => {
+      const updated = prev.includes(id)
+        ? prev.filter((x) => x !== id)
+        : [...prev, id];
+
+      // 🔥 Bắn callback ra ngoài
+      onSelectedChange?.(updated);
+
+      return updated;
+    });
   };
+
+  const filtered = certificates.filter((item) => {
+    const q = search.trim().toLowerCase();
+
+    return (
+      item.certName.toLowerCase().includes(q) ||
+      item.certCode?.toLowerCase().includes(q) ||
+      item.orgName?.toLowerCase().includes(q)
+    );
+  });
 
   return (
     <Stack>
@@ -128,18 +132,22 @@ export default function CertificateCardList() {
         label="Giấy chứng nhận"
         radius={4}
         placeholder="Tìm kiếm giấy chứng nhận"
+        value={search}
+        onChange={(e) => setSearch(e.target.value)}
       />
 
-      <Group wrap="nowrap">
-        {ITEMS.map((item) => (
-          <CertificateCard
-            key={item.id}
-            item={item}
-            selected={selected.includes(item.id)}
-            onToggle={toggle}
-          />
-        ))}
-      </Group>
+      <Scrollable h={140}>
+        <Group wrap="nowrap">
+          {filtered.map((item) => (
+            <CertificateCard
+              key={item.id}
+              item={item}
+              selected={selected.includes(item.id)}
+              onToggle={toggle}
+            />
+          ))}
+        </Group>
+      </Scrollable>
     </Stack>
   );
 }

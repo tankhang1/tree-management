@@ -12,9 +12,10 @@ import type { SeedOption } from "..";
 import Scrollable from "../../../../../components/Scrollable";
 import { useState } from "react";
 import { IconTrash } from "@tabler/icons-react";
+import type { Seed } from "../../../../zustand/seedStore";
 
 interface SeedCardSelectorProps {
-  seeds: SeedOption[];
+  seeds: Seed[];
   selected: string;
   onSelect: (code: string) => void;
   isMultiple?: boolean;
@@ -46,7 +47,7 @@ const SeedCards: React.FC<SeedCardSelectorProps> = ({
           <Card
             w={400}
             h={100}
-            key={seed.code}
+            key={seed.id}
             p={0}
             withBorder
             radius="md"
@@ -54,38 +55,38 @@ const SeedCards: React.FC<SeedCardSelectorProps> = ({
               cursor: "pointer",
               position: "relative",
               transition: "transform 0.2s ease",
-              borderColor: selected.includes(seed.code) ? "green" : undefined,
+              borderColor: selected.includes(seed.id) ? "green" : undefined,
             }}
             onMouseEnter={(e) =>
               (e.currentTarget.style.transform = "scale(1.02)")
             }
             onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
-            onClick={() => onSelect(seed.code)}
+            onClick={() => onSelect(seed.id)}
           >
             <Group gap="xs" align="flex-start">
               <Image
-                src={seed.image}
-                alt={seed.seedName}
+                src={seed.imgUrl}
+                alt={seed.name}
                 height={100}
                 w={"40%"}
                 fit="cover"
               />
               <Stack flex={1} gap={"xs"} p={"xs"}>
                 <Group justify="space-between">
-                  <Text fw={500}>{seed.seedName}</Text>
+                  <Text fw={500}>{seed.name}</Text>
                   <Group gap={"xs"}>
-                    <Badge color="gray">{seed.code}</Badge>
+                    <Badge color="gray">{seed.id}</Badge>
                     {isMultiple && (
                       <Checkbox
                         radius={4}
                         onChange={() => {}}
-                        checked={selected.includes(seed.code)}
+                        checked={selected.includes(seed.id)}
                       />
                     )}
                   </Group>
                 </Group>
                 <Text size="sm">
-                  <strong>Loại cây:</strong> {seed.cropName}
+                  <strong>Nhà cung cấp:</strong> {seed.supplier}
                 </Text>
               </Stack>
               {/* <Text size="sm" c="dimmed">

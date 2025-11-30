@@ -7,12 +7,12 @@ import {
   Badge,
   Checkbox,
 } from "@mantine/core";
-import type { CropOption } from "..";
 import Scrollable from "../../../../../components/Scrollable";
 import { useState } from "react";
+import type { Tree } from "../../../../zustand/treeStore";
 
 interface PlantCardSelectorProps {
-  plants: CropOption[];
+  plants: Tree[];
   isMultiple?: boolean;
   selected: string;
   onSelect: (code: string) => void;
@@ -38,7 +38,7 @@ const CropCards: React.FC<PlantCardSelectorProps> = ({
         {plants.map((plant) => (
           <Card
             h={350}
-            key={plant.code}
+            key={plant.id}
             withBorder
             p={0}
             radius="md"
@@ -47,26 +47,24 @@ const CropCards: React.FC<PlantCardSelectorProps> = ({
               width: 300,
               position: "relative",
               transition: "transform 0.2s ease",
-              borderColor: selectedId.includes(plant.code)
-                ? "green"
-                : undefined,
+              borderColor: selectedId.includes(plant.id) ? "green" : undefined,
             }}
             onMouseEnter={(e) =>
               (e.currentTarget.style.transform = "scale(1.02)")
             }
             onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
-            onClick={() => onSelect(plant.code)}
+            onClick={() => onSelect(plant.id)}
           >
             <Stack gap="xs">
-              <Image src={plant.image} height={140} alt={plant.name} />
+              <Image src={plant.imgUrl} height={140} alt={plant.name} />
               <Stack gap={"xs"} p={"xs"}>
                 <Group justify="space-between">
                   <Text fw={500}>{plant.name}</Text>
                   <Group gap={"xs"}>
-                    <Badge color="gray">{plant.code}</Badge>
+                    <Badge color="gray">{plant.id}</Badge>
                     {isMultiple && (
                       <Checkbox
-                        checked={selectedId.includes(plant.code)}
+                        checked={selectedId.includes(plant.id)}
                         radius={4}
                         onChange={() => {}}
                       />
@@ -74,13 +72,14 @@ const CropCards: React.FC<PlantCardSelectorProps> = ({
                   </Group>
                 </Group>
                 <Text size="sm">
-                  <strong>Hạt giống:</strong> {plant.seed}
+                  <strong>Hạt giống:</strong> {plant.seedName}
                 </Text>
                 <Text size="sm">
                   <strong>Hình thức thu hoạch:</strong> {plant.harvestMethod}
                 </Text>
                 <Text size="sm">
-                  <strong>Chu kỳ sinh trưởng:</strong> {plant.growthCycle}
+                  <strong>Chu kỳ sinh trưởng:</strong>{" "}
+                  {plant.growthCycles.join(" , ")}
                 </Text>
                 {plant.note && (
                   <Text size="sm" c="dimmed">
