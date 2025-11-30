@@ -27,49 +27,102 @@ import type { MRT_ColumnDef } from "mantine-react-table";
 import Table from "../../../components/Table";
 import { useNavigate } from "react-router-dom";
 import { PATH } from "../../../constants/path.constants";
-type Group = {
+import { useMemo, useState } from "react";
+// Đảm bảo đường dẫn import đúng
+import { useTeamStore } from "../../zustand/teamStore";
+import { useDepartmentStore } from "../../zustand/departmentStore";
+import { useEmployeeStore } from "../../zustand/employeeStore";
+
+// Type hiển thị trên bảng (đã map từ ID sang Name)
+type GroupDisplay = {
   id: string;
   name: string;
   description?: string;
-  departments: string[]; // Danh sách ID phòng ban
-  roles: string[]; // Danh sách vai trò
+  departments: string[]; // Tên phòng ban
+  roles: string[]; // (Nếu có)
   members: {
     id: string;
     name: string;
     position: string;
-  }[]; // Danh sách người trong nhóm
+  }[];
 };
-const groupData: Group[] = [
-  {
-    id: "GR001",
-    name: "Nhóm Canh tác",
-    description: "Phụ trách chăm sóc và giám sát cây trồng",
-    departments: ["Phòng Canh tác", "Phòng Giám sát"],
-    roles: ["Giám sát", "Kỹ thuật"],
-    members: [
-      { id: "U001", name: "Nguyễn Văn A", position: "Trưởng nhóm" },
-      { id: "U002", name: "Trần Thị B", position: "Nhân viên" },
-    ],
-  },
-  {
-    id: "GR002",
-    name: "Nhóm Vật tư",
-    description: "Theo dõi kho và phân phối vật tư",
-    departments: ["Phòng Vật tư"],
-    roles: ["Kho", "Cung ứng"],
-    members: [{ id: "U003", name: "Lê Văn C", position: "Nhân viên kho" }],
-  },
-];
 
 const HRManagementTeamPage = () => {
   const navigate = useNavigate();
-  const onAddTeam = () => {
-    navigate(PATH.HR_ADD_TEAM);
+
+  // 1. Hook Stores
+  const { teams } = useTeamStore();
+  const { departments } = useDepartmentStore();
+  const { employees } = useEmployeeStore();
+
+  // 2. Filter States
+  const [filterName, setFilterName] = useState("");
+  const [filterDepts, setFilterDepts] = useState<string[]>([]);
+
+  // 3. Data Processing (Map ID -> Name)
+  // FIX: Sửa Generic Type từ Team[] thành GroupDisplay[]
+  const processedData = useMemo<GroupDisplay[]>(() => {
+    return teams.map((team) => {
+      // Map Department IDs -> Names
+      const deptNames = team.departments?.map(
+        (id) => departments.find((d) => d.id === id)?.name || id
+      );
+
+      // Map Member Objects -> Objects {id, name, position}
+      const memberList = team.members.map((member, index) => {
+        // Tìm nhân viên trong store dựa vào tên (hoặc ID nếu logic store của bạn lưu ID)
+        const emp = employees.find((e) => e.fullName === member.name);
+
+        return {
+          // FIX: Xử lý ID. Nếu tìm thấy nhân viên thì lấy ID thật, nếu không thì tạo ID tạm
+          id: emp ? emp.id : `temp-${team.id}-${index}`,
+          name: member.name, // Lấy tên từ dữ liệu Team lưu trữ
+          position: member.role || emp?.role || "Thành viên",
+        };
+      });
+
+      return {
+        id: team.id,
+        name: team.name,
+        description: team.description,
+        departments: deptNames,
+        roles: team.roles || [],
+        members: memberList,
+      };
+    });
+  }, [teams, departments, employees]);
+
+  // 4. Filtering Logic
+  const filteredData = useMemo(() => {
+    return processedData.filter((item) => {
+      const matchName =
+        filterName === "" ||
+        item.name.toLowerCase().includes(filterName.toLowerCase());
+
+      const matchDept =
+        filterDepts.length === 0 ||
+        item.departments.some((d) => filterDepts.includes(d));
+
+      return matchName && matchDept;
+    });
+  }, [processedData, filterName, filterDepts]);
+
+  // Handlers
+  const onAddTeam = () => navigate(PATH.HR_ADD_TEAM);
+  const onTeamDetail = (id: string) => navigate(`${PATH.HR_TEAM_DETAIL}/${id}`);
+
+  const handleResetFilter = () => {
+    setFilterName("");
+    setFilterDepts([]);
   };
-  const onTeamDetail = () => {
-    navigate(PATH.HR_TEAM_DETAIL);
-  };
-  const groupColumns: MRT_ColumnDef<Group>[] = [
+
+  // Options for MultiSelect
+  const deptOptions = useMemo(
+    () => departments.map((d) => d.name),
+    [departments]
+  );
+
+  const groupColumns: MRT_ColumnDef<GroupDisplay>[] = [
     {
       accessorKey: "name",
       header: "Tên nhóm",
@@ -78,29 +131,20 @@ const HRManagementTeamPage = () => {
     {
       accessorKey: "description",
       header: "Mô tả",
-      Cell: ({ cell }) => <Text>{cell.getValue<string>() || "Không có"}</Text>,
+      Cell: ({ cell }) => (
+        <Text lineClamp={2} title={cell.getValue<string>()}>
+          {cell.getValue<string>() || "—"}
+        </Text>
+      ),
     },
     {
       accessorKey: "departments",
       header: "Phòng ban",
       Cell: ({ cell }) => (
-        <Group gap="xs" wrap="wrap">
+        <Group gap={4} wrap="wrap">
           {cell.getValue<string[]>()?.map((dep, idx) => (
             <Badge key={idx} color="blue" variant="light">
               {dep}
-            </Badge>
-          ))}
-        </Group>
-      ),
-    },
-    {
-      accessorKey: "roles",
-      header: "Vai trò",
-      Cell: ({ cell }) => (
-        <Group gap="xs" wrap="wrap">
-          {cell.getValue<string[]>()?.map((role, idx) => (
-            <Badge key={idx} color="green" variant="light">
-              {role}
             </Badge>
           ))}
         </Group>
@@ -113,16 +157,22 @@ const HRManagementTeamPage = () => {
         <Stack gap={4}>
           {cell
             .getValue<{ id: string; name: string; position: string }[]>()
-            ?.map((member, idx) => (
+            ?.slice(0, 3) // Chỉ hiện 3 người đầu
+            .map((member, idx) => (
               <Group key={idx} gap={6}>
                 <Text size="sm" fw={500}>
                   {member.name}
                 </Text>
-                <Badge size="xs" color="gray">
+                <Badge size="xs" color="gray" variant="outline">
                   {member.position}
                 </Badge>
               </Group>
             ))}
+          {cell.getValue<any[]>().length > 3 && (
+            <Text size="xs" c="dimmed">
+              + {cell.getValue<any[]>().length - 3} thành viên khác
+            </Text>
+          )}
         </Stack>
       ),
     },
@@ -131,18 +181,18 @@ const HRManagementTeamPage = () => {
       header: "Tuỳ chọn",
       enableColumnActions: false,
       size: 10,
-      Cell: () => (
-        <Menu shadow="md">
+      Cell: ({ row }) => (
+        <Menu shadow="md" position="bottom-end">
           <Menu.Target>
             <ActionIcon variant="transparent" c={"gray"}>
-              <IconDotsVertical />
+              <IconDotsVertical size={18} />
             </ActionIcon>
           </Menu.Target>
 
           <Menu.Dropdown>
             <Menu.Item
               leftSection={<IconEye size={18} color="gray" />}
-              onClick={onTeamDetail}
+              onClick={() => onTeamDetail(row.original.id)}
             >
               Chi tiết
             </Menu.Item>
@@ -157,6 +207,7 @@ const HRManagementTeamPage = () => {
       ),
     },
   ];
+
   return (
     <Stack gap="lg">
       <Group justify="space-between">
@@ -172,13 +223,14 @@ const HRManagementTeamPage = () => {
           </Button>
         </Group>
       </Group>
+
       <Card withBorder shadow="sm" radius={4} p="md">
         {/* Header */}
         <Group justify="space-between" align="center" mb="xs">
           <Stack gap={0}>
             <Title order={4}>Tìm kiếm đội nhóm</Title>
             <Text c="dimmed" size="sm">
-              Điền từ khóa hoặc chọn lọc phòng ban, vai trò
+              Điền từ khóa hoặc chọn lọc phòng ban
             </Text>
           </Stack>
 
@@ -188,14 +240,11 @@ const HRManagementTeamPage = () => {
                 radius={4}
                 variant="default"
                 leftSection={<IconRefresh size={16} />}
-                onClick={() => {}}
+                onClick={handleResetFilter}
               >
                 Làm mới
               </Button>
             </Tooltip>
-            <Button radius={4} leftSection={<IconSearch size={16} />}>
-              Lọc thông tin
-            </Button>
           </Group>
         </Group>
 
@@ -204,49 +253,32 @@ const HRManagementTeamPage = () => {
           {/* Khung tìm kiếm (keyword) */}
           <TextInput
             radius={4}
-            label="Khung tìm kiếm"
-            description="Ví dụ: Nguyễn Văn A"
-            placeholder="Nhập thông tin"
+            label="Tìm kiếm theo tên"
+            placeholder="Ví dụ: Nhóm canh tác..."
             leftSection={<IconSearch size={16} />}
+            value={filterName}
+            onChange={(e) => setFilterName(e.currentTarget.value)}
           />
 
-          <SimpleGrid cols={{ base: 1, md: 2, lg: 3 }} spacing="sm">
+          <SimpleGrid cols={{ base: 1, md: 2 }} spacing="sm">
             <MultiSelect
               searchable
               clearable
               radius={4}
               leftSection={<IconHome size={18} />}
               label="Phòng ban"
-              description="Ví dụ: Phòng Nông Nghiệp, Phòng Kỹ Thuật"
-              placeholder="Chọn thông tin"
-              data={[
-                "Phòng Nông Nghiệp",
-                "Phòng Kỹ Thuật",
-                "Phòng Nhân Sự",
-                "Phòng Kế Toán",
-                "Phòng Quản Lý",
-              ]}
-            />
-            <MultiSelect
-              searchable
-              clearable
-              radius={4}
-              label="Vai trò"
-              description="Ví dụ: Kỹ sư canh tác, Giám sát hiện trường"
-              placeholder="Chọn thông tin"
-              data={[
-                "Kỹ sư canh tác",
-                "Giám sát hiện trường",
-                "Nhân viên hành chính",
-                "Kế toán",
-                "Quản lý",
-              ]}
+              placeholder="Chọn phòng ban"
+              data={deptOptions}
+              value={filterDepts}
+              onChange={setFilterDepts}
             />
           </SimpleGrid>
         </Stack>
       </Card>
-      <Table columns={groupColumns} data={groupData} />
+
+      <Table columns={groupColumns} data={filteredData} />
     </Stack>
   );
 };
+
 export default HRManagementTeamPage;

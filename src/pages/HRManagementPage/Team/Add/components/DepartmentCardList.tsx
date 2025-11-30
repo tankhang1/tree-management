@@ -9,45 +9,25 @@ import {
   LoadingOverlay,
 } from "@mantine/core";
 import Scrollable from "../../../../../components/Scrollable";
-import { useState, useEffect } from "react";
-import { useDepartmentStore } from "../../../../zustand/departmentStore";
+import {
+  useDepartmentStore,
+  type Department,
+} from "../../../../zustand/departmentStore";
 
 type DepartmentProps = {
   isCheckbox?: boolean;
-  isMulti?: boolean;
-  value?: string[]; // Danh sách ID đã chọn
-  onChange?: (ids: string[]) => void;
+  selectedIds?: string[]; // Nhận danh sách ID từ cha
+  onToggle?: (department: Department) => void; // Hàm callback
+  readonly?: boolean; // Chế độ chỉ xem (cho bước xác nhận)
 };
 
 export function DepartmentCardList({
   isCheckbox = true,
-  isMulti = true,
-  value = [],
-  onChange,
+  selectedIds = [],
+  onToggle,
+  readonly = false,
 }: DepartmentProps) {
-  // 1. KẾT NỐI STORE
   const { departments, isLoading } = useDepartmentStore();
-
-  // 2. STATE LOCAL
-  const [selectedIds, setSelectedIds] = useState<string[]>(value);
-
-  // 3. XỬ LÝ CHỌN
-  const toggleSelection = (id: string) => {
-    let newSelected: string[] = [];
-
-    if (!isMulti) {
-      // Chọn đơn: Click lại thì bỏ chọn, click mới thì thay thế
-      newSelected = selectedIds.includes(id) ? [] : [id];
-    } else {
-      // Chọn nhiều: Toggle
-      newSelected = selectedIds.includes(id)
-        ? selectedIds.filter((s) => s !== id)
-        : [...selectedIds, id];
-    }
-
-    setSelectedIds(newSelected);
-    onChange?.(newSelected);
-  };
 
   return (
     <div style={{ position: "relative" }}>
@@ -65,75 +45,64 @@ export function DepartmentCardList({
             </Text>
           )}
 
-          {departments.map((dept) => (
-            <Card
-              h={140}
-              miw={300}
-              key={dept.id}
-              withBorder
-              radius={4}
-              shadow="xs"
-              p="md"
-              style={{
-                position: "relative",
-                transition: "all 0.2s ease",
-                cursor: "pointer",
-                borderColor: selectedIds.includes(dept.id)
-                  ? "green"
-                  : undefined,
-                borderWidth: selectedIds.includes(dept.id) ? 2 : 1,
-                backgroundColor: selectedIds.includes(dept.id)
-                  ? "#f0fdf4"
-                  : undefined,
-              }}
-              onClick={() => toggleSelection(dept.id)}
-              onMouseEnter={(e) =>
-                (e.currentTarget.style.transform = "scale(1.02)")
-              }
-              onMouseLeave={(e) =>
-                (e.currentTarget.style.transform = "scale(1)")
-              }
-            >
-              <Stack gap="xs">
-                <Group justify="space-between">
-                  <Title order={5} lineClamp={1} title={dept.name}>
-                    {dept.name}
-                  </Title>
-                  <Group gap={"xs"}>
-                    <Badge variant="light" color="gray">
-                      {dept.code}
-                    </Badge>
-                    {isCheckbox && (
-                      <Checkbox
-                        radius={4}
-                        checked={selectedIds.includes(dept.id)}
-                        readOnly
-                        color="green"
-                        tabIndex={-1}
-                        style={{ pointerEvents: "none" }}
-                      />
-                    )}
+          {departments.map((dept) => {
+            const isSelected = selectedIds.includes(dept.id);
+            // Nếu readonly = true, chỉ hiện những item được chọn (hoặc tất cả nhưng ko click đc - tùy bạn)
+            // Ở đây tôi giả định readonly dùng cho bước xác nhận -> Chỉ hiện cái đã chọn
+            if (readonly && !isSelected) return null;
+
+            return (
+              <Card
+                h={140}
+                miw={300}
+                key={dept.id}
+                withBorder
+                radius={4}
+                shadow="xs"
+                p="md"
+                style={{
+                  position: "relative",
+                  transition: "all 0.2s ease",
+                  cursor: readonly ? "default" : "pointer",
+                  borderColor: isSelected ? "green" : undefined,
+                  borderWidth: isSelected ? 2 : 1,
+                  backgroundColor: isSelected ? "#f0fdf4" : undefined,
+                }}
+                onClick={() => !readonly && onToggle && onToggle(dept)}
+              >
+                <Stack gap="xs">
+                  <Group justify="space-between">
+                    <Title order={5} lineClamp={1} title={dept.name}>
+                      {dept.name}
+                    </Title>
+                    <Group gap={"xs"}>
+                      <Badge variant="light" color="gray">
+                        {dept.code}
+                      </Badge>
+                      {isCheckbox && (
+                        <Checkbox
+                          radius={4}
+                          checked={isSelected}
+                          readOnly
+                          color="green"
+                          tabIndex={-1}
+                          style={{ pointerEvents: "none" }}
+                        />
+                      )}
+                    </Group>
                   </Group>
-                </Group>
-                <Text
-                  size="sm"
-                  c="dimmed"
-                  lineClamp={2}
-                  title={dept.description}
-                >
-                  {dept.description || "Không có mô tả"}
-                </Text>
-                <Group justify="space-between" mt="xs">
-                  <Text size="xs" c="dimmed">
-                    Ngày tạo:{" "}
-                    <Text span fw={500}>
-                      {dept.createdAt}
-                    </Text>
+                  <Text
+                    size="sm"
+                    c="dimmed"
+                    lineClamp={2}
+                    title={dept.description}
+                  >
+                    {dept.description || "Không có mô tả"}
                   </Text>
-                </Group>
-              </Stack>
-            </Card>
-          ))}
+                </Stack>
+              </Card>
+            );
+          })}
         </Group>
       </Scrollable>
     </div>

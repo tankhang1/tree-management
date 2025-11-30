@@ -5,35 +5,113 @@ import {
   Stepper,
   TextInput,
   Textarea,
-  // MultiSelect,
   Stack,
   Title,
   Image,
   Text,
+  LoadingOverlay,
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { IconArrowLeft, IconSearch } from "@tabler/icons-react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+
+// Components
 import { DepartmentCardList } from "./components/DepartmentCardList";
 import { EmployeeCardList } from "./components/EmployeeCardList";
+
+// Stores
+import { useTeamStore } from "../../../zustand/teamStore";
+import type { Department } from "../../../zustand/departmentStore";
+import type { Employee } from "../../../zustand/employeeStore";
 
 const HRManagementTeamAddPage = () => {
   const navigate = useNavigate();
   const [active, setActive] = useState(0);
+  const [loading, setLoading] = useState(false);
 
+  // 1. Get Add Action
+  const addTeam = useTeamStore((state) => state.addTeam);
+
+  // 2. Form Setup - Using "departments" and "members" lists
   const form = useForm({
     initialValues: {
-      name: "Nhóm Giám Sát Sản Xuất",
-      description: "Phụ trách giám sát tiến độ và chất lượng vùng trồng A & B",
-      departments: ["Phòng Kỹ Thuật", "Phòng Vận Hành"],
-      roles: ["leader", "member"],
-      members: [],
+      name: "",
+      description: "",
+      departments: [] as Department[], // List of selected Department IDs
+      members: [] as Employee[], // List of selected Member IDs
+    },
+    validate: {
+      name: (value) =>
+        value.length < 2 ? "Tên nhóm phải có ít nhất 2 ký tự" : null,
+      departments: (value) =>
+        value.length === 0 ? "Vui lòng chọn ít nhất 1 phòng ban" : null,
     },
   });
 
+  // 3. Toggle Handlers
+  const toggleDepartment = (department: Department) => {
+    const current = form.values.departments;
+    const next = current.map((item) => item.id).includes(department.id)
+      ? current.filter((item) => item.id !== department.id) // Remove
+      : [...current, department]; // Add
+
+    form.setFieldValue("departments", next);
+  };
+
+  const toggleMember = (employee: Employee) => {
+    const current = form.values.members;
+    const next = current.map((item) => item.id).includes(employee.id)
+      ? current.filter((item) => item.id !== employee.id)
+      : [...current, employee];
+
+    form.setFieldValue("members", next);
+  };
+
+  // 4. Navigation Logic
+  const handleNextStep = () => {
+    if (active === 0) {
+      const validation = form.validate();
+      if (validation.hasErrors) return;
+    }
+    setActive((current) => (current < 3 ? current + 1 : current));
+  };
+
+  const handlePrevStep = () => {
+    setActive((current) => (current > 0 ? current - 1 : current));
+  };
+
+  // 5. Submit Logic
+  const handleSubmit = async () => {
+    setLoading(true);
+    try {
+      // Map form values to Store Schema
+      await addTeam({
+        name: form.values.name,
+        description: form.values.description,
+        departments: form.values.departments.map((item) => item.name), // Mapping form 'departments' -> store 'departmentIds'
+        members: form.values.members.map((item) => ({
+          name: item.fullName,
+          role: item.role,
+        })), // Mapping form 'members' -> store 'memberIds'
+        roles: [],
+      });
+      setActive(3);
+    } catch (error) {
+      console.error("Failed to add team", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
-    <Card withBorder shadow="sm" radius={4} p="lg">
+    <Card withBorder shadow="sm" radius={4} p="lg" pos="relative">
+      <LoadingOverlay
+        visible={loading}
+        zIndex={1000}
+        overlayProps={{ radius: "sm", blur: 2 }}
+      />
+
       <Stack>
         <Group mb={"md"}>
           <Button
@@ -46,11 +124,13 @@ const HRManagementTeamAddPage = () => {
           </Button>
           <Title order={3}>Tạo Nhóm Mới</Title>
         </Group>
+
         <Stepper
           active={active}
           onStepClick={setActive}
           allowNextStepsSelect={false}
         >
+          {/* --- STEP 1: TEAM INFO --- */}
           <Stepper.Step label="Bước 1" description="Thông tin nhóm">
             <Stack gap={"xs"}>
               <TextInput
@@ -69,60 +149,89 @@ const HRManagementTeamAddPage = () => {
               <TextInput
                 label="Phòng ban"
                 placeholder="Tìm kiếm phòng ban liên quan"
-                {...form.getInputProps("departments")}
                 leftSection={<IconSearch size={16} />}
                 radius={4}
+                readOnly
               />
-              <DepartmentCardList />
-              {/* <MultiSelect
-                label="Vai trò"
-                placeholder="Chọn vai trò của nhóm"
-                data={mockRoles}
-                {...form.getInputProps("roles")}
-                radius={4}
-              /> */}
+
+              <DepartmentCardList
+                isCheckbox={true}
+                selectedIds={form.values.departments.map((item) => item.id)} // Use 'departments'
+                onToggle={toggleDepartment}
+              />
+              {form.errors.departments && (
+                <Text c="red" size="sm">
+                  {form.errors.departments}
+                </Text>
+              )}
             </Stack>
           </Stepper.Step>
 
+          {/* --- STEP 2: MEMBERS --- */}
           <Stepper.Step label="Bước 2" description="Thành viên nhóm">
             <Stack gap={"xs"}>
               <TextInput
                 label="Nhân viên"
-                placeholder="Chọn thành viên từ nhân sự"
+                placeholder="Tìm kiếm thành viên..."
                 leftSection={<IconSearch size={16} />}
-                {...form.getInputProps("members")}
                 radius={4}
               />
-              <EmployeeCardList isMultiple />
+              <EmployeeCardList
+                isMultiple={true}
+                selectedIds={form.values.members.map((item) => item.id)} // Use 'members'
+                onToggle={toggleMember}
+              />
             </Stack>
           </Stepper.Step>
-          <Stepper.Step label="Bước 3" description="Xác nhận">
-            <Card withBorder shadow="sm" radius={4} p="md">
-              <Stack gap="sm">
-                <Title order={3}>Xác nhận thông tin nhóm</Title>
 
+          {/* --- STEP 3: CONFIRMATION --- */}
+          <Stepper.Step label="Bước 3" description="Xác nhận">
+            <Stack gap="sm">
+              <Title order={4} c="blue">
+                Xác nhận thông tin
+              </Title>
+
+              <Card withBorder radius={4} p="sm">
                 <Stack gap={4}>
                   <Group>
-                    <b>Tên nhóm:</b>
-                    <span>{form.values.name || "(chưa nhập)"}</span>
+                    <Text fw={600} size="sm" w={100}>
+                      Tên nhóm:
+                    </Text>
+                    <Text size="sm">{form.values.name}</Text>
                   </Group>
-                  <Group>
-                    <b>Mô tả:</b>
-                    <span>{form.values.description || "(không có)"}</span>
+                  <Group align="flex-start">
+                    <Text fw={600} size="sm" w={100}>
+                      Mô tả:
+                    </Text>
+                    <Text size="sm">
+                      {form.values.description || "(Không có)"}
+                    </Text>
                   </Group>
                 </Stack>
+              </Card>
 
-                <Title order={5} mt="md">
-                  Danh sách phòng ban
-                </Title>
-                <DepartmentCardList isCheckbox={false} />
-                <Title order={5} mt="md">
-                  Danh sách nhân sự
-                </Title>
-                <EmployeeCardList isMultiple={false} />
-              </Stack>
-            </Card>
+              <Title order={5} mt="sm">
+                Phòng ban đã chọn ({form.values.departments.length})
+              </Title>
+              <DepartmentCardList
+                isCheckbox={false}
+                selectedIds={form.values.departments.map((item) => item.id)}
+                readonly={true}
+              />
+
+              <Title order={5} mt="sm">
+                Thành viên đã chọn ({form.values.members.length})
+              </Title>
+              <EmployeeCardList
+                isMultiple={false}
+                isTouchable={false}
+                selectedIds={form.values.members.map((item) => item.id)}
+                filterIds={form.values.members.map((item) => item.id)}
+              />
+            </Stack>
           </Stepper.Step>
+
+          {/* --- COMPLETED --- */}
           <Stepper.Completed>
             <Stack align="center" justify="center" mt="xl">
               <Image
@@ -132,16 +241,16 @@ const HRManagementTeamAddPage = () => {
                 w={200}
                 fit="cover"
               />
-              <Text fz={"h2"} ta="center">
+              <Title order={3} ta="center" mt="md">
                 Thêm mới nhóm thành công!
-              </Text>
-              <Text fz={"md"} ta="center" c="dimmed">
-                Nhóm mới đã được tạo thành công. Bạn có thể xem lại thông tin
-                chi tiết trong danh sách nhóm.
+              </Title>
+              <Text c="dimmed" ta="center">
+                Nhóm <b>{form.values.name}</b> đã được tạo. Bạn có thể quay lại
+                danh sách để xem chi tiết.
               </Text>
 
               <Button size="md" mt="md" radius={4} onClick={() => navigate(-1)}>
-                Xác nhận
+                Quay về danh sách
               </Button>
             </Stack>
           </Stepper.Completed>
@@ -152,16 +261,21 @@ const HRManagementTeamAddPage = () => {
             <Button
               radius={4}
               variant="default"
-              onClick={() => setActive((prev) => Math.max(prev - 1, 0))}
+              onClick={handlePrevStep}
+              disabled={active === 0}
             >
               Quay lại
             </Button>
-            <Button
-              radius={4}
-              onClick={() => setActive((prev) => Math.min(prev + 1, 3))}
-            >
-              {active === 2 ? "Hoàn thành" : "Tiếp tục"}
-            </Button>
+
+            {active === 2 ? (
+              <Button radius={4} onClick={handleSubmit} color="green">
+                Hoàn thành
+              </Button>
+            ) : (
+              <Button radius={4} onClick={handleNextStep}>
+                Tiếp tục
+              </Button>
+            )}
           </Group>
         )}
       </Stack>
