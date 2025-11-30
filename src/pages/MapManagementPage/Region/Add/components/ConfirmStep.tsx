@@ -14,6 +14,10 @@ import {
   IconRulerMeasure,
 } from "@tabler/icons-react";
 import { MapContainer, Polygon, TileLayer } from "react-leaflet";
+import { useMemo } from "react";
+
+// Định nghĩa kiểu dữ liệu cho tọa độ Leaflet
+type LeafletLatLng = [number, number];
 
 export function ConfirmStep({
   code,
@@ -24,6 +28,7 @@ export function ConfirmStep({
   soilType,
   terrain,
   note,
+  gps = [], // Default value để tránh lỗi undefined
   zones,
 }: {
   code?: string;
@@ -42,6 +47,20 @@ export function ConfirmStep({
     terrain: string;
   }[];
 }) {
+  // 1. Logic chuyển đổi dữ liệu GPS cho bản đồ
+  const mapData = useMemo(() => {
+    // Chuyển đổi {lat, lng} -> [lat, lng]
+    const polygonPositions: LeafletLatLng[] = gps.map((p) => [p.lat, p.lng]);
+
+    // Xác định tâm bản đồ (lấy điểm đầu tiên hoặc mặc định HCM)
+    const center: LeafletLatLng =
+      polygonPositions.length > 0
+        ? polygonPositions[0]
+        : [10.762622, 106.660172];
+
+    return { polygonPositions, center };
+  }, [gps]);
+
   return (
     <Stack gap="xl">
       <Title order={2} mt={"md"}>
@@ -70,7 +89,9 @@ export function ConfirmStep({
             <Group gap="xs">
               <IconMapPin size={18} />
               <Text fw={500}>Tên vùng trồng:</Text>
-              <Badge color="green">{name}</Badge>
+              <Badge color="green" size="lg">
+                {name}
+              </Badge>
             </Group>
           </Grid.Col>
 
@@ -85,14 +106,16 @@ export function ConfirmStep({
             <Group gap="xs">
               <IconMapPin size={18} />
               <Text fw={500}>Tỉnh/Thành phố:</Text>
-              <Badge color="green">Tỉnh Đắk Lắk</Badge>
+              <Badge color="blue" variant="light">
+                Tỉnh Đắk Lắk
+              </Badge>
             </Group>
           </Grid.Col>
           <Grid.Col span={6}>
             <Group gap="xs">
               <IconRulerMeasure size={18} />
               <Text fw={500}>Diện tích:</Text>
-              <Text>{size.toLocaleString()} m²</Text>
+              <Text fw={700}>{Number(size).toLocaleString()} m²</Text>
             </Group>
           </Grid.Col>
 
@@ -100,7 +123,7 @@ export function ConfirmStep({
             <Group gap="xs">
               <IconMapPin size={18} />
               <Text fw={500}>Phường/Xã:</Text>
-              <Badge color="green">Xã Krông Pắk</Badge>
+              <Text>Xã Krông Pắk</Text>
             </Group>
           </Grid.Col>
           <Grid.Col span={6}>
@@ -117,49 +140,74 @@ export function ConfirmStep({
           </Grid.Col>
           {note && (
             <Grid.Col span={12}>
-              <Group gap="xs">
+              <Group gap="xs" align="flex-start">
                 <Text fw={500}>Ghi chú:</Text>
-                <Text>{note}</Text>
+                <Text c="dimmed" fs="italic">
+                  {note}
+                </Text>
               </Group>
             </Grid.Col>
           )}
         </Grid>
       </Card>
 
-      <Divider label="📍 Danh sách tọa độ GPS" labelPosition="center" />
+      <Divider label="📍 Bản đồ vùng trồng" labelPosition="center" />
 
+      {/* Map Container */}
       <MapContainer
-        center={[10.762622, 106.660172]}
-        zoom={16}
+        center={mapData.center}
+        zoom={15}
         style={{ height: "300px", width: "100%", borderRadius: 8 }}
+        scrollWheelZoom={false} // Tắt zoom chuột để tránh cuộn trang bị lag
       >
-        <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
-        <Polygon positions={[]} color="green" />
+        <TileLayer
+          url="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"
+          attribution="Tiles &copy; Esri"
+        />
+        {/* Render Polygon nếu có tọa độ */}
+        {mapData.polygonPositions.length > 0 && (
+          <Polygon positions={mapData.polygonPositions} color="green" />
+        )}
       </MapContainer>
 
-      <Divider label="📦 Danh sách khu vực" labelPosition="center" />
+      <Divider
+        label={`📦 Danh sách khu vực (${zones.length})`}
+        labelPosition="center"
+      />
 
       <Group align="flex-start">
+        {zones.length === 0 && (
+          <Text c="dimmed" size="sm" w="100%" ta="center">
+            Chưa có khu vực nào được tạo.
+          </Text>
+        )}
         {zones.map((z, idx) => (
-          <Card key={idx} withBorder radius="md" shadow="xs" p="md">
+          <Card key={idx} withBorder radius="md" shadow="xs" p="md" miw={250}>
             <Stack gap="xs">
-              <Group justify="apart">
-                <Text fw={600}>
-                  Khu vực {idx + 1}: {z.name}
+              <Group justify="space-between">
+                <Text fw={700} c="blue">
+                  {z.name}
                 </Text>
-                <Badge variant="light">{z.area} m²</Badge>
+                <Badge variant="outline" color="dark">
+                  {Number(z.area).toLocaleString()} m²
+                </Badge>
               </Group>
-              <Group>
-                <Text c="dimmed" size="sm">
+              <Divider />
+              <Group justify="space-between">
+                <Text c="dimmed" size="xs">
                   Loại đất:
                 </Text>
-                <Text size="sm">{z.soilType}</Text>
+                <Text size="xs" fw={500}>
+                  {z.soilType}
+                </Text>
               </Group>
-              <Group>
-                <Text c="dimmed" size="sm">
+              <Group justify="space-between">
+                <Text c="dimmed" size="xs">
                   Địa hình:
                 </Text>
-                <Text size="sm">{z.terrain}</Text>
+                <Text size="xs" fw={500}>
+                  {z.terrain}
+                </Text>
               </Group>
             </Stack>
           </Card>

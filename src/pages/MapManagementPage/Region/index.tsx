@@ -270,7 +270,6 @@ const MapManagementRegionPage = () => {
     appliedFilters.terrains.length > 0 ||
     appliedFilters.provinces.length > 0 ||
     appliedFilters.wards.length > 0;
-
   return (
     <Stack gap="lg">
       <Group justify="space-between">
