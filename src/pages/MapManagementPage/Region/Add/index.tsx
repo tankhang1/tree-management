@@ -206,7 +206,8 @@ const MapManagementAddRegionPage = () => {
               radius={4}
               label="Mã vùng (hệ thống)"
               {...form.getInputProps("region.codeSystem")}
-              disabled
+              readOnly
+              variant="filled"
             />
             <TextInput
               radius={4}
