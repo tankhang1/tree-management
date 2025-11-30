@@ -1435,12 +1435,7 @@ export default function TreatmentProtocolPage() {
                         Quy trình xử lý ({selectedData.durationDays} ngày)
                       </Title>
                       <Box pl="sm">
-                        <Timeline
-                          active={1}
-                          bulletSize={36}
-                          lineWidth={2}
-                          color="teal"
-                        >
+                        <Timeline active={1} bulletSize={36} lineWidth={2}>
                           {selectedData.steps.map((step, idx) => (
                             <Timeline.Item
                               key={step.id}
@@ -1448,14 +1443,9 @@ export default function TreatmentProtocolPage() {
                                 <ThemeIcon
                                   size={36}
                                   radius="xl"
-                                  color={
-                                    step.type === "spray"
-                                      ? "blue"
-                                      : step.type === "fertilize"
-                                      ? "teal"
-                                      : "white"
-                                  }
+                                  color={"white"}
                                   variant="light"
+                                  bg={"green"}
                                 >
                                   {step.type === "spray" ? (
                                     <IconDroplet size={18} />

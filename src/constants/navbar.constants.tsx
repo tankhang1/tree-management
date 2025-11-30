@@ -169,7 +169,7 @@ export const NAV_BAR = [
     children: [
       // Thêm báo cáo thu hoạch vào đây nếu cần
       { label: "Thống kê báo cáo", link: PATH.HARVEST_REPORT },
-      { label: "Thống kê hiện tại", link: PATH.HARVEST_QUERY },
+      // { label: "Thống kê hiện tại", link: PATH.HARVEST_QUERY },
     ],
   },
   {
