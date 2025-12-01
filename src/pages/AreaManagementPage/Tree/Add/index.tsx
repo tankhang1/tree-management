@@ -454,6 +454,7 @@ const AreaManagementTreeAddPage = () => {
                                   width: "100%",
                                   borderRadius: 8,
                                 }}
+                                attributionControl={false}
                               >
                                 <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
                                 <Polygon positions={row.coords} color="green" />
@@ -592,6 +593,7 @@ const AreaManagementTreeAddPage = () => {
             center={coords.length >= 1 ? coords[0] : [10.762622, 106.660172]}
             zoom={16}
             style={{ height: "300px", width: "100%", borderRadius: 8 }}
+            attributionControl={false}
           >
             <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
             <Polygon positions={coords} color="green" />

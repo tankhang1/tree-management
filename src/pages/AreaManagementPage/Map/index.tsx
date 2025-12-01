@@ -21,6 +21,7 @@ const AreaManagementMapPage = () => {
         zoom={18}
         zoomSnap={1}
         minZoom={17}
+        attributionControl={false}
         style={{ height: "90dvh", width: "83dvw", borderRadius: 4 }}
       >
         <TileLayer url="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}" />

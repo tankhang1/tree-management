@@ -76,6 +76,7 @@ const HarvestManagementQueryMapPage = () => {
         zoomSnap={1}
         minZoom={17}
         style={{ height: "90dvh", width: "90dvw", borderRadius: 4 }}
+        attributionControl={false}
       >
         <TileLayer url="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}" />
       </MapContainer>

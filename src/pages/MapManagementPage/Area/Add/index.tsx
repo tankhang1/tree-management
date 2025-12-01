@@ -446,6 +446,7 @@ const MapManagementAddAreaPage = () => {
                 }
                 zoom={16}
                 style={{ height: "600px", width: "100%", borderRadius: 8 }}
+                attributionControl={false}
               >
                 <TileLayer
                   url="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"
@@ -559,6 +560,7 @@ const MapManagementAddAreaPage = () => {
             }
             zoom={16}
             style={{ height: "600px", width: "100%", borderRadius: 8 }}
+            attributionControl={false}
           >
             <TileLayer
               url="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"

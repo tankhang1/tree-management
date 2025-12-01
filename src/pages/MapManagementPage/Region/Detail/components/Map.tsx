@@ -124,6 +124,7 @@ const MapBox = ({
       zoomControl={false}
       // zoomSnap={1}
       // minZoom={15}
+      attributionControl={false}
       boxZoom={false}
       style={{ height: `${h}px`, width: "100%", borderRadius: 4 }}
     >

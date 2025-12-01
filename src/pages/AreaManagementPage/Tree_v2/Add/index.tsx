@@ -1257,6 +1257,7 @@ const AreaManagementTreeAddv2Page = () => {
                                     width: "100%",
                                     borderRadius: 8,
                                   }}
+                                  attributionControl={false}
                                 >
                                   <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
                                   {/* Nếu bạn có polygon của lô, render Polygon ở đây */}
@@ -1461,6 +1462,7 @@ const AreaManagementTreeAddv2Page = () => {
                                     width: "100%",
                                     borderRadius: 8,
                                   }}
+                                  attributionControl={false}
                                 >
                                   <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
                                   {points.map((pt, i) =>
@@ -1665,6 +1667,7 @@ const AreaManagementTreeAddv2Page = () => {
                                     width: "100%",
                                     borderRadius: 8,
                                   }}
+                                  attributionControl={false}
                                 >
                                   <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
                                   {points.map((pt, i) =>
@@ -2019,6 +2022,7 @@ const AreaManagementTreeAddv2Page = () => {
                                     width: "100%",
                                     borderRadius: 8,
                                   }}
+                                  attributionControl={false}
                                 >
                                   <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
                                   {points.map((pt, i) =>
@@ -2183,6 +2187,7 @@ const AreaManagementTreeAddv2Page = () => {
             center={coords.length >= 1 ? coords[0] : [10.762622, 106.660172]}
             zoom={16}
             style={{ height: "300px", width: "100%", borderRadius: 8 }}
+            attributionControl={false}
           >
             <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
             <Polygon positions={coords} color="green" />

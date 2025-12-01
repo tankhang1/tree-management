@@ -535,6 +535,7 @@ const ConfirmStep = (props: ConfirmPlantingProps) => {
                             width: "100%",
                             borderRadius: 8,
                           }}
+                          attributionControl={false}
                         >
                           <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
                           {/* Nếu bạn có polygon của lô, render Polygon ở đây */}
@@ -749,6 +750,7 @@ const ConfirmStep = (props: ConfirmPlantingProps) => {
                             width: "100%",
                             borderRadius: 8,
                           }}
+                          attributionControl={false}
                         >
                           <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
                           {points.map((pt, i) =>
@@ -963,6 +965,7 @@ const ConfirmStep = (props: ConfirmPlantingProps) => {
                             width: "100%",
                             borderRadius: 8,
                           }}
+                          attributionControl={false}
                         >
                           <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
                           {points.map((pt, i) =>
@@ -1302,6 +1305,7 @@ const ConfirmStep = (props: ConfirmPlantingProps) => {
                             width: "100%",
                             borderRadius: 8,
                           }}
+                          attributionControl={false}
                         >
                           <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
                           {points.map((pt, i) =>

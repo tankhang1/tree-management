@@ -460,6 +460,7 @@ const ConfirmStep = ({
                   zoom={20}
                   style={{ height: "400px", width: "80%" }}
                   scrollWheelZoom={false}
+                  attributionControl={false}
                 >
                   <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
 
@@ -623,6 +624,7 @@ const ConfirmStep = ({
                   zoom={20}
                   style={{ height: "400px", width: "80%" }}
                   scrollWheelZoom={false}
+                  attributionControl={false}
                 >
                   <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
 

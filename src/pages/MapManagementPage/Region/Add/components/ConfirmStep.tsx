@@ -163,6 +163,7 @@ export function ConfirmStep({
         zoom={15}
         style={{ height: "300px", width: "100%", borderRadius: 8 }}
         scrollWheelZoom={false} // Tắt zoom chuột để tránh cuộn trang bị lag
+        attributionControl={false}
       >
         <TileLayer
           url="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"
