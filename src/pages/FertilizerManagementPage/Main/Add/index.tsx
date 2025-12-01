@@ -163,6 +163,7 @@ const FertilizerManagementMainAddPage = () => {
       hashtags: values.hashtags,
       suppliers: values.suppliers,
     };
+    setActive(3);
 
     const success = await addFertilizer(payload);
     if (success) {
@@ -172,7 +173,7 @@ const FertilizerManagementMainAddPage = () => {
         color: "green",
         icon: <IconCheck />,
       });
-      setActive(3); // Chuyển sang bước hoàn thành
+      // Chuyển sang bước hoàn thành
     }
   };
 
