@@ -21,7 +21,7 @@ import {
   type FileWithPath,
 } from "@mantine/dropzone";
 import { useForm, isNotEmpty } from "@mantine/form";
-import { notifications } from "@mantine/notifications";
+import { Notifications, notifications } from "@mantine/notifications";
 import {
   IconArrowLeft,
   IconCheck,
@@ -124,7 +124,8 @@ const PlantManagementSeedAddPage = () => {
   };
 
   // --- 3. Submit Handler ---
-  const handleSubmit = async (values: SeedFormValues) => {
+  const handleSubmit = async () => {
+    const values = form.getValues();
     const formData = new FormData();
 
     // Append simple fields
@@ -143,7 +144,7 @@ const PlantManagementSeedAddPage = () => {
     }
 
     if (values.docType === "file" && values.technicalDocFile) {
-      formData.append("technicalDocFile", values.technicalDocFile);
+      formData.append("technicalDocFile", "");
     } else {
       formData.append("technicalContent", values.technicalContent);
     }
@@ -154,7 +155,6 @@ const PlantManagementSeedAddPage = () => {
     } else {
       success = await createSeed(formData);
     }
-
     if (success) {
       notifications.show({
         title: isEditMode ? "Cập nhật thành công" : "Tạo mới thành công",
@@ -162,7 +162,8 @@ const PlantManagementSeedAddPage = () => {
         color: "green",
         icon: <IconCheck />,
       });
-      navigate(-1); // Go back
+      navigate(-1);
+      // Go back
     } else {
       notifications.show({
         title: "Lỗi",
@@ -195,7 +196,7 @@ const PlantManagementSeedAddPage = () => {
         </Title>
       </Group>
 
-      <form onSubmit={form.onSubmit(handleSubmit)}>
+      <form>
         <Group grow align="flex-start">
           <Stack gap="xs" flex={1}>
             <TextInput
@@ -380,7 +381,7 @@ const PlantManagementSeedAddPage = () => {
           <Button variant="default" onClick={() => navigate(-1)} mr={10}>
             Hủy
           </Button>
-          <Button type="submit" loading={isLoading}>
+          <Button onClick={handleSubmit} loading={isLoading}>
             {isEditMode ? "Lưu thay đổi" : "Tạo mới"}
           </Button>
         </Group>
