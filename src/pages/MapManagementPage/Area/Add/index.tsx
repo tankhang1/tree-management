@@ -228,7 +228,7 @@ const MapManagementAddAreaPage = () => {
           variant="subtle"
           radius={4}
           leftSection={<IconArrowLeft size={18} />}
-          onClick={() => navigate(-1)}
+          onClick={() => navigate("/map-management/area")}
         >
           Quay lại
         </Button>
@@ -471,7 +471,12 @@ const MapManagementAddAreaPage = () => {
             <Text fz={"h2"} ta="center">
               Thêm mới khu vực trồng thành công!
             </Text>
-            <Button size="md" mt="md" radius={4} onClick={() => navigate(-1)}>
+            <Button
+              size="md"
+              mt="md"
+              radius={4}
+              onClick={() => navigate("/map-management/area")}
+            >
               Xác nhận
             </Button>
           </Stack>

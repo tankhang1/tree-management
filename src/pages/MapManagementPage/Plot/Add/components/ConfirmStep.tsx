@@ -17,6 +17,19 @@ import {
   IconTopologyStar,
   IconArrowBarToRight,
 } from "@tabler/icons-react";
+import { useEffect } from "react";
+import { MapContainer, Polygon, TileLayer, useMap } from "react-leaflet";
+type LatLng = [number, number];
+
+const MapUpdater = ({ coords }: { coords: LatLng[] }) => {
+  const map = useMap();
+  useEffect(() => {
+    if (coords.length > 0) {
+      map.setView(coords[coords.length - 1], map.getZoom());
+    }
+  }, [coords, map]);
+  return null;
+};
 
 export function ConfirmStep({
   region,
@@ -101,7 +114,7 @@ export function ConfirmStep({
         </Grid>
       </Card>
 
-      <Divider label="🌿 Danh sách hàng (Card)" labelPosition="center" />
+      {/* <Divider label="🌿 Danh sách hàng (Card)" labelPosition="center" />
 
       <SimpleGrid cols={3} spacing="lg">
         {rows.map((row, idx) => (
@@ -143,7 +156,7 @@ export function ConfirmStep({
             </Stack>
           </Card>
         ))}
-      </SimpleGrid>
+      </SimpleGrid> */}
 
       <Divider label="📍 Tọa độ GPS" labelPosition="center" />
 
@@ -158,6 +171,19 @@ export function ConfirmStep({
             </Text>
           ))}
         </Stack>
+        <MapContainer
+          center={gps.length >= 1 ? gps[0] : [10.762622, 106.660172]}
+          zoom={16}
+          style={{ height: "300px", width: "100%", borderRadius: 8 }}
+          attributionControl={false}
+        >
+          <TileLayer
+            url="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"
+            attribution="Tiles &copy; Esri"
+          />
+          <MapUpdater coords={gps} />
+          <Polygon positions={gps} color="green" />
+        </MapContainer>
       </Card>
     </Stack>
   );

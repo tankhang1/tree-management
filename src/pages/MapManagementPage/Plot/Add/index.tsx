@@ -20,8 +20,8 @@ import {
   IconSearch,
   IconTrash,
 } from "@tabler/icons-react";
-import { useMemo, useState } from "react";
-import { MapContainer, Polygon, TileLayer } from "react-leaflet";
+import { useEffect, useMemo, useState } from "react";
+import { MapContainer, Polygon, TileLayer, useMap } from "react-leaflet";
 import { useNavigate } from "react-router-dom";
 import { ConfirmStep } from "./components/ConfirmStep";
 import RegionCardSelector from "../../../AreaManagementPage/Region/Add/components/RegionCards";
@@ -31,6 +31,15 @@ import type { AreaZone } from "../../Area";
 import { usePlotStore } from "../../../zustand/plotStore";
 
 type LatLng = [number, number];
+const MapUpdater = ({ coords }: { coords: LatLng[] }) => {
+  const map = useMap();
+  useEffect(() => {
+    if (coords.length > 0) {
+      map.setView(coords[coords.length - 1], map.getZoom());
+    }
+  }, [coords, map]);
+  return null;
+};
 
 const MapManagementPlotAddPage = () => {
   const navigate = useNavigate();
@@ -132,7 +141,9 @@ const MapManagementPlotAddPage = () => {
 
     const newPlotId = "PLOT-" + Date.now();
 
-    const regionEntity = regions.find((r) => r.id === selectedRegionId);
+    const regionEntity = regions.find(
+      (r) => r.region.codeSystem === selectedRegionId
+    );
     const areaEntity = areaZoneData.find((a) => a.id === selectedAreaId);
 
     const payload = {
@@ -245,9 +256,10 @@ const MapManagementPlotAddPage = () => {
               <RegionCardSelector
                 regions={regions}
                 selected={selectedRegionId}
-                onSelect={(id) => {
-                  setSelectedRegionId(id);
-                  form.setFieldValue("regionId", id);
+                onSelect={(data) => {
+                  setSelectedRegionId(
+                    data.selectedIds?.[data.selectedIds.length - 1]
+                  );
                 }}
               />
             </Stack>
@@ -368,7 +380,11 @@ const MapManagementPlotAddPage = () => {
               style={{ height: "300px", width: "100%", borderRadius: 8 }}
               attributionControl={false}
             >
-              <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
+              <TileLayer
+                url="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"
+                attribution="Tiles &copy; Esri"
+              />
+              <MapUpdater coords={coords} />
               <Polygon positions={coords} color="green" />
             </MapContainer>
           </Stack>
@@ -408,7 +424,7 @@ const MapManagementPlotAddPage = () => {
                 Tiếp theo
               </Button>
             ) : (
-              <Button radius={4} onClick={nextStep} color="green" type="submit">
+              <Button radius={4} onClick={handleSubmit} color="green">
                 Hoàn thành
               </Button>
             )}

@@ -103,7 +103,7 @@ const MapManagementPlotPage = () => {
       Cell: ({ row }) => row.original.plot.areaName,
     },
     {
-      accessorKey: "zone",
+      accessorKey: "regionName",
       header: "Vùng",
       Cell: ({ row }) => row.original.plot.regionName,
     },
@@ -121,6 +121,7 @@ const MapManagementPlotPage = () => {
     {
       accessorKey: "numberOfRows",
       header: "Số hàng",
+      Cell: ({ row }) => row.original.rows.length,
     },
     {
       accessorKey: "actions",
